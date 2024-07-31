@@ -110,7 +110,7 @@ export default function AdminAddBanks() {
       if (data.length > 0) {
         setAllCompaniesList(data);
       } else {
-        alert("Please Add Company First");
+        // alert("Please Add Company First");
       }
     } catch (error) {
       console.log(error);
@@ -137,7 +137,7 @@ export default function AdminAddBanks() {
       if (data.length > 0) {
         setAllBranchesList(data);
       } else {
-        alert("Please Add Company First");
+        // alert("Please Add Company First");
       }
     } catch (error) {
       console.log(error);
@@ -164,7 +164,7 @@ export default function AdminAddBanks() {
       if (data.length > 0) {
         setAllDepartmentsList(data);
       } else {
-        alert("Please Add Company First");
+        // alert("Please Add Company First");
       }
     } catch (error) {
       console.log(error);
@@ -191,7 +191,7 @@ export default function AdminAddBanks() {
       if (data.length > 0) {
         setAllRolesList(data);
       } else {
-        alert("Please Add Company First");
+        // alert("Please Add Company First");
       }
     } catch (error) {
       console.log(error);

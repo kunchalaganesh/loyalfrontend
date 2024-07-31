@@ -107,7 +107,7 @@ export default function AdminAddBranch() {
       if (data.length > 0) {
         setAllCompaniesList(data);
       } else {
-        alert("Please Add Company First");
+        // alert("Please Add Company First");
       }
     } catch (error) {
       console.log(error);

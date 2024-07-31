@@ -128,7 +128,7 @@ export default function AdminAddBox() {
       if (data.length > 0) {
         setAllCompaniesList(data);
       } else {
-        alert("Please Add Company First");
+        // alert("Please Add Company First");
       }
     } catch (error) {
       console.log(error);
@@ -155,7 +155,7 @@ export default function AdminAddBox() {
       if (data.length > 0) {
         setAllBranchesList(data);
       } else {
-        alert("Please Add Branch First");
+        // alert("Please Add Branch First");
       }
     } catch (error) {
       console.log(error);
@@ -236,7 +236,7 @@ export default function AdminAddBox() {
       if (data.length > 0) {
         setAllCategoriesList(data);
       } else {
-        alert("Please Add Category First");
+        // alert("Please Add Category First");
       }
     } catch (error) {
       console.log(error);
@@ -263,7 +263,7 @@ export default function AdminAddBox() {
       if (data.length > 0) {
         setAllProductsList(data);
       } else {
-        alert("Please Add Product First");
+        // alert("Please Add Product First");
       }
     } catch (error) {
       console.log(error);
