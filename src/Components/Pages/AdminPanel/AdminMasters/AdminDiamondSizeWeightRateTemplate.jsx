@@ -109,7 +109,7 @@ function AdminDiamondSizeWeightRateTemplate(props) {
                                     <th>Sr.No</th>
                                     <th>Diamond Shape</th>
                                     <th>Diamond Size</th>
-                                    <th>SIEVE</th>
+                                    <th>Sieve</th>
                                     <th>Diamond Weight</th>
                                     <th>Diamond Purchase Rate</th>
                                     <th>Diamond Margin</th>

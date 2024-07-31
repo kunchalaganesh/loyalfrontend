@@ -981,7 +981,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                 />
 
                                 <label>
-                                    SIEVE
+                                    Sieve
                                 </label>
                                 <input
                                     name="Sieve"
@@ -1043,7 +1043,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         <th>Template Name</th>
                                         <th>Diamond Shape</th>
                                         <th>Diamond Size</th>
-                                        <th>SIEVE</th>
+                                        <th>Sieve</th>
                                         <th>Diamond Weight</th>
                                         <th>Diamond Purchase Rate</th>
                                         <th>Diamond Margin</th>
