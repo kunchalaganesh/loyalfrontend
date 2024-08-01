@@ -93,6 +93,7 @@ export default function AdminAddDiamondSizeWeightRate() {
     const [allCategoriesList, setAllCategoriesList] = useState([]);
     const [allProductsList, setAllProductsList] = useState([]);
     const allStates = useSelector((state) => state);
+    const [defaultTemplateId, setDefaultTemplateId] = useState('');
     const adminLoggedIn = allStates.reducer1;
     //   let Entryby_Staff_id = parseInt(adminLoggedIn);
     const clientCode = adminLoggedIn.ClientCode;
@@ -101,7 +102,6 @@ export default function AdminAddDiamondSizeWeightRate() {
     const branchId = adminLoggedIn.BranchId;
     const counterId = adminLoggedIn.CounterId;
     const employeeId = adminLoggedIn.EmployeeId;
-    const [isDisable, setIsDisable] = useState('');
 
     useEffect(() => {
         window.scroll(0, 0);
@@ -383,31 +383,8 @@ export default function AdminAddDiamondSizeWeightRate() {
     };
 
     useEffect(() => {
-        // async function findNullData() {
-        //     const payload = {
-        //         ClientCode: clientCode
-        //     }
-        //     const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate', {
-        //         method: 'POST',
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-        //         },
-        //         body: JSON.stringify(payload)
-        //     });
-        //     const data = await response.json();
-        //     const isNullData = data?.find((item) => item.TemplateName === '');
-        //     if (isNullData) {
-        //         const defaultTemplateId = isNullData.Id;
-        //         setDefaultTemplateId(defaultTemplateId);
-        //     }
-        // }
-        //
-        // findNullData()
-
-        async function fetchDefaultTemplate() {
+        async function findNullData() {
             const payload = {
-                Id: 37,
                 ClientCode: clientCode
             }
             const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate', {
@@ -419,14 +396,44 @@ export default function AdminAddDiamondSizeWeightRate() {
                 body: JSON.stringify(payload)
             });
             const data = await response.json();
-            setDefaultTemplateData(data[0].DiamondSizeWeightRates);
+            const isNullData = data?.find((item) => item.TemplateName === '');
+            if (isNullData) {
+                setDefaultTemplateId(isNullData.Id);
+            } else {
+                setDefaultTemplateId('');
+            }
         }
 
+        if (!defaultTemplateId) {
+            findNullData();
+        }
+
+    }, [defaultTemplateId])
+
+    async function fetchDefaultTemplate() {
+        const payload = {
+            Id: defaultTemplateId,
+            ClientCode: clientCode
+        }
+        const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+            },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        setDefaultTemplateData(data[0]?.DiamondSizeWeightRates);
+    }
+
+    useEffect(() => {
+        if (defaultTemplateId) {
             fetchDefaultTemplate();
-    }, [])
+        }
+    }, [defaultTemplateId])
 
     const addNewCategory = async () => {
-
         setLoading(true);
         let arr = [];
 
@@ -462,49 +469,12 @@ export default function AdminAddDiamondSizeWeightRate() {
         })
 
         try {
-            if (!editId ) {
-                // const defaultPayload = (defaultTemplateId) ? {
-                //     Id: defaultTemplateId,
-                //     TemplateName: newCategory.TemplateName,
-                //     DiamondSizeWeightRates: defaultTemplateData.concat(arr),
-                //     ClientCode: clientCode
-                // } : {
-                //     TemplateName: newCategory.TemplateName,
-                //     DiamondSizeWeightRates: defaultTemplateData.concat(arr),
-                //     ClientCode: clientCode,
-                // }
 
-
-                const payload = (newCategory.TemplateName == '') ? {
-                    Id: 37,
-                    TemplateName: newCategory.TemplateName,
-                    DiamondSizeWeightRates: defaultTemplateData.concat(arr),
-                    ClientCode: clientCode
-                } : {
-
-                    TemplateName: newCategory.TemplateName,
-                    DiamondSizeWeightRates: arr,
-                    ClientCode: clientCode,
-                }
-                const response = await fetch(
-                    postAdminadddiamondsizeweightrate,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-                        },
-                        body: JSON.stringify(payload),
-                    }
-                );
-                const data = await response.json();
-                setResData(data);
-
-            } else {
+            if (defaultTemplateId && !newCategory.TemplateName) {
                 const payload = {
-                    Id: editId,
+                    Id: defaultTemplateId,
                     TemplateName: newCategory.TemplateName,
-                    DiamondSizeWeightRates: arr,
+                    DiamondSizeWeightRates: editId ? arr : arr.concat(defaultTemplateData),
                     ClientCode: clientCode,
                 }
                 const response = await fetch(
@@ -521,6 +491,53 @@ export default function AdminAddDiamondSizeWeightRate() {
                 const data = await response.json();
                 setResData(data);
                 setEditId('');
+                setDefaultTemplateId('')
+            } else {
+
+                if (editId) {
+                    const payload = {
+                        Id: editId,
+                        TemplateName: newCategory.TemplateName,
+                        DiamondSizeWeightRates: arr,
+                        ClientCode: clientCode,
+                    }
+                    const response = await fetch(
+                        postAdminadddiamondsizeweightrate,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                            },
+                            body: JSON.stringify(payload),
+                        }
+                    );
+                    const data = await response.json();
+                    setResData(data);
+                    setEditId('');
+
+
+                } else {
+                    const payload = {
+
+                        TemplateName: newCategory.TemplateName,
+                        DiamondSizeWeightRates: arr,
+                        ClientCode: clientCode,
+                    }
+                    const response = await fetch(
+                        postAdminadddiamondsizeweightrate,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                            },
+                            body: JSON.stringify(payload),
+                        }
+                    );
+                    const data = await response.json();
+                    setResData(data);
+                }
             }
             fetchAllCategory();
             setActive("List");
@@ -558,6 +575,7 @@ export default function AdminAddDiamondSizeWeightRate() {
         } catch (error) {
             console.error(error);
         }
+        setDefaultTemplateId('')
     };
     useEffect(() => {
         setTimeout(() => {
@@ -638,14 +656,7 @@ export default function AdminAddDiamondSizeWeightRate() {
 
     const handleEditClick = async (e, item, index) => {
         e.stopPropagation();
-        if(item.TemplateName == ''){
-            setIsDisable(true);
-        }
 
-        else {
-
-            setIsDisable(false);
-        }
         const updatedData = item.DiamondSizeWeightRates.map((rate) => ({
             ...rate,
             DiamondShape: getShapeValue(rate.DiamondShape),
@@ -750,7 +761,6 @@ export default function AdminAddDiamondSizeWeightRate() {
         }
 
     }
-    console.log("is ",isDisable);
     return (
         <div>
             <AdminHeading/>
@@ -898,7 +908,6 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         onChange={handleNewCategoryChange}
                                         type="text"
                                         style={{marginLeft: '10px'}}
-                                        disabled={isDisable}
                                     />
                                 </div>
                             </div>

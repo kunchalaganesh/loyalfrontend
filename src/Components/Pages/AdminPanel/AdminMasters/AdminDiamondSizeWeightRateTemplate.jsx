@@ -118,7 +118,6 @@ function AdminDiamondSizeWeightRateTemplate(props) {
                                 </thead>
                                 <tbody className={'w-100'}>
                                 {allTableData && allTableData.map((x, index) => (
-                                    console.log(x),
                                     <tr key={x.id}>
                                         <td>{index + 1}</td>
                                         <td>{getShapeValue(x.DiamondShape)}</td>

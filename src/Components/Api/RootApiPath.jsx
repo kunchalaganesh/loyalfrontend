@@ -753,7 +753,7 @@ export const a174 =
 
 export const a175 =
   "https://goldstringwebapp.loyalstring.co.in/api/ProductMaster/GetAllRFID";
-//Fetch All RFID Data
+// Fetch All RFID Data
 
 export const a176 =
   "https://goldstringwebapp.loyalstring.co.in/api/ProductMaster/AddLabeledStock";
