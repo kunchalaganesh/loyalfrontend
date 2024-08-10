@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
@@ -14,15 +14,16 @@ import {
   a173,
   a174,
   a179,
-  a180, a191,
+  a180,
+  a191,
   a204,
   a205,
   a206,
   a95,
   a98,
 } from "../../../Api/RootApiPath";
-import {useSelector} from "react-redux";
-import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
+import { useSelector } from "react-redux";
+import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 
 export default function AdminCustomerTounche() {
@@ -56,8 +57,7 @@ export default function AdminCustomerTounche() {
     BranchId: 0,
     EmployeeId: 0,
     OldEntry: false,
-    DiamondSizeWeightRateTemplateId: 0
-
+    DiamondSizeWeightRateTemplateId: 0,
   });
   const [allCompaniesList, setAllCompaniesList] = useState([]);
   const [allBranchesList, setAllBranchesList] = useState([]);
@@ -65,7 +65,7 @@ export default function AdminCustomerTounche() {
   const [allRolesList, setAllRolesList] = useState([]);
   const [allSelectedTounche, setAllSelectedTounche] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
-  const [templateData, setTemplateData] = useState([])
+  const [templateData, setTemplateData] = useState([]);
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
   //   let Entryby_Staff_id = parseInt(adminLoggedIn);
@@ -88,16 +88,17 @@ export default function AdminCustomerTounche() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+        Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
       },
       body: JSON.stringify(formData),
     });
     const data = await response.json();
-    const processedData = data?.map(item => ({
+    const processedData = data?.map((item) => ({
       templateID: item?.Id,
-      templateName: item?.TemplateName || 'default'
+      templateName: item?.TemplateName || "default",
     }));
-    setTemplateData(processedData)
+    setTemplateData(processedData);
   }, []);
 
   const fetchAllCategory = async () => {
@@ -358,7 +359,7 @@ export default function AdminCustomerTounche() {
   }, []);
 
   const handleNewCategoryChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     let actualValue = value;
     if (name === "FinePure") {
@@ -371,10 +372,10 @@ export default function AdminCustomerTounche() {
       if (selectedSku) {
         handleAllSelectedTounche(e, selectedSku);
       } else {
-        setNewCategory({...newCategory, [name]: actualValue});
+        setNewCategory({ ...newCategory, [name]: actualValue });
       }
     }
-    setNewCategory({...newCategory, [name]: actualValue});
+    setNewCategory({ ...newCategory, [name]: actualValue });
   };
 
   const addNewCategory = async (e) => {
@@ -397,8 +398,10 @@ export default function AdminCustomerTounche() {
       CounterId: CounterId ? CounterId : 0,
       BranchId: BranchId ? BranchId : 0,
       EmployeeId: EmployeeId ? EmployeeId : 0,
-      DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
-      ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
+      DiamondSizeWeightRateTemplateId: parseInt(
+          newCategory.DiamondSizeWeightRateTemplateId
+      ),
+      ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
     };
     let newArray = allSelectedTounche.filter(
         (x) => x.StockKeepingUnit !== newCategory.StockKeepingUnit
@@ -464,24 +467,28 @@ export default function AdminCustomerTounche() {
   }, [showError]);
 
   const handleEditData = (data) => {
-    setNewCategory({...data, OldEntry: true});
+    setNewCategory({ ...data, OldEntry: true });
     setActive("AddNew");
   };
 
   const handleDeleteData = async (e) => {
     const payload = {
       Id: e.Id,
-      ClientCode: clientCode
-    }
+      ClientCode: clientCode,
+    };
     try {
-      const response = await fetch('https://testing.loyalstring.co.in/api/Invoice/DeleteCustomerTounch', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+          "https://testing.loyalstring.co.in/api/Invoice/DeleteCustomerTounch",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+            },
+            body: JSON.stringify(payload),
+          }
+      );
       const result = await response.json();
       fetchAllCategory();
     } catch (err) {
@@ -489,10 +496,10 @@ export default function AdminCustomerTounche() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleAllSelectedTounche = (e, x) => {
-    const {value, checked} = e.target;
+    const { value, checked } = e.target;
     if (checked) {
       const newTounche = {
         CustomerId: 0,
@@ -530,7 +537,9 @@ export default function AdminCustomerTounche() {
       newTounche.CounterId = CounterId ? CounterId : 0;
       newTounche.BranchId = BranchId ? BranchId : 0;
       newTounche.EmployeeId = EmployeeId ? EmployeeId : 0;
-      newTounche.DiamondSizeWeightRateTemplateId = parseInt((x.DiamondSizeWeightRateTemplateId))
+      newTounche.DiamondSizeWeightRateTemplateId = parseInt(
+          x.DiamondSizeWeightRateTemplateId
+      );
       setAllSelectedTounche([...allSelectedTounche, newTounche]);
     } else {
       setAllSelectedTounche(
@@ -585,20 +594,22 @@ export default function AdminCustomerTounche() {
     CounterId: CounterId ? CounterId : 0,
     BranchId: BranchId ? BranchId : 0,
     EmployeeId: EmployeeId ? EmployeeId : 0,
-    DiamondSizeWeightRateTemplateId: parseInt(x.DiamondSizeWeightRateTemplateId)
+    DiamondSizeWeightRateTemplateId: parseInt(
+        x.DiamondSizeWeightRateTemplateId
+    ),
   });
 
   const getNameFunction = (e) => {
-    const matchedObject = templateData?.find(item => item?.templateID === e);
+    const matchedObject = templateData?.find((item) => item?.templateID === e);
     return matchedObject ? matchedObject.templateName : null;
-  }
+  };
 
   return (
       <div>
-        <AdminHeading/>
+        <AdminHeading />
         <div className="adminMainBodyBox">
           {showError ? (
-              <AlertMessage message={messageToShow} type={messageType}/>
+              <AlertMessage message={messageToShow} type={messageType} />
           ) : null}
           <AdminBreadCrump
               title={"Add Customer Tounche"}
@@ -647,7 +658,7 @@ export default function AdminCustomerTounche() {
                       }
                   >
                     {/* 01 */}
-                    <RiListUnordered/>
+                    <RiListUnordered />
                   </div>
                   <p>All Customer Tounche</p>
                 </div>
@@ -670,7 +681,7 @@ export default function AdminCustomerTounche() {
                       }
                   >
                     {/* 02 */}
-                    <RiPlayListAddLine/>
+                    <RiPlayListAddLine />
                   </div>
                   <p>Add Customer Tounche</p>
                 </div>
@@ -708,16 +719,16 @@ export default function AdminCustomerTounche() {
                         <td>{x.CategoryName}</td>
                         <td>{x.ProductName}</td>
                         <td>{x.DesignName}</td>
-                        <td>
-                          {x.PurityName}
-                        </td>
+                        <td>{x.PurityName}</td>
                         <td>{x.StockKeepingUnit}</td>
                         <td>{x.StoneLessPercent}</td>
                         <td>{x.MakingFixedAmt}</td>
                         <td>{x.MakingPercentage}</td>
                         <td>{x.MakingPerGram}</td>
                         <td>{x.MakingFixedWastage}</td>
-                        <td>{getNameFunction(x.DiamondSizeWeightRateTemplateId)}</td>
+                        <td>
+                          {getNameFunction(x.DiamondSizeWeightRateTemplateId)}
+                        </td>
                         <td>
                           <button
                               className="adminAddCategoryEditButton"

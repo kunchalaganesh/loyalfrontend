@@ -1,10 +1,10 @@
 import React from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
 import {
-  a18,
+  a18, a194,
   a20,
   a31,
   a33,
@@ -15,19 +15,21 @@ import {
   a57,
   a8,
 } from "../../../Api/RootApiPath";
-import { useState } from "react";
-import { InfinitySpin, MagnifyingGlass } from "react-loader-spinner";
-import { RxCross2 } from "react-icons/rx";
+import {useState} from "react";
+import {InfinitySpin, MagnifyingGlass} from "react-loader-spinner";
+import {RxCross2} from "react-icons/rx";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
-import { BsHandbag } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineEdit, AiOutlineFileAdd } from "react-icons/ai";
-import { BiSave, BiListUl } from "react-icons/bi";
-import { FaFileInvoiceDollar } from "react-icons/fa";
+import {BsHandbag} from "react-icons/bs";
+import {Link, useNavigate} from "react-router-dom";
+import {AiOutlineEdit, AiOutlineFileAdd} from "react-icons/ai";
+import {BiSave, BiListUl} from "react-icons/bi";
+import {FaFileInvoiceDollar} from "react-icons/fa";
 import "../../PagesStyles/AdminEcommerce.css";
 
 export default function AdminAllUnlabelledList() {
+  const allStates = useSelector((state) => state);
+  const adminLoggedIn = allStates.reducer1;
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +56,7 @@ export default function AdminAllUnlabelledList() {
   const [selectedEditItem, setSelectEditItem] = useState([]);
   const [selectedEditQuantity, setSelectEditQuantity] = useState("");
   const [selectedEditQuantityBefore, setSelectedEditQuantityBefore] =
-    useState(0);
+      useState(0);
   const [showAllFields, setShowAllFields] = useState(false);
   const [pageType, setPageType] = useState("");
   const [labelItemBox, setLabelItemBox] = useState(false);
@@ -64,6 +66,7 @@ export default function AdminAllUnlabelledList() {
   const [goldAlert, setGoldAlert] = useState(false);
   const [barCodeAlert, setBarCodeAlert] = useState(false);
 
+  const clientCode = adminLoggedIn.ClientCode;
   const [barcodeNumbersArray, setBarcodeNumbersArray] = useState([]);
   const [piecesBox, setPiecesBox] = useState(false);
   const [productPiecesEditId, setProductPiecesEditId] = useState(0);
@@ -72,13 +75,29 @@ export default function AdminAllUnlabelledList() {
 
   const navigate = useNavigate();
 
-  const fetchCategories = () => {
+  const fetchCategories = async () => {
     // setLoading(true);
-    fetch(a18)
-      .then((res) => res.json())
-      .then((response) => {
-        setAllCategories(response.data);
+    // fetch(a18)
+
+    // .then((res) => res.json())
+    // .then((response) => {
+    //   setAllCategories(response.data);
+    // });
+    const formData = {ClientCode: clientCode};
+    try {
+      const response = await fetch(a18, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
+      const data = await response.json();
+      setAllCategories(data);
+      // console.log(data, "AllVendorTounche");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -86,44 +105,70 @@ export default function AdminAllUnlabelledList() {
   }, []);
   const fetchProductTypes = async () => {
     // setLoading(true);
-    await fetch(a20)
-      .then((res) => res.json())
-      .then((response) => {
-        setAllProductTypes(response.data);
-      });
+    const formData = {
+      ClientCode: clientCode,
+    };
+    await fetch(a20, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+        .then((res) => res.json())
+        .then((response) => {
+          setAllProductTypes(response);
+        });
   };
 
   useEffect(() => {
     fetchProductTypes();
   }, []);
   const fetchCollectonData = async () => {
-    await fetch(a33)
-      .then((res) => res.json())
-      .then((response) => {
-        setAllCollectionTypes(response.data);
-      });
+    const formData = {
+      ClientCode: clientCode,
+    };
+    await fetch(a33, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+        .then((res) => res.json())
+        .then((response) => {
+          setAllCollectionTypes(response);
+        });
   };
 
   useEffect(() => {
     fetchCollectonData();
   }, []);
 
-  const allStates = useSelector((state) => state);
-  const adminLoggedIn = allStates.reducer1;
+
   let Entryby_Staff_id = parseInt(adminLoggedIn);
 
   const fetchAllProducts = async () => {
     // setLoading(true);
+    const formData = {
+      ClientCode: clientCode,
+    };
     try {
-      const response = await fetch(a56);
+      const response = await fetch(a56, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await response.json();
-      let branchProducts = data.data;
+      let branchProducts = data;
       console.log(branchProducts, "branchProducts");
       // Add a serial number property to each product
       if (selectBranch === "Home" || selectBranch === "Branch 2") {
-        branchProducts = data.data.filter((x) => x.branchName === selectBranch);
+        branchProducts = data.filter((x) => x.branchName === selectBranch);
       } else {
-        branchProducts = data.data;
+        branchProducts = data;
       }
       const productsWithSerial = branchProducts.map((product, index) => ({
         ...product,
@@ -160,8 +205,8 @@ export default function AdminAllUnlabelledList() {
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
+      indexOfFirstProduct,
+      indexOfLastProduct
   );
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -187,7 +232,7 @@ export default function AdminAllUnlabelledList() {
       // If the product is already selected, remove it from the list
       if (isSelected) {
         setSelectedProducts((prevSelected) =>
-          prevSelected.filter((id) => id !== productId)
+            prevSelected.filter((id) => id !== productId)
         );
       } else {
         // If the product is not selected, add it to the list
@@ -198,7 +243,7 @@ export default function AdminAllUnlabelledList() {
 
   const printList = () => {
     const selectedProductData = allProducts.filter((x) =>
-      selectedProducts.includes(x.id)
+        selectedProducts.includes(x.id)
     );
     printListAll(filteredProducts);
   };
@@ -213,7 +258,7 @@ export default function AdminAllUnlabelledList() {
     const margin = 5;
     const serialNumberWidth = 20; // Width for the serial number column
     const columnWidth =
-      (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
+        (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
     doc.setFont("helvetica", "normal");
     // doc.setFontSize(12);
@@ -234,24 +279,24 @@ export default function AdminAllUnlabelledList() {
       doc.text("Tid", startX + 7.53 * columnWidth, startY);
     };
     const totalNetWt = data.reduce(
-      (total, item) => total + (parseFloat(item.netWt) || 0),
-      0
+        (total, item) => total + (parseFloat(item.netWt) || 0),
+        0
     );
     const totalGrossWt = data.reduce(
-      (total, item) => total + (parseFloat(item.grosswt) || 0),
-      0
+        (total, item) => total + (parseFloat(item.grosswt) || 0),
+        0
     );
     // Generate header on the first page
     generateHeader();
     doc.text(
-      `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
-      startX + 5 * columnWidth,
-      startY - 10
+        `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
+        startX + 5 * columnWidth,
+        startY - 10
     );
     doc.text(
-      `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
-      startX,
-      startY - 10
+        `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
+        startX,
+        startY - 10
     );
     // Generate data rows
 
@@ -269,29 +314,29 @@ export default function AdminAllUnlabelledList() {
       const serialNumber = index + 1;
       doc.text(serialNumber.toString(), startX, y);
       doc.text(
-        item.collection ? item.collection.toString().substr(0, 8) : "N/A",
-        startX + columnWidth,
-        y
+          item.collection ? item.collection.toString().substr(0, 8) : "N/A",
+          startX + columnWidth,
+          y
       );
       doc.text(
-        item.grosswt ? item.grosswt.toString() : "N/A",
-        startX + 2 * columnWidth,
-        y
+          item.grosswt ? item.grosswt.toString() : "N/A",
+          startX + 2 * columnWidth,
+          y
       );
       doc.text(
-        item.netWt ? item.netWt.toString() : "N/A",
-        startX + 3 * columnWidth,
-        y
+          item.netWt ? item.netWt.toString() : "N/A",
+          startX + 3 * columnWidth,
+          y
       );
       doc.text(
-        item.itemCode ? item.itemCode.toString() : "N/A",
-        startX + 4 * columnWidth,
-        y
+          item.itemCode ? item.itemCode.toString() : "N/A",
+          startX + 4 * columnWidth,
+          y
       );
       doc.text(
-        item.barcodeNumber ? item.barcodeNumber.toString() : "N/A",
-        startX + 5.5 * columnWidth,
-        y
+          item.barcodeNumber ? item.barcodeNumber.toString() : "N/A",
+          startX + 5.5 * columnWidth,
+          y
       );
       // doc.text(
       //   item.making_Fixed_Amt ? item.making_Fixed_Amt.toString() : "N/A",
@@ -321,9 +366,9 @@ export default function AdminAllUnlabelledList() {
       //   y
       // );
       doc.text(
-        item.tid ? item.tid.toString() : "N/A",
-        startX + 7.5 * columnWidth,
-        y
+          item.tid ? item.tid.toString() : "N/A",
+          startX + 7.5 * columnWidth,
+          y
       );
       y += lineHeight + margin;
     });
@@ -339,7 +384,7 @@ export default function AdminAllUnlabelledList() {
     const pdfData = doc.output();
 
     // Create a new Blob from the PDF data
-    const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
+    const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
 
     // Create a URL from the Blob
     const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -353,21 +398,21 @@ export default function AdminAllUnlabelledList() {
 
     if (labelCode !== "") {
       filtered = filtered.filter((product) =>
-        product.itemCode.includes(labelCode)
+          product.itemCode.includes(labelCode)
       );
     }
     if (barCode !== "") {
       filtered = filtered.filter(
-        (product) =>
-          product.barcodeNumber && product.barcodeNumber.includes(barCode)
+          (product) =>
+              product.barcodeNumber && product.barcodeNumber.includes(barCode)
       );
     }
 
     if (categoryName == "") {
       // setCategoryName(""),
       setProductName(""),
-        setCollectionName(""),
-        setFilteredProducts(allProducts);
+          setCollectionName(""),
+          setFilteredProducts(allProducts);
       // console.log("categoryName", categoryName);
     }
     // if (productName == "") {
@@ -388,26 +433,26 @@ export default function AdminAllUnlabelledList() {
     // }
     if (categoryName !== "") {
       filtered = filtered.filter(
-        (product) =>
-          product.category_Name &&
-          product.category_Name.includes(categoryNameSelected)
+          (product) =>
+              product.category_Name &&
+              product.category_Name.includes(categoryNameSelected)
       );
     }
     if (productName !== "") {
       console.log("filteredProductsTypes1", filtered);
       filtered = filtered.filter(
-        (product) =>
-          // product.itemType && product.itemType.includes(productNameSelected)
-          product.productTypeId &&
-          product.productTypeId === productTypeIdSelected
+          (product) =>
+              // product.itemType && product.itemType.includes(productNameSelected)
+              product.productTypeId &&
+              product.productTypeId === productTypeIdSelected
       );
       console.log("filteredProductsTypes2", filtered);
     }
     if (collectionName !== "") {
       filtered = filtered.filter(
-        (product) =>
-          product.collection &&
-          product.collection.includes(collectionNameSelected)
+          (product) =>
+              product.collection &&
+              product.collection.includes(collectionNameSelected)
       );
     }
 
@@ -448,13 +493,13 @@ export default function AdminAllUnlabelledList() {
   let categoryId = parseInt(categoryName.split(",")[0]);
   let categoryNameSelected = categoryName.split(",")[1];
   const filteredProductTypes = allProductTypes.filter(
-    (product) => product.category_id == categoryId
+      (product) => product.category_id == categoryId
   );
   let productNameSelected = productName.split(",")[1];
   let productTypeIdSelected = parseInt(productName.split(",")[0]);
   let collectionNameSelected = collectionName.split(",")[1];
   const filteredCollection = allCollectionTypes.filter(
-    (product) => product.productType == productNameSelected
+      (product) => product.productType == productNameSelected
   );
   console.log("current", currentProducts);
 
@@ -468,10 +513,10 @@ export default function AdminAllUnlabelledList() {
 
     if (updatedCheckedProducts.includes(productId)) {
       updatedCheckedProducts = updatedCheckedProducts.filter(
-        (id) => id !== productId
+          (id) => id !== productId
       );
       updatedSelectedItemCodes = updatedSelectedItemCodes.filter(
-        (code) => code !== itemCode
+          (code) => code !== itemCode
       );
     } else {
       updatedCheckedProducts.push(productId);
@@ -554,7 +599,7 @@ export default function AdminAllUnlabelledList() {
   const handleInputChange = (e, productId, property) => {
     // const barcodeInput = document.getElementById("barcodeNumberInput");
     // barcodeInput.style.setProperty("color", "black");
-    const { value } = e.target;
+    const {value} = e.target;
     // setBarCodeAlert(false);
     const updatedProducts = selectedEditItem.map((product) => {
       if (product.id === productId) {
@@ -564,7 +609,7 @@ export default function AdminAllUnlabelledList() {
         const netWt = parseFloat(product.netWt) || 0;
 
         // Update the specific property in the product object
-        let updatedProduct = { ...product, [property]: value };
+        let updatedProduct = {...product, [property]: value};
 
         if (property === "barcodeNumber") {
           // Convert the barcode number to uppercase before doing the comparison
@@ -573,7 +618,7 @@ export default function AdminAllUnlabelledList() {
 
           // Find a matching product in the rifdData array
           const matchingProduct = rifdData.find(
-            (item) => item.barcodeNumber === barcodeValue
+              (item) => item.barcodeNumber === barcodeValue
           );
 
           if (matchingProduct) {
@@ -588,19 +633,19 @@ export default function AdminAllUnlabelledList() {
         // If 'grosswt' is changed, calculate 'netWt'
         if (property === "grosswt" && !isNaN(value)) {
           updatedProduct.netWt =
-            parseFloat(value) - updatedProduct.stoneWeight > 0
-              ? (parseFloat(value) - updatedProduct.stoneWeight).toFixed(3)
-              : (updatedProduct.grosswt = value);
+              parseFloat(value) - updatedProduct.stoneWeight > 0
+                  ? (parseFloat(value) - updatedProduct.stoneWeight).toFixed(3)
+                  : (updatedProduct.grosswt = value);
         }
 
         // If 'stoneWeight' is changed, calculate 'netWt'
         if (property === "stoneWeight" && !isNaN(value)) {
           updatedProduct.netWt =
-            parseFloat(updatedProduct.grosswt) > value
-              ? (updatedProduct.grosswt - parseFloat(value)).toFixed(3)
-              : ((updatedProduct.grosswt = value),
-                (updatedProduct.stoneWeight = value),
-                (updatedProduct.netWt = 0));
+              parseFloat(updatedProduct.grosswt) > value
+                  ? (updatedProduct.grosswt - parseFloat(value)).toFixed(3)
+                  : ((updatedProduct.grosswt = value),
+                      (updatedProduct.stoneWeight = value),
+                      (updatedProduct.netWt = 0));
         }
 
         // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
@@ -627,27 +672,41 @@ export default function AdminAllUnlabelledList() {
     try {
       const updatedProductsString = selectedEditItem.map((product) => ({
         ...product,
-        grosswt: product.grosswt.toString(),
-        stoneWeight: product.stoneWeight.toString(),
-        netWt: product.netWt.toString(),
-        mrp: product.mrp.toString(),
-        pieces: parseInt(product.pieces),
+        TotalGrossWt: product.TotalGrossWt,
+        TotalStoneWeight: product.TotalStoneWeight,
+        TotalNetWt: product.TotalNetWt,
+        MRP: product.MRP,
+        Pieces: parseInt(product.Pieces),
       }));
       const updatedProductsString2 = updatedProductsString.map((product) => {
         // Filter out properties with null values
         const filteredProduct = Object.fromEntries(
-          Object.entries(product).filter(([key, value]) => value !== null)
+            Object.entries(product).filter(([key, value]) => value !== null)
         );
         return filteredProduct;
       });
+      const createFormData = (data) => {
+        const formData = new FormData();
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            formData.append(key, data[key]);
+          }
+        }
+        return formData;
+      };
+      const formData = createFormData(updatedProductsString2[0]);
       console.log(updatedProductsString2[0], "updatedProductsString");
       // Send the updated products to the edit API endpoint
-      const response = await fetch(a57, {
+      // const response = await fetch(a57, {
+      //     method: "POST",
+      //     headers: {
+      //         "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(updatedProductsString2),
+      // });
+      const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/UpdateUnlabelledStock', {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProductsString2[0]),
+        body: formData,
       });
       const rcvdData = await response.json();
       console.log("rcvdData", rcvdData);
@@ -697,7 +756,7 @@ export default function AdminAllUnlabelledList() {
       const updatedProductsString2 = updatedProductsString.map((product) => {
         // Filter out properties with null values
         const filteredProduct = Object.fromEntries(
-          Object.entries(product).filter(([key, value]) => value !== null)
+            Object.entries(product).filter(([key, value]) => value !== null)
         );
         return filteredProduct;
       });
@@ -734,7 +793,7 @@ export default function AdminAllUnlabelledList() {
   const scrollToCenter = (elementId) => {
     const element = document.getElementById(elementId);
     const scrollableDiv = document.getElementById(
-      "adminUnlabelledStockMainItemsBox"
+        "adminUnlabelledStockMainItemsBox"
     );
     if (element) {
       element.scrollIntoView({
@@ -747,7 +806,7 @@ export default function AdminAllUnlabelledList() {
     }
   };
   const handleQuantityChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setShowAddBtn(false);
     // Check if the input is empty and reset the quantity to its original value
     if (value === "") {
@@ -761,9 +820,9 @@ export default function AdminAllUnlabelledList() {
 
     // Check if the new quantity is a valid number, not negative, and less than or equal to the original quantity
     if (
-      !isNaN(newQuantity) &&
-      newQuantity >= 0 &&
-      newQuantity <= selectedEditItem[0].quantity
+        !isNaN(newQuantity) &&
+        newQuantity >= 0 &&
+        newQuantity <= selectedEditItem[0].quantity
     ) {
       // Update the state with the new quantity
       setSelectEditQuantity(newQuantity);
@@ -793,8 +852,8 @@ export default function AdminAllUnlabelledList() {
     formData.append("Category_id", selectedEditItem[0].category_id);
     formData.append("Category_Name", selectedEditItem[0].category_Name);
     formData.append(
-      "ProductTypeId",
-      parseInt(selectedEditItem[0].productTypeId)
+        "ProductTypeId",
+        parseInt(selectedEditItem[0].productTypeId)
     );
     formData.append("CollectionId", parseInt(selectedEditItem[0].collectionId));
     formData.append("PartyTypeId", parseInt(selectedEditItem[0].partyTypeId));
@@ -836,14 +895,14 @@ export default function AdminAllUnlabelledList() {
     formData.append("Making_Fixed_Amt", selectedEditItem[0].making_Fixed_Amt);
     formData.append("Making_per_gram", selectedEditItem[0].making_per_gram);
     formData.append(
-      "Making_Percentage",
-      selectedEditItem[0].making_Percentage !== ""
-        ? selectedEditItem[0].making_Percentage
-        : "0"
+        "Making_Percentage",
+        selectedEditItem[0].making_Percentage !== ""
+            ? selectedEditItem[0].making_Percentage
+            : "0"
     );
     formData.append(
-      "Making_Fixed_Wastage",
-      selectedEditItem[0].making_Fixed_Wastage
+        "Making_Fixed_Wastage",
+        selectedEditItem[0].making_Fixed_Wastage
     );
     formData.append("StoneAmount", selectedEditItem[0].stoneAmount);
     formData.append("Featured", selectedEditItem[0].featured);
@@ -914,7 +973,7 @@ export default function AdminAllUnlabelledList() {
 
     // Find a matching product in the rifdData array based on uppercaseBarcodeNumber
     const matchingProduct = rifdData.find(
-      (item) => item.barcodeNumber === uppercaseBarcodeNumber
+        (item) => item.barcodeNumber === uppercaseBarcodeNumber
     );
 
     setBarcodeNumbersArray((prevBarcodeNumbersArray) => {
@@ -973,14 +1032,14 @@ export default function AdminAllUnlabelledList() {
   const handleCheckTidValues = () => {
     // Check if all tid values are non-empty, unique, and do not include the word 'value'
     const uniqueTidValues = new Set(
-      barcodeNumbersArray.map((item) => {
-        const tidValue = Object.values(item)[0];
-        return tidValue !== null &&
+        barcodeNumbersArray.map((item) => {
+          const tidValue = Object.values(item)[0];
+          return tidValue !== null &&
           tidValue !== "" &&
           !tidValue.toLowerCase().includes("value")
-          ? tidValue
-          : null;
-      })
+              ? tidValue
+              : null;
+        })
     );
 
     // Check if all barcode numbers are unique and do not include their key names
@@ -988,18 +1047,18 @@ export default function AdminAllUnlabelledList() {
       const barcodeNumber = Object.keys(item)[0];
       const tidValue = Object.values(item)[0];
       return (
-        barcodeNumber !== tidValue &&
-        !barcodeNumber.toLowerCase().includes("key")
+          barcodeNumber !== tidValue &&
+          !barcodeNumber.toLowerCase().includes("key")
       );
     });
 
     if (
-      uniqueTidValues.size === barcodeNumbersArray.length &&
-      allBarcodeNumbersValid
+        uniqueTidValues.size === barcodeNumbersArray.length &&
+        allBarcodeNumbersValid
     ) {
       // Generate barcodeNumberString and tidNumberString
       const barcodeNumberString = Array.from(
-        barcodeNumbersArray.map((item) => Object.keys(item)[0])
+          barcodeNumbersArray.map((item) => Object.keys(item)[0])
       ).join(","); // Join barcode numbers with commas
       const tidNumberString = Array.from(uniqueTidValues).join(","); // Join unique tid values with commas
 
@@ -1025,7 +1084,7 @@ export default function AdminAllUnlabelledList() {
     } else {
       if (uniqueTidValues.size !== barcodeNumbersArray.length) {
         alert(
-          "Not all tid values are non-empty, unique, or contain the word 'value'."
+            "Not all tid values are non-empty, unique, or contain the word 'value'."
         );
       }
 
@@ -1036,15 +1095,24 @@ export default function AdminAllUnlabelledList() {
   };
 
   useEffect(() => {
-    fetch(a43)
-      .then((res) => res.json())
-      .then((data) => setRifdData(data.data)),
-      setLoadingAdd(true);
+    const formData = {
+      ClientCode: clientCode,
+    };
+    fetch(a43, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+        .then((res) => res.json())
+        .then((data) => setRifdData(data.data)),
+        setLoadingAdd(true);
   }, []);
   const handleInputChange2 = (e, productId, property) => {
     // const barcodeInput = document.getElementById("barcodeNumberInput");
     // barcodeInput.style.setProperty("color", "black");
-    const { value } = e.target;
+    const {value} = e.target;
     // setBarCodeAlert(false);
     const updatedProducts = addedProducts.map((product) => {
       if (product.id === productId) {
@@ -1054,7 +1122,7 @@ export default function AdminAllUnlabelledList() {
         const netWt = parseFloat(product.netWt) || 0;
 
         // Update the specific property in the product object
-        let updatedProduct = { ...product, [property]: value };
+        let updatedProduct = {...product, [property]: value};
 
         if (property === "barcodeNumber") {
           // Convert the barcode number to uppercase before doing the comparison
@@ -1063,7 +1131,7 @@ export default function AdminAllUnlabelledList() {
 
           // Find a matching product in the rifdData array
           const matchingProduct = rifdData.find(
-            (item) => item.barcodeNumber === barcodeValue
+              (item) => item.barcodeNumber === barcodeValue
           );
 
           if (matchingProduct) {
@@ -1095,7 +1163,7 @@ export default function AdminAllUnlabelledList() {
         }
         if (property === "netWt" && !isNaN(value)) {
           updatedProduct.grosswt = parseFloat(
-            parseFloat(stoneWeight) + parseFloat(value)
+              parseFloat(stoneWeight) + parseFloat(value)
           ).toFixed(3);
         }
 
@@ -1121,10 +1189,10 @@ export default function AdminAllUnlabelledList() {
     try {
       // Validate 'grosswt' for all products
       const hasInvalidGrossWt = addedProducts.some(
-        (product) =>
-          (product.grosswt === "" && product.category_Name === "Gold") ||
-          (parseFloat(product.grosswt) === 0 &&
-            product.category_Name === "Gold")
+          (product) =>
+              (product.grosswt === "" && product.category_Name === "Gold") ||
+              (parseFloat(product.grosswt) === 0 &&
+                  product.category_Name === "Gold")
       );
 
       const hasMissingBarcodeAndTid = addedProducts.some((product) => {
@@ -1190,8 +1258,8 @@ export default function AdminAllUnlabelledList() {
         console.log("Total Net Weight:", totalNetWt);
         console.log("Total Stone Weight:", totalStoneWeight);
         handleEditProductsUnlabelled2(
-          "weights",
-          `${totalGrosswt},${totalStoneWeight},${totalNetWt}`
+            "weights",
+            `${totalGrosswt},${totalStoneWeight},${totalNetWt}`
         );
         // console.log("rcvdData", rcvdData);
         //       openLabelInNew(rcvdData.data);
@@ -1210,9 +1278,9 @@ export default function AdminAllUnlabelledList() {
           setLoading(false);
           alert(rcvdData.message); // Show error message
           const productsWithErrors = addedProducts.map((product) =>
-            product.barcodeNumber === rcvdData.errorBarcode
-              ? { ...product, hasError: true }
-              : product
+              product.barcodeNumber === rcvdData.errorBarcode
+                  ? {...product, hasError: true}
+                  : product
           );
           setAddedProducts(productsWithErrors);
           // console.log("rcvdDataErrorAdded", addedProducts);
@@ -1277,27 +1345,27 @@ export default function AdminAllUnlabelledList() {
         doc.text(`G.WT: ${parseFloat(grosswt).toFixed(3)}`, 3, 3);
         doc.text(`S.WT: ${parseFloat(stoneWeight).toFixed(3)}`, 3, 5.5);
         if (
-          parseFloat(making_Percentage) !== 0 &&
-          making_Percentage !== "" &&
-          making_Fixed_Wastage !== 0 &&
-          making_Fixed_Wastage !== ""
+            parseFloat(making_Percentage) !== 0 &&
+            making_Percentage !== "" &&
+            making_Fixed_Wastage !== 0 &&
+            making_Fixed_Wastage !== ""
         ) {
           doc.text(
-            `W.WT: ${(
-              parseFloat(netWt) / parseFloat(making_Percentage) +
-              parseFloat(making_Fixed_Wastage)
-            ).toFixed(3)}`,
-            3,
-            7.5
+              `W.WT: ${(
+                  parseFloat(netWt) / parseFloat(making_Percentage) +
+                  parseFloat(making_Fixed_Wastage)
+              ).toFixed(3)}`,
+              3,
+              7.5
           );
           doc.text(
-            `N.WT: ${(
-              parseFloat(netWt) +
-              parseFloat(netWt / making_Percentage) +
-              parseFloat(making_Fixed_Wastage)
-            ).toFixed(3)}`,
-            3,
-            10
+              `N.WT: ${(
+                  parseFloat(netWt) +
+                  parseFloat(netWt / making_Percentage) +
+                  parseFloat(making_Fixed_Wastage)
+              ).toFixed(3)}`,
+              3,
+              10
           );
 
           doc.text(`${itemCode}`, 18, 3);
@@ -1305,22 +1373,22 @@ export default function AdminAllUnlabelledList() {
           doc.text(`${purity}`, 18, 7.5);
           doc.text(`Pc:${pieces}`, 18, 10);
         } else if (
-          parseFloat(making_Percentage) !== 0 &&
-          making_Percentage !== ""
+            parseFloat(making_Percentage) !== 0 &&
+            making_Percentage !== ""
         ) {
           doc.text(
-            `W.WT: ${(
-              parseFloat(netWt) / parseFloat(making_Percentage)
-            ).toFixed(3)}`,
-            3,
-            7.5
+              `W.WT: ${(
+                  parseFloat(netWt) / parseFloat(making_Percentage)
+              ).toFixed(3)}`,
+              3,
+              7.5
           );
           doc.text(
-            `N.WT: ${(
-              parseFloat(netWt) + parseFloat(netWt / making_Percentage)
-            ).toFixed(3)}`,
-            3,
-            10
+              `N.WT: ${(
+                  parseFloat(netWt) + parseFloat(netWt / making_Percentage)
+              ).toFixed(3)}`,
+              3,
+              10
           );
 
           doc.text(`${itemCode}`, 18, 3);
@@ -1329,16 +1397,16 @@ export default function AdminAllUnlabelledList() {
           doc.text(`Pc:${pieces}`, 18, 10);
         } else if (making_Fixed_Wastage !== 0 && making_Fixed_Wastage !== "") {
           doc.text(
-            `W.WT: ${parseFloat(making_Fixed_Wastage).toFixed(3)}`,
-            3,
-            7.5
+              `W.WT: ${parseFloat(making_Fixed_Wastage).toFixed(3)}`,
+              3,
+              7.5
           );
           doc.text(
-            `N.WT: ${(
-              parseFloat(making_Fixed_Wastage) + parseFloat(netWt)
-            ).toFixed(3)}`,
-            3,
-            10
+              `N.WT: ${(
+                  parseFloat(making_Fixed_Wastage) + parseFloat(netWt)
+              ).toFixed(3)}`,
+              3,
+              10
           );
 
           doc.text(`${itemCode}`, 18, 3);
@@ -1366,137 +1434,137 @@ export default function AdminAllUnlabelledList() {
     const pdfData = doc.output("datauristring");
     const newWindow = window.open();
     newWindow.document.write(
-      `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+        `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
     );
   };
   return (
-    <div>
-      <AdminHeading />
-      <div
-        id="adminUnlabelledStockMainOuterBoxTop"
-        style={{ paddingTop: "130px" }}
-      >
-        <AdminBreadCrump
-          title={"Unlabelled List"}
-          companyName={"Loyalstring"}
-          module={"E-commerce"}
-          page={"Unlabelled List"}
-        />
-
+      <div>
+        <AdminHeading/>
         <div
-          style={{ overflowY: "auto" }}
-          className="adminUnlabelledStockMainOuterBox"
+            id="adminUnlabelledStockMainOuterBoxTop"
+            style={{paddingTop: "130px"}}
         >
-          <div
-            id="adminUnlabelledStockMainItemsBox"
-            className="adminUnlabelledStockMainItemsBox"
-          >
-            <div style={{ padding: "0px" }} className="adminAddCategoryMainBox">
-              <div className="adminAddCategoryInnerBox adminAddCategoryInnerBoxUnlabel">
-                <div className={loading == true ? "loading" : "none"}>
-                  {/* <h1>Loading...</h1> */}
-                  {/* <InfinitySpin width="200" color="#4fa94d" /> */}
-                  <MagnifyingGlass
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="MagnifyingGlass-loading"
-                    wrapperStyle={{}}
-                    wrapperClass="MagnifyingGlass-wrapper"
-                    glassColor="#c0efff"
-                    color="#e15b64"
-                  />
-                </div>
+          <AdminBreadCrump
+              title={"Unlabelled List"}
+              companyName={"Loyalstring"}
+              module={"E-commerce"}
+              page={"Unlabelled List"}
+          />
 
-                {!loading == true ? (
-                  <div>
-                    <div
-                      style={{
-                        width: "100%",
-                        justifyContent: "left",
-                        flexWrap: "wrap",
-                      }}
-                      className="adminAllProductsFilterBox"
-                    >
-                      <div className="adminAllProductsFilterCategoryBox">
-                        <select
-                          value={categoryName}
-                          onChange={(e) => {
-                            setCategoryName(e.target.value);
-                            setCurrentPage(1);
-                          }}
+          <div
+              style={{overflowY: "auto"}}
+              className="adminUnlabelledStockMainOuterBox"
+          >
+            <div
+                id="adminUnlabelledStockMainItemsBox"
+                className="adminUnlabelledStockMainItemsBox"
+            >
+              <div style={{padding: "0px"}} className="adminAddCategoryMainBox">
+                <div className="adminAddCategoryInnerBox adminAddCategoryInnerBoxUnlabel">
+                  <div className={loading == true ? "loading" : "none"}>
+                    {/* <h1>Loading...</h1> */}
+                    {/* <InfinitySpin width="200" color="#4fa94d" /> */}
+                    <MagnifyingGlass
+                        visible={true}
+                        height="80"
+                        width="80"
+                        ariaLabel="MagnifyingGlass-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="MagnifyingGlass-wrapper"
+                        glassColor="#c0efff"
+                        color="#e15b64"
+                    />
+                  </div>
+
+                  {!loading == true ? (
+                      <div>
+                        <div
+                            style={{
+                              width: "100%",
+                              justifyContent: "left",
+                              flexWrap: "wrap",
+                            }}
+                            className="adminAllProductsFilterBox"
                         >
-                          <option value="">Select Category</option>
-                          {allCategories.map((x) => {
-                            return (
-                              <option value={`${x.id},${x.name}`}>
-                                {x.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                        <select
-                          value={productName}
-                          onChange={(e) => {
-                            setProductName(e.target.value);
-                            setCurrentPage(1);
-                            setCollectionName("");
-                          }}
-                        >
-                          <option value="">Select Product Type</option>
-                          {filteredProductTypes.map((x) => {
-                            return (
-                              <option
-                                value={`${parseInt(x.id)},${x.productTitle}`}
-                              >
-                                {x.productTitle}
-                              </option>
-                            );
-                          })}
-                        </select>
-                        <select
-                          value={collectionName}
-                          onChange={(e) => {
-                            setCollectionName(e.target.value);
-                            setCurrentPage(1);
-                          }}
-                        >
-                          <option value="">Select Collection</option>
-                          {filteredCollection.map((x) => {
-                            return (
-                              <option
-                                value={`${parseInt(x.id)},${x.collection_Name}`}
-                              >
-                                {x.collection_Name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                      <div className="adminAllProductsFilterDatesBox">
-                        {/* <div
+                          <div className="adminAllProductsFilterCategoryBox">
+                            <select
+                                value={categoryName}
+                                onChange={(e) => {
+                                  setCategoryName(e.target.value);
+                                  setCurrentPage(1);
+                                }}
+                            >
+                              <option value="">Select Category</option>
+                              {allCategories.map((x) => {
+                                return (
+                                    <option value={`${x.id},${x.name}`}>
+                                      {x.name}
+                                    </option>
+                                );
+                              })}
+                            </select>
+                            <select
+                                value={productName}
+                                onChange={(e) => {
+                                  setProductName(e.target.value);
+                                  setCurrentPage(1);
+                                  setCollectionName("");
+                                }}
+                            >
+                              <option value="">Select Product Type</option>
+                              {filteredProductTypes.map((x) => {
+                                return (
+                                    <option
+                                        value={`${parseInt(x.id)},${x.productTitle}`}
+                                    >
+                                      {x.productTitle}
+                                    </option>
+                                );
+                              })}
+                            </select>
+                            <select
+                                value={collectionName}
+                                onChange={(e) => {
+                                  setCollectionName(e.target.value);
+                                  setCurrentPage(1);
+                                }}
+                            >
+                              <option value="">Select Collection</option>
+                              {filteredCollection.map((x) => {
+                                return (
+                                    <option
+                                        value={`${parseInt(x.id)},${x.collection_Name}`}
+                                    >
+                                      {x.collection_Name}
+                                    </option>
+                                );
+                              })}
+                            </select>
+                          </div>
+                          <div className="adminAllProductsFilterDatesBox">
+                            {/* <div
                         style={{
                           display: "flex",
                           marginTop: "1rem",
                           alignItems: "center",
                         }}
                       > */}
-                        <input
-                          type="date"
-                          placeholder="From Date"
-                          value={fromDate}
-                          onChange={(e) => setFromDate(e.target.value)}
-                        />
+                            <input
+                                type="date"
+                                placeholder="From Date"
+                                value={fromDate}
+                                onChange={(e) => setFromDate(e.target.value)}
+                            />
 
-                        <input
-                          // style={{ margin: "1rem" }}
-                          type="date"
-                          placeholder="To Date"
-                          value={toDate}
-                          onChange={(e) => setToDate(e.target.value)}
-                        />
+                            <input
+                                // style={{ margin: "1rem" }}
+                                type="date"
+                                placeholder="To Date"
+                                value={toDate}
+                                onChange={(e) => setToDate(e.target.value)}
+                            />
 
-                        {/* <AiOutlineEdit
+                            {/* <AiOutlineEdit
                       className="labelledListEditIcon"
                       style={{ padding: "5px" }}
                       size={"1.5rem"}
@@ -1507,145 +1575,145 @@ export default function AdminAllUnlabelledList() {
                           setDeleteSelectedButton(false);
                       }}
                     /> */}
-                      </div>
-                      <div className="adminAllLabelledListButtonBox">
-                        <button onClick={printList}>Print List</button>
+                          </div>
+                          <div className="adminAllLabelledListButtonBox">
+                            <button onClick={printList}>Print List</button>
 
-                        <button
-                          onClick={() => {
-                            setSelectedProducts([]),
-                              setSelectAll(false),
-                              setCategoryName(""),
-                              setProductName(""),
-                              setCollectionName(""),
-                              setFromDate(""),
-                              setToDate(""),
-                              setFilteredProducts(allProducts);
-                          }}
-                        >
-                          Reset
-                        </button>
-                        {deleteSelectedButton ? (
-                          <button
-                            onClick={() => deleteAllProducts(selectedItems)}
-                            style={{
-                              backgroundColor: "#c14456",
-                              color: "white",
-                            }}
-                          >
-                            Delete Selected
-                          </button>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div style={{ overflowX: "auto" }}>
-                      <table
-                        className="adminInventoryMainTable"
-                        style={{
-                          width: "100%",
-                          marginTop: "20px",
-                          marginLeft: "1rem",
-
-                          boxSizing: "border-box",
-                        }}
-                      >
-                        <thead>
-                          <tr>
-                            {deleteSelected ? <th>Delete Item</th> : null}
-                            <th>S.No</th>
-                            <th>Collection Name</th>
-                            <th>Gross Wt</th>
-                            <th>Stone WT</th>
-                            <th>Net Wt</th>
-                            <th>Quantity</th>
-                            <th>Branch</th>
-                            <th>Edit</th>
-                            <th>Select</th>
-                          </tr>
-                        </thead>
-                        <tbody style={{ position: "relative" }}>
-                          {currentProducts.map((x, index) => (
-                            <tr key={x.id}>
-                              {/* <td>{index}</td> */}
-                              {deleteSelected ? (
-                                <td>
-                                  <input
+                            <button
+                                onClick={() => {
+                                  setSelectedProducts([]),
+                                      setSelectAll(false),
+                                      setCategoryName(""),
+                                      setProductName(""),
+                                      setCollectionName(""),
+                                      setFromDate(""),
+                                      setToDate(""),
+                                      setFilteredProducts(allProducts);
+                                }}
+                            >
+                              Reset
+                            </button>
+                            {deleteSelectedButton ? (
+                                <button
+                                    onClick={() => deleteAllProducts(selectedItems)}
                                     style={{
-                                      width: "15px",
-                                      height: "15px",
-                                      color: "red",
+                                      backgroundColor: "#c14456",
+                                      color: "white",
                                     }}
-                                    type="checkbox"
-                                    checked={checkedProducts.includes(x.id)}
-                                    onChange={() =>
-                                      handleDeleteCheckboxChange(
-                                        x.id,
-                                        x.itemCode
-                                      )
-                                    }
-                                  />
-                                </td>
-                              ) : null}
-                              <td>{x.serialNumber}</td>
-                              {/* <td>{x.product_Name}</td> */}
-                              <td
-                                onClick={() => editUnlabelItem(x)}
-                                className="adminAllProductsTitle"
-                              >
-                                {x.collection}
-                              </td>
-                              <td>{parseFloat(x.grosswt).toFixed(3)}</td>
-                              <td>{parseFloat(x.stoneWeight).toFixed(3)}</td>
-                              <td>{parseFloat(x.netWt).toFixed(3)}</td>
-                              <td>{x.quantity}</td>
-                              {/* <td>{x.stoneWeight}</td>
+                                >
+                                  Delete Selected
+                                </button>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div style={{overflowX: "auto"}}>
+                          <table
+                              className="adminInventoryMainTable"
+                              style={{
+                                width: "100%",
+                                marginTop: "20px",
+                                marginLeft: "1rem",
+
+                                boxSizing: "border-box",
+                              }}
+                          >
+                            <thead>
+                            <tr>
+                              {deleteSelected ? <th>Delete Item</th> : null}
+                              <th>S.No</th>
+                              <th>Collection Name</th>
+                              <th>Gross Wt</th>
+                              <th>Stone WT</th>
+                              <th>Net Wt</th>
+                              <th>Quantity</th>
+                              <th>Branch</th>
+                              <th>Edit</th>
+                              <th>Select</th>
+                            </tr>
+                            </thead>
+                            <tbody style={{position: "relative"}}>
+                            {currentProducts.map((x, index) => (
+                                <tr key={x.id}>
+                                  {/* <td>{index}</td> */}
+                                  {deleteSelected ? (
+                                      <td>
+                                        <input
+                                            style={{
+                                              width: "15px",
+                                              height: "15px",
+                                              color: "red",
+                                            }}
+                                            type="checkbox"
+                                            checked={checkedProducts.includes(x.id)}
+                                            onChange={() =>
+                                                handleDeleteCheckboxChange(
+                                                    x.id,
+                                                    x.itemCode
+                                                )
+                                            }
+                                        />
+                                      </td>
+                                  ) : null}
+                                  <td>{x.serialNumber}</td>
+                                  {/* <td>{x.product_Name}</td> */}
+                                  <td
+                                      onClick={() => editUnlabelItem(x)}
+                                      className="adminAllProductsTitle"
+                                  >
+                                    {x.CollectionName}
+                                  </td>
+                                  <td>{parseFloat(x.TotalGrossWt).toFixed(3)}</td>
+                                  <td>{parseFloat(x.TotalStoneWeight).toFixed(3)}</td>
+                                  <td>{parseFloat(x.TotalNetWt).toFixed(3)}</td>
+                                  <td>{x.Quantity}</td>
+                                  {/* <td>{x.stoneWeight}</td>
                     <td>{x.netWt}</td> */}
 
-                              <td>{x.branchName}</td>
-                              {/* <td>{x.making_Percentage}</td> */}
-                              <td
-                                onClick={() => editUnlabelItem(x)}
-                                className="adminAllProductsTitle"
-                              >
-                                Edit
-                              </td>
-                              <td
-                                className="adminAllProductsTitle"
-                                onClick={() => {
-                                  setSelectedEditQuantityBefore(x.quantity),
-                                    openLabelBox(x),
-                                    setPageType("");
-                                  setShowAddBtn(false);
-                                }}
-                              >
-                                Label
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ) : null}
+                                  <td>{x.BranchName}</td>
+                                  {/* <td>{x.making_Percentage}</td> */}
+                                  <td
+                                      onClick={() => editUnlabelItem(x)}
+                                      className="adminAllProductsTitle"
+                                  >
+                                    Edit
+                                  </td>
+                                  <td
+                                      className="adminAllProductsTitle"
+                                      onClick={() => {
+                                        setSelectedEditQuantityBefore(x.quantity),
+                                            openLabelBox(x),
+                                            setPageType("");
+                                        setShowAddBtn(false);
+                                      }}
+                                  >
+                                    Label
+                                  </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                  ) : null}
 
-                <div className="bulkProductAddingTableMain">
-                  <button
-                    onClick={goToPreviousPage}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    onClick={goToNextPage}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
+                  <div className="bulkProductAddingTableMain">
+                    <button
+                        onClick={goToPreviousPage}
+                        disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    <button
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/* <div className="adminInventoryMobilePrintButtonsBox">
+            {/* <div className="adminInventoryMobilePrintButtonsBox">
             <button onClick={printList}>Print List</button>
 
             <button
@@ -1670,254 +1738,978 @@ export default function AdminAllUnlabelledList() {
               </button>
             ) : null}
           </div> */}
-          <div
-            id="adminUnlabelledStockMainAddLabelBox"
-            // className="adminUnlabelledStockMainAddLabelBox"
-          >
-            {pageType === "Edit" ? (
-              <div
-                style={{
-                  overflowX: "auto",
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                className="adminAddCategoryMainBox"
-              >
-                <div
-                  style={{
-                    width: "90%",
-                    minHeight: "100px",
-                    marginBottom: "50px",
-                  }}
-                  className="adminAddCategoryInnerBox"
-                >
-                  {/* <h4 className="adminInvoiceAddTitles">Add Product</h4> */}
-                  <div className="adminUnlabelledListEditDetailsMainBox">
+            <div
+                id="adminUnlabelledStockMainAddLabelBox"
+                // className="adminUnlabelledStockMainAddLabelBox"
+            >
+              {pageType === "Edit" ? (
+                  <div
+                      style={{
+                        overflowX: "auto",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                      className="adminAddCategoryMainBox"
+                  >
                     <div
-                      style={{ marginBottom: "1rem" }}
-                      className={loading == true ? "loading" : "none"}
+                        style={{
+                          width: "90%",
+                          minHeight: "100px",
+                          marginBottom: "50px",
+                        }}
+                        className="adminAddCategoryInnerBox"
                     >
-                      <InfinitySpin
-                        className={loading == true ? "loading" : "none"}
-                        width="150"
-                        color="#4fa94d"
-                      />
+                      {/* <h4 className="adminInvoiceAddTitles">Add Product</h4> */}
+                      <div className="adminUnlabelledListEditDetailsMainBox">
+                        <div
+                            style={{marginBottom: "1rem"}}
+                            className={loading == true ? "loading" : "none"}
+                        >
+                          <InfinitySpin
+                              className={loading == true ? "loading" : "none"}
+                              width="150"
+                              color="#4fa94d"
+                          />
+                        </div>
+                        <div
+                            id="adminAddBulkStockAddedTitleStatement"
+                            className="adminAddBulkStockShowEditBox"
+                        >
+                          <h3
+                              style={{
+                                margin: "0px",
+                                padding: "0px",
+                              }}
+                              className="adminAddBulkStockAddedTitle"
+                          >
+                            Edit Item
+                          </h3>
+                          <div className="adminAddBulkStockShowEditButton">
+                            <AiOutlineEdit
+                                onClick={() => setShowAllFields(!showAllFields)}
+                                size={"20px"}
+                            />
+                          </div>
+                        </div>
+                        <div
+                            style={{marginBottom: "0px"}}
+                            id="adminAddBulkStockAddedProductsOuterBox"
+                            className="adminAddBulkStockAddedProductsOuterBox"
+                        >
+                          {/* <form onSubmit={updatedetailsBox}> */}
+                          {console.log("SHOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW : ", selectedEditItem[0].CategoryName)}
+                          {showAllFields ? (
+                              <div
+                                  className="bulkProductAddingTableMain"
+                                  style={{margin: "1.5rem", overflowX: "auto"}}
+                              >
+                                <table>
+                                  <thead>
+                                  <tr style={{whiteSpace: "nowrap"}}>
+                                    {selectedEditItem[0].CategoryName == 'LOOSE DIAMOND' ? (
+                                        <>
+                                          <th>Diamond Shape</th>
+                                          <th>Diamond Clarity</th>
+                                          <th>Diamond Colour</th>
+                                          <th>Diamond Cut</th>
+                                          <th>Diamond Size</th>
+                                          <th>Sieve</th>
+                                          <th>Diamond Weight</th>
+                                          <th>Sell rate</th>
+                                          <th>Quantity</th>
+                                          <th>Packet</th>
+                                          <th>Total Weight</th>
+                                          <th>Total Amount</th>
+                                          <th>Setting Type</th>
+                                          <th>Certificate</th>
+                                          <th>Description</th>
+                                        </>) : (
+                                        <>
+                                          <th>Metal</th>
+                                          <th>Product Type</th>
+                                          <th>Collection</th>
+                                          <th>Purity</th>
+                                          <th>Quantity</th>
+                                          <th>GrossWt</th>
+                                          <th>StoneWt</th>
+                                          <th>NetWt</th>
+                                          <th>Making Per Gram</th>
+                                          <th>Making Percentage</th>
+                                          <th>Fixed Making</th>
+                                          <th>Fixed Wastage</th>
+                                          <th>Pieces</th>
+                                          <th>Size</th>
+                                          <th>Description</th>
+                                          <th>Occasion</th>
+                                          <th>Gender</th>
+                                          <th>Featured</th>
+                                          <th>Online Status</th>
+                                        </>
+                                    )}
+                                  </tr>
+                                  </thead>
+
+                                  <tbody>
+                                  {selectedEditItem.map((x) => (
+                                      // <tr key={x.Customer_id}>
+
+                                      <tr key={x.id}>
+                                        {x.CategoryName == 'LOOSE DIAMOND' ? (
+                                            <>
+                                              <td>
+                                                <input
+                                                    id="DiamondShape"
+                                                    type="text"
+                                                    placeholder={x.DiamondShape}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondShape")}
+                                                    readOnly
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondClarity"
+                                                    type="text"
+                                                    placeholder={x.DiamondClarity}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondClarity")}
+                                                    readOnly
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondColour"
+                                                    type="text"
+                                                    placeholder={x.DiamondColour}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondColour")}
+                                                    readOnly
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondCut"
+                                                    type="text"
+                                                    placeholder={x.DiamondCut}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondCut")}
+                                                    readOnly
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondSize"
+                                                    type="text"
+                                                    placeholder={x.DiamondSize}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondSize")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="Sieve"
+                                                    type="text"
+                                                    placeholder={x.Sieve}
+                                                    onChange={(e) => handleInputChange(e, x.id, "Sieve")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondWeight"
+                                                    type="text"
+                                                    placeholder={x.DiamondWeight}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondWeight")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondSellRate"
+                                                    type="text"
+                                                    placeholder={x.DiamondSellRate}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondSellRate")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="Quantity"
+                                                    type="text"
+                                                    placeholder={x.Quantity}
+                                                    onChange={(e) => handleInputChange(e, x.id, "Quantity")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="PacketId"
+                                                    type="text"
+                                                    placeholder={x.PacketId}
+                                                    onChange={(e) => handleInputChange(e, x.id, "PacketId")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="TotalDiamondWeight"
+                                                    type="text"
+                                                    placeholder={x.TotalDiamondWeight}
+                                                    onChange={(e) => handleInputChange(e, x.id, "TotalDiamondWeight")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="TotalDiamondAmount"
+                                                    type="text"
+                                                    placeholder={x.TotalDiamondAmount}
+                                                    onChange={(e) => handleInputChange(e, x.id, "TotalDiamondAmount")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondSettingType"
+                                                    type="text"
+                                                    placeholder={x.DiamondSettingType}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondSettingType")}
+                                                    readOnly
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondCertificate"
+                                                    type="text"
+                                                    placeholder={x.DiamondCertificate}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondCertificate")}
+                                                />
+                                              </td>
+                                              <td>
+                                                <input
+                                                    id="DiamondDescription"
+                                                    type="text"
+                                                    placeholder={x.DiamondDescription}
+                                                    onChange={(e) => handleInputChange(e, x.id, "DiamondDescription")}
+                                                />
+                                              </td>
+                                            </>
+                                        ) : (<>
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.CategoryName}
+                                                value={x.CategoryName}
+                                                // onChange={(e) =>
+                                                //   handleInputChange(
+                                                //     e,
+                                                //     x.id,
+                                                //     "category_Name"
+                                                //   )
+                                                // }
+                                                readOnly
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.MetalName}
+                                                value={x.MetalName}
+                                                // onChange={(e) =>
+                                                //   handleInputChange(e, x.id, "product_type")
+                                                // }
+                                                readOnly
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.CollectionName}
+                                                value={x.CollectionName}
+                                                // onChange={(e) =>
+                                                //   handleInputChange(e, x.id, "collection")
+                                                // }
+                                                readOnly
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.PurityName}
+                                                value={x.PurityName}
+                                                // onChange={(e) =>
+                                                //   handleInputChange(e, x.id, "purity")
+                                                // }
+                                                readOnly
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.Quantity}
+                                                value={x.Quantity}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "Quantity")
+                                                }
+                                                // onChange={() => {
+                                                //   setPurity(x.purity);
+                                                // }}
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.TotalGrossWt}
+                                                value={x.TotalGrossWt}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "TotalGrossWt")
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.TotalStoneWeight}
+                                                value={x.TotalStoneWeight}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        e,
+                                                        x.id,
+                                                        "TotalStoneWeight"
+                                                    )
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.TotalNetWt}
+                                                value={x.TotalNetWt}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "TotalNetWt")
+                                                }
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.MakingPerGram}
+                                                value={x.MakingPerGram}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        e,
+                                                        x.id,
+                                                        "MakingPerGram"
+                                                    )
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.MakingPercentage}
+                                                value={x.MakingPercentage}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        e,
+                                                        x.id,
+                                                        "MakingPercentage"
+                                                    )
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.MakingFixedAmt}
+                                                value={x.MakingFixedAmt}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        e,
+                                                        x.id,
+                                                        "MakingFixedAmt"
+                                                    )
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.MakingFixedWastage}
+                                                value={x.MakingFixedWastage}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        e,
+                                                        x.id,
+                                                        "MakingFixedWastage"
+                                                    )
+                                                }
+                                            />
+                                          </td>
+                                          {/* <td>
+                                <input
+                                  type="number"
+                                  placeholder={x.pieces}
+                                  onChange={(e) =>
+                                    handleInputChange(e, x.id, "pieces")
+                                  }
+                                />
+                              </td> */}
+                                          <td>
+                                            <input
+                                                type="number"
+                                                value={x.Pieces}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "Pieces")
+                                                }
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="number"
+                                                placeholder={x.Size}
+                                                value={x.Size}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "Size")
+                                                }
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.Description}
+                                                value={x.Description}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        e,
+                                                        x.id,
+                                                        "Description"
+                                                    )
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.OccasionName}
+                                                value={x.OccasionName}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "OccasionName")
+                                                }
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.Gender}
+                                                value={x.Gender}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "Gender")
+                                                }
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.Featured}
+                                                value={x.Featured}
+                                                onChange={(e) =>
+                                                    handleInputChange(e, x.id, "Featured")
+                                                }
+                                            />
+                                          </td>
+
+                                          <td>
+                                            <input
+                                                type="text"
+                                                placeholder={x.Status}
+                                                value={x.Status}
+                                                readOnly
+                                            />
+                                          </td>
+                                        </>)}
+                                      </tr>
+                                  ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                          ) : (
+                              <div
+                                  className="bulkProductAddingTableMain bulkProductAddingTableMain2"
+                                  style={{margin: "1.5rem", overflowX: "auto"}}
+                              >
+                                <table>
+                                  <thead>
+                                  <tr>
+                                    {/* <th style={{ whiteSpace: "nowrap" }}>
+                              Delete Product
+                            </th> */}
+                                    {/* <th>Product Type</th> */}
+                                    {selectedEditItem[0].CategoryName == 'LOOSE DIAMOND' ? (<>
+                                          <th>Diamond Shape</th>
+                                          <th>Diamond Clarity</th>
+                                          <th>Diamond Colour</th>
+                                          <th>Diamond Cut</th>
+                                          <th>Diamond Size</th>
+                                          <th>Sleve</th>
+                                          <th>Diamond Weight</th>
+                                          <th>Sell rate</th>
+                                          <th>Quantity</th>
+                                        </>)
+                                        : (<>
+                                          <th>Metal</th>
+                                          <th>Collection</th>
+                                          <th>Purity</th>
+                                          <th>GrossWt</th>
+                                          <th>StoneWt</th>
+                                          <th>NetWt</th>
+                                          <th>Quantity</th>
+                                          <th>Pieces</th>
+                                        </>)}
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {selectedEditItem.map((x) => (
+                                      <tr key={x.id}>
+                                        {x.CategoryName == 'LOOSE DIAMOND' ? (<>
+                                              <td><input type="text" placeholder={x.DiamondShape}
+                                                         readOnly/></td>
+                                              <td><input type="text"
+                                                         placeholder={x.DiamondClarity} readOnly/>
+                                              </td>
+                                              <td><input type="text" placeholder={x.DiamondColour}
+                                                         readOnly/></td>
+                                              <td><input type="text" placeholder={x.DiamondCut}
+                                                         readOnly/></td>
+                                              <td><input type="text" placeholder={x.DiamondSize}
+                                                         readOnly/></td>
+                                              <td><input type="text" placeholder={x.Sieve}
+                                                         readOnly/></td>
+                                              <td><input type="text" placeholder={x.DiamondWeight}
+                                                         readOnly/></td>
+                                              <td><input type="text"
+                                                         placeholder={x.DiamondSellRate}
+                                                         readOnly/></td>
+                                              <td><input type="number" value={x.Quantity}
+                                                         onChange={(e) => handleInputChange(e, x.id, "Quantity")}/>
+                                              </td>
+                                            </>) :
+                                            (
+                                                <>
+                                                  <td>
+                                                    <input
+                                                        type="text"
+                                                        placeholder={x.CategoryName}
+                                                        value={x.CategoryName}
+                                                        readOnly
+                                                    />
+                                                  </td>
+
+                                                  <td>
+                                                    <input
+                                                        type="text"
+                                                        placeholder={x.CollectionName}
+                                                        value={x.CollectionName}
+                                                        readOnly
+                                                    />
+                                                  </td>
+                                                  <td>
+                                                    <input
+                                                        type="text"
+                                                        placeholder={x.PurityName}
+                                                        value={x.PurityName}
+                                                        readOnly
+                                                    />
+                                                  </td>
+
+                                                  <td>
+                                                    <input
+                                                        type="number"
+                                                        placeholder={x.TotalGrossWt}
+                                                        value={x.TotalGrossWt}
+                                                        onChange={(e) =>
+                                                            handleInputChange(e, x.id, "TotalGrossWt")
+                                                        }
+                                                    />
+                                                  </td>
+
+                                                  <td>
+                                                    <input
+                                                        type="number"
+                                                        placeholder={x.TotalStoneWeight}
+                                                        value={x.TotalStoneWeight}
+                                                        onChange={(e) =>
+                                                            handleInputChange(
+                                                                e,
+                                                                x.id,
+                                                                "TotalStoneWeight"
+                                                            )
+                                                        }
+                                                    />
+                                                  </td>
+                                                  <td>
+                                                    <input
+                                                        type="number"
+                                                        placeholder={x.TotalNetWt}
+                                                        value={x.TotalNetWt}
+                                                        onChange={(e) =>
+                                                            handleInputChange(e, x.id, "TotalNetWt")
+                                                        }
+                                                    />
+                                                  </td>
+
+                                                  <td>
+                                                    <input
+                                                        type="number"
+                                                        placeholder={x.Quantity}
+                                                        value={x.Quantity}
+                                                        onChange={(e) =>
+                                                            handleInputChange(e, x.id, "Quantity")
+                                                        }
+                                                    />
+                                                  </td>
+
+                                                  <td>
+                                                    <input
+                                                        type="number"
+                                                        placeholder={x.Pieces}
+                                                        value={x.Pieces}
+                                                        onChange={(e) =>
+                                                            handleInputChange(e, x.id, "Pieces")
+                                                        }
+                                                    />
+                                                  </td>
+                                                </>)}
+                                      </tr>
+                                  ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              // </div>
+                          )}
+                          <div className="bulkProductAddingTableMain">
+                            <button
+                                onClick={() => {
+                                  if (selectedEditItem) {
+                                    handleEditProductsUnlabelled();
+                                  }
+                                }}
+                            >
+                              Update
+                            </button>
+                            <button
+                                onClick={() => {
+                                  setSelectEditItem([]);
+                                  scrollToCenter("adminUnlabelledStockMainItemsBox");
+                                }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div
+                  </div>
+              ) : null}
+            </div>
+            {labelItemBox ? (
+                <div className="adminUnlabelledLabelItemMainBox">
+                  <div className="adminInvoiceOpenEditMainBox">
+                    <div className="adminInvoiceOpenEditInnerBox">
+                      <div className="adminInvoiceOpenEditInnerTitleBox">
+                        <p>Edit Item</p>
+                        <button
+                            onClick={() => {
+                              setLabelItemBox(false);
+                              setSelectEditQuantity(0);
+                            }}
+                            className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
+                        >
+                          <RxCross2 size={"25px"}/>
+                        </button>
+                      </div>
+                      <div className="adminInvoiceOpenEditOuterGridBox">
+                        {/* <div className="adminInvoiceOpenEditInnerGridItem"> */}
+                        <p>Enter Quantity to be Labelled</p>
+                        <input
+                            type="number"
+                            value={selectedEditQuantity}
+                            onChange={(e) => {
+                              handleQuantityChange(e);
+                            }}
+                        />
+                        {/* </div> */}
+                        {/* <div className="adminInvoiceOpenEditInnerGridItem"> */}
+                        <p>Remaining Quantity </p>
+                        <input
+                            style={{cursor: "not-allowed"}}
+                            type="number"
+                            readOnly
+                            value={selectedEditQuantityBefore}
+                        />
+                        {/* </div> */}
+                        {showAddBtn ? (
+                            <div className="adminInvoiceOpenEditInnerGridItem">
+                              <button
+                                  onClick={(e) => {
+                                    handleSubmit(e);
+                                  }}
+                                  className="adminInvoiceEditProductSaveButton"
+                              >
+                                Add
+                              </button>
+                            </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            ) : null}
+            {addedProducts.length > 0 ? (
+                <>
+                  <div
+                      style={{
+                        width: "80%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                      onClick={() =>
+                          scrollToCenter("adminAddBulkStockAddedProductsOuterBox")
+                      }
                       id="adminAddBulkStockAddedTitleStatement"
                       className="adminAddBulkStockShowEditBox"
-                    >
-                      <h3
+                  >
+                    <h3
                         style={{
                           margin: "0px",
                           padding: "0px",
                         }}
                         className="adminAddBulkStockAddedTitle"
-                      >
-                        Edit Item
-                      </h3>
-                      <div className="adminAddBulkStockShowEditButton">
-                        <AiOutlineEdit
+                    >
+                      Added Products
+                    </h3>
+                    <div className="adminAddBulkStockShowEditButton">
+                      <AiOutlineEdit
                           onClick={() => setShowAllFields(!showAllFields)}
                           size={"20px"}
-                        />
-                      </div>
+                      />
                     </div>
-                    <div
-                      style={{ marginBottom: "0px" }}
+                  </div>
+                  <div
+                      style={{width: "85%", whiteSpace: "nowrap"}}
                       id="adminAddBulkStockAddedProductsOuterBox"
                       className="adminAddBulkStockAddedProductsOuterBox"
-                    >
-                      {/* <form onSubmit={updatedetailsBox}> */}
-                      {showAllFields ? (
+                  >
+                    {/* <form onSubmit={updatedetailsBox}> */}
+                    {showAllFields ? (
                         <div
-                          className="bulkProductAddingTableMain"
-                          style={{ margin: "1.5rem", overflowX: "auto" }}
+                            className="bulkProductAddingTableMain"
+                            style={{
+                              margin: "1.5rem",
+                              overflowX: "auto",
+                            }}
                         >
                           <table>
                             <thead>
-                              <tr style={{ whiteSpace: "nowrap" }}>
-                                <th>Metal</th>
-                                <th>Product Type</th>
-                                <th>Collection</th>
-                                <th>Purity</th>
-                                <th>Quantity</th>
-                                <th>GrossWt</th>
-                                <th>StoneWt</th>
-                                <th>NetWt</th>
-                                <th>Making Per Gram</th>
-                                <th>Making Percentage</th>
-                                <th>Fixed Making</th>
-                                <th>Fixed Wastage</th>
-                                <th>Pieces</th>
-                                <th>Size</th>
-                                <th>Description</th>
-                                <th>Occasion</th>
-                                <th>Gender</th>
-                                <th>Featured</th>
-                                <th>Online Status</th>
-                              </tr>
+                            <tr style={{whiteSpace: "nowrap"}}>
+                              <th>Product Type</th>
+                              <th>Collection</th>
+                              <th>Purity</th>
+                              <th>Label</th>
+                              <th>Barcode Number</th>
+                              <th>TID</th>
+                              <th>Product name</th>
+                              <th>HUID Code</th>
+                              <th>GrossWt</th>
+                              <th>StoneWt</th>
+                              <th>NetWt</th>
+                              <th>Stone Amount</th>
+                              <th>Making Per Gram</th>
+                              <th>Making Percentage</th>
+                              <th>Fixed Making</th>
+                              <th>Fixed Wastage</th>
+                              <th>Pieces</th>
+                              <th>Size</th>
+                              <th>MRP</th>
+                              <th>Description</th>
+                              <th>Occassion</th>
+                              <th>Gender</th>
+                              <th>Online Status</th>
+                              <th>Delete Product</th>
+                            </tr>
                             </thead>
 
                             <tbody>
-                              {selectedEditItem.map((x) => (
+                            {addedProducts.map((x) => (
                                 // <tr key={x.Customer_id}>
 
                                 <tr key={x.id}>
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.category_Name}
-                                      value={x.category_Name}
-                                      // onChange={(e) =>
-                                      //   handleInputChange(
-                                      //     e,
-                                      //     x.id,
-                                      //     "category_Name"
-                                      //   )
-                                      // }
-                                      readOnly
+                                        type="text"
+                                        placeholder={x.product_type}
+                                        readOnly
+                                        // value={x.product_type}
+                                        // onChange={(e) => handleInputChange(e, x.id, "Product_type")}
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                        type="text"
+                                        placeholder={x.collection}
+                                        value={x.collection}
+                                        readOnly
+                                        // onChange={(e) => handleInputChange(e, x.id, "collection")}
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                        type="text"
+                                        placeholder={x.purity}
+                                        value={x.purity}
+                                        readOnly
+                                        // onChange={() => {
+                                        //   setPurity(x.purity);
+                                        // }}
                                     />
                                   </td>
 
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.product_type}
-                                      value={x.product_type}
-                                      // onChange={(e) =>
-                                      //   handleInputChange(e, x.id, "product_type")
-                                      // }
-                                      readOnly
+                                        type="text"
+                                        placeholder={x.itemCode}
+                                        value={x.itemCode}
+                                        //   onChange={() => {
+                                        //     setItemCode(x.itemCode);
+                                        //   }}
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.collection}
-                                      value={x.collection}
-                                      // onChange={(e) =>
-                                      //   handleInputChange(e, x.id, "collection")
-                                      // }
-                                      readOnly
+                                        id="barcodeNumberInput"
+                                        type="text"
+                                        placeholder={x.barcodeNumber}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "barcodeNumber")
+                                        }
+                                        style={{
+                                          color: x.hasError ? "red" : "black",
+                                        }}
+                                        //     setItemCode(x.itemCode);
+                                        //   }}
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.purity}
-                                      value={x.purity}
-                                      // onChange={(e) =>
-                                      //   handleInputChange(e, x.id, "purity")
-                                      // }
-                                      readOnly
-                                    />
-                                  </td>
-
-                                  <td>
-                                    <input
-                                      type="text"
-                                      placeholder={x.quantity}
-                                      value={x.quantity}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "quantity")
-                                      }
-                                      // onChange={() => {
-                                      //   setPurity(x.purity);
-                                      // }}
+                                        style={{cursor: "not-allowed"}}
+                                        type="text"
+                                        placeholder={x.tid}
                                     />
                                   </td>
 
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.grosswt}
-                                      value={x.grosswt}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "grosswt")
-                                      }
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      placeholder={x.stoneWeight}
-                                      value={x.stoneWeight}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "stoneWeight"
-                                        )
-                                      }
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="number"
-                                      placeholder={x.netWt}
-                                      value={x.netWt}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "netWt")
-                                      }
+                                        type="text"
+                                        placeholder={x.product_Name}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "product_Name")
+                                        }
                                     />
                                   </td>
 
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.making_per_gram}
-                                      value={x.making_per_gram}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "making_per_gram"
-                                        )
-                                      }
+                                        type="text"
+                                        maxLength={6}
+                                        placeholder={x.huidCode}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "huidCode")
+                                        }
+                                    />
+                                  </td>
+
+                                  <td>
+                                    <input
+                                        type="number"
+                                        placeholder={x.grosswt}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "grosswt")
+                                        }
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.making_Percentage}
-                                      value={x.making_Percentage}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "making_Percentage"
-                                        )
-                                      }
+                                        type="number"
+                                        placeholder={x.stoneWeight}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "stoneWeight")
+                                        }
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.making_Fixed_Amt}
-                                      value={x.making_Fixed_Amt}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "making_Fixed_Amt"
-                                        )
-                                      }
+                                        type="number"
+                                        placeholder={x.netWt}
+                                        readOnly
+                                        // onChange={(e) =>
+                                        //   handleInputChange2(e, x.id, "netWt")
+                                        // }
+                                    />
+                                  </td>
+
+                                  <td>
+                                    <input
+                                        type="number"
+                                        placeholder={x.stoneAmount}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "stoneAmount")
+                                        }
+                                    />
+                                  </td>
+
+                                  <td>
+                                    <input
+                                        type="number"
+                                        placeholder={x.making_per_gram}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "making_per_gram")
+                                        }
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.making_Fixed_Wastage}
-                                      value={x.making_Fixed_Wastage}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "making_Fixed_Wastage"
-                                        )
-                                      }
+                                        type="number"
+                                        placeholder={x.making_Percentage}
+                                        onChange={(e) =>
+                                            handleInputChange2(
+                                                e,
+                                                x.id,
+                                                "making_Percentage"
+                                            )
+                                        }
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                        type="number"
+                                        placeholder={x.making_Fixed_Amt}
+                                        onChange={(e) =>
+                                            handleInputChange2(
+                                                e,
+                                                x.id,
+                                                "making_Fixed_Amt"
+                                            )
+                                        }
+                                    />
+                                  </td>
+                                  <td>
+                                    <input
+                                        type="number"
+                                        placeholder={x.making_Fixed_Wastage}
+                                        onChange={(e) =>
+                                            handleInputChange2(
+                                                e,
+                                                x.id,
+                                                "making_Fixed_Wastage"
+                                            )
+                                        }
                                     />
                                   </td>
                                   {/* <td>
@@ -1931,604 +2723,71 @@ export default function AdminAllUnlabelledList() {
                               </td> */}
                                   <td>
                                     <input
-                                      type="number"
-                                      value={x.pieces}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "pieces")
-                                      }
+                                        type="number"
+                                        value={x.pieces}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "pieces")
+                                        }
                                     />
                                   </td>
 
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.size}
-                                      value={x.size}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "size")
-                                      }
+                                        type="number"
+                                        placeholder={x.size}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "size")
+                                        }
                                     />
                                   </td>
 
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.description}
-                                      value={x.description}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "description"
-                                        )
-                                      }
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      placeholder={x.occasion}
-                                      value={x.occasion}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "occasion")
-                                      }
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      placeholder={x.gender}
-                                      value={x.gender}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "gender")
-                                      }
+                                        type="number"
+                                        placeholder={x.mrp}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "mrp")
+                                        }
                                     />
                                   </td>
 
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.featured}
-                                      value={x.featured}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "featured")
-                                      }
-                                    />
-                                  </td>
-
-                                  <td>
-                                    <input
-                                      type="text"
-                                      placeholder={x.onlineStatus}
-                                      value={x.onlineStatus}
-                                      readOnly
-                                    />
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : (
-                        <div
-                          className="bulkProductAddingTableMain bulkProductAddingTableMain2"
-                          style={{ margin: "1.5rem", overflowX: "auto" }}
-                        >
-                          <table>
-                            <thead>
-                              <tr>
-                                {/* <th style={{ whiteSpace: "nowrap" }}>
-                              Delete Product
-                            </th> */}
-                                {/* <th>Product Type</th> */}
-                                <th>Metal</th>
-                                <th>Collection</th>
-                                <th>Purity</th>
-                                <th>GrossWt</th>
-                                <th>StoneWt</th>
-                                <th>NetWt</th>
-                                <th>Quantity</th>
-                                <th>Pieces</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {selectedEditItem.map((x) => (
-                                <tr key={x.id}>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      placeholder={x.category_Name}
-                                      value={x.category_Name}
-                                      readOnly
-                                    />
-                                  </td>
-
-                                  <td>
-                                    <input
-                                      type="text"
-                                      placeholder={x.collection}
-                                      value={x.collection}
-                                      readOnly
+                                        type="text"
+                                        placeholder={x.description}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "description")
+                                        }
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="text"
-                                      placeholder={x.purity}
-                                      value={x.purity}
-                                      readOnly
-                                    />
-                                  </td>
-
-                                  <td>
-                                    <input
-                                      type="number"
-                                      placeholder={x.grosswt}
-                                      value={x.grosswt}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "grosswt")
-                                      }
-                                    />
-                                  </td>
-
-                                  <td>
-                                    <input
-                                      type="number"
-                                      placeholder={x.stoneWeight}
-                                      value={x.stoneWeight}
-                                      onChange={(e) =>
-                                        handleInputChange(
-                                          e,
-                                          x.id,
-                                          "stoneWeight"
-                                        )
-                                      }
+                                        type="text"
+                                        placeholder={x.occasion}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "occasion")
+                                        }
                                     />
                                   </td>
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.netWt}
-                                      value={x.netWt}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "netWt")
-                                      }
+                                        type="text"
+                                        placeholder={x.gender}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "gender")
+                                        }
                                     />
                                   </td>
-
                                   <td>
                                     <input
-                                      type="number"
-                                      placeholder={x.quantity}
-                                      value={x.quantity}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "quantity")
-                                      }
+                                        type="text"
+                                        placeholder={x.featured}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, x.id, "featured")
+                                        }
                                     />
                                   </td>
-
-                                  <td>
-                                    <input
-                                      type="number"
-                                      placeholder={x.pieces}
-                                      value={x.pieces}
-                                      onChange={(e) =>
-                                        handleInputChange(e, x.id, "pieces")
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                        // </div>
-                      )}
-                      <div className="bulkProductAddingTableMain">
-                        <button
-                          onClick={() => {
-                            if (selectedEditItem) {
-                              handleEditProductsUnlabelled();
-                            }
-                          }}
-                        >
-                          Update
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectEditItem([]);
-                            scrollToCenter("adminUnlabelledStockMainItemsBox");
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </div>
-          {labelItemBox ? (
-            <div className="adminUnlabelledLabelItemMainBox">
-              <div className="adminInvoiceOpenEditMainBox">
-                <div className="adminInvoiceOpenEditInnerBox">
-                  <div className="adminInvoiceOpenEditInnerTitleBox">
-                    <p>Edit Item</p>
-                    <button
-                      onClick={() => {
-                        setLabelItemBox(false);
-                        setSelectEditQuantity(0);
-                      }}
-                      className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
-                    >
-                      <RxCross2 size={"25px"} />
-                    </button>
-                  </div>
-                  <div className="adminInvoiceOpenEditOuterGridBox">
-                    {/* <div className="adminInvoiceOpenEditInnerGridItem"> */}
-                    <p>Enter Quantity to be Labelled</p>
-                    <input
-                      type="number"
-                      value={selectedEditQuantity}
-                      onChange={(e) => {
-                        handleQuantityChange(e);
-                      }}
-                    />
-                    {/* </div> */}
-                    {/* <div className="adminInvoiceOpenEditInnerGridItem"> */}
-                    <p>Remaining Quantity </p>
-                    <input
-                      style={{ cursor: "not-allowed" }}
-                      type="number"
-                      readOnly
-                      value={selectedEditQuantityBefore}
-                    />
-                    {/* </div> */}
-                    {showAddBtn ? (
-                      <div className="adminInvoiceOpenEditInnerGridItem">
-                        <button
-                          onClick={(e) => {
-                            handleSubmit(e);
-                          }}
-                          className="adminInvoiceEditProductSaveButton"
-                        >
-                          Add
-                        </button>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : null}
-          {addedProducts.length > 0 ? (
-            <>
-              <div
-                style={{
-                  width: "80%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-                onClick={() =>
-                  scrollToCenter("adminAddBulkStockAddedProductsOuterBox")
-                }
-                id="adminAddBulkStockAddedTitleStatement"
-                className="adminAddBulkStockShowEditBox"
-              >
-                <h3
-                  style={{
-                    margin: "0px",
-                    padding: "0px",
-                  }}
-                  className="adminAddBulkStockAddedTitle"
-                >
-                  Added Products
-                </h3>
-                <div className="adminAddBulkStockShowEditButton">
-                  <AiOutlineEdit
-                    onClick={() => setShowAllFields(!showAllFields)}
-                    size={"20px"}
-                  />
-                </div>
-              </div>
-              <div
-                style={{ width: "85%", whiteSpace: "nowrap" }}
-                id="adminAddBulkStockAddedProductsOuterBox"
-                className="adminAddBulkStockAddedProductsOuterBox"
-              >
-                {/* <form onSubmit={updatedetailsBox}> */}
-                {showAllFields ? (
-                  <div
-                    className="bulkProductAddingTableMain"
-                    style={{
-                      margin: "1.5rem",
-                      overflowX: "auto",
-                    }}
-                  >
-                    <table>
-                      <thead>
-                        <tr style={{ whiteSpace: "nowrap" }}>
-                          <th>Product Type</th>
-                          <th>Collection</th>
-                          <th>Purity</th>
-                          <th>Label</th>
-                          <th>Barcode Number</th>
-                          <th>TID</th>
-                          <th>Product name</th>
-                          <th>HUID Code</th>
-                          <th>GrossWt</th>
-                          <th>StoneWt</th>
-                          <th>NetWt</th>
-                          <th>Stone Amount</th>
-                          <th>Making Per Gram</th>
-                          <th>Making Percentage</th>
-                          <th>Fixed Making</th>
-                          <th>Fixed Wastage</th>
-                          <th>Pieces</th>
-                          <th>Size</th>
-                          <th>MRP</th>
-                          <th>Description</th>
-                          <th>Occassion</th>
-                          <th>Gender</th>
-                          <th>Online Status</th>
-                          <th>Delete Product</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        {addedProducts.map((x) => (
-                          // <tr key={x.Customer_id}>
-
-                          <tr key={x.id}>
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.product_type}
-                                readOnly
-                                // value={x.product_type}
-                                // onChange={(e) => handleInputChange(e, x.id, "Product_type")}
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.collection}
-                                value={x.collection}
-                                readOnly
-                                // onChange={(e) => handleInputChange(e, x.id, "collection")}
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.purity}
-                                value={x.purity}
-                                readOnly
-                                // onChange={() => {
-                                //   setPurity(x.purity);
-                                // }}
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.itemCode}
-                                value={x.itemCode}
-                                //   onChange={() => {
-                                //     setItemCode(x.itemCode);
-                                //   }}
-                              />
-                            </td>
-                            <td>
-                              <input
-                                id="barcodeNumberInput"
-                                type="text"
-                                placeholder={x.barcodeNumber}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "barcodeNumber")
-                                }
-                                style={{
-                                  color: x.hasError ? "red" : "black",
-                                }}
-                                //     setItemCode(x.itemCode);
-                                //   }}
-                              />
-                            </td>
-                            <td>
-                              <input
-                                style={{ cursor: "not-allowed" }}
-                                type="text"
-                                placeholder={x.tid}
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.product_Name}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "product_Name")
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="text"
-                                maxLength={6}
-                                placeholder={x.huidCode}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "huidCode")
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.grosswt}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "grosswt")
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.stoneWeight}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "stoneWeight")
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.netWt}
-                                readOnly
-                                // onChange={(e) =>
-                                //   handleInputChange2(e, x.id, "netWt")
-                                // }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.stoneAmount}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "stoneAmount")
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.making_per_gram}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "making_per_gram")
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.making_Percentage}
-                                onChange={(e) =>
-                                  handleInputChange2(
-                                    e,
-                                    x.id,
-                                    "making_Percentage"
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.making_Fixed_Amt}
-                                onChange={(e) =>
-                                  handleInputChange2(
-                                    e,
-                                    x.id,
-                                    "making_Fixed_Amt"
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.making_Fixed_Wastage}
-                                onChange={(e) =>
-                                  handleInputChange2(
-                                    e,
-                                    x.id,
-                                    "making_Fixed_Wastage"
-                                  )
-                                }
-                              />
-                            </td>
-                            {/* <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.pieces}
-                                  onChange={(e) =>
-                                    handleInputChange(e, x.id, "pieces")
-                                  }
-                                />
-                              </td> */}
-                            <td>
-                              <input
-                                type="number"
-                                value={x.pieces}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "pieces")
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.size}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "size")
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="number"
-                                placeholder={x.mrp}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "mrp")
-                                }
-                              />
-                            </td>
-
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.description}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "description")
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.occasion}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "occasion")
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.gender}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "gender")
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                placeholder={x.featured}
-                                onChange={(e) =>
-                                  handleInputChange2(e, x.id, "featured")
-                                }
-                              />
-                            </td>
-                            {/*                            
+                                  {/*
                               <td>
                                 <input
                                   style={{
@@ -2544,7 +2803,7 @@ export default function AdminAllUnlabelledList() {
                                 />
                               </td> */}
 
-                            {/* <td>
+                                  {/* <td>
                     <button
                       type="submit"
                       onClick={() => {
@@ -2560,97 +2819,97 @@ export default function AdminAllUnlabelledList() {
                       Update
                     </button>
                   </td> */}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div>
-                    {/* <h2>Half Fields</h2> */}
-                    <div
-                      className="bulkProductAddingTableMain bulkProductAddingTableMain2"
-                      style={{ margin: "1.5rem", overflowX: "auto" }}
-                    >
-                      <table>
-                        <thead>
-                          <tr>
-                            {/* <th style={{ whiteSpace: "nowrap" }}>
+                                </tr>
+                            ))}
+                            </tbody>
+                          </table>
+                        </div>
+                    ) : (
+                        <div>
+                          {/* <h2>Half Fields</h2> */}
+                          <div
+                              className="bulkProductAddingTableMain bulkProductAddingTableMain2"
+                              style={{margin: "1.5rem", overflowX: "auto"}}
+                          >
+                            <table>
+                              <thead>
+                              <tr>
+                                {/* <th style={{ whiteSpace: "nowrap" }}>
                               Delete Product
                             </th> */}
-                            {/* <th>Product Type</th> */}
+                                {/* <th>Product Type</th> */}
 
-                            <th>Collection</th>
-                            <th>Purity</th>
-                            <th>Label</th>
-                            <th>Barcode Number</th>
-                            {/* <th>TID</th> */}
-                            {/* <th>Product name</th> */}
-                            {/* <th>HUID Code</th> */}
-                            <th>GrossWt</th>
-                            <th>StoneWt</th>
+                                <th>Collection</th>
+                                <th>Purity</th>
+                                <th>Label</th>
+                                <th>Barcode Number</th>
+                                {/* <th>TID</th> */}
+                                {/* <th>Product name</th> */}
+                                {/* <th>HUID Code</th> */}
+                                <th>GrossWt</th>
+                                <th>StoneWt</th>
 
-                            <th>NetWt</th>
-                            <th>Stone Amount</th>
-                            <th>Making Per Gram</th>
-                            <th>Making Percentage</th>
-                            <th>Fixed Making</th>
-                            {/* <th>Fixed Wastage</th> */}
-                            {/* <th>Pieces</th> */}
-                            {/* <th>Size</th> */}
-                            <th>MRP</th>
-                            {/* <th>Description</th> */}
-                            {/* <th>Occassion</th> */}
-                            {/* <th>Gender</th> */}
-                            {/* <th>Online Status</th> */}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {addedProducts.map((x) => (
-                            // <tr key={x.Customer_id}>
+                                <th>NetWt</th>
+                                <th>Stone Amount</th>
+                                <th>Making Per Gram</th>
+                                <th>Making Percentage</th>
+                                <th>Fixed Making</th>
+                                {/* <th>Fixed Wastage</th> */}
+                                {/* <th>Pieces</th> */}
+                                {/* <th>Size</th> */}
+                                <th>MRP</th>
+                                {/* <th>Description</th> */}
+                                {/* <th>Occassion</th> */}
+                                {/* <th>Gender</th> */}
+                                {/* <th>Online Status</th> */}
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {addedProducts.map((x) => (
+                                  // <tr key={x.Customer_id}>
 
-                            <tr key={x.id}>
-                              <td>
-                                <input
-                                  type="text"
-                                  placeholder={x.collection}
-                                  value={x.collection}
-                                  readOnly
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  placeholder={x.purity}
-                                  value={x.purity}
-                                  readOnly
-                                />
-                              </td>
+                                  <tr key={x.id}>
+                                    <td>
+                                      <input
+                                          type="text"
+                                          placeholder={x.collection}
+                                          value={x.collection}
+                                          readOnly
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                          type="text"
+                                          placeholder={x.purity}
+                                          value={x.purity}
+                                          readOnly
+                                      />
+                                    </td>
 
-                              <td>
-                                <input
-                                  type="text"
-                                  placeholder={x.itemCode}
-                                  value={x.itemCode}
-                                  readOnly
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  id="barcodeNumberInput"
-                                  type="text"
-                                  placeholder={x.BarcodeNumber}
-                                  onChange={(e) =>
-                                    handleInputChange2(e, x.id, "barcodeNumber")
-                                  }
-                                  style={{
-                                    color: x.hasError ? "red" : "black",
-                                  }}
-                                  //     setItemCode(x.itemCode);
-                                  //   }}
-                                />
-                              </td>
-                              {/* <td>
+                                    <td>
+                                      <input
+                                          type="text"
+                                          placeholder={x.itemCode}
+                                          value={x.itemCode}
+                                          readOnly
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                          id="barcodeNumberInput"
+                                          type="text"
+                                          placeholder={x.BarcodeNumber}
+                                          onChange={(e) =>
+                                              handleInputChange2(e, x.id, "barcodeNumber")
+                                          }
+                                          style={{
+                                            color: x.hasError ? "red" : "black",
+                                          }}
+                                          //     setItemCode(x.itemCode);
+                                          //   }}
+                                      />
+                                    </td>
+                                    {/* <td>
                                 <input
                                   style={{ cursor: "not-allowed" }}
                                   type="text"
@@ -2677,93 +2936,93 @@ export default function AdminAllUnlabelledList() {
                                   }
                                 />
                               </td> */}
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.grosswt}
-                                  onChange={(e) =>
-                                    handleInputChange2(e, x.id, "grosswt")
-                                  }
-                                  // readOnly
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.stoneWeight}
-                                  onChange={(e) =>
-                                    handleInputChange2(e, x.id, "stoneWeight")
-                                  }
-                                />
-                              </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.grosswt}
+                                          onChange={(e) =>
+                                              handleInputChange2(e, x.id, "grosswt")
+                                          }
+                                          // readOnly
+                                      />
+                                    </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.stoneWeight}
+                                          onChange={(e) =>
+                                              handleInputChange2(e, x.id, "stoneWeight")
+                                          }
+                                      />
+                                    </td>
 
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.netWt}
-                                  // onChange={(e) =>
-                                  //   handleInputChange2(e, x.id, "netWt")
-                                  // }
-                                  readOnly
-                                />
-                              </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.netWt}
+                                          // onChange={(e) =>
+                                          //   handleInputChange2(e, x.id, "netWt")
+                                          // }
+                                          readOnly
+                                      />
+                                    </td>
 
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.stoneAmount}
-                                  onChange={(e) =>
-                                    handleInputChange2(e, x.id, "StoneAmount")
-                                  }
-                                />
-                              </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.stoneAmount}
+                                          onChange={(e) =>
+                                              handleInputChange2(e, x.id, "StoneAmount")
+                                          }
+                                      />
+                                    </td>
 
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.making_per_gram}
-                                  // readOnly
-                                  onChange={(e) =>
-                                    handleInputChange2(
-                                      e,
-                                      x.id,
-                                      "making_per_gram"
-                                    )
-                                  }
-                                />
-                              </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.making_per_gram}
+                                          // readOnly
+                                          onChange={(e) =>
+                                              handleInputChange2(
+                                                  e,
+                                                  x.id,
+                                                  "making_per_gram"
+                                              )
+                                          }
+                                      />
+                                    </td>
 
-                              <td>
-                                <input
-                                  type="number"
-                                  // readOnly
-                                  placeholder={x.making_Percentage}
-                                  onChange={(e) =>
-                                    handleInputChange2(
-                                      e,
-                                      x.id,
-                                      "making_Percentage"
-                                    )
-                                  }
-                                />
-                              </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          // readOnly
+                                          placeholder={x.making_Percentage}
+                                          onChange={(e) =>
+                                              handleInputChange2(
+                                                  e,
+                                                  x.id,
+                                                  "making_Percentage"
+                                              )
+                                          }
+                                      />
+                                    </td>
 
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.making_Fixed_Amt}
-                                  onChange={(e) =>
-                                    handleInputChange2(
-                                      e,
-                                      x.id,
-                                      "making_Fixed_Amt"
-                                    )
-                                  }
-                                  // readOnly
-                                />
-                              </td>
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.making_Fixed_Amt}
+                                          onChange={(e) =>
+                                              handleInputChange2(
+                                                  e,
+                                                  x.id,
+                                                  "making_Fixed_Amt"
+                                              )
+                                          }
+                                          // readOnly
+                                      />
+                                    </td>
 
-                              {/* <td>
+                                    {/* <td>
                                 <input
                                   type="number"
                                   placeholder={x.making_Fixed_Wastage}
@@ -2776,7 +3035,7 @@ export default function AdminAllUnlabelledList() {
                                   }
                                 />
                               </td> */}
-                              {/* <td>
+                                    {/* <td>
                                 <input
                                   type="number"
                                   placeholder={x.pieces}
@@ -2795,48 +3054,48 @@ export default function AdminAllUnlabelledList() {
                                 />
                               </td> */}
 
-                              <td>
-                                <input
-                                  type="number"
-                                  placeholder={x.mrp}
-                                  onChange={(e) =>
-                                    handleInputChange2(e, x.id, "mrp")
-                                  }
-                                />
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
+                                    <td>
+                                      <input
+                                          type="number"
+                                          placeholder={x.mrp}
+                                          onChange={(e) =>
+                                              handleInputChange2(e, x.id, "mrp")
+                                          }
+                                      />
+                                    </td>
+                                  </tr>
+                              ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                    )}
 
-                <div className="bulkProductAddingTableMain">
-                  <button
-                    style={{ cursor: "pointer" }}
-                    // onClick={handleEditProducts}>
-                    onClick={handleEditProducts}
-                  >
-                    <BiSave size={"12px"} style={{ marginRight: "5px" }} />
-                    Save All
-                  </button>
+                    <div className="bulkProductAddingTableMain">
+                      <button
+                          style={{cursor: "pointer"}}
+                          // onClick={handleEditProducts}>
+                          onClick={handleEditProducts}
+                      >
+                        <BiSave size={"12px"} style={{marginRight: "5px"}}/>
+                        Save All
+                      </button>
 
-                  <Link to="/inventory">
-                    <button style={{ cursor: "pointer" }}>
-                      <BiListUl size={"12px"} style={{ marginRight: "5px" }} />
-                      Labelled List
-                    </button>
-                  </Link>
-                  {/* <Link to="/unlabelled_list">
+                      <Link to="/inventory">
+                        <button style={{cursor: "pointer"}}>
+                          <BiListUl size={"12px"} style={{marginRight: "5px"}}/>
+                          Labelled List
+                        </button>
+                      </Link>
+                      {/* <Link to="/unlabelled_list">
                     <button style={{ cursor: "pointer" }}>
                       <BiListUl size={"12px"} style={{ marginRight: "5px" }} />
                       Unlabelled List
                     </button>
                   </Link> */}
-                  {/* <Link to="/admininvoice">
+                      {/* <Link to="/admininvoice">
                     <button style={{ cursor: "pointer" }}>
-                      <FaFileInvoiceDollar 
+                      <FaFileInvoiceDollar
                         size={"12px"}
                         style={{ marginRight: "5px" }}
                       />
@@ -2844,26 +3103,26 @@ export default function AdminAllUnlabelledList() {
                     </button>
                   </Link> */}
 
-                  <button
-                    onClick={() => {
-                      setAddedProducts([]);
-                      // setSelectedFiles([]);
+                      <button
+                          onClick={() => {
+                            setAddedProducts([]);
+                            // setSelectedFiles([]);
 
-                      scrollToCenter("adminUnlabelledStockMainAddLabelBox");
-                    }}
-                  >
-                    <AiOutlineFileAdd
-                      size={"12px"}
-                      style={{ marginRight: "5px" }}
-                    />
-                    New Item
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : null}
+                            scrollToCenter("adminUnlabelledStockMainAddLabelBox");
+                          }}
+                      >
+                        <AiOutlineFileAdd
+                            size={"12px"}
+                            style={{marginRight: "5px"}}
+                        />
+                        New Item
+                      </button>
+                    </div>
+                  </div>
+                </>
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
   );
 }

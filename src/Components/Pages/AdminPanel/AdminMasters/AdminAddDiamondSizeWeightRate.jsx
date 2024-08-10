@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import * as xlsx from "xlsx";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
@@ -40,23 +41,27 @@ import {
     a96,
     a97,
     a98,
-    a99, postAdminadddiamondsizeweightrate,
+    a99,
+    postAdminadddiamondsizeweightrate,
 } from "../../../Api/RootApiPath";
 import {useSelector} from "react-redux";
 import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from "react-router-dom";
 
 export default function AdminAddDiamondSizeWeightRate() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [excelData, setExcelData] = useState([]);
+    const fileInputRef = useRef(null);
     const [active, setActive] = useState("List");
     const [showError, setShowError] = useState(false);
     const [messageType, setMessageType] = useState("");
     const [messageToShow, setMessageToShow] = useState("");
-    const [editId, setEditId] = useState('');
+    const [editId, setEditId] = useState("");
+    const [uploadCheck, setUploadCheck] = useState(false);
     const [diamondShapes, setDiamondShapes] = useState([]);
     const [diamondClarities, setDiamondClarities] = useState([]);
-    const [diamondColours, setDiamondColours] = useState([]);
+    const [diamondColors, setDiamondColors] = useState([]);
     const [diamondCuts, setDiamondCuts] = useState([]);
     const [settingTypes, setSettingTypes] = useState([]);
     const [defaultTemplateData, setDefaultTemplateData] = useState([]);
@@ -73,19 +78,20 @@ export default function AdminAddDiamondSizeWeightRate() {
         DiamondMargin: "0",
         CompanyId: 0,
         BranchId: 0,
-        DiamondShape: '',
-        DiamondClarity: '',
-        DiamondColour: '',
-        DiamondCut: '',
-        SettingType: '',
+        DiamondShape: "",
+        DiamondClarity: "",
+        DiamondColor: "",
+        DiamondCut: "",
+        SettingType: "",
         CounterId: 0,
         EmployeeId: 0,
-        TemplateName: '',
+        TemplateName: "",
 
         OldEntry: false,
     });
+
     const [allTableData, setAllTableData] = useState([]);
-    const [resData, setResData] = useState('');
+    const [resData, setResData] = useState("");
     const [allCompaniesList, setAllCompaniesList] = useState([]);
     const [allBranchesList, setAllBranchesList] = useState([]);
     const [allDepartmentsList, setAllDepartmentsList] = useState([]);
@@ -93,7 +99,7 @@ export default function AdminAddDiamondSizeWeightRate() {
     const [allCategoriesList, setAllCategoriesList] = useState([]);
     const [allProductsList, setAllProductsList] = useState([]);
     const allStates = useSelector((state) => state);
-    const [defaultTemplateId, setDefaultTemplateId] = useState('');
+    const [defaultTemplateId, setDefaultTemplateId] = useState("");
     const adminLoggedIn = allStates.reducer1;
     //   let Entryby_Staff_id = parseInt(adminLoggedIn);
     const clientCode = adminLoggedIn.ClientCode;
@@ -105,29 +111,41 @@ export default function AdminAddDiamondSizeWeightRate() {
 
     useEffect(() => {
         window.scroll(0, 0);
-
     }, []);
     useEffect(() => {
         const fetchDiamondAttributes = async () => {
-            const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ClientCode: 'LS000023',
-                }),
-            });
+            const response = await fetch(
+                "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ClientCode: clientCode,
+                    }),
+                }
+            );
             const data = await response.json();
-            const shapes = data.filter(item => item.DiamondAttribute === 'DiamondShape');
-            const clarities = data.filter(item => item.DiamondAttribute === 'DiamondClarity');
-            const colours = data.filter(item => item.DiamondAttribute === 'DiamondColour');
-            const cuts = data.filter(item => item.DiamondAttribute === 'DiamondCut');
-            const settings = data.filter(item => item.DiamondAttribute === 'DiamondSettingType');
+            const shapes = data.filter(
+                (item) => item.DiamondAttribute === "DiamondShape"
+            );
+            const clarities = data.filter(
+                (item) => item.DiamondAttribute === "DiamondClarity"
+            );
+            const colors = data.filter(
+                (item) => item.DiamondAttribute === "DiamondColour"
+            );
+            const cuts = data.filter(
+                (item) => item.DiamondAttribute === "DiamondCut"
+            );
+            const settings = data.filter(
+                (item) => item.DiamondAttribute === "DiamondSettingType"
+            );
 
             setDiamondShapes(shapes);
             setDiamondClarities(clarities);
-            setDiamondColours(colours);
+            setDiamondColors(colors);
             setDiamondCuts(cuts);
             setSettingTypes(settings);
         };
@@ -142,7 +160,8 @@ export default function AdminAddDiamondSizeWeightRate() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                Authorization:
+                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
             },
             body: JSON.stringify(formData),
         });
@@ -244,7 +263,6 @@ export default function AdminAddDiamondSizeWeightRate() {
     useEffect(() => {
         fetchAllDepartments();
     }, []);
-
     const fetchAllRoles = async () => {
         const formData = {
             ClientCode: clientCode,
@@ -325,7 +343,6 @@ export default function AdminAddDiamondSizeWeightRate() {
 
     const handleNewCategoryChange = (e) => {
         const {name, value} = e.target;
-
         if (name === "DiamondMargin") {
             const diamondPurchaseRate = parseFloat(
                 newCategory.DiamondPurchaseRate || 0
@@ -385,44 +402,51 @@ export default function AdminAddDiamondSizeWeightRate() {
     useEffect(() => {
         async function findNullData() {
             const payload = {
-                ClientCode: clientCode
-            }
-            const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-                },
-                body: JSON.stringify(payload)
-            });
+                ClientCode: clientCode,
+            };
+            const response = await fetch(
+                "https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization:
+                            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                    },
+                    body: JSON.stringify(payload),
+                }
+            );
             const data = await response.json();
-            const isNullData = data?.find((item) => item.TemplateName === '');
+            const isNullData = data?.find((item) => item.TemplateName === "");
             if (isNullData) {
                 setDefaultTemplateId(isNullData.Id);
             } else {
-                setDefaultTemplateId('');
+                setDefaultTemplateId("");
             }
         }
 
         if (!defaultTemplateId) {
             findNullData();
         }
-
-    }, [defaultTemplateId])
+    }, [defaultTemplateId]);
 
     async function fetchDefaultTemplate() {
         const payload = {
             Id: defaultTemplateId,
-            ClientCode: clientCode
-        }
-        const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-            },
-            body: JSON.stringify(payload)
-        });
+            ClientCode: clientCode,
+        };
+        const response = await fetch(
+            "https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization:
+                        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                },
+                body: JSON.stringify(payload),
+            }
+        );
         const data = await response.json();
         setDefaultTemplateData(data[0]?.DiamondSizeWeightRates);
     }
@@ -431,27 +455,21 @@ export default function AdminAddDiamondSizeWeightRate() {
         if (defaultTemplateId) {
             fetchDefaultTemplate();
         }
-    }, [defaultTemplateId])
+    }, [defaultTemplateId]);
 
     const addNewCategory = async () => {
         setLoading(true);
         let arr = [];
 
         allTableData.map((item) => {
-            let currentShape = diamondShapes.find((item1) => item1.DiamondValue == item.DiamondShape);
-            let currentClarity = diamondClarities.find((item1) => item1.DiamondValue == item.DiamondClarity);
-            let currentColour = diamondColours.find((item1) => item1.DiamondValue == item.DiamondColour);
-            let currentCut = diamondShapes.find((item1) => item1.DiamondValue == item.DiamondCut);
-            let currentSettingType = diamondShapes.find((item1) => item1.DiamondValue == item.SettingType);
-
             arr.push({
                 ClientCode: clientCode,
                 DiamondSize: item.DiamondSize,
-                DiamondShape: currentShape?.Id,
-                DiamondClarity: currentClarity?.Id,
-                DiamondColour: currentColour?.Id,
-                DiamondCut: currentCut?.Id,
-                SettingType: currentSettingType?.Id,
+                DiamondShape: getShapeValue(null, item.DiamondShape),
+                DiamondClarity: getDiamondClarity(null, item.DiamondClarity),
+                DiamondColor: getDiamondColor(null, item.DiamondColor),
+                DiamondCut: getDiamondCut(null, item.DiamondCut),
+                SettingType: getSettingType(null, item.SettingType),
                 Sleve: item.Sieve,
                 DiamondWeight: item.DiamondWeight,
                 DiamondPurchaseRate: item.DiamondPurchaseRate,
@@ -462,79 +480,68 @@ export default function AdminAddDiamondSizeWeightRate() {
                 CounterId: counterId ? counterId : 0,
                 EmployeeId: employeeId ? employeeId : 0,
 
-                // OldEntry: false,
-
                 ...(item.OldEntry ? {Id: item.Id} : {}),
-            })
-        })
+            });
+        });
 
         try {
-
             if (defaultTemplateId && !newCategory.TemplateName) {
                 const payload = {
                     Id: defaultTemplateId,
                     TemplateName: newCategory.TemplateName,
-                    DiamondSizeWeightRates: editId ? arr : arr.concat(defaultTemplateData),
+                    DiamondSizeWeightRates: editId
+                        ? arr
+                        : arr.concat(defaultTemplateData),
                     ClientCode: clientCode,
-                }
-                const response = await fetch(
-                    postAdminadddiamondsizeweightrate,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-                        },
-                        body: JSON.stringify(payload),
-                    }
-                );
+                };
+                const response = await fetch(postAdminadddiamondsizeweightrate, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization:
+                            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                    },
+                    body: JSON.stringify(payload),
+                });
                 const data = await response.json();
                 setResData(data);
-                setEditId('');
-                setDefaultTemplateId('')
+                setEditId("");
+                setDefaultTemplateId("");
             } else {
-
                 if (editId) {
                     const payload = {
                         Id: editId,
                         TemplateName: newCategory.TemplateName,
                         DiamondSizeWeightRates: arr,
                         ClientCode: clientCode,
-                    }
-                    const response = await fetch(
-                        postAdminadddiamondsizeweightrate,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-                            },
-                            body: JSON.stringify(payload),
-                        }
-                    );
+                    };
+                    const response = await fetch(postAdminadddiamondsizeweightrate, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                        },
+                        body: JSON.stringify(payload),
+                    });
                     const data = await response.json();
                     setResData(data);
-                    setEditId('');
-
-
+                    setEditId("");
                 } else {
                     const payload = {
-
                         TemplateName: newCategory.TemplateName,
                         DiamondSizeWeightRates: arr,
                         ClientCode: clientCode,
-                    }
-                    const response = await fetch(
-                        postAdminadddiamondsizeweightrate,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
-                            },
-                            body: JSON.stringify(payload),
-                        }
-                    );
+                    };
+                    const response = await fetch(postAdminadddiamondsizeweightrate, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization:
+                                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                        },
+                        body: JSON.stringify(payload),
+                    });
                     const data = await response.json();
                     setResData(data);
                 }
@@ -548,16 +555,16 @@ export default function AdminAddDiamondSizeWeightRate() {
                 DiamondPurchaseRate: "0",
                 DiamondSellRate: "0",
                 DiamondMargin: "0",
-                DiamondShape: '',
-                DiamondClarity: '',
-                DiamondColour: '',
-                DiamondCut: '',
-                SettingType: '',
+                DiamondShape: "",
+                DiamondClarity: "",
+                DiamondColor: "",
+                DiamondCut: "",
+                SettingType: "",
                 CompanyId: 0,
                 BranchId: 0,
                 CounterId: 0,
                 EmployeeId: 0,
-                TemplateName: '',
+                TemplateName: "",
                 OldEntry: false,
             });
             if (resData.Message) {
@@ -575,7 +582,7 @@ export default function AdminAddDiamondSizeWeightRate() {
         } catch (error) {
             console.error(error);
         }
-        setDefaultTemplateId('')
+        setDefaultTemplateId("");
     };
     useEffect(() => {
         setTimeout(() => {
@@ -586,55 +593,63 @@ export default function AdminAddDiamondSizeWeightRate() {
     function getShapeValue(id, shape) {
         if (id) {
             const shapeValue = diamondShapes?.find((item) => item.Id == id);
-            return id ? shapeValue?.DiamondValue : '';
+            return id ? shapeValue?.DiamondValue : "";
         }
         if (shape) {
-            const shapeValue = diamondShapes?.find((item) => item.DiamondValue == shape);
-            return shape ? shapeValue?.Id : '';
+            const shapeValue = diamondShapes?.find(
+                (item) => item.DiamondValue == shape
+            );
+            return shape ? shapeValue?.Id : "";
         }
     }
 
     function getDiamondClarity(id, clarity) {
         if (id) {
             const clarityValue = diamondClarities?.find((item) => item.Id == id);
-            return id ? clarityValue?.DiamondValue : '';
+            return id ? clarityValue?.DiamondValue : "";
         }
         if (clarity) {
-            const clarityValue = diamondClarities?.find((item) => item.DiamondValue == clarity);
-            return clarity ? clarityValue?.Id : '';
+            const clarityValue = diamondClarities?.find(
+                (item) => item.DiamondValue == clarity
+            );
+            return clarity ? clarityValue?.Id : "";
         }
     }
 
-    function getDiamondColour(id, colour) {
+    function getDiamondColor(id, color) {
         if (id) {
-            const colourValue = diamondColours?.find((item) => item.Id == id);
-            return id ? colourValue?.DiamondValue : '';
+            const colorValue = diamondColors?.find((item) => item.Id == id);
+            return id ? colorValue?.DiamondValue : "";
         }
-        if (colour) {
-            const shapeValue = diamondColours?.find((item) => item.DiamondValue == colour);
-            return colour ? shapeValue?.Id : '';
+        if (color) {
+            const shapeValue = diamondColors?.find(
+                (item) => item.DiamondValue == color
+            );
+            return color ? shapeValue?.Id : "";
         }
     }
 
     function getDiamondCut(id, cut) {
         if (id) {
             const cutValue = diamondCuts?.find((item) => item.Id == id);
-            return id ? cutValue?.DiamondValue : '';
+            return id ? cutValue?.DiamondValue : "";
         }
         if (cut) {
-            const cutValue = diamondShapes?.find((item) => item.DiamondValue == cut);
-            return cut ? cutValue?.Id : '';
+            const cutValue = diamondCuts?.find((item) => item.DiamondValue == cut);
+            return cut ? cutValue?.Id : "";
         }
     }
 
     function getSettingType(id, settingType) {
         if (id) {
-            const settingTypeValue = settingType?.find((item) => item.Id == id);
-            return id ? settingTypeValue?.DiamondValue : '';
+            const settingTypeValue = settingTypes?.find((item) => item.Id == id);
+            return id ? settingTypeValue?.DiamondValue : "";
         }
         if (settingType) {
-            const shapeValue = diamondShapes?.find((item) => item.DiamondValue == settingType);
-            return settingType ? shapeValue?.Id : '';
+            const shapeValue = settingTypes?.find(
+                (item) => item.DiamondValue == settingType
+            );
+            return settingType ? shapeValue?.Id : "";
         }
     }
 
@@ -644,15 +659,14 @@ export default function AdminAddDiamondSizeWeightRate() {
         setNewCategory({
             ...data,
             DiamondShape: getShapeValue(null, data.DiamondShape),
-            DiamondClarity: getDiamondColour(null, data.DiamondClarity),
+            DiamondClarity: getDiamondClarity(null, data.DiamondClarity),
             DiamondCut: getDiamondCut(null, data.DiamondCut),
-            DiamondColor: getDiamondColour(null, data.DiamondColour),
+            DiamondColor: getDiamondColor(null, data.DiamondColor),
             SettingType: getSettingType(null, data.SettingType),
-            OldEntry: true
+            OldEntry: true,
         });
-        setActive("AddNew")
+        setActive("AddNew");
     };
-
 
     const handleEditClick = async (e, item, index) => {
         e.stopPropagation();
@@ -662,37 +676,38 @@ export default function AdminAddDiamondSizeWeightRate() {
             DiamondShape: getShapeValue(rate.DiamondShape),
             SettingType: getSettingType(rate.SettingType),
             DiamondCut: getDiamondCut(rate.DiamondCut),
-            DiamondColor: getDiamondColour(rate.DiamondColour),
+            DiamondColor: getDiamondColor(rate.DiamondColor),
             DiamondClarity: getDiamondClarity(rate.DiamondClarity),
             TemplateName: item.TemplateName,
             mainId: item.Id,
-        }))
+        }));
         setAllTableData(updatedData);
-        setActive('addNew');
+        setActive("addNew");
 
         const payload = {
             id: item.Id,
-            ClientCode: item.ClientCode
-        }
+            ClientCode: item.ClientCode,
+        };
         setEditId(item.Id);
         try {
             setNewCategory({...newCategory, TemplateName: item.TemplateName});
         } catch (error) {
-            console.error('There has been a problem with your fetch operation:', error);
+            console.error(
+                "There has been a problem with your fetch operation:",
+                error
+            );
         }
-    }
+    };
 
     function handleAdd() {
-        const shape = diamondShapes?.find((item) => item.Id == newCategory.DiamondShape);
-
         const stepFormData = {
             ClientCode: clientCode,
             DiamondSize: newCategory.DiamondSize,
-            DiamondShape: shape?.DiamondValue,
-            DiamondClarity: newCategory.DiamondClarity,
-            DiamondColour: newCategory.DiamondColour,
-            DiamondCut: newCategory.DiamondCut,
-            SettingType: newCategory.SettingType,
+            DiamondShape: getShapeValue(newCategory.DiamondShape),
+            DiamondClarity: getDiamondClarity(newCategory.DiamondClarity),
+            DiamondColor: getDiamondColor(newCategory.DiamondColor),
+            DiamondCut: getDiamondCut(newCategory.DiamondCut),
+            SettingType: getSettingType(newCategory.SettingType),
             TemplateName: newCategory.TemplateName,
             Sieve: newCategory.Sieve,
             DiamondWeight: newCategory.DiamondWeight,
@@ -708,7 +723,10 @@ export default function AdminAddDiamondSizeWeightRate() {
 
             ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
         };
-        setAllTableData((list) => [...list, {...stepFormData, TemplateName: newCategory.TemplateName}]);
+        setAllTableData((list) => [
+            ...list,
+            {...stepFormData, TemplateName: newCategory.TemplateName},
+        ]);
         setNewCategory({
             DiamondSize: "0",
             Sieve: "0",
@@ -716,11 +734,11 @@ export default function AdminAddDiamondSizeWeightRate() {
             DiamondPurchaseRate: "0",
             DiamondSellRate: "0",
             DiamondMargin: "0",
-            DiamondShape: '',
-            DiamondClarity: '',
-            DiamondColour: '',
-            DiamondCut: '',
-            SettingType: '',
+            DiamondShape: "",
+            DiamondClarity: "",
+            DiamondColor: "",
+            DiamondCut: "",
+            SettingType: "",
             CompanyId: 0,
             BranchId: 0,
             CounterId: 0,
@@ -739,17 +757,20 @@ export default function AdminAddDiamondSizeWeightRate() {
         e.stopPropagation();
         const payload = {
             Id: x.Id,
-            ClientCode: clientCode
-        }
+            ClientCode: clientCode,
+        };
 
         try {
-            const response = await fetch('https://testing.loyalstring.co.in/api/ProductMaster/DeleteDiamondSizeWeightRateTemplate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
+            const response = await fetch(
+                "https://testing.loyalstring.co.in/api/ProductMaster/DeleteDiamondSizeWeightRateTemplate",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                }
+            );
             const result = await response.json();
             // const updatedCategories = allCategories.filter((_, i) => i !== index);
             // setAllCategories(updatedCategories);
@@ -759,8 +780,165 @@ export default function AdminAddDiamondSizeWeightRate() {
         } finally {
             setLoading(false);
         }
+    };
+    const keyMapping = {
+        Clarity: "DiamondClarity",
+        Color: "DiamondColor",
+        Cut: "DiamondCut",
+        Margin: "DiamondMargin",
+        PurchaseRate: "DiamondPurchaseRate",
+        SellRate: "DiamondSellRate",
+        Setting: "SettingType",
+        Shape: "DiamondShape",
+        Size: "DiamondSize",
+        Sleve: "Sieve",
+        Weight: "DiamondWeight",
+    };
+    const handleFileUpload = async (e) => {
+        const fileInput = e.target;
+        const file = fileInput.files[0];
+        if (file) {
+            const data = await file.arrayBuffer();
+            const workbook = xlsx.read(data);
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = xlsx.utils.sheet_to_json(worksheet, {
+                header: 1,
+                defval: "",
+            });
 
-    }
+            const headers = jsonData[0];
+            const rows = jsonData.slice(1);
+            let uploadCheckLocal = false;
+
+            const arrayOfObjects = rows.map((row) => {
+                const obj = {};
+                headers.forEach((header, index) => {
+                    const newKey = keyMapping[header] || header;
+                    let value = row[index];
+                    if (newKey === "DiamondShape") {
+                        const checkShape = diamondShapes.find(
+                            (item) => item.DiamondValue === value.toUpperCase()
+                        );
+                        if (checkShape) {
+                            value = value.toUpperCase();
+                        } else {
+                            uploadCheckLocal = true;
+                        }
+                    }
+                    if (newKey === "DiamondClarity") {
+                        if (value) {
+                            const checkShape = diamondClarities.find(
+                                (item) => item.DiamondValue == value.toUpperCase()
+                            );
+                            if (checkShape || value === "") {
+                                value = value.toUpperCase();
+                            } else {
+                                uploadCheckLocal = true;
+                            }
+                        }
+                    }
+                    if (newKey === "DiamondColor") {
+                        if (value) {
+                            const checkShape = diamondColors.find(
+                                (item) => item.DiamondValue === value.toUpperCase()
+                            );
+                            if (checkShape || value === "") {
+                                value = value.toUpperCase();
+                            } else {
+                                uploadCheckLocal = true;
+                            }
+                        }
+                    }
+                    if (newKey === "DiamondCut") {
+                        if (value) {
+                            const checkShape = diamondCuts.find(
+                                (item) => item.DiamondValue === value.toUpperCase()
+                            );
+                            if (checkShape || value === "") {
+                                value = value.toUpperCase();
+                            } else {
+                                uploadCheckLocal = true;
+                            }
+                        }
+                    }
+                    if (newKey === "SettingType") {
+                        if (value) {
+                            const checkShape = settingTypes.find(
+                                (item) => item.DiamondValue === value.toUpperCase()
+                            );
+                            if (checkShape || value === "") {
+                                value = value.toUpperCase();
+                            } else {
+                                uploadCheckLocal = true;
+                            }
+                        }
+                    }
+                    if (
+                        newKey === "Sieve" ||
+                        newKey === "DiamondSellRate" ||
+                        newKey === "DiamondPurchaseRate" ||
+                        newKey === "DiamondWeight" ||
+                        newKey === "DiamondSize"
+                    ) {
+                        value = value.toString();
+                    }
+                    obj[newKey] = value;
+                });
+                obj["TemplateName"] = newCategory.TemplateName;
+                obj["OldEntry"] = false;
+                obj["CompanyId"] = companyId ? companyId : 0;
+                obj["BranchId"] = branchId ? branchId : 0;
+                obj["CounterId"] = counterId ? counterId : 0;
+                obj["EmployeeId"] = employeeId ? employeeId : 0;
+                obj["ClientCode"] = clientCode;
+                return obj;
+            });
+
+            setUploadCheck(uploadCheckLocal);
+
+            if (uploadCheckLocal) {
+                setMessageType("error");
+                setMessageToShow("Shape/Clarity/Color/Cut/Setting Value is invalid");
+                setShowError(true);
+                setUploadCheck(false);
+            } else {
+                console.log("ARRAYOFOBJECT : ", arrayOfObjects);
+                setAllTableData(arrayOfObjects);
+            }
+
+            fileInput.value = "";
+        }
+    };
+    const handleImportClick = () => {
+        if (newCategory.TemplateName) {
+            fileInputRef.current.click();
+        } else {
+            setMessageType("error");
+            setMessageToShow("Template name is mandatory when excel imported");
+            setShowError(true);
+        }
+    };
+    const handleDownload = () => {
+        const sampleData = [
+            {
+                Shape: "Round",
+                Clarity: "VS",
+                Color: "Golden",
+                Cut: "",
+                Setting: "",
+                Size: "",
+                Sleve: "",
+                Weight: "",
+                PurchaseRate: "1000",
+                Margin: "20",
+                SellRate: "1800",
+            },
+        ];
+        const workbook = xlsx.utils.book_new();
+        const worksheet = xlsx.utils.json_to_sheet(sampleData);
+        xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        xlsx.writeFile(workbook, "downloadSample.xlsx");
+    };
     return (
         <div>
             <AdminHeading/>
@@ -804,7 +982,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                             <div
                                 id="addCategoryListTitle"
                                 onClick={() => {
-                                    setActive("AddNew")
+                                    setActive("AddNew");
                                     setAllTableData([]);
                                     setNewCategory({
                                         DiamondSize: "0",
@@ -813,16 +991,16 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         DiamondPurchaseRate: "0",
                                         DiamondSellRate: "0",
                                         DiamondMargin: "0",
-                                        DiamondShape: '',
-                                        DiamondClarity: '',
-                                        DiamondColour: '',
-                                        DiamondCut: '',
-                                        SettingType: '',
+                                        DiamondShape: "",
+                                        DiamondClarity: "",
+                                        DiamondColor: "",
+                                        DiamondCut: "",
+                                        SettingType: "",
                                         CompanyId: 0,
                                         BranchId: 0,
                                         CounterId: 0,
                                         EmployeeId: 0,
-                                        TemplateName: '',
+                                        TemplateName: "",
                                         OldEntry: false,
                                     });
                                 }}
@@ -851,35 +1029,49 @@ export default function AdminAddDiamondSizeWeightRate() {
                                 active === "List" ? "adminCategoryListMainBox" : "none"
                             }
                         >
-                            <table className={'table table-bordered text-center w-100 align-middle'}
-                                   style={{marginTop: "40px"}}>
+                            <table
+                                className={
+                                    "table table-bordered text-center w-100 align-middle"
+                                }
+                                style={{marginTop: "40px"}}
+                            >
                                 <thead>
                                 <tr>
                                     <th>Sr.No</th>
                                     <th>Template Name</th>
-                                    <th style={{textAlign: 'right', paddingRight: '50px'}}>Action</th>
+                                    <th style={{textAlign: "right", paddingRight: "50px"}}>
+                                        Action
+                                    </th>
                                 </tr>
                                 </thead>
-                                <tbody className={'w-100'}>
+                                <tbody className={"w-100"}>
                                 {allCategories.map((x, index) => (
-                                    <tr key={x.Id} style={{cursor: "pointer"}}
-                                        onClick={() => navigate(`/diamond_size_weight_rate_template/${x.Id}`)}>
+                                    <tr
+                                        key={x.Id}
+                                        style={{cursor: "pointer"}}
+                                        onClick={() =>
+                                            navigate(`/diamond_size_weight_rate_template/${x.Id}`)
+                                        }
+                                    >
                                         <td>{index + 1}</td>
-                                        <td>{x.TemplateName == '' ? "Default" : x.TemplateName}</td>
-                                        <td style={{textAlign: 'right'}}>
+                                        <td>
+                                            {x.TemplateName === "" ? "Default" : x.TemplateName}
+                                        </td>
+                                        <td style={{textAlign: "right"}}>
                                             <button
                                                 className="adminAddCategoryEditButton"
                                                 onClick={(e) => handleEditClick(e, x, index)}
                                             >
                                                 Edit
                                             </button>
+
                                             <button
                                                 className="adminAddCategoryEditButton"
                                                 style={{
-                                                    backgroundColor: 'rgba(255, 0, 0, 0.3)',
-                                                    marginLeft: '10px',
-                                                    borderColor: 'red',
-                                                    color: 'red'
+                                                    backgroundColor: "rgba(255, 0, 0, 0.3)",
+                                                    marginLeft: "10px",
+                                                    borderColor: "red",
+                                                    color: "red",
                                                 }}
                                                 onClick={(e) => handleDeleteDatalist(e, x)}
                                             >
@@ -896,37 +1088,50 @@ export default function AdminAddDiamondSizeWeightRate() {
                                 active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
                             }
                         >
-                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
                                 <p>Add New Diamond Size/Weight/Rate</p>
-                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                    <label className={'me-2'}>
-                                        Template Name :
-                                    </label>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <label className={"me-2"}>Template Name :</label>
                                     <input
                                         name="TemplateName"
                                         value={newCategory.TemplateName}
                                         onChange={handleNewCategoryChange}
                                         type="text"
-                                        style={{marginLeft: '10px'}}
+                                        style={{marginLeft: "10px"}}
                                     />
                                 </div>
                             </div>
                             <div
                                 style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(5, 1fr)',
-                                    columnGap: '40px',
-                                    minHeight: '50px',
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(5, 1fr)",
+                                    columnGap: "40px",
+                                    minHeight: "50px",
                                 }}
-                                className="adminCategoryAddCategoryInnerBox">
+                                className="adminCategoryAddCategoryInnerBox"
+                            >
                                 <select
                                     name="DiamondShape"
                                     value={newCategory.DiamondShape}
                                     onChange={handleNewCategoryChange}
                                 >
-                                    <option value={''}>Select Diamond Shape</option>
+                                    <option value={""}>Select Diamond Shape</option>
                                     {diamondShapes.map((shape) => (
-                                        <option key={shape.Id} value={shape.Id}>{shape.DiamondValue}</option>
+                                        <option key={shape.Id} value={shape.Id}>
+                                            {shape.DiamondValue}
+                                        </option>
                                     ))}
                                 </select>
                                 <select
@@ -936,17 +1141,21 @@ export default function AdminAddDiamondSizeWeightRate() {
                                 >
                                     <option value={""}>Select Diamond Clarity</option>
                                     {diamondClarities.map((clarity) => (
-                                        <option key={clarity.Id} value={clarity.Id}>{clarity.DiamondValue}</option>
+                                        <option key={clarity.Id} value={clarity.Id}>
+                                            {clarity.DiamondValue}
+                                        </option>
                                     ))}
                                 </select>
                                 <select
-                                    name="DiamondColour"
-                                    value={newCategory.DiamondColour}
+                                    name="DiamondColor"
+                                    value={newCategory.DiamondColor}
                                     onChange={handleNewCategoryChange}
                                 >
-                                    <option value={""}>Select Diamond Colour</option>
-                                    {diamondColours.map((colour) => (
-                                        <option key={colour.Id} value={colour.Id}>{colour.DiamondValue}</option>
+                                    <option value={""}>Select Diamond Color</option>
+                                    {diamondColors.map((colour) => (
+                                        <option key={colour.Id} value={colour.Id}>
+                                            {colour.DiamondValue}
+                                        </option>
                                     ))}
                                 </select>
                                 <select
@@ -957,7 +1166,9 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     <option value={""}>Select Diamond Cut</option>
 
                                     {diamondCuts.map((cut) => (
-                                        <option key={cut.Id} value={cut.Id}>{cut.DiamondValue}</option>
+                                        <option key={cut.Id} value={cut.Id}>
+                                            {cut.DiamondValue}
+                                        </option>
                                     ))}
                                 </select>
                                 <select
@@ -967,7 +1178,9 @@ export default function AdminAddDiamondSizeWeightRate() {
                                 >
                                     <option value={""}>Select Setting Type</option>
                                     {settingTypes.map((setting) => (
-                                        <option key={setting.Id} value={setting.Id}>{setting.DiamondValue}</option>
+                                        <option key={setting.Id} value={setting.Id}>
+                                            {setting.DiamondValue}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
@@ -989,9 +1202,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     required="required"
                                 />
 
-                                <label>
-                                    Sieve
-                                </label>
+                                <label>Sieve</label>
                                 <input
                                     name="Sieve"
                                     value={newCategory.Sieve}
@@ -1040,12 +1251,45 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     required="required"
                                 />
                             </div>
-                            <button onClick={() => handleAdd()}>Add</button>
-                            <button onClick={() => addNewCategory()} style={{marginLeft: '10px'}}>Submit</button>
                             <div
-                                className={"adminCategoryListMainBox"}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                }}
                             >
-                                <table className={'table table-bordered text-center w-100 align-middle'}>
+                                <div>
+                                    <button onClick={() => handleAdd()}>Add</button>
+                                    <button
+                                        onClick={() => addNewCategory()}
+                                        style={{marginLeft: "10px"}}
+                                    >
+                                        Submit
+                                    </button>
+                                </div>
+                                <div>
+                                    <input
+                                        type="file"
+                                        accept=".xlsx, .xls, .csv"
+                                        ref={fileInputRef}
+                                        onChange={handleFileUpload}
+                                        style={{display: "none"}}
+                                    />
+                                    <button onClick={handleImportClick}>Import</button>
+                                    <button
+                                        onClick={handleDownload}
+                                        style={{marginLeft: "10px"}}
+                                    >
+                                        Download Sample
+                                    </button>
+                                </div>
+                            </div>
+                            <div className={"adminCategoryListMainBox"}>
+                                <table
+                                    className={
+                                        "table table-bordered text-center w-100 align-middle"
+                                    }
+                                >
                                     <thead>
                                     <tr>
                                         <th>Sr.No</th>
@@ -1064,7 +1308,11 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     {allTableData.map((item, index) => (
                                         <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{item.TemplateName == '' ? "Default" : item.TemplateName}</td>
+                                            <td>
+                                                {item.TemplateName == ""
+                                                    ? "Default"
+                                                    : item.TemplateName}
+                                            </td>
                                             <td>{item.DiamondShape}</td>
                                             <td>{item.DiamondSize}</td>
                                             <td>{item.Sieve}</td>
@@ -1074,7 +1322,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                             <td>{item.DiamondSellRate}</td>
                                             <td>
                                                 <button
-                                                    className={'adminAddCategoryEditButton'}
+                                                    className={"adminAddCategoryEditButton"}
                                                     style={{
                                                         margin: 0,
                                                         padding: "3px 10px",
@@ -1083,7 +1331,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                                         border: "1px solid #02A8B5",
                                                         color: "#02A8B5",
                                                         borderRadius: "2px",
-                                                        cursor: "pointer"
+                                                        cursor: "pointer",
                                                     }}
                                                     onClick={() => handleEditData(item, index)}
                                                 >
@@ -1094,12 +1342,12 @@ export default function AdminAddDiamondSizeWeightRate() {
                                                     style={{
                                                         margin: 0,
                                                         padding: "3px 10px",
-                                                        backgroundColor: 'rgba(255, 0, 0, 0.3)',
-                                                        marginLeft: '10px',
-                                                        border: '1px solid red',
-                                                        color: 'red',
+                                                        backgroundColor: "rgba(255, 0, 0, 0.3)",
+                                                        marginLeft: "10px",
+                                                        border: "1px solid red",
+                                                        color: "red",
                                                         borderRadius: "2px",
-                                                        cursor: "pointer"
+                                                        cursor: "pointer",
                                                     }}
                                                     onClick={() => handleDeleteData(index)}
                                                 >
@@ -1108,7 +1356,6 @@ export default function AdminAddDiamondSizeWeightRate() {
                                             </td>
                                         </tr>
                                     ))}
-
                                     </tbody>
                                 </table>
                             </div>

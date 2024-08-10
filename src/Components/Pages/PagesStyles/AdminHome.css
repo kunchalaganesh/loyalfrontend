@@ -567,7 +567,8 @@ textarea {
 .bulkStockAddProductDetailsBox {
   display: grid;
   padding-bottom: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
+  grid-template-columns: repeat(4, 1fr);
   width: 95%;
   box-sizing: border-box;
   margin-top: 2rem;
@@ -624,10 +625,10 @@ textarea {
   cursor: pointer;
   background: rgb(2, 0, 36);
   background: linear-gradient(
-    90deg,
-    rgb(0, 0, 0) 0%,
-    rgba(79, 79, 79, 1) 61%,
-    rgba(207, 205, 205, 1) 100%
+          90deg,
+          rgb(0, 0, 0) 0%,
+          rgba(79, 79, 79, 1) 61%,
+          rgba(207, 205, 205, 1) 100%
   );
   transition: opacity ease-in-out 0.3s;
   transition: color ease-in-out 0.5s;

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-//
-// //   Customer List All (GET)
+
+//   Customer List All (GET)
 // export const a1 =
 //   // "https://sunshineteam.in/loyalstring/api_ls_customerall_data.php";
 //   // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/GetAllCustomer";
@@ -427,8 +427,8 @@ import { useNavigate } from "react-router-dom";
 //
 // export const a93 =
 //   "https://goldstringwebapp.loyalstring.co.in/api/ClientOnboarding/AddClientOnboarding";
-// Gold String Add New client
-
+// // Gold String Add New client
+//
 // export const a94 =
 //     "https://goldstringwebapp.loyalstring.co.in/api/ClientOnboarding/ClientOnboardingLogin";
 // // Gold String Client Login
@@ -753,7 +753,7 @@ import { useNavigate } from "react-router-dom";
 //
 // export const a175 =
 //   "https://goldstringwebapp.loyalstring.co.in/api/ProductMaster/GetAllRFID";
-//Fetch All RFID Data
+// // Fetch All RFID Data
 //
 // export const a176 =
 //   "https://goldstringwebapp.loyalstring.co.in/api/ProductMaster/AddLabeledStock";
@@ -1006,7 +1006,6 @@ import { useNavigate } from "react-router-dom";
 // export const postAdminadddiamondsizeweightrate = `https://testing.loyalstring.co.in/api/ProductMaster/SaveDiamondSizeWeightRateTemplate`;
 
 
-// import { useNavigate } from "react-router-dom";
 
 // Customer List All (GET)
 export const a1 =
@@ -1104,7 +1103,7 @@ export const a17 =
 export const a18 =
     // "https://sunshineteam.in/loyalstring/api_ls_categoryall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllCategory";
-    "https://testing.loyalstring.co.in/api/ProductMaster/fetchAllCategory";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCategory";
 // Get All Categories (GET)
 
 export const a19 =
@@ -1116,7 +1115,7 @@ export const a19 =
 export const a20 =
     // "https://sunshineteam.in/loyalstring/api_ls_producttypeall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllProductType";
-    "https://testing.loyalstring.co.in/api/ProductMaster/fetchAllProductType";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllProductMaster";
 // Get All ProductTypes (GET)
 
 export const a21 =
@@ -1229,7 +1228,7 @@ export const a42 =
 // Get All Products
 
 export const a43 =
-    "https://testing.loyalstring.co.in/api/Device/GetAllRFID";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllRFID";
 // Get All Barcode and Tid
 
 export const a44 =
@@ -1282,7 +1281,7 @@ export const a55 =
 // Add Unlabelled Items
 
 export const a56 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetfetchAllUnLabeledProducts";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
 // Get All Unlabelled Items
 
 export const a57 =

@@ -679,7 +679,7 @@ export default function AdminVendorTounche() {
                                 <tr>
                                     <th>Sr.No</th>
                                     <th>Vendor</th>
-                                    <th>template Name</th>
+                                    <th>Template Name</th>
                                     <th>Category</th>
                                     <th>Product</th>
                                     <th>Purity</th>
@@ -702,7 +702,7 @@ export default function AdminVendorTounche() {
                                         </td>
                                         <td>{x.CategoryName}</td>
                                         <td>{x.ProductName}</td>
-                                        <td>{x.PurityName}</td>
+                                        <td>{x?.PurityDetails?.PurityName}</td>
                                         <td>{x.StockKeepingUnit}</td>
                                         <td>{x.WastageWt}</td>
                                         <td>{x.MakingFixedAmt}</td>
@@ -1006,7 +1006,7 @@ export default function AdminVendorTounche() {
                                                     </td>
                                                     <td>{x.CategoryName}</td>
                                                     <td>{x.ProductName}</td>
-                                                    <td>{x.PurityName}</td>
+                                                    <td>{x?.PurityName}</td>
                                                     <td>{x.Pieces !== "" ? x.Pieces : 0}</td>
                                                     <td>{x.SketchNo !== "" ? x.SketchNo : 0}</td>
                                                     <td>
