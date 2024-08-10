@@ -157,6 +157,7 @@ export default function AdminAddSku() {
     SettingType: "",
     DiamondAmount: 0,
     Sleve: "",
+    TotalDiamondWeight: 0,
     DiamondPurchaseAmt: 0,
     Description: "",
     ClientCode: clientCode,
@@ -1001,26 +1002,34 @@ export default function AdminAddSku() {
       const totalAmount = Number(diamondPieces) * Number(diamondAmount);
       updatedDiamond.DiamondAmount = String(totalAmount.toFixed(2));
     }
+    if (field === "DiamondWeight" || field === "DiamondPieces") {
+      const diamondPieces =
+          field === "DiamondPieces" ? value : updatedDiamond.DiamondPieces || "0";
+      const diamondWeight =
+          field === "DiamondWeight" ? value : updatedDiamond.DiamondWeight || "0";
+      const totalWeight = Number(diamondPieces) * Number(diamondWeight);
+      updatedDiamond.TotalDiamondWeight = String(totalWeight.toFixed(2));
+    }
     if (field === "DiamondShape") {
+      console.log("updatedDiamondupdatedDiamond : ",updatedDiamond)
       const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondShape == value));
-      singleTemplateData ? updatedDiamond.DiamondAmount = String(singleTemplateData.DiamondPurchaseRate) : null;
+      singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;
     }
-    if (field === "DiamondClarity") {
-      console.log(newSku,index)
-      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondClarity == value));
-      singleTemplateData ? updatedDiamond.DiamondAmount = String(singleTemplateData.DiamondPurchaseRate) : null;
+    if (field === "DiamondClarity" || field === "DiamondShape") {
+      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondClarity == value && item.DiamondShape == newSku.Diamonds[index].DiamondShape));
+      singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;
     }
-    if (field === "DiamondColour") {
-      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondColour == value));
-      singleTemplateData ? updatedDiamond.DiamondAmount = String(singleTemplateData.DiamondPurchaseRate) : null;
+    if (field === "DiamondColour" || field === "DiamondClarity" || field === "DiamondShape") {
+      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondColor == value && item.DiamondShape == newSku.Diamonds[index].DiamondShape && item.DiamondClarity == newSku.Diamonds[index].DiamondClarity));
+      singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;
     }
-    if (field === "Sleve") {
-      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.Sleve == value));
-      singleTemplateData ? updatedDiamond.DiamondAmount = String(singleTemplateData.DiamondPurchaseRate) : null;
+    if (field === "Sleve" || field === "DiamondColour" || field === "DiamondClarity" || field === "DiamondShape") {
+      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.Sleve == value && item.DiamondColor == newSku.Diamonds[index].DiamondColour && item.DiamondShape == newSku.Diamonds[index].DiamondShape && item.DiamondClarity == newSku.Diamonds[index].DiamondClarity));
+      singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;
     }
-    if (field === "DiamondWeight") {
-      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondWeight == value));
-      singleTemplateData ? updatedDiamond.DiamondAmount = String(singleTemplateData.DiamondPurchaseRate) : null;
+    if (field === "DiamondWeight" || field === "Sleve" || field === "DiamondColour" || field === "DiamondClarity" || field === "DiamondShape") {
+      const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondWeight == value && item.Sleve == newSku.Diamonds[index].Sleve && item.DiamondColor == newSku.Diamonds[index].DiamondColour && item.DiamondShape == newSku.Diamonds[index].DiamondShape && item.DiamondClarity == newSku.Diamonds[index].DiamondClarity));
+      singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;
     }
     // if (field === "DiamondWeight") {
     //     if (value !== "") {
@@ -2645,14 +2654,6 @@ export default function AdminAddSku() {
                                   }
                                   list="diamondsList"
                               />
-                              <datalist id="diamondsList">
-                                {allDiamonds.map((diamond, index) => (
-                                    <option
-                                        key={index}
-                                        value={`${diamond.DiamondName}`}
-                                    />
-                                ))}
-                              </datalist>
                             </div>
                             <div className="adminSkuAddSkuInnerItemsBox">
                               <label>Diamond Shape</label>
@@ -2795,12 +2796,25 @@ export default function AdminAddSku() {
                               />
                             </div>
                             <div className="adminSkuAddSkuInnerItemsBox">
-                              <label>Diamond Amount</label>
+                              <label>Total Weight</label>
+                              <input
+                                  type="text"
+                                  value={diamond.TotalDiamondWeight}
+                                  style={{width: '100%'}}
+                                  placeholder={`Total Diamond Weight ${index + 1}`}
+                                  onChange={(e) =>
+                                      updateDiamond(index, "TotalDiamondWeight", e.target.value)
+                                  }
+                                  readOnly
+                              />
+                            </div>
+                            <div className="adminSkuAddSkuInnerItemsBox">
+                              <label>Total Amount</label>
                               <input
                                   type="text"
                                   value={diamond.DiamondAmount}
                                   style={{width: '100%'}}
-                                  placeholder={`Diamond Amount ${index + 1}`}
+                                  placeholder={`Total Diamond Amount ${index + 1}`}
                                   readOnly
                                   onChange={(e) =>
                                       updateDiamond(index, "DiamondAmount", e.target.value)
@@ -2828,22 +2842,6 @@ export default function AdminAddSku() {
                               </select>
                             </div>
                             <div className="adminSkuAddSkuInnerItemsBox">
-                              <label>Certificate</label>
-                              <input
-                                  type="text"
-                                  value={diamond.Certificate}
-                                  style={{width: '100%'}}
-                                  placeholder={`Certificate Name ${index + 1}`}
-                                  onChange={(e) =>
-                                      updateDiamond(
-                                          index,
-                                          "Certificate",
-                                          e.target.value
-                                      )
-                                  }
-                              />
-                            </div>
-                            <div className="adminSkuAddSkuInnerItemsBox">
                               <label>Setting Type</label>
                               <select
                                   name="SettingType"
@@ -2862,6 +2860,22 @@ export default function AdminAddSku() {
                                     </option>
                                 ))}
                               </select>
+                            </div>
+                            <div className="adminSkuAddSkuInnerItemsBox">
+                              <label>Certificate</label>
+                              <input
+                                  type="text"
+                                  value={diamond.Certificate}
+                                  style={{width: '100%'}}
+                                  placeholder={`Certificate Name ${index + 1}`}
+                                  onChange={(e) =>
+                                      updateDiamond(
+                                          index,
+                                          "Certificate",
+                                          e.target.value
+                                      )
+                                  }
+                              />
                             </div>
                             <div className="adminSkuAddSkuInnerItemsBox">
                               <label>Description</label>
