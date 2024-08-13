@@ -816,13 +816,15 @@ export default function AdminAddDiamondSizeWeightRate() {
                     const newKey = keyMapping[header] || header;
                     let value = row[index];
                     if (newKey === "DiamondShape") {
-                        const checkShape = diamondShapes.find(
-                            (item) => item.DiamondValue === value.toUpperCase()
-                        );
-                        if (checkShape) {
-                            value = value.toUpperCase();
-                        } else {
-                            uploadCheckLocal = true;
+                        if (value) {
+                            const checkShape = diamondShapes.find(
+                                (item) => item.DiamondValue === value.toUpperCase()
+                            );
+                            if (checkShape) {
+                                value = value.toUpperCase();
+                            } else {
+                                uploadCheckLocal = true;
+                            }
                         }
                     }
                     if (newKey === "DiamondClarity") {
@@ -922,8 +924,8 @@ export default function AdminAddDiamondSizeWeightRate() {
         const sampleData = [
             {
                 Shape: "Round",
-                Clarity: "VS",
-                Color: "Golden",
+                Clarity: "VVS1",
+                Color: "Red",
                 Cut: "",
                 Setting: "",
                 Size: "",
