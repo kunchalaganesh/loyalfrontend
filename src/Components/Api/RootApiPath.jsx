@@ -1924,7 +1924,6 @@ export const a215 =
 
 export const a216 =
     "https://testing.loyalstring.co.in/api/ProductMaster/GetStockReport";
-//Get Stock Report
 
 export const a217 =
     "https://testing.loyalstring.co.in/api/ProductMaster/InsertLabelledStock";
@@ -1984,6 +1983,33 @@ export const a230 =
 
 export const a231 =
     "https://testing.loyalstring.co.in/api/Invoice/AddDebitNote";
+
+//Get Stock Transfer Type
+export const a232 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetStockTransferTypes";
+
+
+
+// Filter labeled stock
+export const a233 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllLabeledStockByFilter";
+
+// Filter unlabeled stock
+export const a234 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStockByFilter";
+
+// add stock transfer
+export const a235 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/AddStockTransfer";
+
+//get all stock transfers
+export const a236 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllStockTransfers";
+
+//add Approve Stock Transfer
+export const a237 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/ApproveStockTransfer";
+
 // Add Debit Note
 
 // export const s1 = `http://localhost:3000/demo/Images/`;
@@ -2004,6 +2030,7 @@ export const s3 =
     // "https://product123.blob.core.windows.net/images";
     "https://jewellerywebapplications.blob.core.windows.net/images";
 // "https://testing.loyalstring.co.in/api/RDPurchase/GetAllRDPurchase";
+
 
 export const paymentApi = "http://localhost:5000";
 // export const paymentApi = "https://goldkarizma.com";

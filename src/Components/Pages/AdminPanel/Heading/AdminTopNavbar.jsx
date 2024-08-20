@@ -272,7 +272,7 @@ export default function AdminTopNavbar() {
         {id: 7, name: "Credit Note / Sale Return", linkto: "/credit_note"},
         {id: 8, name: "Debit Note / Purchase Return", linkto: "/debit_note"},
         // { id: 14, name: "Customize Order", linkto: "/adminhome" },
-        //{ id: 15, name: "Stock Transfer", linkto: "/adminhome" },
+        { id: 15, name: "Stock Transfer", linkto: "/stock_transfer" },
         //{ id: 16, name: "Stock Verification", linkto: "/adminhome" },
       ],
     },

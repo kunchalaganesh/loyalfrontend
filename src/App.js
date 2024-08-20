@@ -74,6 +74,9 @@ import AdminSkuReport from "./Components/Pages/AdminPanel/AdminReports/AdminSkuR
 import AdminVendorLedger from "./Components/Pages/AdminPanel/AdminTrading/AdminVendorLedger";
 import AdminCustomerLedger from "./Components/Pages/AdminPanel/AdminTrading/AdminCustomerLedger";
 import AdminAddPacketMaster from "./Components/Pages/AdminPanel/AdminMasters/AdminAddPacketMaster";
+import AdminStockTransfer from "./Components/Pages/AdminPanel/AdminTrading/AdminStockTransfer";
+import AdminStockTransferList from "./Components/Pages/AdminPanel/AdminTrading/AdminStockTransferList";
+import AdminApprovalStockTransfer from "./Components/Pages/AdminPanel/AdminTrading/AdminApprovalStockTransfer";
 
 function App() {
   const allStates = useSelector((state) => state);
@@ -303,6 +306,18 @@ function App() {
           <Route
               path="/diamond_size_weight_rate_Template/:templateId"
               element={<AdminDiamondSizeWeightRateTemplate/>}
+          />
+          <Route
+              path="/stock_transfer"
+              element={<AdminStockTransfer/>}
+          />
+          <Route
+              path="/stock_transfer_list"
+              element={<AdminStockTransferList/>}
+          />
+          <Route
+              path="/stock_transfer_approval/:id"
+              element={<AdminApprovalStockTransfer/>}
           />
           <Route path="/add_packet" element={<AdminAddPacketMaster/>}/>
           <Route

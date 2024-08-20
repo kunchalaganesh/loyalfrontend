@@ -199,11 +199,11 @@ export default function AdminVendorTounche() {
             });
     }, []);
 
-    useEffect(async () => {
+    useEffect( () => {
         const formData = {
             ClientCode: clientCode,
         };
-        const response = await fetch(a191, {
+        fetch(a191, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -211,13 +211,14 @@ export default function AdminVendorTounche() {
                     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
             },
             body: JSON.stringify(formData),
-        });
-        const data = await response.json();
-        const processedData = data?.map((item) => ({
-            templateID: item?.Id,
-            templateName: item?.TemplateName || "default",
-        }));
-        setTemplateData(processedData);
+        }).then((res) => res.json())
+            .then((data) => {
+                const processedData = data?.map((item) => ({
+                    templateID: item?.Id,
+                    templateName: item?.TemplateName || "default",
+                }));
+                setTemplateData(processedData);
+            });
     }, []);
 
     const fetchAllCompanies = async () => {
@@ -874,13 +875,12 @@ export default function AdminVendorTounche() {
                                         type="text"
                                     />
                                     <label>
-                                        Select Template<sup>*</sup>
+                                        Select Template
                                     </label>
                                     <select
                                         name="DiamondSizeWeightRateTemplateId"
                                         value={newCategory.DiamondSizeWeightRateTemplateId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
                                     >
                                         <option value={""}>Select an Option</option>
                                         {templateData?.map((x) => {

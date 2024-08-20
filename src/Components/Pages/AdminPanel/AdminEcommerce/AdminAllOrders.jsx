@@ -10,6 +10,7 @@ import logoImage from "../../../Images/loyalStringLogoSmall.png";
 import { useSelector } from "react-redux";
 import { numberToIndianWords } from "../../../Other Functions/numberToIndianWords";
 import { generateFullBillPDF } from "../../../Other Functions/GenerateFullBillPDF";
+import {generateBillInvocePDF, generateBillPDF} from "../../../Other Functions/GenerateBillPDF";
 
 export default function AdminAllOrders() {
   const [allOrders, setAllOrders] = useState([]);
@@ -1507,7 +1508,7 @@ export default function AdminAllOrders() {
                             style={{ padding: "0px", cursor: "pointer" }}
                             onClick={() => {
                               // showPDFWithId(x.id), setLoading(true);
-                              // generateBillPDF([x], [x]);
+                              generateBillInvocePDF(x, x.InvoiceItem);
                               // console.log("order", [x.tblProduct]);
                               setCsData(x);
                               getAllOrderItems(x.Id);

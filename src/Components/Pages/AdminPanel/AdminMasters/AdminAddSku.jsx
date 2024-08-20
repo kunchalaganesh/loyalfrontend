@@ -1027,7 +1027,6 @@ export default function AdminAddSku() {
         //   const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.Sleve == value && item.DiamondColor == newSku.Diamonds[index].DiamondColour && item.DiamondShape == newSku.Diamonds[index].DiamondShape && item.DiamondClarity == newSku.Diamonds[index].DiamondClarity));
         //   singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;
         // }
-        console.log(field)
         if (field === "DiamondWeight" || field === "Sleve" || field === "DiamondColour" || field === "DiamondClarity" || field === "DiamondShape" || field === "DiamondSize") {
             const singleTemplateData = defaultTemplateData.DiamondSizeWeightRates.find((item) => (item.DiamondWeight == newSku.Diamonds[index].DiamondWeight && item.Sleve == newSku.Diamonds[index].Sleve && item.DiamondColor == newSku.Diamonds[index].DiamondColour && item.DiamondShape == newSku.Diamonds[index].DiamondShape && item.DiamondClarity == newSku.Diamonds[index].DiamondClarity && item.DiamondSize == newSku.Diamonds[index].DiamondSize));
             singleTemplateData ? updatedDiamond.DiamondRate = String(singleTemplateData.DiamondPurchaseRate) : null;

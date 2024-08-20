@@ -474,7 +474,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                 DiamondWeight: item.DiamondWeight,
                 DiamondPurchaseRate: item.DiamondPurchaseRate,
                 DiamondSellRate: item.DiamondSellRate,
-                DiamondMargin: item.DiamondMargin,
+                DiamondMargin: String(item.DiamondMargin),
                 CompanyId: companyId ? companyId : 0,
                 BranchId: branchId ? branchId : 0,
                 CounterId: counterId ? counterId : 0,
@@ -880,7 +880,8 @@ export default function AdminAddDiamondSizeWeightRate() {
                         newKey === "DiamondSellRate" ||
                         newKey === "DiamondPurchaseRate" ||
                         newKey === "DiamondWeight" ||
-                        newKey === "DiamondSize"
+                        newKey === "DiamondSize" ||
+                        newKey === "DiamondMargin"
                     ) {
                         value = value.toString();
                     }
