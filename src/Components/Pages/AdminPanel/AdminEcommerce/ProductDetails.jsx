@@ -641,17 +641,18 @@ export default function ProductDetails() {
 
                 if (field === "StoneName") {
                     const selectedStone = allStonesList.find(
-                        (stone) => stone.StoneMainName === value
+                        (stone) => (stone.StoneName ? stone.StoneName : stone.StoneMainName) === value
                     );
+                    console.log("selectedStone,allStonesListselectedStone,allStonesList : ",selectedStone,value,allStonesList)
                     if (selectedStone) {
                         return {
                             ...stone,
-                            StoneName: selectedStone.StoneMainName,
-                            StoneWeight: selectedStone.StoneMainWeight,
-                            StonePieces: selectedStone.StoneMainPieces,
-                            StoneRate: selectedStone.StoneMainRate,
-                            StoneAmount: selectedStone.StoneMainAmount,
-                            Description: selectedStone.StoneMainDescription
+                            StoneName: selectedStone.StoneName ? selectedStone.StoneName : selectedStone.StoneMainName,
+                            StoneWeight: selectedStone.StoneWeight ? selectedStone.StoneWeight : selectedStone.StoneMainWeight,
+                            StonePieces: selectedStone.StonePieces ? selectedStone.StonePieces : selectedStone.StoneMainPieces,
+                            StoneRate: selectedStone.StoneRate ? selectedStone.StoneRate : selectedStone.StoneMainRate,
+                            StoneAmount: selectedStone.StoneAmount ? selectedStone.StoneAmount : selectedStone.StoneMainAmount,
+                            Description: selectedStone.Description ? selectedStone.Description : selectedStone.StoneMainDescription
                         };
                     }
                 }

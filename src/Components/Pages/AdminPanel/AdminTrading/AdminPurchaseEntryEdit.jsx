@@ -363,14 +363,51 @@ export default function AdminPurchaseEntryEdit() {
             }
         }
 
-        fetchData(); // call the async function
-    }, [searchParams, allCsData]); // make sure to include searchParams in the dependency array
-
+        fetchData();
+    }, [searchParams, allCsData]);
+    const fetchAllCustomers = async () => {
+        const formData = {
+            ClientCode: clientCode,
+        };
+        try {
+            const response = await fetch(a149, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+            setAllCsData(data);
+            console.log(data, "allCSData");
+            setProductsLoading(false);
+            console.log(data, "allCSData");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    async function fetchAllSkuList() {
+        const formData = {
+            ClientCode: clientCode,
+        };
+        try {
+            const response = await fetch(a163, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            // const response = await fetch(a56);
+            const data = await response.json();
+            setAllSkuList(data);
+            // setProductsLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     useEffect(() => {
         fetchAllSkuList();
-    }, []);
-
-    useEffect(() => {
         fetchAllCustomers();
     }, []);
 
@@ -417,7 +454,7 @@ export default function AdminPurchaseEntryEdit() {
                 setSelectedSku(selectedSkuItem);
             })
         }
-    }, [allSelectedProducts])
+    }, [allSelectedProducts,allSkuList])
 
 
     const getAllPurchaseItemsById = async (id, mainBoxData) => {
@@ -611,8 +648,17 @@ export default function AdminPurchaseEntryEdit() {
     console.log(purchaseMainBox, "purchaseMainBox");
     // console.log(selectedCustomer, "selectedCustomer");
     const fetchAllSalesTeam = async () => {
+        const formData = {
+            ClientCode: clientCode,
+        };
         try {
-            const response = await fetch(a59);
+            const response = await fetch(a59, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
             const data = await response.json();
             setAllSalesTeam(data.data);
         } catch (error) {
@@ -622,50 +668,7 @@ export default function AdminPurchaseEntryEdit() {
     useEffect(() => {
         fetchAllSalesTeam();
     }, []);
-    const fetchAllCustomers = async () => {
-        const formData = {
-            ClientCode: clientCode,
-        };
-        try {
-            const response = await fetch(a149, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllCsData(data);
-            console.log(data, "allCSData");
-            setProductsLoading(false);
-            console.log(data, "allCSData");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    console.log(allCsData, "allCSData");
 
-
-    async function fetchAllSkuList() {
-        const formData = {
-            ClientCode: clientCode,
-        };
-        try {
-            const response = await fetch(a163, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            // const response = await fetch(a56);
-            const data = await response.json();
-            setAllSkuList(data);
-            // setProductsLoading(false);
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const fetchAllVendorTounche = async () => {
         const formData = {ClientCode: clientCode};
@@ -688,8 +691,8 @@ export default function AdminPurchaseEntryEdit() {
     const [selectedSkuName, setSelectedSkuName] = useState("");
 
     useEffect(() => {
-        if (selectedSku) {
-            setAllStonesList(selectedSku.SKUStoneMain)
+        if (selectedSku && selectedSku?.length !== 0) {
+            setAllStonesList(selectedSku?.SKUStoneMain)
         }
     }, [selectedSku]);
 
@@ -4107,17 +4110,17 @@ export default function AdminPurchaseEntryEdit() {
     const handleStoneChange = (index, property, value) => {
         const newStones = [...purchaseProduct.Stones];
         const selectedStone = allStonesList?.find(
-            (stone) => stone.StoneMainName === value
+            (stone) => (stone.StoneName ? stone.StoneName : stone.StoneMainName) === value
         );
         if (selectedStone) {
             newStones[index] = {
                 ...newStones[index],
-                StoneName: selectedStone.StoneMainName,
-                StoneWeight: selectedStone.StoneWeight,
-                StonePieces: selectedStone.StonePieces,
-                StoneRate: selectedStone.StoneRate,
-                StoneAmount: selectedStone.StoneAmount,
-                Description: selectedStone.Description,
+                StoneName: selectedStone.StoneName ? selectedStone.StoneName : selectedStone.StoneMainName,
+                StoneWeight: selectedStone.StoneWeight ? selectedStone.StoneWeight : selectedStone.StoneMainWeight,
+                StonePieces: selectedStone.StonePieces ? selectedStone.StonePieces : selectedStone.StoneMainPieces,
+                StoneRate: selectedStone.StoneRate ? selectedStone.StoneRate : selectedStone.StoneMainRate,
+                StoneAmount: selectedStone.StoneAmount ? selectedStone.StoneAmount : selectedStone.StoneMainAmount,
+                Description: selectedStone.Description ? selectedStone.Description : selectedStone.StoneMainDescription
             };
         } else {
             newStones[index] = {
@@ -4125,7 +4128,6 @@ export default function AdminPurchaseEntryEdit() {
                 [property]: value,
             };
         }
-
         setPurchaseProduct({...purchaseProduct, Stones: newStones});
     };
     const deleteDiamond = (x, index) => {
@@ -5842,7 +5844,7 @@ export default function AdminPurchaseEntryEdit() {
                                                         </div>
                                                         <label>Stone Name</label>
                                                         <input
-                                                            value={x.StoneName}
+                                                            value={x.StoneMainName ? x.StoneMainName : x.StoneName}
                                                             onChange={(e) =>
                                                                 handleStoneChange(
                                                                     index,
@@ -5854,8 +5856,12 @@ export default function AdminPurchaseEntryEdit() {
                                                             list="allStonesList"
                                                         />
                                                         <datalist id="allStonesList">
-                                                            {allStonesList?.map((x) => {
-                                                                return <option>{x.StoneMainName}</option>;
+                                                            {allStonesList?.map((stone) => {
+                                                                return (
+                                                                    <option>
+                                                                        {stone.StoneMainName ? stone.StoneMainName : stone.StoneName}
+                                                                    </option>
+                                                                );
                                                             })}
                                                         </datalist>
                                                         <label>Stone Weight</label>

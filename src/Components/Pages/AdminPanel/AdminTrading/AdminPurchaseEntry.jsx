@@ -735,7 +735,7 @@ export default function AdminPurchaseEntry() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      setAllStonesList(selectedSku.SKUStoneMain);
+      setAllStonesList(data);
       // setAllStonesList(data);
       console.log(data, "allPurities");
     } catch (error) {
@@ -3573,29 +3573,22 @@ export default function AdminPurchaseEntry() {
 
     let selectedStone;
     allStonesList.forEach(stone => {
-      const normalizedStoneName = normalizeString(stone.StoneMainName);
+      const normalizedStoneName = normalizeString((stone.StoneName ? stone.StoneName : stone.StoneMainName));
       console.log(`Comparing "${normalizedStoneName}" with "${normalizedValue}"`);
       if (normalizedStoneName === normalizedValue) {
         selectedStone = stone;
         console.log('Match found:', stone);
       }
     });
-
-
     if (selectedStone) {
-
-
       newStones[index] = {
-
         ...newStones[index],
-        StoneName: selectedStone.StoneMainName,
-        StoneWeight: selectedStone.StoneMainWeight, // Assuming these fields exist in your stone objects
-        StonePieces: selectedStone.StoneMainPieces,
-        StoneRate: selectedStone.StoneMainRate,
-        StoneAmount: selectedStone.StoneMainAmount, // Calculate or pull this value as required
-        Description: selectedStone.StoneMainDescription, // Assuming a description field exists
-
-
+        StoneName: selectedStone.StoneName ? selectedStone.StoneName : selectedStone.StoneMainName,
+        StoneWeight: selectedStone.StoneWeight ? selectedStone.StoneWeight : selectedStone.StoneMainWeight,
+        StonePieces: selectedStone.StonePieces ? selectedStone.StonePieces : selectedStone.StoneMainPieces,
+        StoneRate: selectedStone.StoneRate ? selectedStone.StoneRate : selectedStone.StoneMainRate,
+        StoneAmount: selectedStone.StoneAmount ? selectedStone.StoneAmount : selectedStone.StoneMainAmount,
+        Description: selectedStone.Description ? selectedStone.Description : selectedStone.StoneMainDescription
       };
     } else {
       newStones[index] = {
@@ -5268,7 +5261,7 @@ export default function AdminPurchaseEntry() {
                               className="popup-inner"
                           >
                             <div className="adminAddProductsPopupInnerBox">
-                              {purchaseProduct.Stones.map((x, index) => (
+                              {purchaseProduct?.Stones?.map((x, index) => (
                                   <div className="adminPurchaseEntryAddStonesMainBox">
                                     <div style={{gridColumn: "span 6"}}>
                                       <h4 style={{margin: "5px"}}>
@@ -5277,7 +5270,7 @@ export default function AdminPurchaseEntry() {
                                     </div>
                                     <label>Stone Name</label>
                                     <input
-                                        value={x.StoneName}
+                                        value={x.StoneMainName ? x.StoneMainName : x.StoneName}
                                         onChange={(e) =>
                                             handleStoneChange(
                                                 index,
@@ -5289,10 +5282,10 @@ export default function AdminPurchaseEntry() {
                                         list="allStonesList"
                                     />
                                     <datalist id="allStonesList">
-                                      {allStonesList.map((e) => {
+                                      {allStonesList?.map((stone) => {
                                         return (
                                             <option>
-                                              {e.StoneMainName}
+                                              {stone.StoneMainName ? stone.StoneMainName : stone.StoneName}
                                             </option>
                                         );
                                       })}
