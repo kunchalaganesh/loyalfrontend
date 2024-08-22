@@ -3,7 +3,7 @@ import * as xlsx from "xlsx";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
-import {TbCircleNumber1} from "react-icons/tb";
+import DownloadIcon from '@mui/icons-material/Download';
 import {
     a100,
     a104,
@@ -589,6 +589,29 @@ export default function AdminAddDiamondSizeWeightRate() {
             setShowError(false);
         }, 2000);
     }, [showError]);
+    const handleTemplateDownload = (e, item) => {
+        e.stopPropagation()
+        const transformedData = item.DiamondSizeWeightRates.map((data, index) => {
+                return {
+                    Shape: getShapeValue(data.DiamondShape),
+                    Clarity: getDiamondClarity(data.DiamondClarity),
+                    Color: getDiamondColor(data.DiamondColor),
+                    Cut: getDiamondCut(data.DiamondCut),
+                    Setting: getSettingType(data.SettingType),
+                    Size: data.DiamondSize,
+                    Sleve: data.Sleve,
+                    Weight: data.DiamondWeight,
+                    'Purchase Rate': data.DiamondPurchaseRate,
+                    Margin: data.DiamondMargin,
+                    'Sell Rate': data.DiamondSellRate
+                }
+            }
+        )
+        const workbook = xlsx.utils.book_new();
+        const worksheet = xlsx.utils.json_to_sheet(transformedData);
+        xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        xlsx.writeFile(workbook, `${item.TemplateName ? item.TemplateName : "DefaultTemplate"}.xlsx`);
+    };
 
     function getShapeValue(id, shape) {
         if (id) {
@@ -1060,7 +1083,23 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         <td>
                                             {x.TemplateName === "" ? "Default" : x.TemplateName}
                                         </td>
-                                        <td style={{textAlign: "right"}}>
+                                        <td style={{
+                                            textAlign: "right",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "right"
+                                        }}>
+                                            <div
+                                                // className="adminAddCategoryEditButton"
+                                                // onClick={(e) => handleDeleteDatalist(e, x)}
+                                                onClick={(e) => handleTemplateDownload(e, x)} style={{
+                                                cursor: "pointer",
+                                                display: "inline-block",
+                                                marginRight: "10px"
+                                            }}
+                                            >
+                                                <DownloadIcon/>
+                                            </div>
                                             <button
                                                 className="adminAddCategoryEditButton"
                                                 onClick={(e) => handleEditClick(e, x, index)}
@@ -1119,9 +1158,10 @@ export default function AdminAddDiamondSizeWeightRate() {
                             <div
                                 style={{
                                     display: "grid",
-                                    gridTemplateColumns: "repeat(5, 1fr)",
+                                    // gridTemplateColumns: "repeat(5, 1fr)",
                                     columnGap: "40px",
                                     minHeight: "50px",
+                                    gridTemplateColumns: window.innerWidth >= 968 ? "repeat(5, 1fr)" : "repeat(2, 1fr)",
                                 }}
                                 className="adminCategoryAddCategoryInnerBox"
                             >
@@ -1297,13 +1337,13 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     <tr>
                                         <th>Sr.No</th>
                                         <th>Template Name</th>
-                                        <th>Diamond Shape</th>
-                                        <th>Diamond Size</th>
+                                        <th>Dia. Shape</th>
+                                        <th>Dia. Size</th>
                                         <th>Sieve</th>
-                                        <th>Diamond Weight</th>
-                                        <th>Diamond Purchase Rate</th>
-                                        <th>Diamond Margin</th>
-                                        <th>Diamond Sell Rate</th>
+                                        <th>Dia. Weight</th>
+                                        <th>Dia. Purchase Rate</th>
+                                        {/*<th>Diamond Margin</th>*/}
+                                        <th>Dia.z Sell Rate</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -1321,15 +1361,15 @@ export default function AdminAddDiamondSizeWeightRate() {
                                             <td>{item.Sieve}</td>
                                             <td>{item.DiamondWeight}</td>
                                             <td>{item.DiamondPurchaseRate}</td>
-                                            <td>{item.DiamondMargin}</td>
+                                            {/*<td>{item.DiamondMargin}</td>*/}
                                             <td>{item.DiamondSellRate}</td>
-                                            <td>
+                                            <td >
                                                 <button
                                                     className={"adminAddCategoryEditButton"}
                                                     style={{
                                                         margin: 0,
                                                         padding: "3px 10px",
-                                                        marginRight: "10px",
+                                                        // marginRight: "6px",
                                                         backgroundColor: "rgba(2, 168, 181,0.3)",
                                                         border: "1px solid #02A8B5",
                                                         color: "#02A8B5",

@@ -546,7 +546,7 @@ function AdminStockTransfer() {
                                         <option value="">
                                             Choose a Transfer Type
                                         </option>
-                                        {transferType.map((x, y) => (
+                                        {transferType?.map((x, y) => (
                                             <option
                                                 key={y}
                                                 value={x.TransferType}
@@ -890,9 +890,13 @@ function AdminStockTransfer() {
                                             marginBottom: "5px",
                                             fontSize: "15px"
                                         }}>Transferred By</label>
-                                        <select className={"input-select"} name={"TransferByEmployee"}
-                                                onChange={handleInputChangePurchase}
-                                                value={formData.TransferByEmployee}>
+                                        <select
+                                            className={"input-select"}
+                                            name={"TransferByEmployee"}
+                                            onChange={handleInputChangePurchase}
+                                            value={formData.TransferByEmployee || allEmployee?.[0]?.Id || ""}
+                                            disabled
+                                        >
                                             <option value="">
                                                 Select Transferred By
                                             </option>

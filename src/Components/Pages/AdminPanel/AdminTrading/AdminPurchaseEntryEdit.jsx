@@ -386,6 +386,7 @@ export default function AdminPurchaseEntryEdit() {
             console.log(error);
         }
     };
+
     async function fetchAllSkuList() {
         const formData = {
             ClientCode: clientCode,
@@ -454,7 +455,7 @@ export default function AdminPurchaseEntryEdit() {
                 setSelectedSku(selectedSkuItem);
             })
         }
-    }, [allSelectedProducts,allSkuList])
+    }, [allSelectedProducts, allSkuList])
 
 
     const getAllPurchaseItemsById = async (id, mainBoxData) => {
@@ -691,8 +692,12 @@ export default function AdminPurchaseEntryEdit() {
     const [selectedSkuName, setSelectedSkuName] = useState("");
 
     useEffect(() => {
-        if (selectedSku && selectedSku?.length !== 0) {
+        if (selectedSku) {
             setAllStonesList(selectedSku?.SKUStoneMain)
+            console.log(selectedSku, "jdshdjshjdhjsdhjsdhjdhsjdhjshl̥")
+        } else {
+            console.log(allStonesList, "jdshdjshjdhjsdhjsdhjdhsjdhjshl̥")
+            setAllStonesList(allStonesList)
         }
     }, [selectedSku]);
 
@@ -726,8 +731,10 @@ export default function AdminPurchaseEntryEdit() {
 
 
     useEffect(() => {
+        if(!selectedSkuName){
         fetchAllStonesList();
-    }, []);
+        }
+    }, [selectedSkuName]);
 
     useEffect(() => {
         fetchAllDiamondsList();

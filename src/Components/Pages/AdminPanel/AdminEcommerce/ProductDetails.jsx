@@ -167,8 +167,10 @@ export default function ProductDetails() {
     };
 
     useEffect(() => {
-        fetchAllStonesList();
-    }, []);
+        if (!selectedSkuName) {
+            fetchAllStonesList();
+        }
+    }, [selectedSkuName]);
 
     const fetchAllStonesList = async () => {
         const formData = {ClientCode: clientCode};
@@ -453,13 +455,12 @@ export default function ProductDetails() {
             setLoading(false);
         }
     };
-        console.log("selectedSkuselectedSku : ",selectedSku)
+    console.log("selectedSkuselectedSku : ", selectedSku)
     useEffect(() => {
         if (selectedSku) {
             setAllStonesList(selectedSku.SKUStoneMain)
         }
     }, [selectedSku]);
-
 
 
     const handleSkuInputChange = (value) => {
@@ -468,9 +469,9 @@ export default function ProductDetails() {
         setSelectedSkuName(uppercaseValue);
         let selectedSkuItem = [];
         selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
-        if(selectedSkuItem){
-        setSelectedSku(selectedSkuItem);
-        setSelectedSkuId(selectedSkuItem.Id);
+        if (selectedSkuItem) {
+            setSelectedSku(selectedSkuItem);
+            setSelectedSkuId(selectedSkuItem.Id);
         }
         const key = selectedSkuItem?.WeightCategories.split(',').map(Number)
         setWeightOptions(key);
@@ -566,8 +567,8 @@ export default function ProductDetails() {
     const handleUpdateProduct = async () => {
         const openEditProduct2 = [{
             ...openEditProduct,
-            SKUId : selectedSkuId,
-            SKU : selectedSkuName,
+            SKUId: selectedSkuId,
+            SKU: selectedSkuName,
             WeightCategory: weightCategory,
             VendorId: partyTypeId,
             CategoryId: category,
@@ -643,7 +644,7 @@ export default function ProductDetails() {
                     const selectedStone = allStonesList.find(
                         (stone) => (stone.StoneName ? stone.StoneName : stone.StoneMainName) === value
                     );
-                    console.log("selectedStone,allStonesListselectedStone,allStonesList : ",selectedStone,value,allStonesList)
+                    console.log("selectedStone,allStonesListselectedStone,allStonesList : ", selectedStone, value, allStonesList)
                     if (selectedStone) {
                         return {
                             ...stone,

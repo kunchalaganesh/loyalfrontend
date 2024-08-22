@@ -1,9 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
-import {Box, Grid, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs} from "@mui/material";
+import {
+    Box, Button, Dialog, DialogActions, DialogContent, DialogContentText,
+    DialogTitle,
+    Grid,
+    Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Tabs, Typography
+} from "@mui/material";
 import {useSelector} from "react-redux";
-import {a236} from "../../../Api/RootApiPath";
+import {a236, a237} from "../../../Api/RootApiPath";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import {useParams} from "react-router-dom";
 import moment from "moment";
@@ -20,6 +32,8 @@ function AdminApprovalStockTransfer() {
     const [areButtonsDisabled, setAreButtonsDisabled] = useState(true);
     const allStates = useSelector((state) => state);
     const clientCode = allStates.reducer1.ClientCode;
+    const [open, setOpen] = useState(false);
+    const [actionType, setActionType] = useState("");
     const {id} = useParams();
 
     const fetchAllLabelledStock = async () => {
@@ -32,7 +46,8 @@ function AdminApprovalStockTransfer() {
             });
             const data = await response.json();
             const filterData = data.find((e) => e.Id == id);
-            setTableData(filterData.LabelledStockItems);
+            console.log(filterData)
+            setTableData(filterData);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -52,22 +67,34 @@ function AdminApprovalStockTransfer() {
         let filtered;
         switch (selectedTab) {
             case 0:
-                filtered = tableData?.filter(item => item.Status === 'InTransit');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'InTransit');
                 break;
             case 1:
-                filtered = tableData?.filter(item => item.Status === 'Approved');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'Active');
                 break;
             case 2:
-                filtered = tableData?.filter(item => item.Status === 'Rejected');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'Rejected');
                 break;
             case 3:
-                filtered = tableData?.filter(item => item.Status === 'Lost');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'Lost');
                 break;
             default:
                 filtered = tableData;
         }
         setFilteredData(filtered);
     }, [selectedTab, tableData]);
+
+    const handleSelectAllChange = (event) => {
+        const checked = event.target.checked;
+        setSelectAll(checked);
+        if (checked) {
+            const allIds = filteredData.map(item => item.Id);
+            setSelectedRows(allIds);
+        } else {
+            setSelectedRows([]);
+        }
+        setAreButtonsDisabled(!checked);
+    };
 
     const handleRowCheckboxChange = (id) => {
         let updatedSelectedRows;
@@ -77,25 +104,69 @@ function AdminApprovalStockTransfer() {
             updatedSelectedRows = [...selectedRows, id];
         }
         setSelectedRows(updatedSelectedRows);
-        setSelectAll(updatedSelectedRows.length === filteredData.length);
         setAreButtonsDisabled(updatedSelectedRows.length === 0);
-    };
-
-    const handleSelectAllChange = (event) => {
-        const checked = event.target.checked;
-        setSelectAll(checked);
-        if (checked) {
-            const allIds = filteredData.map(item => item.Id);
-            setSelectedRows(allIds);
-            setAreButtonsDisabled(allIds.length === 0); // Update button state
-        } else {
-            setSelectedRows([]);
-            setAreButtonsDisabled(true); // Update button state
-        }
     };
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue);
+    };
+
+    const handleClickOpen = (type) => {
+        setActionType(type);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const getStatusForActionType = (type) => {
+        switch (type) {
+            case "Approve":
+                return "1";
+            case "Reject":
+                return "2";
+            case "Lost":
+                return "3";
+            default:
+                return 0;
+        }
+    };
+
+    const handleConfirm = async () => {
+        const payload = {
+            StockTransferItems: selectedRows.map(id => ({
+                Id: id,
+                Status: getStatusForActionType(actionType)
+            })),
+            ClientCode: clientCode,
+        };
+
+        try {
+            const response = await fetch(a237, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload),
+            });
+            if (response.ok) {
+                const result = await response.json();
+                setMessageType("success");
+                setMessageToShow(`${actionType} action completed successfully.`);
+            } else {
+                setMessageType("error");
+                setMessageToShow(`Failed to ${actionType.toLowerCase()} the items.`);
+            }
+        } catch (error) {
+            setMessageType("error");
+            setMessageToShow("An error occurred during the request.");
+            console.error("Error during the confirm action:", error);
+        } finally {
+            setShowError(true);
+            fetchAllLabelledStock();
+            setOpen(false);
+            setSelectedRows([]);
+            setSelectAll(false);
+        }
     };
 
     return (
@@ -114,6 +185,28 @@ function AdminApprovalStockTransfer() {
             </Box>
             <Box className="adminAddCategoryMainBox" sx={{width: '100%'}}>
                 <Box className="adminAddCategoryInnerBox" sx={{width: '100%'}}>
+                    <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} my={2}>
+                        <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
+                            <Box display={"flex"} alignItems={"center"} mx={1}>
+                                <Typography sx={{fontWeight: "600"}}>Transfer type :</Typography>
+                                <Typography mx={1}>{tableData.StockTransferTypeName}</Typography>
+                            </Box>
+                            <Box display={"flex"} alignItems={"center"} mx={1}>
+                                <Typography sx={{fontWeight: "600"}}>Stock Type :</Typography>
+                                <Typography mx={1}>{tableData.StockType}</Typography>
+                            </Box>
+                            <Box display={"flex"} alignItems={"center"} mx={1}>
+                                <Typography sx={{fontWeight: "600"}}>Transfer By :</Typography>
+                                <Typography mx={1}>{tableData?.StockTransferByName}</Typography>
+                            </Box>
+                        </Box>
+                        <Box>
+                            <Box display={"flex"} alignItems={"center"}>
+                                <Typography sx={{fontWeight: "600"}}>Date :</Typography>
+                                <Typography mx={1}>{tableData?.Date}</Typography>
+                            </Box>
+                        </Box>
+                    </Box>
                     <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
                         <Tabs
                             value={selectedTab}
@@ -149,8 +242,7 @@ function AdminApprovalStockTransfer() {
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
                                 <button
-                                    // onClick={handleSubmit}
-                                    disabled={areButtonsDisabled} // Disable based on selected rows
+                                    onClick={() => handleClickOpen("Approve")}
                                 >
                                     Approve
                                 </button>
@@ -160,8 +252,8 @@ function AdminApprovalStockTransfer() {
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
                                 <button
-                                    // onClick={handleSubmit}
-                                    disabled={areButtonsDisabled} // Disable based on selected rows
+                                    onClick={() => handleClickOpen("Reject")}
+                                    disabled={areButtonsDisabled}
                                 >
                                     Reject
                                 </button>
@@ -171,8 +263,8 @@ function AdminApprovalStockTransfer() {
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
                                 <button
-                                    // onClick={handleSubmit}
-                                    disabled={areButtonsDisabled} // Disable based on selected rows
+                                    onClick={() => handleClickOpen("Lost")}
+                                    disabled={areButtonsDisabled}
                                 >
                                     Lost
                                 </button>
@@ -199,19 +291,17 @@ function AdminApprovalStockTransfer() {
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Metal Name</TableCell>
+                                                <TableCell sx={{fontWeight: "600"}} align="center">Metal
+                                                    Name</TableCell>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">Item Code</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Branch Name</TableCell>
+                                                <TableCell sx={{fontWeight: "600"}} align="center">Branch
+                                                    Name</TableCell>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">NetWt</TableCell>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">GrossWt</TableCell>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">Status</TableCell>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">Created</TableCell>
                                                 <TableCell sx={{fontWeight: "600"}} align="center">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectAll}
-                                                        onChange={handleSelectAllChange}
-                                                    />
+
                                                 </TableCell>
                                             </TableRow>
                                         </TableHead>
@@ -242,6 +332,43 @@ function AdminApprovalStockTransfer() {
                             </Grid>
                         </Grid>
                     </Box>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            {"Confirm Action"}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                {`Are you sure you want to ${actionType.toLowerCase()} the selected items?`}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Box display={"flex"} justifyContent={"end"}>
+                                <Box
+                                    mx={1}
+                                    className="adminInvoiceAddProductsOptionsMainPurchaseItems"
+                                >
+                                    <Button onClick={handleClose}>
+                                        CANCEL
+                                    </Button>
+                                </Box>
+                                <Box
+                                    mx={1}
+                                    className="adminInvoiceAddProductsOptionsMainPurchaseItems"
+                                >
+                                    <button
+                                        onClick={handleConfirm}
+                                    >
+                                        OK
+                                    </button>
+                                </Box>
+                            </Box>
+                        </DialogActions>
+                    </Dialog>
                 </Box>
             </Box>
         </>

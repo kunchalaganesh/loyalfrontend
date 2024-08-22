@@ -135,7 +135,7 @@ function AdminDiamondSizeWeightRateTemplate(props) {
                                     <th>Sieve</th>
                                     <th>Diamond Weight</th>
                                     <th>Diamond Purchase Rate</th>
-                                    <th>Diamond Margin</th>
+                                    {/*<th>Diamond Margin</th>*/}
                                     <th>Diamond Sell Rate</th>
                                 </tr>
                                 </thead>
@@ -149,7 +149,7 @@ function AdminDiamondSizeWeightRateTemplate(props) {
                                         <td>{x.Sleve}</td>
                                         <td>{x.DiamondWeight}</td>
                                         <td>{x.DiamondPurchaseRate}</td>
-                                        <td>{x.DiamondMargin}</td>
+                                        {/*<td>{x.DiamondMargin}</td>*/}
                                         <td>{x.DiamondSellRate}</td>
                                     </tr>
                                 ))}
