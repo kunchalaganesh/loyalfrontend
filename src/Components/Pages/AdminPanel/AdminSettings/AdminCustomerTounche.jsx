@@ -82,7 +82,6 @@ export default function AdminCustomerTounche() {
 
     useEffect(() => {
         async function getDiamondTemplates() {
-
             const formData = {
                 ClientCode: clientCode,
             };
@@ -235,7 +234,6 @@ export default function AdminCustomerTounche() {
             body: JSON.stringify(formData),
         });
         const data = await response.json();
-        console.log(data, "data,");
         try {
             if (data.length > 0) {
                 setAllCompaniesList(data);
@@ -263,7 +261,6 @@ export default function AdminCustomerTounche() {
             body: JSON.stringify(formData),
         });
         const data = await response.json();
-        console.log(data, "data,");
         try {
             if (data.length > 0) {
                 setAllBranchesList(data);
@@ -291,7 +288,6 @@ export default function AdminCustomerTounche() {
             body: JSON.stringify(formData),
         });
         const data = await response.json();
-        console.log(data, "data,");
         try {
             if (data.length > 0) {
                 setAllDepartmentsList(data);
@@ -319,7 +315,6 @@ export default function AdminCustomerTounche() {
             body: JSON.stringify(formData),
         });
         const data = await response.json();
-        console.log(data, "data,");
         try {
             if (data.length > 0) {
                 setAllRolesList(data);
@@ -347,7 +342,6 @@ export default function AdminCustomerTounche() {
             body: JSON.stringify(formData),
         });
         const data = await response.json();
-        console.log(data, "Venodors   data,");
         try {
             if (data.length > 0) {
                 setAllCustomers(data);
@@ -365,15 +359,12 @@ export default function AdminCustomerTounche() {
 
     const handleNewCategoryChange = (e) => {
         const {name, value} = e.target;
-
         let actualValue = value;
         if (name === "FinePure") {
             actualValue = value === "true";
         }
         if (name == "StockKeepingUnit") {
             let selectedSku = skuData.find((x) => x.StockKeepingUnit == value);
-            console.log(selectedSku, "selectedSku");
-            console.log(selectedSku, "selectedSku");
             if (selectedSku) {
                 handleAllSelectedTounche(e, selectedSku);
             } else {
@@ -403,14 +394,33 @@ export default function AdminCustomerTounche() {
             CounterId: CounterId ? CounterId : 0,
             BranchId: BranchId ? BranchId : 0,
             EmployeeId: EmployeeId ? EmployeeId : 0,
-            DiamondSizeWeightRateTemplateId: parseInt(
-                newCategory.DiamondSizeWeightRateTemplateId
-            ),
+            DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
             ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
         };
         let newArray = allSelectedTounche.filter(
             (x) => x.StockKeepingUnit !== newCategory.StockKeepingUnit
-        );
+        ).map((item) => {
+            return {
+                ...item,
+                FinePure: newCategory.FinePure,
+                CategoryId: parseInt(newCategory.CategoryId),
+                ProductId: parseInt(newCategory.ProductId),
+                ClientCode: clientCode,
+                PurityId: parseInt(newCategory.PurityId),
+                MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
+                MakingPerGram: `${newCategory.MakingPerGram}`,
+                MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
+                MakingPercentage: `${newCategory.MakingPercentage}`,
+                StockKeepingUnit: item.StockKeepingUnit,
+                CompanyId: CompanyId ? CompanyId : 0,
+                CounterId: CounterId ? CounterId : 0,
+                BranchId: BranchId ? BranchId : 0,
+                EmployeeId: EmployeeId ? EmployeeId : 0,
+                DiamondSizeWeightRateTemplateId: parseInt(
+                    newCategory.DiamondSizeWeightRateTemplateId
+                ),
+            };
+        });
         const newArrayData = [...newArray, formData];
         try {
             const response = await fetch(
@@ -421,7 +431,7 @@ export default function AdminCustomerTounche() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify([...newArray, formData]),
+                    body: JSON.stringify(!newCategory.OldEntry ? newArray : newArrayData),
                 }
             );
             const data = await response.json();
@@ -472,6 +482,7 @@ export default function AdminCustomerTounche() {
     }, [showError]);
 
     const handleEditData = (data) => {
+        console.log(data, "djhfhdjhdfjfjhdfjhdjfhdjhfh")
         setNewCategory({...data, OldEntry: true});
         setActive("AddNew");
     };
@@ -559,11 +570,41 @@ export default function AdminCustomerTounche() {
         if (checked) {
             setAllSelectedTounche(
                 skuData
-                    .filter(
-                        (sku) =>
-                            sku.VendorId == newCategory.VendorId || newCategory.VendorId == 0
-                    )
-                    .map((x) => createTouncheObject(x))
+                    .filter((sku) => {
+                        const matchesCategory =
+                            newCategory.CategoryId === 0 ||
+                            newCategory.CategoryId === "" ||
+                            newCategory.CategoryId === null
+                                ? true
+                                : sku.CategoryId ===
+                                parseInt(newCategory.CategoryId);
+                        const matchesProduct =
+                            newCategory.ProductId === 0 ||
+                            newCategory.ProductId === "" ||
+                            newCategory.ProductId === null
+                                ? true
+                                : sku.ProductId ===
+                                parseInt(newCategory.ProductId);
+                        const matchesPurity =
+                            newCategory.PurityId === 0 ||
+                            newCategory.PurityId === "" ||
+                            newCategory.PurityId === null
+                                ? true
+                                : sku.PurityId === parseInt(newCategory.PurityId);
+                        const matchesDesign =
+                            newCategory.DesignId === 0 ||
+                            newCategory.DesignId === "" ||
+                            newCategory.DesignId === null
+                                ? true
+                                : sku.DesignId === parseInt(newCategory.DesignId);
+                        return (
+                            // matchesVendor &&
+                            matchesCategory &&
+                            matchesProduct &&
+                            matchesPurity &&
+                            matchesDesign
+                        );
+                    }).map((x) => createTouncheObject(x))
             );
         } else {
             setAllSelectedTounche([]);
@@ -667,7 +708,6 @@ export default function AdminCustomerTounche() {
                                 </div>
                                 <p>All Customer Tounche</p>
                             </div>
-
                             <div
                                 id="addCategoryListTitle"
                                 onClick={() => setActive("AddNew")}
@@ -792,25 +832,25 @@ export default function AdminCustomerTounche() {
                                             );
                                         })}
                                     </select>
-                                    <label>
-                                        Select SKU<sup>*</sup>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={newCategory.StockKeepingUnit}
-                                        onChange={handleNewCategoryChange}
-                                        name="StockKeepingUnit"
-                                        list="SKUList"
-                                    />
-                                    <datalist id="SKUList">
-                                        {skuData?.map((x) => {
-                                            return (
-                                                <option value={x.StockKeepingUnit}>
-                                                    {x.StockKeepingUnit}
-                                                </option>
-                                            );
-                                        })}
-                                    </datalist>
+                                    {/*<label>*/}
+                                    {/*    Select SKU<sup>*</sup>*/}
+                                    {/*</label>*/}
+                                    {/*<input*/}
+                                    {/*    type="text"*/}
+                                    {/*    value={newCategory.StockKeepingUnit}*/}
+                                    {/*    onChange={handleNewCategoryChange}*/}
+                                    {/*    name="StockKeepingUnit"*/}
+                                    {/*    list="SKUList"*/}
+                                    {/*/>*/}
+                                    {/*<datalist id="SKUList">*/}
+                                    {/*    {skuData?.map((x) => {*/}
+                                    {/*        return (*/}
+                                    {/*            <option value={x.StockKeepingUnit}>*/}
+                                    {/*                {x.StockKeepingUnit}*/}
+                                    {/*            </option>*/}
+                                    {/*        );*/}
+                                    {/*    })}*/}
+                                    {/*</datalist>*/}
                                     <label>
                                         Select Category<sup>*</sup>
                                     </label>
@@ -835,9 +875,19 @@ export default function AdminCustomerTounche() {
                                         required="required"
                                     >
                                         <option value={""}>Select an Option</option>
-                                        {filtreredProducts?.map((x) => {
-                                            return <option value={x.Id}>{x.ProductName}</option>;
-                                        })}
+                                        {productsData
+                                            .filter((pro) => {
+                                                const matchesCategory =
+                                                    newCategory.CategoryId === 0 ||
+                                                    newCategory.CategoryId === "" ||
+                                                    newCategory.CategoryId === null
+                                                        ? true
+                                                        : pro.CategoryId ===
+                                                        parseInt(newCategory.CategoryId);
+                                                return matchesCategory;
+                                            }).map((x) => {
+                                                return <option value={x.Id}>{x.ProductName}</option>;
+                                            })}
                                     </select>
                                     <label>
                                         Select Design<sup>*</sup>
@@ -849,9 +899,19 @@ export default function AdminCustomerTounche() {
                                         required="required"
                                     >
                                         <option value={""}>Select an Option</option>
-                                        {filteredDesign?.map((x) => {
-                                            return <option value={x.Id}>{x.DesignName}</option>;
-                                        })}
+                                        {designData
+                                            .filter((pro) => {
+                                                const matchesCategory =
+                                                    newCategory.CategoryId === 0 ||
+                                                    newCategory.CategoryId === "" ||
+                                                    newCategory.CategoryId === null
+                                                        ? true
+                                                        : pro.CategoryId ===
+                                                        parseInt(newCategory.CategoryId);
+                                                return matchesCategory;
+                                            })?.map((x) => {
+                                                return <option value={x.Id}>{x.DesignName}</option>;
+                                            })}
                                     </select>
                                     <label>
                                         Select Purity<sup>*</sup>
@@ -914,12 +974,147 @@ export default function AdminCustomerTounche() {
                                         <option value={""}>Select an Template</option>
                                         {templateData?.map((x) => {
                                             return (
-                                                <option value={x?.templateID} key={x.templateName}>
+                                                <option value={x?.templateID} key={x.templateID}>
                                                     {x.templateName}
                                                 </option>
                                             );
                                         })}
                                     </select>
+                                </div>
+                                <div
+                                    style={{
+                                        overflowX: "auto",
+                                        borderTop: "1px solid rgba(0,0,0,0.2)",
+                                        borderBottom: "1px solid rgba(0,0,0,0.2)",
+                                        marginTop: "30px",
+                                        marginBottom: "20px",
+                                    }}
+                                >
+                                    <table
+                                        className="adminInventoryMainTable"
+                                        style={{
+                                            width: "100%",
+                                            marginTop: "30px",
+                                            marginBottom: "20px",
+                                            marginLeft: "1rem",
+                                            boxSizing: "border-box",
+                                        }}
+                                    >
+                                        <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th
+                                                style={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                {" "}
+                                                <input
+                                                    type="checkbox"
+                                                    checked={allSelected}
+                                                    onChange={handleSelectAll}
+                                                    style={{
+                                                        width: "20px",
+                                                        height: "20px",
+                                                        marginRight: "10px",
+                                                    }}
+                                                />{" "}
+                                                SELECT
+                                            </th>
+                                            <th>SKU</th>
+                                            <th>Category</th>
+                                            <th>Product</th>
+                                            <th>Purity</th>
+                                            <th>Pieces</th>
+                                            <th>Sketch Number</th>
+                                            <th>Weight Categories</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style={{position: "relative"}}>
+                                        {skuData
+                                            .filter((sku) => {
+                                                // const parsedVendorId = parseInt(newCategory.VendorId);
+                                                // const matchesVendor =
+                                                //     newCategory.VendorId !== null &&
+                                                //     newCategory.VendorId !== "" &&
+                                                //     sku.SKUVendor.some(
+                                                //         (x) => x.VendorId === parsedVendorId
+                                                //     );
+                                                // {
+                                                //     /* sku.SKUVendor[0].VendorId === parsedVendorId; */
+                                                // }
+                                                const matchesCategory =
+                                                    newCategory.CategoryId === 0 ||
+                                                    newCategory.CategoryId === "" ||
+                                                    newCategory.CategoryId === null
+                                                        ? true
+                                                        : sku.CategoryId ===
+                                                        parseInt(newCategory.CategoryId);
+                                                const matchesProduct =
+                                                    newCategory.ProductId === 0 ||
+                                                    newCategory.ProductId === "" ||
+                                                    newCategory.ProductId === null
+                                                        ? true
+                                                        : sku.ProductId ===
+                                                        parseInt(newCategory.ProductId);
+                                                const matchesPurity =
+                                                    newCategory.PurityId === 0 ||
+                                                    newCategory.PurityId === "" ||
+                                                    newCategory.PurityId === null
+                                                        ? true
+                                                        : sku.PurityId === parseInt(newCategory.PurityId);
+                                                const matchesDesign =
+                                                    newCategory.DesignId === 0 ||
+                                                    newCategory.DesignId === "" ||
+                                                    newCategory.DesignId === null
+                                                        ? true
+                                                        : sku.DesignId === parseInt(newCategory.DesignId);
+                                                return (
+                                                    // matchesVendor &&
+                                                    matchesCategory &&
+                                                    matchesProduct &&
+                                                    matchesPurity &&
+                                                    matchesDesign
+                                                );
+                                            })
+                                            .map((x, index) => (
+                                                <tr key={x.Id}>
+                                                    <td>{index + 1}</td>
+                                                    <td>
+                                                        <input
+                                                            style={{width: "20px", height: "20px"}}
+                                                            type="checkbox"
+                                                            checked={!newCategory.OldEntry ? allSelectedTounche.some(
+                                                                (tounche) =>
+                                                                    tounche.StockKeepingUnit ===
+                                                                    x.StockKeepingUnit
+                                                            ) : newCategory?.StockKeepingUnit === x.StockKeepingUnit
+                                                            }
+                                                            onChange={(e) =>
+                                                                handleIndividualCheckboxChange(e, x)
+                                                            }
+                                                            value={x.StockKeepingUnit}
+                                                        />
+                                                    </td>
+
+                                                    <td style={{whiteSpace: "nowrap"}}>
+                                                        {x.StockKeepingUnit}
+                                                    </td>
+                                                    <td>{x.CategoryName}</td>
+                                                    <td>{x.ProductName}</td>
+                                                    <td>{x?.PurityName}</td>
+                                                    <td>{x.Pieces !== "" ? x.Pieces : 0}</td>
+                                                    <td>{x.SketchNo !== "" ? x.SketchNo : 0}</td>
+                                                    <td>
+                                                        {x.WeightCategories !== ""
+                                                            ? x.WeightCategories
+                                                            : 0}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                                 {!loading ? <button type="submit">Submit</button> : null}
                             </form>

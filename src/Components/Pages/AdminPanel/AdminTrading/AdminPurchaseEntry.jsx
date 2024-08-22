@@ -152,6 +152,7 @@ export default function AdminPurchaseEntry() {
   const [allDiamondSizeWeightRate, setAllDiamondSizeWeightRate] = useState([]);
   const [allDiamondAttributes, setAllDiamondAttributes] = useState([]);
   const [purchaseEntryOrder, setPurchaseEntryOrder] = useState({});
+  const [diamondtampletid, setDiamondtampletid] = useState(0)
 
   const [metalPaymentOption, setMetalPaymentOption] = useState({
     optionSelected: "GOLD",
@@ -788,7 +789,7 @@ export default function AdminPurchaseEntry() {
       });
       const data = await response.json();
       setAllDiamondSizeWeightRate(data);
-      // console.log(data, "AllVendorTounche");
+      console.log(data, "all diamond data");
     } catch (error) {
       console.log(error);
     }
@@ -884,10 +885,14 @@ export default function AdminPurchaseEntry() {
       return fullName.toLowerCase() === value.toLowerCase();
     });
 
+
     if (selected) {
       setCustomerEmail(selected.Email);
       setCustomerId(selected.Id); // Update the email input value based on selected customer's email
+      setDiamondtampletid(selected.DiamondSizeWeightRateTemplateId)
+      console.log('checking vendordiamondid ', diamondtampletid);
     }
+    // setDiamondtampletid(0)
     setSelectedCustomerEdit(false);
     setSelectedCustomer(selected); // Update the selected customer based on name match
   };
@@ -3661,7 +3666,6 @@ export default function AdminPurchaseEntry() {
     const selectedDiamond = allDiamondsList.find(
         (diamond) => diamond.DiamondName === value
     );
-
     if (selectedDiamond) {
       newDiamond[index] = {
         ...newDiamond[index],
@@ -3677,7 +3681,7 @@ export default function AdminPurchaseEntry() {
         Certificate: selectedDiamond.Certificate,
         SettingType: selectedDiamond.SettingType,
         DiamondAmount: selectedDiamond.DiamondAmount,
-        DiamondPurchaseAmt: selectedDiamond.DiamondPurchaseAmt,
+        // DiamondPurchaseAmt: selectedDiamond.DiamondPurchaseAmt,
         Description: selectedDiamond.Description, // Assuming a description field exists
       };
     } else {
@@ -3685,7 +3689,70 @@ export default function AdminPurchaseEntry() {
         ...newDiamond[index],
         [property]: value,
       };
+
+      const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
+        return template.Id === diamondtampletid;
+      });
+
+      console.log('Found diamond template:', diamondTemplate, 'for ID:', diamondtampletid);
+
+      if (diamondTemplate) {
+        const rates = diamondTemplate.DiamondSizeWeightRates;
+        console.log('Available rates:', rates);
+
+        const matchingRate = rates.find((rate) => {
+          console.log('Checking rate:', rate);
+          console.log('Comparing with:', {
+            DiamondShape: newDiamond[index].DiamondShape,
+            DiamondWeight: newDiamond[index].DiamondWeight,
+            DiamondCut: newDiamond[index].DiamondCut
+          });
+
+          const isMatch =
+              // rate.DiamondShape === newDiamond[index].DiamondShape &&
+              rate.DiamondWeight === newDiamond[index].DiamondWeight
+          //  rate.DiamondCut === newDiamond[index].DiamondCut;
+
+          console.log('Rate match result:', isMatch);
+          return isMatch;
+        });
+
+        if (matchingRate) {
+          newDiamond[index].DiamondPurchaseAmt = matchingRate.DiamondPurchaseRate;
+          console.log('Found matching rate:', matchingRate);
+        } else {
+          newDiamond[index].DiamondPurchaseAmt = 0; // Default value if no match found
+          console.log('No matching rate found.');
+        }
+      } else {
+        console.log('No diamond template found for ID:', diamondtampletid);
+      }
+
+
     }
+
+
+
+    const totalDiamondWeight = newDiamond
+        .reduce((acc, diamond) => acc + (parseFloat(diamond.DiamondWeight) || 0), 0);
+
+    // Calculate total DiamondPieces
+    const totalDiamondPieces = newDiamond
+        .reduce((acc, diamond) => acc + (parseInt(diamond.DiamondPieces, 10) || 0), 0);
+
+    // Calculate total DiamondAmount
+    const totalDiamondAmount = newDiamond
+        .reduce((acc, diamond) => acc + (parseFloat(diamond.DiamondAmount) || 0), 0);
+
+    // Calculate total StoneWeight
+    const totalStoneWeight = newDiamond
+        .reduce((acc, diamond) => acc + (parseFloat(diamond.StoneWeight) || 0), 0);
+
+    console.log('Total diamond weight: ', totalDiamondWeight);
+    console.log('Total diamond pieces: ', totalDiamondPieces);
+    console.log('Total diamond amount: ', totalDiamondAmount);
+    console.log('Total stone weight: ', totalStoneWeight);
+
 
     setPurchaseProduct({...purchaseProduct, Diamonds: newDiamond});
   };
@@ -5095,6 +5162,48 @@ export default function AdminPurchaseEntry() {
                                       </div>
                                       <div>
                                         <th>TOTAL ITEM AMT</th>
+                                        <input
+                                            style={{cursor: "not-allowed", color: "grey"}}
+                                            name="TotalItemAmt"
+                                            // onChange={handleInputChangePurchase}
+                                            readOnly
+                                            type="text"
+                                            value={parseFloat(
+                                                purchaseProduct.TotalItemAmt
+                                            ).toFixed(3)}
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <th>TOTAL DIAMOND AMOUNT</th>
+                                        <input
+                                            style={{cursor: "not-allowed", color: "grey"}}
+                                            name="TotalItemAmt"
+                                            // onChange={handleInputChangePurchase}
+                                            readOnly
+                                            type="text"
+                                            value={parseFloat(
+                                                purchaseProduct.TotalItemAmt
+                                            ).toFixed(3)}
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <th>TOTAL DIAMOND QTY</th>
+                                        <input
+                                            style={{cursor: "not-allowed", color: "grey"}}
+                                            name="TotalItemAmt"
+                                            // onChange={handleInputChangePurchase}
+                                            readOnly
+                                            type="text"
+                                            value={parseFloat(
+                                                purchaseProduct.TotalItemAmt
+                                            ).toFixed(3)}
+                                        />
+                                      </div>
+
+                                      <div>
+                                        <th>TOTAL DIAMOND WT</th>
                                         <input
                                             style={{cursor: "not-allowed", color: "grey"}}
                                             name="TotalItemAmt"

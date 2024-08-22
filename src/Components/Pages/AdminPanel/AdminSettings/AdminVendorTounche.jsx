@@ -366,7 +366,6 @@ export default function AdminVendorTounche() {
         if (name == "StockKeepingUnit") {
             let selectedSku = skuData.find((x) => x.StockKeepingUnit == value);
             if (selectedSku) {
-                console.log("I amd here");
                 handleAllSelectedTounche(e, selectedSku);
             } else {
                 setNewCategory({ ...newCategory, [name]: actualValue });
@@ -520,9 +519,7 @@ export default function AdminVendorTounche() {
             };
             setAllSelectedTounche([...allSelectedTounche, newTounche]);
         } else {
-            setAllSelectedTounche(
-                allSelectedTounche.filter((item) => item.StockKeepingUnit !== value)
-            );
+            setAllSelectedTounche(allSelectedTounche.filter((item) => item.StockKeepingUnit !== value));
         }
     };
 
