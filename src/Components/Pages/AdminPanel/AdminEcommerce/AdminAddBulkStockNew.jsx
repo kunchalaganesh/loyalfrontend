@@ -59,6 +59,7 @@ import {GenerateLabel} from "../../../Other Functions/GenerateLabel";
 import {color} from "chart.js/helpers";
 
 export default function AdminAddBulkStockNew() {
+    const [diamondTemplateId, setDiamondTemplateId] = useState(null)
     const [qr, setQr] = useState("");
     const [productName, setProductName] = useState("");
     const [allProducts, setAllProducts] = useState([]);
@@ -1221,7 +1222,7 @@ export default function AdminAddBulkStockNew() {
         formData.append("CuttingNetWt", "0");
         formData.append("HSNCode", "0");
         formData.append("LotNumber", `${lotNumber}`);
-        formData.append("WarehouseId", packetNumber);
+        formData.append("WarehouseId", 0);
         formData.append("Margin", "0");
         formData.append("OtherWeight", selectedSku ? selectedSku.OtherWeight : "0");
         formData.append("OfferPrice", "0");
@@ -1499,7 +1500,7 @@ export default function AdminAddBulkStockNew() {
             CuttingNetWt: "0",
             HSNCode: "0",
             LotNumber: `${lotNumber}`,
-            WarehouseId: packetNumber,
+            WarehouseId: 0,
             WeightCategory: weights,
             Margin: "0",
             OfferPrice: "0",
@@ -1547,7 +1548,7 @@ export default function AdminAddBulkStockNew() {
             DiamondCut: `${diamondCut}`,
             DiamondSettingType: `${diamondSettingType}`,
             DiamondCertificate: `${diamondCertificate}`,
-            DiamondPieces: `${diamondPieces}`,
+            DiamondPieces: `${diamondPieces.toString()}`,
             DiamondPurchaseAmount: `${diamondPurchaseAmount}`,
             DiamondSellAmount: `${diamondTotalAmount}`,
             DiamondDescription: `${diamondDescription}`,
@@ -1661,7 +1662,7 @@ export default function AdminAddBulkStockNew() {
         formData.append("TotalStoneAmount", `${stoneAmount}`);
         formData.append("TotalStonePieces", "");
         formData.append("TotalDiamondWeight", diamondTotalWeight);
-        formData.append("TotalDiamondPieces", diamondPieces);
+        formData.append("TotalDiamondPieces", String(diamondPieces));
         formData.append("TotalDiamondAmount", diamondTotalAmount);
         formData.append("Featured", "");
         formData.append("Pieces", pieces);
@@ -1705,7 +1706,7 @@ export default function AdminAddBulkStockNew() {
         formData.append("FinePlusWastageWeight", `${fineWastagePerc}`);
         formData.append("Images", "");
         formData.append("MetalId", baseMetal);
-        formData.append("WarehouseId", packetNumber);
+        formData.append("WarehouseId", 0);
 
         formData.append("DiamondSize", `${diamondSize}`);
         formData.append("DiamondWeight", `${diamondWeight}`);
@@ -1917,6 +1918,30 @@ export default function AdminAddBulkStockNew() {
         }, 2000);
     };
 
+    function findClosestHigherDiamondWeight(data, inputWeight, inputShape, inputClarity) {
+        // Convert inputWeight to a number
+        const positiveInputWeight = parseFloat(inputWeight);
+
+        // Filter and sort the weights
+        const higherWeights = data
+            .map(item => {
+                // Convert DiamondWeight to a positive number
+                const positiveWeight = Math.abs(parseFloat(item.DiamondWeight));
+                return {
+                    ...item,
+                    DiamondWeight: positiveWeight
+                };
+            })
+            // Filter weights greater than input weight
+            .filter(item => item.DiamondShape === inputShape)
+            .filter(item => item.DiamondClarity === inputClarity)
+            .filter(item => item.DiamondWeight == positiveInputWeight)
+            // Sort in ascending order
+            .sort((a, b) => a.DiamondWeight - b.DiamondWeight);
+        // Get the closest higher weight
+        return higherWeights.length > 0 ? higherWeights[0] : null;
+    }
+
     const handleEditProducts = async () => {
         setLoading(true);
         setReadOnly(false)
@@ -2005,8 +2030,10 @@ export default function AdminAddBulkStockNew() {
                 } else {
                     editProduct = false;
                 }
+                console.log("updatedProductsStringupdatedProductsString : ",updatedProductsString)
 
                 // Send the updated products to the edit API endpoint
+                // const transformedData = updatedProductsString.map((item,ind))
                 // const response = await fetch(a177, {
                 const response = await fetch(!editProduct ? a217 : a177, {
                     method: "POST",
@@ -2437,7 +2464,7 @@ export default function AdminAddBulkStockNew() {
         }
     };
 
-    async function fetchAllStonesList()  {
+    async function fetchAllStonesList() {
         const formData = {ClientCode: clientCode};
         try {
             const response = await fetch(a146, {
@@ -2453,6 +2480,7 @@ export default function AdminAddBulkStockNew() {
             console.log(error);
         }
     };
+
     async function fetchAllDiamondsList() {
         const formData = {ClientCode: clientCode};
         try {
@@ -2507,6 +2535,32 @@ export default function AdminAddBulkStockNew() {
 
     //   return setNewStonesList(newStones);
     // };
+    function getShapeValue(id, shape) {
+        if (id) {
+            const shapeValue = allDiamondAttributes.filter((x) => x.DiamondAttribute == "DiamondShape")?.find((item) => item.Id == id);
+            return id ? shapeValue?.DiamondValue : "";
+        }
+        if (shape) {
+            const shapeValue = allDiamondAttributes.filter((x) => x.DiamondAttribute == "DiamondShape")?.find(
+                (item) => item.DiamondValue == shape
+            );
+            return shape ? shapeValue?.Id : "";
+        }
+    }
+
+    function getDiamondClarity(id, clarity) {
+        if (id) {
+            const clarityValue = allDiamondAttributes.filter((x) => x.DiamondAttribute == "DiamondClarity")?.find((item) => item.Id == id);
+            return id ? clarityValue?.DiamondValue : "";
+        }
+        if (clarity) {
+            const clarityValue = allDiamondAttributes.filter((x) => x.DiamondAttribute == "DiamondClarity")?.find(
+                (item) => item.DiamondValue == clarity
+            );
+            return clarity ? clarityValue?.Id : "";
+        }
+    }
+
     const [selectedStone, setSelectedStone] = useState(null);
     const handleStoneChange = (stoneIndex, field, value) => {
         setAddedProducts((prevProducts) =>
@@ -2520,7 +2574,7 @@ export default function AdminAddBulkStockNew() {
                         const selectedStone = allStonesList.find(
                             (stone) => (stone.StoneName ? stone.StoneName : stone.StoneMainName) === value
                         );
-                        console.log("selectedStoneselectedStone",selectedStone,allStonesList)
+                        console.log("selectedStoneselectedStone", selectedStone, allStonesList)
                         if (selectedStone) {
                             return {
                                 ...stone,
@@ -2572,14 +2626,14 @@ export default function AdminAddBulkStockNew() {
         );
     };
     const handleDiamondChange = (diamondIndex, field, value) => {
-        setAddedProducts((prevProducts) =>
-            prevProducts.map((product, index) => {
+        setAddedProducts((prevProducts) => {
+            const updatedProducts = prevProducts.map((product, index) => {
                 if (index !== selectedProductIndex) return product;
 
                 const updatedDiamonds = product.Diamonds.map((diamond, sIndex) => {
                     if (sIndex !== diamondIndex) return diamond;
 
-                    let updatedDiamond = {...diamond, [field]: value};
+                    let updatedDiamond = { ...diamond, [field]: value };
 
                     if (field === "DiamondSize") {
                         const selectedDiamond = allDiamondSizeWeightRate.find(
@@ -2601,8 +2655,7 @@ export default function AdminAddBulkStockNew() {
                         );
                         const diamondMargin = parseFloat(value || 0);
                         const diamondSellRate = (
-                            diamondPurchaseRate *
-                            (1 + diamondMargin / 100)
+                            diamondPurchaseRate * (1 + diamondMargin / 100)
                         ).toFixed(2);
 
                         updatedDiamond = {
@@ -2618,8 +2671,7 @@ export default function AdminAddBulkStockNew() {
                         const diamondPurchaseRate = parseFloat(value || 0);
                         const diamondMargin = parseFloat(diamond.DiamondMargin || 0);
                         const diamondSellRate = (
-                            diamondPurchaseRate *
-                            (1 + diamondMargin / 100)
+                            diamondPurchaseRate * (1 + diamondMargin / 100)
                         ).toFixed(2);
 
                         updatedDiamond = {
@@ -2639,8 +2691,7 @@ export default function AdminAddBulkStockNew() {
 
                         if (diamondPurchaseRate !== 0) {
                             const diamondMargin = (
-                                (diamondSellRate / diamondPurchaseRate - 1) *
-                                100
+                                (diamondSellRate / diamondPurchaseRate - 1) * 100
                             ).toFixed(2);
 
                             updatedDiamond = {
@@ -2663,7 +2714,7 @@ export default function AdminAddBulkStockNew() {
                             };
                         }
                     } else if (field === "DiamondPieces") {
-                        const diamondPieces = parseFloat(value || 0);
+                        const diamondPieces = parseFloat(value || "0");
                         const diamondWeight = parseFloat(diamond.DiamondWeight || 0);
                         const diamondPurchaseRate = parseFloat(
                             diamond.DiamondPurchaseRate || 0
@@ -2681,10 +2732,35 @@ export default function AdminAddBulkStockNew() {
                         };
                     }
 
+                    // Update DiamondPurchaseRate based on DiamondWeight, DiamondShape, or DiamondClarity
+                    if (field === 'DiamondWeight' || field === 'DiamondShape' || field === 'DiamondClarity') {
+                        const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
+                            return template.Id === diamondTemplateId;
+                        });
+                        if (diamondTemplate) {
+                            const shape = updatedDiamond.DiamondShape
+                                ? getShapeValue(null, updatedDiamond.DiamondShape)
+                                : null;
+                            const clarity = updatedDiamond.DiamondClarity
+                                ? getDiamondClarity(null, updatedDiamond.DiamondClarity)
+                                : null;
+
+                            const findedData = findClosestHigherDiamondWeight(
+                                diamondTemplate.DiamondSizeWeightRates,
+                                updatedDiamond.DiamondWeight,
+                                shape,
+                                clarity
+                            );
+                            if (findedData) {
+                                updatedDiamond.DiamondPurchaseRate = findedData.DiamondPurchaseRate;
+                            }
+                        }
+                    }
+
                     return updatedDiamond;
                 });
 
-                const productPieces = parseFloat(product.Pieces || 0);
+                const productPieces = parseFloat(product.Pieces || "0");
 
                 const totalDiamondWeight = updatedDiamonds
                     .reduce(
@@ -2720,9 +2796,11 @@ export default function AdminAddBulkStockNew() {
                     TotalDiamondPieces: totalDiamondPieces,
                     NetWt: totalNetWt,
                 };
-            })
-        );
+            });
+            return updatedProducts;
+        });
     };
+
 
     const handleAddStone = () => {
         setAddedProducts((prevProducts) =>
@@ -2833,7 +2911,6 @@ export default function AdminAddBulkStockNew() {
             setSelectedStone(null);
         }
     }, [selectedStone, newStonesList]);
-
     return (
         <div>
             <div>
@@ -3105,7 +3182,7 @@ export default function AdminAddBulkStockNew() {
                                                         />
                                                         <label>Diamond Pieces</label>
                                                         <input
-                                                            value={x.DiamondPieces}
+                                                            value={(x.DiamondPieces).toString()}
                                                             onChange={(e) =>
                                                                 handleDiamondChange(
                                                                     index,
@@ -3434,7 +3511,11 @@ export default function AdminAddBulkStockNew() {
                                                         id="category"
                                                         required="required"
                                                         value={partyTypeId}
-                                                        onChange={(e) => setPartyTypeId(e.target.value)}
+                                                        onChange={(e) => {
+                                                            setPartyTypeId(e.target.value)
+                                                            const tempId = partyData.find((event, ind) => event.Id == e.target.value)
+                                                            setDiamondTemplateId(tempId.DiamondSizeWeightRateTemplateId)
+                                                        }}
                                                     >
                                                         <option value="">
                                                             Select Party / Karigar Name
@@ -3880,7 +3961,7 @@ export default function AdminAddBulkStockNew() {
                                                                         setDiamondTotalAmount("0");
                                                                         setDiamondPurchaseRate("0");
                                                                         setDiamondPurchaseAmount("0");
-                                                                        // setDiamondPieces(0);
+                                                                        setDiamondPieces("0");
                                                                     }
                                                                 }}
                                                                 list="diamondSizeList"
@@ -4879,9 +4960,9 @@ export default function AdminAddBulkStockNew() {
                                                         <th>Fixed Wastage</th>
                                                         <th>MRP</th>
                                                         <th>Add Stone</th>
-                                                        {addedProducts.length > 0 && addedProducts[0].CategoryId === 5 && (
+                                                        {/*{addedProducts.length > 0 && addedProducts[0].CategoryId === 5 && (*/}
                                                             <th>Add Diamond</th>
-                                                        )}
+                                                        {/*)}*/}
                                                         <th>Occassion</th>
                                                         <th>Gender</th>
                                                         <th>Online Status</th>
@@ -4937,7 +5018,6 @@ export default function AdminAddBulkStockNew() {
                                                     </thead>
                                                 )}
                                                 <tbody>
-                                                {console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : ", addedProducts)}
                                                 {addedProducts?.map((x, index) => (
                                                     // <tr key={x.Customer_id}>
 
@@ -5250,31 +5330,31 @@ export default function AdminAddBulkStockNew() {
                                                                 />
                                                             </td>
 
-                                                            {stockType === "Labelled" ? (
-                                                                <td>
-                                                                    <button
-                                                                        onClick={() => {
-                                                                            setAddedProducts((prevProducts) =>
-                                                                                prevProducts.map((item, i) =>
-                                                                                    i === index
-                                                                                        ? {
-                                                                                            ...item,
-                                                                                            Stones: [
-                                                                                                ...item.Stones,
-                                                                                                addStone,
-                                                                                            ],
-                                                                                        }
-                                                                                        : item
-                                                                                )
-                                                                            ),
-                                                                                setSelectedProductIndex(index);
-                                                                            setShowAddStoneBox(true);
-                                                                        }}
-                                                                    >
-                                                                        Stone{x.Stones.length}
-                                                                    </button>
-                                                                </td>
-                                                            ) : null}
+                                                            {/*{stockType === "Labelled" ? (*/}
+                                                            {/*    <td>*/}
+                                                            {/*        <button*/}
+                                                            {/*            onClick={() => {*/}
+                                                            {/*                setAddedProducts((prevProducts) =>*/}
+                                                            {/*                    prevProducts.map((item, i) =>*/}
+                                                            {/*                        i === index*/}
+                                                            {/*                            ? {*/}
+                                                            {/*                                ...item,*/}
+                                                            {/*                                Stones: [*/}
+                                                            {/*                                    ...item.Stones,*/}
+                                                            {/*                                    addStone,*/}
+                                                            {/*                                ],*/}
+                                                            {/*                            }*/}
+                                                            {/*                            : item*/}
+                                                            {/*                    )*/}
+                                                            {/*                ),*/}
+                                                            {/*                    setSelectedProductIndex(index);*/}
+                                                            {/*                setShowAddStoneBox(true);*/}
+                                                            {/*            }}*/}
+                                                            {/*        >*/}
+                                                            {/*            Stone{x.Stones.length}*/}
+                                                            {/*        </button>*/}
+                                                            {/*    </td>*/}
+                                                            {/*) : null}*/}
 
                                                             {stockType == "Labelled" ? (
                                                                 <td>
@@ -5490,6 +5570,43 @@ export default function AdminAddBulkStockNew() {
                                                                     </button>
                                                                 </td>
                                                             ) : null}
+                                                            <td>
+                                                                <button style={{display: "flex"}}
+                                                                        onClick={() => {
+                                                                            // setAddedProducts((prevProducts) =>
+                                                                            //     prevProducts.map((product, index) =>
+                                                                            //         index === selectedProductIndex
+                                                                            //             ? {...product, Diamonds: [...product.Diamonds, {}]}
+                                                                            //             : product
+                                                                            //     )
+                                                                            // );
+                                                                            if (x.Diamonds.length === 0) {
+                                                                                setAddedProducts((prevProducts) =>
+                                                                                    prevProducts.map((item, i) =>
+                                                                                        i === index
+                                                                                            ? {
+                                                                                                ...item,
+                                                                                                Diamonds: [
+                                                                                                    ...item.Diamonds,
+                                                                                                    addDiamond,
+                                                                                                ],
+                                                                                            }
+                                                                                            : item
+                                                                                    )
+                                                                                )
+                                                                            }
+                                                                            setShowAddDiamondBox(true);
+                                                                            setSelectedProductIndex(index);
+                                                                        }}>
+                                                                    {/*<IoMdAddCircleOutline*/}
+                                                                    {/*    style={{*/}
+                                                                    {/*        marginRight: "5px",*/}
+                                                                    {/*    }}*/}
+                                                                    {/*    size={"18px"}*/}
+                                                                    {/*/>*/}
+                                                                    DIAMOND-{x.Diamonds.length}
+                                                                </button>
+                                                            </td>
                                                             {stockType === "Labelled" &&
                                                             addedProducts.length > 0 &&
                                                             addedProducts[0].CategoryId == 5 ? (
@@ -5737,7 +5854,6 @@ export default function AdminAddBulkStockNew() {
                                                                             </button>
                                                                         </td>
                                                                     ) : null}
-                                                                    {console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX : ", x)}
                                                                     {showDiamondBtn && (
                                                                         <td>
                                                                             <button style={{display: "flex"}}

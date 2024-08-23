@@ -1825,6 +1825,8 @@ export const a190 =
 export const a191 =
     "https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate";
 //Get All Diamond Size Weight Rate
+export const getAllSizeWeightRate =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondSizeWeightRate";
 
 export const a192 =
     "https://testing.loyalstring.co.in/api/ProductMaster/AddDiamondSizeWeightRate";

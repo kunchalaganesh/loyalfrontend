@@ -1,12 +1,13 @@
-import { jsPDF } from "jspdf";
+import {jsPDF} from "jspdf";
 
 export const generateBillPDF = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
   });
-  console.log(csData,"csData44444");
-let Total=0;
+  console.log(csData, "csData44444");
+  console.log(invoiceItems, "csData44444");
+  let Total = 0;
   doc.setDrawColor(0, 0, 0, 0.3);
   doc.setFontSize(12);
   doc.setFont("times");
@@ -103,65 +104,65 @@ let Total=0;
       doc.addPage();
       y = 10;
     }
-let OtherCharges = 0; 
-let NetCharges = 0; 
-let HallmarkCharges = 0;
+    let OtherCharges = 0;
+    let NetCharges = 0;
+    let HallmarkCharges = 0;
     const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
     doc.text(srNo.toString(), 6, y);
     doc.text(`${item.Purity || ""} ${productName || ""}`, 15, y);
     doc.text(`${item.HSNCode || "-"}`, 70, y);
-    doc.text(`${item.Quantity!=='undefined'?item.Quantity: "-"}`, 85, y);
+    doc.text(`${item.Quantity !== 'undefined' ? item.Quantity : "-"}`, 85, y);
     doc.text(`${item.Purity || "-"}`, 95, y);
     doc.text(`${item.GrossWt || "-"}`, 105, y);
     doc.text(`${item.NetWt || "-"}`, 117, y);
     if (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") {
-            doc.text(`MRP -`, 130, y);
-            doc.text(`${parseFloat(item.MRP)?.toFixed(2)}`, 145, y);
-            OtherCharges = Number(item.MRP);
-          } else {
-            doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
-            doc.text(
-              parseFloat(
-                (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
-              )?.toFixed(2),
-              145,
-              y
-            );
-            OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
-          }
+      doc.text(`MRP -`, 130, y);
+      doc.text(`${parseFloat(item.MRP)?.toFixed(2)}`, 145, y);
+      OtherCharges = Number(item.MRP);
+    } else {
+      doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
+      doc.text(
+          parseFloat(
+              (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+          )?.toFixed(2),
+          145,
+          y
+      );
+      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+    }
 
-          doc.text(
-                    parseFloat(
-                      parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-                        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-                    )?.toFixed(2),
-                    160,
-                    y
-                  );
-                  NetCharges+= parseFloat(
-                    parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-                      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                      parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-                  )
-                  doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-                  HallmarkCharges+= parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-                  totalAmount =(item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0")? (parseFloat(item.MRP ? item.MRP : 0) +
-                  parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                  parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0    
-              ) :parseFloat(
-                    parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-                      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                      parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0    
-                  )
-                  Total+=totalAmount
+    doc.text(
+        parseFloat(
+            parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+            parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+        )?.toFixed(2),
+        160,
+        y
+    );
+    NetCharges += parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+    )
+    doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
+    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
+    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+    ) : parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+    )
+    Total += totalAmount
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity!=='undefined'?item.Quantity:0) || 0;
+    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -223,10 +224,10 @@ let HallmarkCharges = 0;
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`CGST 1.5%:`, 155, y + 10);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${((Number(csData?.GST)/ 2||0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
     doc.text(`SGST 1.5%:`, 155, y + 15);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 15);
-    doc.text(`${((Number(csData?.GST)/ 2||0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
   } else {
     doc.text(`Sales Amount:`, 155, y);
     doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
@@ -249,7 +250,7 @@ let HallmarkCharges = 0;
   // );
   doc.text(`${parseFloat(csData?.BalanceAmt || 0)?.toFixed(2)}`, 185, y + 25);
   doc.text(`Total:`, 155, y + 30);
-  doc.text(`${Number(csData?.TotalAmount||0).toFixed(2)}`, 185, y + 30);
+  doc.text(`${Number(csData?.TotalAmount || 0).toFixed(2)}`, 185, y + 30);
 
   // Footer
   // doc.setFont("times", "bold");
@@ -258,9 +259,9 @@ let HallmarkCharges = 0;
   // doc.setFont("times", "normal");
   // doc.setFontSize(10);
   // doc.text("Authorised Signatory", 160, y + 55);
-  
 
-    let footerY = doc.internal.pageSize.height - 50;
+
+  let footerY = doc.internal.pageSize.height - 50;
   doc.setFontSize(9);
   // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
   // doc.text("Phone Number: 0674-2492089 ", 10, footerY + 4);
@@ -271,26 +272,26 @@ let HallmarkCharges = 0;
   doc.text("Terms And Conditions :- ", 10, footerY);
   doc.setFont("times", "normal");
   doc.text(
-    `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
-    10,
-    footerY + 5
+      `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
+      10,
+      footerY + 5
   );
   doc.text(`to Rule 138(14) of the CGST Rules.`, 10, footerY + 9);
   doc.text(
-    `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
-    10,
-    footerY + 13
+      `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
+      10,
+      footerY + 13
   );
   doc.text(
-    `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
-    10,
-    footerY + 17
+      `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
+      10,
+      footerY + 17
   );
   doc.text(`Hallmark Charges is Rs 45 Per Piece`, 10, footerY + 21);
   doc.text(
-    `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
-    10,
-    footerY + 25
+      `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
+      10,
+      footerY + 25
   );
   doc.setFont("times", "bold");
   doc.setFontSize(10);
@@ -306,14 +307,14 @@ let HallmarkCharges = 0;
 // export default generateBillPDF;
 
 
-
-
 export const generateBillInvocePDF = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
   });
-  let Total=0;
+  console.log(csData, "sjdshjdhsjhdjs")
+  console.log(invoiceItems, "sjdshjdhsjhdjs")
+  let Total = 0;
   doc.setDrawColor(0, 0, 0, 0.3);
   doc.setFontSize(12);
   doc.setFont("times");
@@ -321,7 +322,7 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
   doc.setFontSize(18);
   doc.setTextColor(0, 0, 139);
   doc.setFont("times", "bold");
-  doc.text("TAX INVOICE", 105, 20, { align: "center" });
+  doc.text("TAX INVOICE", 105, 20, {align: "center"});
   // if (csData?.billType === "false") {
   //   doc.text(`${csData?.orderType}`, 90, 47.5);
   // } else {
@@ -352,10 +353,10 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
     doc.text(`${customer.FirstName || ""} ${customer.LastName || ""}`, 6, y + 4);
     doc.setFont("times", "normal");
     doc.text(`${customer.CurrAddStreet || "add"}`, 6, y + 8);
-    doc.text(`${customer.CurrAddState || "State"} & ${customer.CurrAddPincode || "Code"}`, 6, y + 22);
+    doc.text(`${customer.CurrAddState} & ${customer.CurrAddPincode}`, 6, y + 22);
     doc.text(`GST No. - ${customer.GstNo || ""}`, 6, y + 26);
-    doc.text(`Pan No. - ${customer.GstNo || ""}`, 6, y + 30);
-    doc.text(`Mob No. - ${customer.GstNo || ""}`, 6, y + 34);
+    doc.text(`Pan No. - ${customer.PanNo || ""}`, 6, y + 30);
+    doc.text(`Mob No. - ${customer.Mobile || ""}`, 6, y + 34);
   };
 
   if (csData) {
@@ -370,9 +371,9 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
     // renderAddress("add ", csData?.Customer, y + 12);
 
 
-    doc.text(`Invoice No - ${csData?.invoiceNo || ""}`, 109, y);
+    doc.text(`Invoice No - ${csData?.InvoiceNo || ""}`, 109, y);
     // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
-    doc.text(`Invoice Date - ${csData?.InvoiceDate||""}`, 109, y + 6);
+    doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 109, y + 6);
     doc.text(`Terms - C.O.D`, 109, y + 10);
     doc.text(`Our GST No. - 27BCPPV7154N1ZI`, 109, y + 30);
     doc.text(`Pan No. - BCPPV7154N`, 109, y + 34);
@@ -392,7 +393,7 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
   doc.text("Sr", 6, y);
   doc.text("No.", 6, y + 4);
   doc.text("Description of Goods", 42, y);
-  doc.text("HSN CODE - 71131930", 42, y+4);
+  doc.text("HSN CODE - 71131930", 42, y + 4);
   doc.text("HSN / SAC", 114, y);
   // doc.text("Pcs", 85, y);
   // doc.text("Purity", 95, y);
@@ -468,29 +469,29 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
     //     160,
     //     y
     // );
-    NetCharges+= parseFloat(
+    NetCharges += parseFloat(
         parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0)
     )
     // doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-    HallmarkCharges+= parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-    totalAmount =(item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0")? (parseFloat(item.MRP ? item.MRP : 0) +
+    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
+    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    ) :parseFloat(
+    ) : parseFloat(
         parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
     )
-    Total+=totalAmount
+    Total += totalAmount
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity!=='undefined'?item.Quantity:0) || 0;
+    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -505,13 +506,13 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
     y += 8;
   });
 
-  doc.text("CGST", 15, y + 52  )
-  doc.text("SGST", 15, y + 56  )
+  doc.text("CGST", 15, y + 52)
+  doc.text("SGST", 15, y + 56)
   doc.setFont("times", "bold");
-  doc.text("IGST", 90, y + 60  )
-  doc.text("3.0%", 130, y + 60  )
-  doc.text("DISCOUNT", 90, y + 64  )
-  doc.text("R / d", 90, y + 68  )
+  doc.text("IGST", 90, y + 60)
+  doc.text("3.0%", 130, y + 60)
+  doc.text("DISCOUNT", 90, y + 64)
+  doc.text("R / d", 90, y + 68)
   // doc.line(5, y - 3, 205, y - 3);
   doc.setFont("times", "normal");
 
@@ -549,7 +550,7 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
 
   // Summary
   const totalSaleAmount = invoiceItems.reduce((total, product) => {
-    return total + parseFloat((parseFloat(product.Amount) * 100) / 103 || 0);
+    return total + parseFloat((parseFloat(product.TotalAmount) * 100) / 103 || 0);
   }, 0);
 
   const payableGst = totalSaleAmount * 0.03;
@@ -607,6 +608,8 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
   doc.setFont("times", "bold");
   doc.line(5, footerY - 60, 205, footerY - 60);
   doc.text("TOTAL", 90, footerY - 56)
+  doc.text(csData.TotalAmount, 182, footerY - 56);
+
   doc.line(5, footerY - 54, 205, footerY - 54);
   doc.text("Amount Chargeable (in words): ", 7, footerY - 50)
   doc.text("Rs.", 7, footerY - 46)
@@ -651,11 +654,8 @@ export const generateBillInvocePDF = (csData, invoiceItems) => {
   // doc.line(5, footerY + 27, 205, footerY + 27);
 
   // Save PDF
-  doc.save(`Invoice-${csData?.invoiceNo}.pdf`);
+  doc.save(`Invoice-${csData?.InvoiceNo}.pdf`);
 };
-
-
-
 
 
 
