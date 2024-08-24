@@ -57,6 +57,7 @@ import { IoIosAddCircleOutline, IoMdAddCircleOutline } from "react-icons/io";
 import { CiImport } from "react-icons/ci";
 import { GenerateLabel } from "../../../Other Functions/GenerateLabel";
 import { color } from "chart.js/helpers";
+import DiamondEntryComponent from '../../../support/purchasesupport/Diamondpopup'
 
 export default function AdminAddBulkStockNew() {
   const [diamondTemplateId, setDiamondTemplateId] = useState(null);
@@ -3160,281 +3161,35 @@ export default function AdminAddBulkStockNew() {
                             className="adminPurchaseEntryAddStonesMainBox"
                             key={index}
                           >
-                            <div style={{ gridColumn: "span 6" }}>
+                            {/* <div style={{ gridColumn: "span 6" }}>
                               <h4 style={{ margin: "5px" }}>
                                 Diamond {index + 1}
                               </h4>
-                            </div>
+                            </div> */}
 
-                            <label>Diamond Shape</label>
-                            <input
-                              value={x.DiamondShape}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondShape",
-                                  e.target.value
-                                )
+                            <DiamondEntryComponent
+                              key={index}
+                              index={index}
+                              diamond={x}
+                              allDiamondAttributes={allDiamondAttributes}
+                              allDiamondSizeWeightRate={
+                                allDiamondSizeWeightRate
                               }
-                              type="text"
-                              list="diamondAttributesShapeList"
-                            />
-                            <datalist id="diamondAttributesShapeList">
-                              {allDiamondAttributes
-                                .filter(
-                                  (x) => x.DiamondAttribute == "DiamondShape"
-                                )
-                                .map((attribute) => (
-                                  <option value={attribute.DiamondValue}>
-                                    {attribute.DiamondValue}
-                                  </option>
-                                ))}
-                            </datalist>
-
-                            <label>Diamond Clarity</label>
-                            <input
-                              value={x.DiamondClarity}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondClarity",
-                                  e.target.value
-                                )
+                              handleDiamondChange={handleDiamondChange}
+                              deleteDiamond={deleteDiamond}
+                              addDiamond={() =>
+                                setPurchaseProduct((prevState) => ({
+                                  ...prevState,
+                                  Diamonds: [...prevState.Diamonds, addDiamond],
+                                }))
                               }
-                              type="text"
-                              list="diamondAttributesClarityList"
-                            />
-                            <datalist id="diamondAttributesClarityList">
-                              {allDiamondAttributes
-                                .filter(
-                                  (x) => x.DiamondAttribute == "DiamondClarity"
-                                )
-                                .map((attribute) => (
-                                  <option value={attribute.DiamondValue}>
-                                    {attribute.DiamondValue}
-                                  </option>
-                                ))}
-                            </datalist>
-                            <label>Diamond Colour</label>
-                            <input
-                              value={x.DiamondColour}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondColour",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                              list="diamondAttributesColourList"
-                            />
-                            <datalist id="diamondAttributesColourList">
-                              {allDiamondAttributes
-                                .filter(
-                                  (x) => x.DiamondAttribute == "DiamondColour"
-                                )
-                                .map((attribute) => (
-                                  <option value={attribute.DiamondValue}>
-                                    {attribute.DiamondValue}
-                                  </option>
-                                ))}
-                            </datalist>
-
-                            <label>Diamond Size</label>
-                            <input
-                              value={x.DiamondSize}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondSize",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                              list="diamondSizeList"
-                            />
-                            <datalist id="diamondSizeList">
-                              {allDiamondSizeWeightRate.map((x, index) => (
-                                <option key={index}>{x.DiamondSize}</option>
-                              ))}
-                            </datalist>
-
-                            <label>Diamond Weight</label>
-                            <input
-                              value={x.DiamondWeight}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondWeight",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
+                              from={'product'}
                             />
 
-                            <label>Diamond Pieces</label>
-                            <input
-                              value={x.DiamondPieces.toString()}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondPieces",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
+                      
 
-                            <label>Diamond Cut</label>
-                            <input
-                              value={x.DiamondCut}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondCut",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                              list="diamondAttributesCutList"
-                            />
-                            <datalist id="diamondAttributesCutList">
-                              {allDiamondAttributes
-                                .filter(
-                                  (x) => x.DiamondAttribute == "DiamondCut"
-                                )
-                                .map((attribute) => (
-                                  <option value={attribute.DiamondValue}>
-                                    {attribute.DiamondValue}
-                                  </option>
-                                ))}
-                            </datalist>
 
-                            <label>Diamond Sell Rate</label>
-                            <input
-                              value={x.DiamondSellRate}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondSellRate",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Diamond Purchase Rate</label>
-                            <input
-                              value={x.DiamondPurchaseRate}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondPurchaseRate",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Diamond Margin</label>
-                            <input
-                              value={x.DiamondMargin}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondMargin",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-
-                            <label>Diamond PurchaseAmt</label>
-                            <input
-                              value={x.DiamondPurchaseAmount}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondPurchaseAmount",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Total Diamond Wt</label>
-                            <input
-                              value={x.TotalDiamondWeight}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "TotalDiamondWeight",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Diamond Sell Amt</label>
-                            <input
-                              value={x.DiamondSellAmount}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondSellAmount",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-
-                            <label>SettingType</label>
-                            <input
-                              value={x.SettingType}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "SettingType",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                              list="diamondAttributesSettingTypeList"
-                            />
-                            <datalist id="diamondAttributesSettingTypeList">
-                              {allDiamondAttributes
-                                .filter(
-                                  (x) =>
-                                    x.DiamondAttribute == "DiamondSettingType"
-                                )
-                                .map((attribute) => (
-                                  <option value={attribute.DiamondValue}>
-                                    {attribute.DiamondValue}
-                                  </option>
-                                ))}
-                            </datalist>
-                            <label>Certificate</label>
-                            <input
-                              value={x.Certificate}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "Certificate",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-
-                            <label>Description</label>
-                            <input
-                              value={x.Description}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "Description",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <button
+                            {/* <button
                               className="bulkProductAddDeleteButton close-btn"
                               onClick={() => deleteDiamond(index)}
                             >
@@ -3446,7 +3201,7 @@ export default function AdminAddBulkStockNew() {
                               className="close-btn"
                             >
                               Add Diamond
-                            </button>
+                            </button> */}
                           </div>
                         )
                       )}

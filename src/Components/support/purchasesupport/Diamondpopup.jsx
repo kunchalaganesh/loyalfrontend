@@ -1,12 +1,12 @@
 import React from "react";
 
-const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamondSizeWeightRate, handleDiamondChange, deleteDiamond, addDiamond }) => {
+const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamondSizeWeightRate, handleDiamondChange, deleteDiamond, addDiamond, from }) => {
     return (
         <div className="adminPurchaseEntryAddStonesMainBox">
             <div style={{ gridColumn: "span 6" }}>
                 <h4 style={{ margin: "5px" }}>Diamond {index + 1}</h4>
             </div>
-            <label>Diamond Shape1</label>
+            <label>Diamond Shap1e</label>
             <input
                 value={diamond.DiamondShape}
                 onChange={(e) => handleDiamondChange(index, "DiamondShape", e.target.value)}
@@ -89,6 +89,26 @@ const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamon
                 ))}
             </datalist>
 
+
+            <label>Diamond Sleve</label>
+            <input
+                value={diamond.Sleve}
+                onChange={(e) =>
+                    handleDiamondChange(
+                        index,
+                        "Sleve",
+                        e.target.value
+                    )
+                }
+                type="text"
+                list="diamondSizeList"
+            />
+            <datalist id="diamondSleveList">
+                {allDiamondSizeWeightRate.map((x, index) => (
+                    <option key={index}>{x.Sleve}</option>
+                ))}
+            </datalist>
+
             <label>Diamond Weight</label>
             <input
                 value={diamond.DiamondWeight}
@@ -101,7 +121,18 @@ const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamon
                 }
                 type="text"
             />
-
+<label>Diamond Rate</label>
+            <input
+                value={diamond.DiamondRate}
+                onChange={(e) =>
+                    handleDiamondChange(
+                        index,
+                        "DiamondRate",
+                        e.target.value
+                    )
+                }
+                type="text"
+            />
 
             <label>Diamond Pieces</label>
             <input
@@ -177,19 +208,22 @@ const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamon
                 }
                 type="text"
             />
-            <label>Diamond Rate</label>
+
+<label>Diamond Total Weight</label>
             <input
-                value={diamond.DiamondRate}
+                value={diamond.DiamondTotalWeight}
                 onChange={(e) =>
                     handleDiamondChange(
                         index,
-                        "DiamondRate",
+                        "DiamondTotalWeight",
                         e.target.value
                     )
                 }
                 type="text"
             />
-            <label>Diamond PurchaseAmt</label>
+
+            
+            <label>Diamond Total Amount</label>
             <input
                 value={diamond.DiamondPurchaseAmt}
                 onChange={(e) =>
