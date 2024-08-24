@@ -641,42 +641,6 @@ export default function AdminPurchaseEntry() {
         DiamondDescription: "",
         SKUId: 0,
       });
-      setSelectedSku([]);
-      // setSelectedSkuName("");
-      setSelectedCategory("");
-      setSelectedProductType("");
-      // setPurchaseProduct({
-      //   ...purchaseProduct,
-      //   names: null,
-      //   ProductNames: null,
-      //   CategoryName: "",
-      //   ProductName: "",
-      //   CategoryId: "",
-      //   ProductTypeId: "",
-      //   GrossWt: "0",
-      //   NetWt: "0",
-      //   StoneWt: "0",
-      //   Quantity: "1",
-      //   MakingFixedAmt: "0",
-      //   MakingPercentage: "0",
-      //   MakingPerGram: "0",
-      //   MakingFixedWastage: "0",
-      //   StoneAmt: "0",
-      // });
-      // setDeleteAll(true);
-      // setPartyTypeId("");
-      // setCategory("");
-      // setProductType("");
-      // setPurity("");
-      // setQuantity(1);
-      // setCollection("");
-      // setGrosswt(0);
-      // setNetWt(0);
-      // setGender("");
-      // setStoneWeight(0);
-      // setMRP(0);
-      // setProductName("");
-      // setDescription("");
     }
   }, [selectedSku]);
   const fetchAllCategories = async () => {
@@ -3797,10 +3761,14 @@ export default function AdminPurchaseEntry() {
   };
   const handleDiamondChange = (index, property, value) => {
     const newDiamond = [...purchaseProduct.Diamonds];
+    
+    const oldproduct = { ...purchaseProduct };
+
     const selectedDiamond = allDiamondsList.find(
       (diamond) => diamond.DiamondName === value
     );
     let totalDiamondAmount=0;
+    let truncatedweight = 0;
 
     if (selectedDiamond) {
       newDiamond[index] = {
@@ -3953,13 +3921,20 @@ export default function AdminPurchaseEntry() {
       newDiamond[index].DiamondRate;
      
       const truncatedAmount = Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
-      const truncatedweight = Math.floor(tweight * 1000) / 1000;
+     truncatedweight = Math.floor(tweight * 1000) / 1000;
 
       newDiamond[index] = {
         ...newDiamond[index],
         DiamondPurchaseAmt: truncatedAmount,
         DiamondTotalWeight: truncatedweight
       };
+
+      
+
+      // setPurchaseProduct({
+      //   ...purchaseProduct,
+      //   NetWt: net
+      // });
 
 
 
@@ -3995,11 +3970,27 @@ export default function AdminPurchaseEntry() {
     // console.log("Total diamond amount: ", totalDiamondAmount);
     console.log("Total stone weight: ", totalStoneWeight);
 
+    
+
+    // updatedProduct.NetWt = parseFloat(
+    //   parseFloat(updatedProduct.GrossWt) -
+    //     parseFloat(updatedProduct.StoneWt) -
+    //     parseFloat(parseFloat(updatedProduct.ClipWeight) * parseFloat(value))
+    // ).toFixed(3);
+
+    const netwt = parseFloat(
+      parseFloat(oldproduct.GrossWt) -
+        parseFloat(oldproduct.StoneWt) -
+        parseFloat(parseFloat(oldproduct.ClipWeight) * parseFloat(oldproduct.ClipQuantity))-
+        parseFloat(totalDiamondWeight/5)
+    ).toFixed(3);
+
     setPurchaseProduct({
       ...purchaseProduct,
       Diamonds: newDiamond,
       DiamondWeight: totalDiamondWeight,
       DiamondAmount: totalDiamondAmount,
+      NetWt: netwt
     });
   };
 
