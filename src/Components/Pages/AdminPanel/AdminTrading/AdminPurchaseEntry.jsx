@@ -59,6 +59,9 @@ import {useSelector} from "react-redux";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import {IoMdAddCircleOutline} from "react-icons/io";
 import GenerateRdPurchaseReceipt from "../../../Other Functions/GenerateRdPurchaseReceipt";
+import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup"
+
+
 
 export default function AdminPurchaseEntry() {
     const [allCsData, setAllCsData] = useState([]);
@@ -5628,6 +5631,21 @@ export default function AdminPurchaseEntry() {
                                                                 Diamond {index + 1}
                                                             </h4>
                                                         </div>
+
+
+                                                        <DiamondEntryComponent
+                                    key={index}
+                                    index={index}
+                                    diamond={x}
+                                    allDiamondAttributes={allDiamondAttributes}
+                                    allDiamondSizeWeightRate={allDiamondSizeWeightRate}
+                                    handleDiamondChange={handleDiamondChange}
+                                    deleteDiamond={deleteDiamond}
+                                    addDiamond={() => setPurchaseProduct((prevState) => ({
+                                        ...prevState,
+                                        Diamonds: [...prevState.Diamonds, addDiamond],
+                                    }))}
+                                />
                                                         {/* <label>Diamond Name</label>
                             <input
                               value={x.DiamondName}
@@ -5645,48 +5663,30 @@ export default function AdminPurchaseEntry() {
                                 return <option>{x.DiamondName}</option>;
                               })}
                             </datalist> */}
-                                                        <label>Diamond Size</label>
+                            <label>Diamond Shape</label>
                                                         <input
-                                                            value={x.DiamondSize}
+                                                            value={x.DiamondShape}
                                                             onChange={(e) =>
                                                                 handleDiamondChange(
                                                                     index,
-                                                                    "DiamondSize",
+                                                                    "DiamondShape",
                                                                     e.target.value
                                                                 )
                                                             }
                                                             type="text"
-                                                            list="diamondSizeList"
+                                                            list="diamondAttributesShapeList"
                                                         />
-                                                        <datalist id="diamondSizeList">
-                                                            {allDiamondSizeWeightRate.map((x, index) => (
-                                                                <option key={index}>{x.DiamondSize}</option>
-                                                            ))}
+                                                        <datalist id="diamondAttributesShapeList">
+                                                            {allDiamondAttributes
+                                                                .filter(
+                                                                    (x) => x.DiamondAttribute == "DiamondShape"
+                                                                )
+                                                                .map((attribute) => (
+                                                                    <option value={attribute.DiamondValue}>
+                                                                        {attribute.DiamondValue}
+                                                                    </option>
+                                                                ))}
                                                         </datalist>
-                                                        <label>Diamond Weight</label>
-                                                        <input
-                                                            value={x.DiamondWeight}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondWeight",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Diamond Rate</label>
-                                                        <input
-                                                            value={x.DiamondRate}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondRate",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
                                                         <label>Diamond Clarity</label>
                                                         <input
                                                             value={x.DiamondClarity}
@@ -5735,30 +5735,56 @@ export default function AdminPurchaseEntry() {
                                                                     </option>
                                                                 ))}
                                                         </datalist>
-                                                        <label>Diamond Shape</label>
+
+
+
+
+                                                        <label>Diamond Size</label>
                                                         <input
-                                                            value={x.DiamondShape}
+                                                            value={x.DiamondSize}
                                                             onChange={(e) =>
                                                                 handleDiamondChange(
                                                                     index,
-                                                                    "DiamondShape",
+                                                                    "DiamondSize",
                                                                     e.target.value
                                                                 )
                                                             }
                                                             type="text"
-                                                            list="diamondAttributesShapeList"
+                                                            list="diamondSizeList"
                                                         />
-                                                        <datalist id="diamondAttributesShapeList">
-                                                            {allDiamondAttributes
-                                                                .filter(
-                                                                    (x) => x.DiamondAttribute == "DiamondShape"
-                                                                )
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
+                                                        <datalist id="diamondSizeList">
+                                                            {allDiamondSizeWeightRate.map((x, index) => (
+                                                                <option key={index}>{x.DiamondSize}</option>
+                                                            ))}
                                                         </datalist>
+
+                                                        <label>Diamond Weight</label>
+                                                        <input
+                                                            value={x.DiamondWeight}
+                                                            onChange={(e) =>
+                                                                handleDiamondChange(
+                                                                    index,
+                                                                    "DiamondWeight",
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                            type="text"
+                                                        />
+                                                        
+                                                        
+                                                        <label>Diamond Pieces</label>
+                                                        <input
+                                                            value={x.DiamondPieces}
+                                                            onChange={(e) =>
+                                                                handleDiamondChange(
+                                                                    index,
+                                                                    "DiamondPieces",
+                                                                    e.target.value
+                                                                )
+                                                            }
+                                                            type="text"
+                                                        />
+                                                        
                                                         <label>Diamond Cut</label>
                                                         <input
                                                             value={x.DiamondCut}
@@ -5820,13 +5846,13 @@ export default function AdminPurchaseEntry() {
                                                             }
                                                             type="text"
                                                         />
-                                                        <label>Diamond Pieces</label>
+                                                        <label>Diamond Rate</label>
                                                         <input
-                                                            value={x.DiamondPieces}
+                                                            value={x.DiamondRate}
                                                             onChange={(e) =>
                                                                 handleDiamondChange(
                                                                     index,
-                                                                    "DiamondPieces",
+                                                                    "DiamondRate",
                                                                     e.target.value
                                                                 )
                                                             }
