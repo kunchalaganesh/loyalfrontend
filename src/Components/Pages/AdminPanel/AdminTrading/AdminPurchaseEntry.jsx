@@ -61,7 +61,10 @@ import AlertMessage from "../../../Other Functions/AlertMessage";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import GenerateRdPurchaseReceipt from "../../../Other Functions/GenerateRdPurchaseReceipt";
 import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
-import ProductCalculator from "../../../support/calculations/ProductCalculator"
+import ProductCalculator from "../../../support/calculations/ProductCalculator.jsx";
+import StonePopup from "../../../support/purchasesupport/StonePopup.jsx";
+import LooseDiamonds from "../../../support/purchasesupport/LooseDiamonds.jsx";
+
 
 export default function AdminPurchaseEntry() {
   const [allCsData, setAllCsData] = useState([]);
@@ -138,7 +141,7 @@ export default function AdminPurchaseEntry() {
   const [showError, setShowError] = useState(false);
   const [messageType, setMessageType] = useState("");
   const [messageToShow, setMessageToShow] = useState("");
-  
+
   const [savingInvoice, setSavingInvoice] = useState(false);
   const [iscal, setIscal] = useState(false);
 
@@ -2328,7 +2331,7 @@ export default function AdminPurchaseEntry() {
           parseFloat(makingCharges3) +
           parseFloat(makingCharges4) +
           parseFloat(updatedProduct.HallmarkAmt) +
-          parseFloat(updatedProduct.StoneAmount)+
+          parseFloat(updatedProduct.StoneAmount) +
           parseFloat(updatedProduct.totalDiamondpurchaseAmount);
         let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
         let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
@@ -2824,28 +2827,26 @@ export default function AdminPurchaseEntry() {
     }
 
     setPurchaseProduct(updatedProduct);
-    setIsCal(true); // Set iscal to true to trigger calculations
+    setIscal(true); // Set iscal to true to trigger calculations
   };
 
   useEffect(() => {
     if (iscal) {
       const updatedProduct = ProductCalculator.updateProduct(
         purchaseProduct,
-        props.allDiamondSizeWeightRate,
-        props.allPurities,
-        props.allVendorTounche,
-        props.selectedCustomer,
-        props.selectedSku,
-        props.selectedSkuName,
-        props.finePure,
-        props.convertAmount
+        allDiamondSizeWeightRate,
+        allPurities,
+        allVendorTounche,
+        selectedCustomer,
+        selectedSku,
+        selectedSkuName,
+        finePure,
+        convertAmount
       );
       setPurchaseProduct(updatedProduct);
-      setIsCal(false);
+      setIscal(false);
     }
-  }, [iscal, purchaseProduct, props]);
-
-
+  }, [iscal, purchaseProduct]);
 
   function findClosestHigherDiamondWeight(
     data,
@@ -3560,13 +3561,13 @@ export default function AdminPurchaseEntry() {
   };
   const handleDiamondChange = (index, property, value) => {
     const newDiamond = [...purchaseProduct.Diamonds];
-    
+
     const oldproduct = { ...purchaseProduct };
 
     const selectedDiamond = allDiamondsList.find(
       (diamond) => diamond.DiamondName === value
     );
-    let totalDiamondAmount=0;
+    let totalDiamondAmount = 0;
     let truncatedweight = 0;
 
     if (selectedDiamond) {
@@ -3694,8 +3695,7 @@ export default function AdminPurchaseEntry() {
           });
 
           if (matchingRate) {
-            newDiamond[index].DiamondRate =
-              matchingRate.DiamondRate;
+            newDiamond[index].DiamondRate = matchingRate.DiamondRate;
             console.log("Found matching rate:", matchingRate);
           } else {
             newDiamond[index].DiamondRate = 0; // Default value if no match found
@@ -3712,42 +3712,37 @@ export default function AdminPurchaseEntry() {
         };
       }
 
+      const tweight =
+        newDiamond[index].DiamondWeight * newDiamond[index].DiamondPieces;
 
-      const tweight = newDiamond[index].DiamondWeight*newDiamond[index].DiamondPieces;
+      const totalDiamondPurchaseAmount =
+        tweight * newDiamond[index].DiamondRate;
 
-      const totalDiamondPurchaseAmount = 
-      tweight * 
-      newDiamond[index].DiamondRate;
-     
-      const truncatedAmount = Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
-     truncatedweight = Math.floor(tweight * 1000) / 1000;
+      const truncatedAmount =
+        Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
+      truncatedweight = Math.floor(tweight * 1000) / 1000;
 
       newDiamond[index] = {
         ...newDiamond[index],
         DiamondPurchaseAmt: truncatedAmount,
-        DiamondTotalWeight: truncatedweight
+        DiamondTotalWeight: truncatedweight,
       };
-
-      
 
       // setPurchaseProduct({
       //   ...purchaseProduct,
       //   NetWt: net
       // });
-
-
-
     }
 
     totalDiamondAmount = newDiamond.reduce(
-        (acc, diamond) => acc + (parseFloat(diamond.DiamondRate) || 0),
-        0
-      );
+      (acc, diamond) => acc + (parseFloat(diamond.DiamondRate) || 0),
+      0
+    );
 
-      const totalDiamondpurchaseAmount = newDiamond.reduce(
-        (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
-        0
-      );
+    const totalDiamondpurchaseAmount = newDiamond.reduce(
+      (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
+      0
+    );
 
     const totalDiamondWeight = newDiamond.reduce(
       (acc, diamond) => acc + (parseFloat(diamond.DiamondTotalWeight) || 0),
@@ -3761,7 +3756,6 @@ export default function AdminPurchaseEntry() {
     );
 
     // Calculate total DiamondAmount
-    
 
     // Calculate total StoneWeight
     const totalStoneWeight = newDiamond.reduce(
@@ -3774,8 +3768,6 @@ export default function AdminPurchaseEntry() {
     // console.log("Total diamond amount: ", totalDiamondAmount);
     console.log("Total stone weight: ", totalStoneWeight);
 
-    
-
     // updatedProduct.NetWt = parseFloat(
     //   parseFloat(updatedProduct.GrossWt) -
     //     parseFloat(updatedProduct.StoneWt) -
@@ -3785,8 +3777,11 @@ export default function AdminPurchaseEntry() {
     const netwt = parseFloat(
       parseFloat(oldproduct.GrossWt) -
         parseFloat(oldproduct.StoneWt) -
-        parseFloat(parseFloat(oldproduct.ClipWeight) * parseFloat(oldproduct.ClipQuantity))-
-        parseFloat(totalDiamondWeight/5)
+        parseFloat(
+          parseFloat(oldproduct.ClipWeight) *
+            parseFloat(oldproduct.ClipQuantity)
+        ) -
+        parseFloat(totalDiamondWeight / 5)
     ).toFixed(3);
 
     setPurchaseProduct({
@@ -3794,8 +3789,8 @@ export default function AdminPurchaseEntry() {
       Diamonds: newDiamond,
       DiamondWeight: totalDiamondWeight,
       DiamondAmount: totalDiamondAmount,
-      Diamondpurchseamount:totalDiamondpurchaseAmount,
-      NetWt: netwt
+      Diamondpurchseamount: totalDiamondpurchaseAmount,
+      NetWt: netwt,
     });
   };
 
@@ -4773,187 +4768,18 @@ export default function AdminPurchaseEntry() {
                             </select>
                           </div>
                         ) : null}
+
                         {purchaseProduct.CategoryName &&
                         purchaseProduct.CategoryName.toLowerCase() ==
                           "loose diamonds" ? (
-                          <>
-                            <div>
-                              <th>DIAMOND SIZE</th>
-                              <input
-                                name="DiamondSize"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondSize}
-                                list="diamondSizeList"
-                              />
-                              <datalist id="diamondSizeList">
-                                {allDiamondSizeWeightRate.map((x, index) => (
-                                  <option key={index}>{x.DiamondSize}</option>
-                                ))}
-                              </datalist>
-                            </div>
-                            <div>
-                              <th>D.WEIGHT</th>
-                              <input
-                                name="DiamondWeight"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondWeight}
-                              />
-                            </div>
-                            <div>
-                              <th>D.PURCHASE RATE</th>
-                              <input
-                                name="DiamondPurchaseRate"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondPurchaseRate}
-                              />
-                            </div>
-                            <div>
-                              <th>D.CLARITY</th>
-                              <input
-                                name="DiamondClarity"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondClarity}
-                                list="diamondAttributesClarityList"
-                              />
-                              <datalist id="diamondAttributesClarityList">
-                                {allDiamondAttributes
-                                  .filter(
-                                    (x) =>
-                                      x.DiamondAttribute == "DiamondClarity"
-                                  )
-                                  .map((attribute) => (
-                                    <option value={attribute.DiamondValue}>
-                                      {attribute.DiamondValue}
-                                    </option>
-                                  ))}
-                              </datalist>
-                            </div>
-                            <div>
-                              <th>D.COLOUR</th>
-                              <input
-                                name="DiamondColour"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondColour}
-                                list="diamondAttributesColourList"
-                              />
-                              <datalist id="diamondAttributesColourList">
-                                {allDiamondAttributes
-                                  .filter(
-                                    (x) => x.DiamondAttribute == "DiamondColour"
-                                  )
-                                  .map((attribute) => (
-                                    <option value={attribute.DiamondValue}>
-                                      {attribute.DiamondValue}
-                                    </option>
-                                  ))}
-                              </datalist>
-                            </div>
-                            <div>
-                              <th>D.SHAPE</th>
-                              <input
-                                name="DiamondShape"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondShape}
-                                list="diamondAttributesShapeList"
-                              />
-                              <datalist id="diamondAttributesShapeList">
-                                {allDiamondAttributes
-                                  .filter(
-                                    (x) => x.DiamondAttribute == "DiamondShape"
-                                  )
-                                  .map((attribute) => (
-                                    <option value={attribute.DiamondValue}>
-                                      {attribute.DiamondValue}
-                                    </option>
-                                  ))}
-                              </datalist>
-                            </div>
-                            <div>
-                              <th>D.CUT</th>
-                              <input
-                                name="DiamondCut"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondCut}
-                                list="diamondAttributesCutList"
-                              />
-                              <datalist id="diamondAttributesCutList">
-                                {allDiamondAttributes
-                                  .filter(
-                                    (x) => x.DiamondAttribute == "DiamondCut"
-                                  )
-                                  .map((attribute) => (
-                                    <option value={attribute.DiamondValue}>
-                                      {attribute.DiamondValue}
-                                    </option>
-                                  ))}
-                              </datalist>
-                            </div>
-                            <div>
-                              <th>D.SETTINGTYPE</th>
-                              <input
-                                name="DiamondSettingType"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondSettingType}
-                                list="diamondAttributesSettingTypeList"
-                              />
-                              <datalist id="diamondAttributesSettingTypeList">
-                                {allDiamondAttributes
-                                  .filter(
-                                    (x) =>
-                                      x.DiamondAttribute == "DiamondSettingType"
-                                  )
-                                  .map((attribute) => (
-                                    <option value={attribute.DiamondValue}>
-                                      {attribute.DiamondValue}
-                                    </option>
-                                  ))}
-                              </datalist>
-                            </div>
-                            <div>
-                              <th>D.CERTIFICATE</th>
-                              <input
-                                name="DiamondCertificate"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondCertificate}
-                              />
-                            </div>
-                            <div>
-                              <th>D.PIECES</th>
-                              <input
-                                name="DiamondPieces"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondPieces}
-                              />
-                            </div>
-                            <div>
-                              <th>D.PURCHASEAMT</th>
-                              <input
-                                name="DiamondPurchaseAmount"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondPurchaseAmount}
-                              />
-                            </div>
-                            <div>
-                              <th>D.DESCRIPTION</th>
-                              <input
-                                name="DiamondDescription"
-                                onChange={handleInputChangePurchase}
-                                type="text"
-                                value={purchaseProduct.DiamondDescription}
-                              />
-                            </div>
-                          </>
+                          <LooseDiamonds
+                            purchaseProduct={purchaseProduct}
+                            handleInputChangePurchase={
+                              handleInputChangePurchase
+                            }
+                            allDiamondSizeWeightRate={allDiamondSizeWeightRate}
+                            allDiamondAttributes={allDiamondAttributes}
+                          />
                         ) : (
                           <>
                             <div>
@@ -5355,7 +5181,20 @@ export default function AdminPurchaseEntry() {
                             </div>
                             <div className="adminPurchaseEntryAddStoneDiamondOptionBox">
                               <div className="adminPanelLoginFormRegisterBox">
-                                <th onClick={() => setShowAddStoneBox(true)}>
+                                <th
+                                  onClick={() => {
+                                    setShowAddStoneBox(true);
+                                    if (!purchaseProduct.Stones.length > 0) {
+                                      setPurchaseProduct((previousState) => ({
+                                        ...previousState,
+                                        Stones: [
+                                          ...previousState.Stones,
+                                          addStone,
+                                        ],
+                                      }));
+                                    }
+                                  }}
+                                >
                                   <IoMdAddCircleOutline
                                     style={{
                                       marginRight: "5px",
@@ -5436,152 +5275,25 @@ export default function AdminPurchaseEntry() {
                     </thead>
                   </table>
                 </div>
-                {showAddStoneBox ? (
+                {showAddStoneBox && (
                   <div className="popup">
                     <div
                       style={{ maxHeight: "250px", overflowY: "auto" }}
                       className="popup-inner"
                     >
-                      <div className="adminAddProductsPopupInnerBox">
-                        {purchaseProduct?.Stones?.map((x, index) => (
-                          <div className="adminPurchaseEntryAddStonesMainBox">
-                            <div style={{ gridColumn: "span 6" }}>
-                              <h4 style={{ margin: "5px" }}>
-                                Stone {index + 1}
-                              </h4>
-                            </div>
-                            <label>Stone Name</label>
-                            <input
-                              value={
-                                x.StoneMainName ? x.StoneMainName : x.StoneName
-                              }
-                              onChange={(e) =>
-                                handleStoneChange(
-                                  index,
-                                  "StoneName",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                              list="allStonesList"
-                            />
-                            <datalist id="allStonesList">
-                              {allStonesList?.map((stone) => {
-                                return (
-                                  <option>
-                                    {stone.StoneMainName
-                                      ? stone.StoneMainName
-                                      : stone.StoneName}
-                                  </option>
-                                );
-                              })}
-                            </datalist>
-                            <label>Stone Weight</label>
-                            <input
-                              value={x.StoneWeight}
-                              onChange={(e) =>
-                                handleStoneChange(
-                                  index,
-                                  "StoneWeight",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Stone Pieces</label>
-                            <input
-                              value={x.StonePieces}
-                              onChange={(e) =>
-                                handleStoneChange(
-                                  index,
-                                  "StonePieces",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Stone Rate</label>
-                            <input
-                              value={x.StoneRate}
-                              onChange={(e) =>
-                                handleStoneChange(
-                                  index,
-                                  "StoneRate",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Stone Amount</label>
-                            <input
-                              value={x.StoneAmount}
-                              onChange={(e) =>
-                                handleStoneChange(
-                                  index,
-                                  "StoneAmount",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            <label>Stone Description</label>
-                            <input
-                              value={x.Description}
-                              onChange={(e) =>
-                                handleStoneChange(
-                                  index,
-                                  "Description",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            />
-                            {/* <label>Stone Weight</label> */}
-                            <button
-                              className="bulkProductAddDeleteButton close-btn"
-                              onClick={() => deleteStone(index)}
-                            >
-                              Delete Stone
-                            </button>
-                            <button
-                              id="bulkStockAddProductImportButton"
-                              onClick={() =>
-                                setPurchaseProduct((previousState) => ({
-                                  ...previousState,
-                                  Stones: [...previousState.Stones, addStone],
-                                }))
-                              }
-                              className="close-btn"
-                            >
-                              Add Stone
-                            </button>
-                          </div>
-                        ))}
-                        {!purchaseProduct.Stones.length > 0 ? (
-                          <button
-                            id="bulkStockAddProductImportButton"
-                            onClick={() =>
-                              setPurchaseProduct((previousState) => ({
-                                ...previousState,
-                                Stones: [...previousState.Stones, addStone],
-                              }))
-                            }
-                            className="close-btn"
-                          >
-                            Add Stone
-                          </button>
-                        ) : null}
-                        <button
-                          onClick={() => updatestonewt()}
-                          className="bulkProductAddDeleteButton close-btn"
-                        >
-                          Close
-                        </button>
-                      </div>
-                      {/* <p>This is a popup screen!</p> */}
+                      <StonePopup
+                        purchaseProduct={purchaseProduct}
+                        handleStoneChange={handleStoneChange}
+                        deleteStone={deleteStone}
+                        addStone={addStone}
+                        setPurchaseProduct={setPurchaseProduct}
+                        updatestonewt={updatestonewt}
+                        closePopup={() => setShowAddStoneBox(false)} // Close function
+                        allStonesList={allStonesList}
+                      />
                     </div>
                   </div>
-                ) : null}
+                )}
 
                 {showAddDiamondBox ? (
                   <div className="popup">

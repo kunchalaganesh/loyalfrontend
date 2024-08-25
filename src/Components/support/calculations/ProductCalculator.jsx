@@ -117,4 +117,4 @@ class ProductCalculator {
       return updatedProduct;
     }
   }
-  
+  export default ProductCalculator;
