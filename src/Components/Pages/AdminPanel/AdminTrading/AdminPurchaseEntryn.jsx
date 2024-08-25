@@ -61,7 +61,7 @@ import AlertMessage from "../../../Other Functions/AlertMessage";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import GenerateRdPurchaseReceipt from "../../../Other Functions/GenerateRdPurchaseReceipt";
 import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
-import ProductCalculator from '../'
+
 
 export default function AdminPurchaseEntryn() {
   const [allCsData, setAllCsData] = useState([]);

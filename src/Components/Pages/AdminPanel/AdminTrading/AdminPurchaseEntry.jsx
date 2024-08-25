@@ -61,6 +61,7 @@ import AlertMessage from "../../../Other Functions/AlertMessage";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import GenerateRdPurchaseReceipt from "../../../Other Functions/GenerateRdPurchaseReceipt";
 import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
+import ProductCalculator from "../../../support/calculations/ProductCalculator"
 
 export default function AdminPurchaseEntry() {
   const [allCsData, setAllCsData] = useState([]);
@@ -137,7 +138,9 @@ export default function AdminPurchaseEntry() {
   const [showError, setShowError] = useState(false);
   const [messageType, setMessageType] = useState("");
   const [messageToShow, setMessageToShow] = useState("");
+  
   const [savingInvoice, setSavingInvoice] = useState(false);
+  const [iscal, setIscal] = useState(false);
 
   const getTodaysDateInHTMLFormat = () => {
     const today = new Date();
@@ -2735,313 +2738,114 @@ export default function AdminPurchaseEntry() {
   };
   const handleInputChangePurchase = (e) => {
     const { name, value } = e.target;
+    const updatedProduct = { ...purchaseProduct };
 
-    console.log(name, "name");
-    console.log(value, "value");
-    const updatedProduct = purchaseProduct; // Create a copy of the purchaseProduct object
-    // Update the edited data in the updatedProduct object
-    if (name === "CategoryId") {
-      const [selectedCategoryId, selectedCategoryName] = value.split(",");
-      updatedProduct.CategoryName = selectedCategoryName;
-      updatedProduct.CategoryId = selectedCategoryId;
-
-      if (
-        selectedCategoryName &&
-        !selectedCategoryName.toLowerCase() == "diamonds"
-      ) {
+    switch (name) {
+      case "CategoryId":
+        const [selectedCategoryId, selectedCategoryName] = value.split(",");
+        updatedProduct.CategoryName = selectedCategoryName;
+        updatedProduct.CategoryId = selectedCategoryId;
         updatedProduct.MetalId = selectedCategoryId;
         updatedProduct.MetalName = selectedCategoryName;
-      } else {
-        updatedProduct.MetalId = selectedCategoryId;
-        updatedProduct.MetalName = selectedCategoryName;
-      }
-      // (updatedProduct.CategoryName = selectedCategoryName);
-    } else if (name === "MetalId") {
-      const [selectedMetalId, selectedMetalName] = value.split(",");
-      // setSelectedProductType(selectedProductName),
-      updatedProduct.MetalId = selectedMetalId;
-      updatedProduct.MetalName = selectedMetalName;
-    } else if (name === "DiamondPieces") {
-      // setSelectedProductType(selectedProductName),
-      const selectedDiamondSizeWeightRate = allDiamondSizeWeightRate.filter(
-        (x) => x.DiamondSize == purchaseProduct.DiamondSize
-      );
-      if (value !== "" && selectedDiamondSizeWeightRate.length > 0) {
+        break;
+
+      case "MetalId":
+        const [selectedMetalId, selectedMetalName] = value.split(",");
+        updatedProduct.MetalId = selectedMetalId;
+        updatedProduct.MetalName = selectedMetalName;
+        break;
+
+      case "DiamondPieces":
         updatedProduct.DiamondPieces = value;
-        updatedProduct.DiamondWeight = parseFloat(
-          parseFloat(selectedDiamondSizeWeightRate[0].DiamondWeight) *
-            parseInt(value)
-        ).toFixed(3);
-        updatedProduct.DiamondPurchaseAmount = parseFloat(
-          parseFloat(selectedDiamondSizeWeightRate[0].DiamondPurchaseRate) *
-            parseInt(value)
-        ).toFixed(2);
-        updatedProduct.DiamondSellAmount = parseFloat(
-          parseFloat(selectedDiamondSizeWeightRate[0].DiamondSellRate) *
-            parseInt(value)
-        ).toFixed(2);
-      } else {
-        updatedProduct.DiamondPieces = value;
-        updatedProduct.DiamondWeight = 0;
-        updatedProduct.DiamondPurchaseAmount = 0;
-        updatedProduct.DiamondSellAmount = 0;
-      }
-    } else if (name === "ProductName") {
-      const [selectedProductId, selectedProductName] = value.split(",");
-      // setSelectedProductType(selectedProductName),
-      (updatedProduct.ProductId = selectedProductId),
-        (updatedProduct.ProductName = selectedProductName);
-    } else if (name === "GrossWt") {
-      updatedProduct.NetWt = parseFloat(
-        parseFloat(value) -
-          parseFloat(updatedProduct.StoneWt) -
-          parseFloat(
-            parseFloat(updatedProduct.ClipWeight) *
-              parseFloat(updatedProduct.ClipQuantity)
-          )
-      ).toFixed(3);
-      updatedProduct.GrossWt = value;
-    } else if (name === "StoneWt") {
-      updatedProduct.NetWt = parseFloat(
-        parseFloat(updatedProduct.GrossWt) -
-          parseFloat(value) -
-          parseFloat(
-            parseFloat(updatedProduct.ClipWeight) *
-              parseFloat(updatedProduct.ClipQuantity)
-          )-
-          parseFloat((updatedProduct.DiamondWeight/5))
-        
-      ).toFixed(3);
-      updatedProduct.StoneWt = value;
-    } else if (name === "ClipWeight") {
-      updatedProduct.NetWt = parseFloat(
-        parseFloat(updatedProduct.GrossWt) -
-          parseFloat(updatedProduct.StoneWt) -
-          parseFloat(
-            parseFloat(value) * parseFloat(updatedProduct.ClipQuantity)
-          )
-          -
-          parseFloat((updatedProduct.DiamondWeight/5))
-      ).toFixed(3);
-      // updatedProduct.StoneWt = value;
-      updatedProduct.ClipWeight = value;
-    } else if (name === "ClipQuantity") {
-      updatedProduct.NetWt = parseFloat(
-        parseFloat(updatedProduct.GrossWt) -
-          parseFloat(updatedProduct.StoneWt) -
-          parseFloat(parseFloat(updatedProduct.ClipWeight) * parseFloat(value))
-          -
-          parseFloat((updatedProduct.DiamondWeight/5))
-      ).toFixed(3);
-      // updatedProduct.StoneWt = value;
-      updatedProduct.ClipQuantity = value;
-      updatedProduct.Quantity = value;
-    } else if (name === "Quantity") {
-      updatedProduct.ClipQuantity = value;
-      updatedProduct.Quantity = value;
-    } else if (name === "NetWt") {
-      updatedProduct.StoneWt = parseFloat(
-        parseFloat(updatedProduct.GrossWt) -
-          parseFloat(value) -
-          parseFloat(
-            parseFloat(updatedProduct.ClipWeight) *
-              parseFloat(updatedProduct.ClipQuantity))
-              -
-          parseFloat((updatedProduct.DiamondWeight/5))
-      ).toFixed(3);
-      updatedProduct.NetWt = value;
-    } 
-    else if (name === "FinePercent") {
+        break;
 
-      if (value !== "") {
-        let matchingPurity = allPurities.find(
-          (purity) =>
-            Math.abs(parseFloat(purity.FinePercentage) - parseFloat(value)) <=
-            0.5
-        );
-        console.log(matchingPurity, "matchingPurity");
-        updatedProduct.PurityId = matchingPurity ? matchingPurity.Id : 0;
-      } else {
-        updatedProduct.PurityId = 0;
-      }
-      // logic for vendor Tounche below
-      const mathchingVendorTounche = allVendorTounche.filter(
-        (tounches) =>
-          tounches.CategoryId == purchaseProduct.CategoryId &&
-          tounches.ProductId == purchaseProduct.ProductId &&
-          selectedCustomer &&
-          tounches.PurityId == purchaseProduct.PurityId &&
-          tounches.VendorId == selectedCustomer.Id &&
-          tounches.StockKeepingUnit == purchaseProduct.StockKeepingUnit
-      );
+      case "ProductName":
+        const [selectedProductId, selectedProductName] = value.split(",");
+        updatedProduct.ProductId = selectedProductId;
+        updatedProduct.ProductName = selectedProductName;
+        break;
 
-      console.log(
-        "checkingmatch ",
-        mathchingVendorTounche,
-        " and  ",
-        selectedCustomer
-      );
+      case "GrossWt":
+        updatedProduct.GrossWt = value;
+        break;
 
-      if (selectedCustomer && mathchingVendorTounche.length > 0) {
-        updatedProduct.WastageWt = mathchingVendorTounche
-          ? mathchingVendorTounche[0].WastageWt
-          : 0;
-        updatedProduct.WastagePercent = mathchingVendorTounche
-          ? mathchingVendorTounche[0].WastageWt
-          : 0;
-        updatedProduct.MakingPercentage = mathchingVendorTounche
-          ? mathchingVendorTounche[0].MakingPercentage
-          : 0;
-        updatedProduct.MakingFixedAmt = mathchingVendorTounche
-          ? mathchingVendorTounche[0].MakingFixedAmt
-          : 0;
-        updatedProduct.MakingFixedWastage = mathchingVendorTounche
-          ? mathchingVendorTounche[0].MakingFixedWastage
-          : 0;
-        updatedProduct.MakingPerGram = mathchingVendorTounche
-          ? mathchingVendorTounche[0].MakingPerGram
-          : 9;
-        updatedProduct.FinePure = mathchingVendorTounche
-          ? mathchingVendorTounche[0].FinePure
-          : 0;
-        setFinePure(mathchingVendorTounche[0].FinePure);
-        console.log("TouncheMatched", mathchingVendorTounche);
-        console.log("TouncheMatched", mathchingVendorTounche);
-        console.log("TouncheMatched", mathchingVendorTounche);
-        console.log("TouncheMatched", mathchingVendorTounche);
-      } else {
-        console.log("TouncheNotMatched", mathchingVendorTounche);
-        updatedProduct.WastageWt = 0;
-        updatedProduct.MakingFixedAmt = 0;
-        updatedProduct.MakingPerGram = 0;
-        updatedProduct.MakingPercentage = 0;
-        updatedProduct.MakingFixedWastage = 0;
-        updatedProduct.WastagePercent = 0;
-      }
-      let fineWeight =
-        (parseFloat(updatedProduct.NetWt) * parseFloat(value)) / 100;
-      let wastageWeight =
-        (parseFloat(updatedProduct.WastageWt) *
-          parseFloat(updatedProduct.NetWt)) /
-        100;
-      let totalFineWastageWt =
-        parseFloat(fineWeight) + parseFloat(wastageWeight);
+      case "StoneWt":
+        updatedProduct.StoneWt = value;
+        break;
 
-      // updatedProduct.PurityId = value !== "" ? value : 0;
-      updatedProduct.FinePercent = value !== "" ? value : 0;
-      updatedProduct.FineWt = parseFloat(fineWeight);
-      updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt);
-      updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt);
-      // calculatePurchasePrice(updatedProduct);
-      // logic for vendor Tounche above
-    } else if (name === "WastageWt") {
-      let fineWeight = parseFloat(updatedProduct.FineWt);
-      let wastageWeight = !finePure
-        ? (parseFloat(value) * parseFloat(updatedProduct.NetWt)) / 100
-        : (parseFloat(value) * parseFloat(fineWeight)) / 100;
-      let totalFineWastageWt =
-        parseFloat(fineWeight) + parseFloat(wastageWeight);
-      //   updatedProduct.Purity = parseFloat(value);
-      updatedProduct.WastageWt = value;
-      updatedProduct.FineWt = parseFloat(fineWeight).toFixed(3);
-      updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt).toFixed(3);
-      updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt).toFixed(3);
-      updatedProduct.MakingFixedWastage =
-        selectedSkuName !== ""
-          ? parseFloat(selectedSku.MakingFixedWastage).toFixed(3)
-          : "0";
-    } else if (name === "MetalRate") {
-      let fineWeight = parseFloat(updatedProduct.FineWt);
-      let wastageWeight =
-        parseFloat(updatedProduct.WastageWt) / parseFloat(updatedProduct.NetWt);
-      let totalFineWastageWt =
-        parseFloat(fineWeight) + parseFloat(wastageWeight);
-      updatedProduct.MetalRate = parseFloat(value) !== 0 ? value : 0;
-      if (convertAmount) {
-        updatedProduct.TotalItemAmt = parseFloat(
-          (parseFloat(updatedProduct.TotalItemAmt) * parseFloat(value)) / 10
-        ).toFixed(3);
-      } else {
-        updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt).toFixed(3);
-      }
-    } else if (name === "purityRate") {
-      const [selectedPurityName, selectedPurityRate] = value.split(",");
-      setSelectedPurity(selectedPurityName);
-      updatedProduct.Purity = selectedPurityName;
-      updatedProduct.GoldRate = selectedPurityRate;
-      updatedProduct.purityRate = selectedPurityRate;
-    } else if (name === "GoldRate") {
-      updatedProduct.GoldRate = parseFloat(value);
-      updatedProduct.purityRate = parseFloat(value);
-    } else if (name === "ProductName") {
-      updatedProduct.ProductName = value;
-    } else if (name == "DiamondSize") {
-      updatedProduct[name] = value;
-      const selectedDiamondSizeWeightRate = allDiamondSizeWeightRate.filter(
-        (x) => x.DiamondSize == value
-      );
-      console.log(
-        selectedDiamondSizeWeightRate,
-        "selectedDiamondSizeWeightRate"
-      );
-      console.log(
-        selectedDiamondSizeWeightRate,
-        "selectedDiamondSizeWeightRate"
-      );
-      if (selectedDiamondSizeWeightRate.length > 0) {
-        updatedProduct.DiamondWeight =
-          selectedDiamondSizeWeightRate[0].DiamondWeight;
-        updatedProduct.DiamondPurchaseRate =
-          selectedDiamondSizeWeightRate[0].DiamondPurchaseRate;
-        updatedProduct.DiamondPurchaseAmount =
-          selectedDiamondSizeWeightRate[0].DiamondPurchaseRate;
-        updatedProduct.DiamondSellRate =
-          selectedDiamondSizeWeightRate[0].DiamondSellRate;
-        updatedProduct.DiamondPieces = "1";
-      } else {
-        updatedProduct.DiamondWeight = 0;
-        updatedProduct.DiamondSellRate = 0;
-        updatedProduct.DiamondPurchaseRate = 0;
-        updatedProduct.DiamondPurchaseAmount = 0;
-        updatedProduct.DiamondPieces = "0";
-      }
-    } else {
-      updatedProduct[name] = value;
+      case "ClipWeight":
+        updatedProduct.ClipWeight = value;
+        break;
+
+      case "ClipQuantity":
+        updatedProduct.ClipQuantity = value;
+        updatedProduct.Quantity = value;
+        break;
+
+      case "Quantity":
+        updatedProduct.Quantity = value;
+        updatedProduct.ClipQuantity = value;
+        break;
+
+      case "NetWt":
+        updatedProduct.NetWt = value;
+        break;
+
+      case "FinePercent":
+        updatedProduct.FinePercent = value;
+        break;
+
+      case "WastageWt":
+        updatedProduct.WastageWt = value;
+        break;
+
+      case "MetalRate":
+        updatedProduct.MetalRate = parseFloat(value) !== 0 ? value : 0;
+        break;
+
+      case "purityRate":
+        const [selectedPurityName, selectedPurityRate] = value.split(",");
+        updatedProduct.Purity = selectedPurityName;
+        updatedProduct.GoldRate = selectedPurityRate;
+        updatedProduct.purityRate = selectedPurityRate;
+        break;
+
+      case "GoldRate":
+        updatedProduct.GoldRate = parseFloat(value);
+        updatedProduct.purityRate = parseFloat(value);
+        break;
+
+      case "DiamondSize":
+        updatedProduct[name] = value;
+        break;
+
+      default:
+        updatedProduct[name] = value;
     }
-    if (
-      name === "NetWt" ||
-      name === "GrossWt" ||
-      name === "StoneWt" ||
-      name === "ClipWeight" ||
-      name === "ClipQuantity"
-    ) {
-      let fineWeight = parseFloat(updatedProduct.FineWt);
-      let wastageWeight = !finePure
-        ? (parseFloat(updatedProduct.WastageWt) *
-            parseFloat(updatedProduct.NetWt)) /
-          100
-        : (parseFloat(updatedProduct.WastageWt) * parseFloat(fineWeight)) / 100;
-      let totalFineWastageWt =
-        parseFloat(fineWeight) + parseFloat(wastageWeight);
-      //   updatedProduct.Purity = parseFloat(updatedProduct.WastageWt);
-      updatedProduct.WastageWt = 0;
-      updatedProduct.FineWt = 0;
-      updatedProduct.FinePercent = 0;
-      updatedProduct.FineWastageWt = 0;
-      updatedProduct.TotalItemAmt = 0;
-      updatedProduct.MakingFixedWastage =
-        selectedSkuName !== ""
-          ? parseFloat(selectedSku.MakingFixedWastage).toFixed(3)
-          : "0";
-    }
-    // Set the state of the purchaseProduct object with the updatedProduct object
+
     setPurchaseProduct(updatedProduct);
-
-    // Calculate purchase price based on the updatedProduct object
-    calculatePurchasePrice(updatedProduct);
-
-    // Rest of the function logic...
+    setIsCal(true); // Set iscal to true to trigger calculations
   };
+
+  useEffect(() => {
+    if (iscal) {
+      const updatedProduct = ProductCalculator.updateProduct(
+        purchaseProduct,
+        props.allDiamondSizeWeightRate,
+        props.allPurities,
+        props.allVendorTounche,
+        props.selectedCustomer,
+        props.selectedSku,
+        props.selectedSkuName,
+        props.finePure,
+        props.convertAmount
+      );
+      setPurchaseProduct(updatedProduct);
+      setIsCal(false);
+    }
+  }, [iscal, purchaseProduct, props]);
+
+
 
   function findClosestHigherDiamondWeight(
     data,
