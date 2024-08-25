@@ -2,46 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import "../../PagesStyles/AdminTrading.css";
 import {
-  a1,
-  a125,
-  a128,
-  a134,
-  a136,
-  a146,
-  a149,
-  a152,
-  a153,
   a154,
   a155,
   a156,
   a157,
   a158,
-  a159,
-  a163,
-  a174,
-  a18,
-  a191,
-  a194,
-  a20,
-  a22,
-  a28,
   a4,
-  a40,
-  a41,
-  a48,
-  a49,
-  a51,
   a53,
-  a56,
-  a57,
-  a59,
-  a61,
   a64,
-  a65,
-  a66,
-  a71,
-  a74,
-  getAllSizeWeightRate,
 } from "../../../Api/RootApiPath";
 import { AiOutlineEdit, AiOutlinePlusSquare } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
@@ -61,10 +29,11 @@ import AlertMessage from "../../../Other Functions/AlertMessage";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import GenerateRdPurchaseReceipt from "../../../Other Functions/GenerateRdPurchaseReceipt";
 import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
-import ProductCalculator from "../../../support/calculations/ProductCalculator.jsx";
-import StonePopup from "../../../support/purchasesupport/StonePopup.jsx";
-import LooseDiamonds from "../../../support/purchasesupport/LooseDiamonds.jsx";
-import GetApiService from "../../../Api/getapiService"
+import ProductCalculator from "../../../support/calculations/ProductCalculator.jsx"
+import StonePopup from '../../../support/purchasesupport/StonePopup.jsx';
+import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
+import GetApiService from "../../../Api/getapiService";
+
 
 
 export default function AdminPurchaseEntry() {
@@ -142,7 +111,7 @@ export default function AdminPurchaseEntry() {
   const [showError, setShowError] = useState(false);
   const [messageType, setMessageType] = useState("");
   const [messageToShow, setMessageToShow] = useState("");
-
+  
   const [savingInvoice, setSavingInvoice] = useState(false);
   const [iscal, setIscal] = useState(false);
 
@@ -296,14 +265,7 @@ export default function AdminPurchaseEntry() {
     panNo: "",
     gstNo: "",
   });
-  // console.log(allSelectedProducts, "allSelectedProduct");
-  //   useEffect(() => {
-  //     fetch(a1)
-  //       .then((res) => res.json())
-  //       .then((response) => {
-  //         setAllCsData(response.data);
-  //       });
-  //   }, []);
+  
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
   //   let Entryby_Staff_id = parseInt(adminLoggedIn);
@@ -314,93 +276,89 @@ export default function AdminPurchaseEntry() {
   const EmployeId = adminLoggedIn.EmployeId;
   const employeeCode = adminLoggedIn.EmployeeCode;
   const rdPurchaseFormat = parseInt(adminLoggedIn.Clients.RDPurchaseFormat);
-
-
-  const fetchPurchaseEntryForBill = async (idRcvd) => {
-    const formData = { ClientCode: clientCode };
-    try {
-      const response = await fetch(a159, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      const selectedEntry = data.filter((x) => x.Id === idRcvd)[0];
-
-      GenerateRdPurchaseReceipt(selectedEntry, rdPurchaseFormat);
-      resetAllFields();
-      // console.log(data, "AllVendorTounche");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
+ 
+  const apiService = new GetApiService(clientCode);
+ 
   const loadData = async () => {
     try {
-      // Fetching all customers
-      const customersResponse = await GetApiService.fetchAllCustomers();
-      setAllCsData(customersResponse);
-
-      const salesTeamResponse = await GetApiService.fetchAllSalesTeam();
-    setAllSalesTeam(salesTeamResponse.data);
-
-      // Fetching all SKU list
-      const skuListResponse = await GetApiService.fetchAllSkuList();
-      setAllSkuList(skuListResponse);
-
-      // Fetching all categories
-      const categoriesResponse = await GetApiService.fetchAllCategories();
-      setAllCategories(categoriesResponse);
-
-      // Fetching all product types
-      const productTypesResponse = await GetApiService.fetchAllProductType();
-      setAllProductTypes(productTypesResponse);
-
-      // Fetching all purities
-      const puritiesResponse = await GetApiService.fetchAllPurities();
-      setAllPurities(puritiesResponse);
-
-      // Fetching all stones list
-      const stonesListResponse = await GetApiService.fetchAllStonesList();
-      setAllStonesList(stonesListResponse);
-
-      // Fetching all diamonds list
-      const diamondsListResponse = await GetApiService.fetchAllDiamondsList();
-      setAllDiamondsList(diamondsListResponse);
-
-      // Fetching all vendor touches
-      const vendorTouchesResponse = await GetApiService.fetchAllVendorTounche();
-      setAllVendorTounche(vendorTouchesResponse);
-
-      // Fetching all diamond size weight rates
-      const diamondSizeWeightRateResponse = await GetApiService.fetchAllDiamondSizeWeightRate();
-      setAllDiamondSizeWeightRate(diamondSizeWeightRateResponse);
-
-      // Fetching all diamond attributes
-      const diamondAttributesResponse = await GetApiService.fetchAllDiamondAttributes();
-      setAllDiamondAttributes(diamondAttributesResponse);
-
-      // Fetching all RD purchase list
-      const rdPurchaseListResponse = await GetApiService.fetchAllRDPurchaseList();
-      setAllRDPurcaseMainBox(rdPurchaseListResponse);
-
+      const apiCalls = [
+        apiService.fetchAllSalesTeam(),
+        apiService.fetchAllCustomers(),
+        apiService.fetchAllSkuList(),
+        apiService.fetchAllCategories(),
+        apiService.fetchAllProductType(),
+        apiService.fetchAllPurities(),
+        apiService.fetchAllStonesList(),
+        apiService.fetchAllDiamondsList(),
+        apiService.fetchAllVendorTounche(),
+        apiService.fetchAllDiamondSizeWeightRate(),
+        apiService.fetchAllDiamondAttributes(),
+        apiService.fetchAllRDPurchaseList(),
+      ];
+  
+      const results = await Promise.allSettled(apiCalls);
+  
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          // Handle successful response
+          switch (index) {
+            case 0:
+              setAllSalesTeam(result.value.data);
+              break;
+            case 1:
+              setAllCsData(result.value);
+              break;
+            case 2:
+              setAllSkuList(result.value);
+              break;
+            case 3:
+              setAllCategories(result.value);
+              break;
+            case 4:
+              setAllProductTypes(result.value);
+              break;
+            case 5:
+              setAllPurities(result.value);
+              break;
+            case 6:
+              setAllStonesList(result.value);
+              break;
+            case 7:
+              setAllDiamondsList(result.value);
+              break;
+            case 8:
+              setAllVendorTounche(result.value);
+              break;
+            case 9:
+              setAllDiamondSizeWeightRate(result.value);
+              break;
+            case 10:
+              setAllDiamondAttributes(result.value);
+              break;
+            case 11:
+              setAllRDPurcaseMainBox(result.value);
+              break;
+            default:
+              break;
+          }
+        } else {
+          // Handle error
+          console.error(`Error loading data for API ${index + 1}:`, result.reason);
+        }
+      });
     } catch (error) {
-      console.error("Error loading data", error);
+      console.error("Error loading data:", error);
     }
   };
-
+  
   useEffect(() => {
     loadData();
-  }, []);
-
-
+  }, [clientCode]);
+  
   const [selectedSku, setSelectedSku] = useState([]);
   const [selectedSkuName, setSelectedSkuName] = useState("");
   const handleSkuInputChange = (e) => {
-    console.log(e, "jdfghghsdfbgjsb vbfsbnjf sf gdsbfsrjf s ");
+    
     e.preventDefault();
     const { value } = e.target;
     setSelectedSkuName(value);
@@ -419,7 +377,7 @@ export default function AdminPurchaseEntry() {
     // setSelectedProductType(selectedSkuItem.productType);
     // }
   };
-
+  
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -637,7 +595,7 @@ export default function AdminPurchaseEntry() {
       });
     }
   }, [selectedSku]);
-
+  
   // console.log(allPurities, "allPurities");
 
   // useEffect(() => {
@@ -885,9 +843,9 @@ export default function AdminPurchaseEntry() {
       );
       let totalGstAmount = gstType
         ? allSelectedProducts.reduce(
-          (total, product) => total + parseFloat(product.TotalGstAmount),
-          0
-        )
+            (total, product) => total + parseFloat(product.TotalGstAmount),
+            0
+          )
         : 0;
       let totalAmountPaying = allSelectedProducts.reduce(
         (total, product) =>
@@ -1217,8 +1175,8 @@ export default function AdminPurchaseEntry() {
           parseFloat(totalPayableSilver).toFixed(3) === "0.000"
           ? "Paid"
           : payments.length > 0
-            ? "Partial"
-            : "None"
+          ? "Partial"
+          : "None"
       );
 
       formData.append("Quantity", totalQuantity);
@@ -1449,24 +1407,24 @@ export default function AdminPurchaseEntry() {
           // AssignedSilverWeight: "0",
           UnlabelledGoldWeight:
             !product.AddToUnlabelled &&
-              product.CategoryName.toLowerCase().includes("gold")
+            product.CategoryName.toLowerCase().includes("gold")
               ? `${product.GrossWt}`
               : // ? `${product.FineWastageWt}`
-              "0",
+                "0",
           UnlabelledOtherMetalWeight:
             !product.AddToUnlabelled &&
-              !(
-                product.CategoryName.toLowerCase().includes("gold") &&
-                !product.CategoryName.toLowerCase().includes("silver")
-              )
+            !(
+              product.CategoryName.toLowerCase().includes("gold") &&
+              !product.CategoryName.toLowerCase().includes("silver")
+            )
               ? // ? `${product.FineWastageWt}`
-              `${product.GrossWt}`
+                `${product.GrossWt}`
               : "0",
           UnlabelledSilverWeight:
             !product.AddToUnlabelled &&
-              product.CategoryName.toLowerCase().includes("silver")
+            product.CategoryName.toLowerCase().includes("silver")
               ? // ? `${product.FineWastageWt}`
-              `${product.GrossWt}`
+                `${product.GrossWt}`
               : "0",
           MRP: `0`,
           PurityId: parseInt(product.PurityId),
@@ -1482,21 +1440,21 @@ export default function AdminPurchaseEntry() {
           AssignedSilverWeight: "0",
           AvailableGrossWeight: !product.AddToUnlabelled
             ? // &&
-            // product.CategoryName.toLowerCase().includes("gold")
-            `${product.GrossWt}`
+              // product.CategoryName.toLowerCase().includes("gold")
+              `${product.GrossWt}`
             : "0",
           AvailableNetWeight: !product.AddToUnlabelled
             ? // &&
-            // !(
-            //   product.CategoryName.toLowerCase().includes("gold") &&
-            //   !product.CategoryName.toLowerCase().includes("silver")
-            // )
-            `${product.NetWt}`
+              // !(
+              //   product.CategoryName.toLowerCase().includes("gold") &&
+              //   !product.CategoryName.toLowerCase().includes("silver")
+              // )
+              `${product.NetWt}`
             : "0",
           AvailableStoneWeight: !product.AddToUnlabelled
             ? // &&
-            // product.CategoryName.toLowerCase().includes("silver")
-            `${product.StoneWt}`
+              // product.CategoryName.toLowerCase().includes("silver")
+              `${product.StoneWt}`
             : "0",
         };
       });
@@ -2129,7 +2087,7 @@ export default function AdminPurchaseEntry() {
           parseFloat(makingCharges3) +
           parseFloat(makingCharges4) +
           parseFloat(updatedProduct.HallmarkAmt) +
-          parseFloat(updatedProduct.StoneAmount) +
+          parseFloat(updatedProduct.StoneAmount)+
           parseFloat(updatedProduct.totalDiamondpurchaseAmount);
         let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
         let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
@@ -2646,6 +2604,8 @@ export default function AdminPurchaseEntry() {
     }
   }, [iscal, purchaseProduct]);
 
+
+
   function findClosestHigherDiamondWeight(
     data,
     inputWeight,
@@ -2724,8 +2684,8 @@ export default function AdminPurchaseEntry() {
     let fineWeight = parseFloat(purchaseProduct.FineWt);
     let wastageWeight = !finePure
       ? (parseFloat(purchaseProduct.WastageWt) *
-        parseFloat(purchaseProduct.NetWt)) /
-      100
+          parseFloat(purchaseProduct.NetWt)) /
+        100
       : (parseFloat(purchaseProduct.WastageWt) * parseFloat(fineWeight)) / 100;
     let totalFineWastageWt = parseFloat(fineWeight) + parseFloat(wastageWeight);
     updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt).toFixed(3);
@@ -2806,14 +2766,14 @@ export default function AdminPurchaseEntry() {
         BalanceSilver: 0,
         FineGold:
           purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("gold")
+          purchaseProduct.MetalName !== "" &&
+          purchaseProduct.MetalName.toLowerCase().includes("gold")
             ? purchaseProduct.FineWastageWt
             : "0",
         FineSilver:
           purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("silver")
+          purchaseProduct.MetalName !== "" &&
+          purchaseProduct.MetalName.toLowerCase().includes("silver")
             ? purchaseProduct.FineWastageWt
             : "0",
       });
@@ -2839,39 +2799,39 @@ export default function AdminPurchaseEntry() {
         FinalPrice: convertAmount
           ? `${totalRate}`
           : parseInt(totalMakingCharges) !== 0
-            ? `${parseFloat(totalMakingCharges).toFixed(3)}`
-            : `${0}`,
+          ? `${parseFloat(totalMakingCharges).toFixed(3)}`
+          : `${0}`,
         TotalGstAmount: convertAmount
           ? `${gstRate}`
           : parseInt(totalMakingCharges) !== 0
-            ? `${parseFloat(gstRateOnMaking).toFixed(3)}`
-            : // : `${parseFloat(purchaseProduct.FineWastageWt).toFixed(3)}`,
+          ? `${parseFloat(gstRateOnMaking).toFixed(3)}`
+          : // : `${parseFloat(purchaseProduct.FineWastageWt).toFixed(3)}`,
             `${0}`,
         // totalGstAmount: `${0}`,
         BalanceGold:
           !convertAmount &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName &&
-            purchaseProduct.MetalName.toLowerCase().includes("gold")
+          purchaseProduct.MetalName !== "" &&
+          purchaseProduct.MetalName &&
+          purchaseProduct.MetalName.toLowerCase().includes("gold")
             ? purchaseProduct.FineWastageWt
             : 0,
         BalanceSilver:
           !convertAmount &&
-            purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("silver")
+          purchaseProduct.MetalName &&
+          purchaseProduct.MetalName !== "" &&
+          purchaseProduct.MetalName.toLowerCase().includes("silver")
             ? purchaseProduct.FineWastageWt
             : 0,
         FineGold:
           purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("gold")
+          purchaseProduct.MetalName !== "" &&
+          purchaseProduct.MetalName.toLowerCase().includes("gold")
             ? purchaseProduct.FineWastageWt
             : "0",
         FineSilver:
           purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("silver")
+          purchaseProduct.MetalName !== "" &&
+          purchaseProduct.MetalName.toLowerCase().includes("silver")
             ? purchaseProduct.FineWastageWt
             : "0",
       });
@@ -3305,9 +3265,9 @@ export default function AdminPurchaseEntry() {
     // Calculate and update NetWt
     updatedProduct.NetWt = parseFloat(
       parseFloat(updatedProduct.GrossWt || 0) -
-      parseFloat(updatedProduct.WastageWt || 0) -
-      parseFloat(updatedProduct.ClipWeight || 0) * clipQuantity -
-      parseFloat(updatedProduct.StoneWt || 0)
+        parseFloat(updatedProduct.WastageWt || 0) -
+        parseFloat(updatedProduct.ClipWeight || 0) * clipQuantity -
+        parseFloat(updatedProduct.StoneWt || 0)
     ).toFixed(3);
 
     // Update purchaseProduct state
@@ -3359,13 +3319,13 @@ export default function AdminPurchaseEntry() {
   };
   const handleDiamondChange = (index, property, value) => {
     const newDiamond = [...purchaseProduct.Diamonds];
-
+    
     const oldproduct = { ...purchaseProduct };
 
     const selectedDiamond = allDiamondsList.find(
       (diamond) => diamond.DiamondName === value
     );
-    let totalDiamondAmount = 0;
+    let totalDiamondAmount=0;
     let truncatedweight = 0;
 
     if (selectedDiamond) {
@@ -3407,24 +3367,24 @@ export default function AdminPurchaseEntry() {
           // const clarity = newDiamond[index].DiamondClarity ? getDiamondClarity(null, newDiamond[index].DiamondClarity) : null;
           const shape = newDiamond[index].DiamondShape
             ? getShapeValue(
-              null,
-              newDiamond[index].DiamondShape,
-              "DiamondShape"
-            )
+                null,
+                newDiamond[index].DiamondShape,
+                "DiamondShape"
+              )
             : null;
           const clarity = newDiamond[index].DiamondClarity
             ? getShapeValue(
-              null,
-              newDiamond[index].DiamondClarity,
-              "DiamondClarity"
-            )
+                null,
+                newDiamond[index].DiamondClarity,
+                "DiamondClarity"
+              )
             : null;
           const color = newDiamond[index].DiamondColour
             ? getShapeValue(
-              null,
-              newDiamond[index].DiamondColour,
-              "DiamondColour"
-            )
+                null,
+                newDiamond[index].DiamondColour,
+                "DiamondColour"
+              )
             : null;
           const size = newDiamond[index].DiamondSize
             ? getShapeValue(null, newDiamond[index].DiamondSize, "DiamondSize")
@@ -3493,7 +3453,8 @@ export default function AdminPurchaseEntry() {
           });
 
           if (matchingRate) {
-            newDiamond[index].DiamondRate = matchingRate.DiamondRate;
+            newDiamond[index].DiamondRate =
+              matchingRate.DiamondRate;
             console.log("Found matching rate:", matchingRate);
           } else {
             newDiamond[index].DiamondRate = 0; // Default value if no match found
@@ -3510,37 +3471,42 @@ export default function AdminPurchaseEntry() {
         };
       }
 
-      const tweight =
-        newDiamond[index].DiamondWeight * newDiamond[index].DiamondPieces;
 
-      const totalDiamondPurchaseAmount =
-        tweight * newDiamond[index].DiamondRate;
+      const tweight = newDiamond[index].DiamondWeight*newDiamond[index].DiamondPieces;
 
-      const truncatedAmount =
-        Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
-      truncatedweight = Math.floor(tweight * 1000) / 1000;
+      const totalDiamondPurchaseAmount = 
+      tweight * 
+      newDiamond[index].DiamondRate;
+     
+      const truncatedAmount = Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
+     truncatedweight = Math.floor(tweight * 1000) / 1000;
 
       newDiamond[index] = {
         ...newDiamond[index],
         DiamondPurchaseAmt: truncatedAmount,
-        DiamondTotalWeight: truncatedweight,
+        DiamondTotalWeight: truncatedweight
       };
+
+      
 
       // setPurchaseProduct({
       //   ...purchaseProduct,
       //   NetWt: net
       // });
+
+
+
     }
 
     totalDiamondAmount = newDiamond.reduce(
-      (acc, diamond) => acc + (parseFloat(diamond.DiamondRate) || 0),
-      0
-    );
+        (acc, diamond) => acc + (parseFloat(diamond.DiamondRate) || 0),
+        0
+      );
 
-    const totalDiamondpurchaseAmount = newDiamond.reduce(
-      (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
-      0
-    );
+      const totalDiamondpurchaseAmount = newDiamond.reduce(
+        (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
+        0
+      );
 
     const totalDiamondWeight = newDiamond.reduce(
       (acc, diamond) => acc + (parseFloat(diamond.DiamondTotalWeight) || 0),
@@ -3554,6 +3520,7 @@ export default function AdminPurchaseEntry() {
     );
 
     // Calculate total DiamondAmount
+    
 
     // Calculate total StoneWeight
     const totalStoneWeight = newDiamond.reduce(
@@ -3566,6 +3533,8 @@ export default function AdminPurchaseEntry() {
     // console.log("Total diamond amount: ", totalDiamondAmount);
     console.log("Total stone weight: ", totalStoneWeight);
 
+    
+
     // updatedProduct.NetWt = parseFloat(
     //   parseFloat(updatedProduct.GrossWt) -
     //     parseFloat(updatedProduct.StoneWt) -
@@ -3574,12 +3543,9 @@ export default function AdminPurchaseEntry() {
 
     const netwt = parseFloat(
       parseFloat(oldproduct.GrossWt) -
-      parseFloat(oldproduct.StoneWt) -
-      parseFloat(
-        parseFloat(oldproduct.ClipWeight) *
-        parseFloat(oldproduct.ClipQuantity)
-      ) -
-      parseFloat(totalDiamondWeight / 5)
+        parseFloat(oldproduct.StoneWt) -
+        parseFloat(parseFloat(oldproduct.ClipWeight) * parseFloat(oldproduct.ClipQuantity))-
+        parseFloat(totalDiamondWeight/5)
     ).toFixed(3);
 
     setPurchaseProduct({
@@ -3587,8 +3553,8 @@ export default function AdminPurchaseEntry() {
       Diamonds: newDiamond,
       DiamondWeight: totalDiamondWeight,
       DiamondAmount: totalDiamondAmount,
-      Diamondpurchseamount: totalDiamondpurchaseAmount,
-      NetWt: netwt,
+      Diamondpurchseamount:totalDiamondpurchaseAmount,
+      NetWt: netwt
     });
   };
 
@@ -3635,8 +3601,8 @@ export default function AdminPurchaseEntry() {
             <div className="invoiceFormDateTimeBox">
               <DateTime
                 dateRcvd={selectedDate ? selectedDate : null}
-              // showInv={true}
-              // gstType={gstType}
+                // showInv={true}
+                // gstType={gstType}
               />
               <div className="invoiceFormDateTimeSelectDateBox">
                 <input
@@ -3792,8 +3758,8 @@ export default function AdminPurchaseEntry() {
             </div>
 
             {selectedCustomer &&
-              !selectedCustomerEdit ? null : selectedCustomer &&
-                selectedCustomerEdit ? (
+            !selectedCustomerEdit ? null : selectedCustomer &&
+              selectedCustomerEdit ? (
               <div className="adminInvoiceAddedCustomerEditMainBox">
                 <p>Personal Details</p>
                 <div className="adminInvoiceAddedCustomerEditBox">
@@ -4047,96 +4013,96 @@ export default function AdminPurchaseEntry() {
                         <tbody>
                           {allSelectedProducts.length > 0
                             ? allSelectedProducts.map((x, index) => (
-                              <tr
-                                style={{
-                                  borderBottom:
-                                    "1px solid  rgba(128, 128, 128, 0.3)",
-                                }}
-                              >
-                                <td>
-                                  <div className="adminAddInvoiceMainAddLabelOption">
-                                    <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                      <BsCardImage size={"30px"} />
+                                <tr
+                                  style={{
+                                    borderBottom:
+                                      "1px solid  rgba(128, 128, 128, 0.3)",
+                                  }}
+                                >
+                                  <td>
+                                    <div className="adminAddInvoiceMainAddLabelOption">
+                                      <div className="adminAddInvoiceMainAddLabelOptionImageBox">
+                                        <BsCardImage size={"30px"} />
+                                      </div>
+                                      <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                        <p
+                                          style={{
+                                            textAlign: "left",
+                                            margin: "5px",
+                                            padding: "5px",
+                                            marginBottom: "0px",
+                                            paddingBottom: "0px",
+                                            color: "red",
+                                          }}
+                                        >
+                                          Purchase
+                                        </p>
+
+                                        <p
+                                          style={{
+                                            fontWeight: "bold",
+                                            color: "red",
+                                            fontSize: "10px",
+                                            textAlign: "left",
+                                            margin: "0px 5px",
+                                            padding: "0px 5px",
+                                          }}
+                                        >
+                                          {`${x.CategoryName}, ${x.ProductName}`}
+                                        </p>
+                                      </div>
+                                      <div className="adminAddInvoiceMainAddLabelOptionEditIconBox">
+                                        <button
+                                          onClick={() => {
+                                            // editItem(x);
+                                            removePurchaseProductFromList(
+                                              index
+                                            ),
+                                              setPurchaseProduct(x),
+                                              setActive("Purchase"),
+                                              setConvertAmount(x.ConvertAmount),
+                                              setFinePure(x.FinePure);
+                                          }}
+                                          className="adminAddInvoiceMainAddLabelOptionEditIcon"
+                                        >
+                                          <AiOutlineEdit />
+                                        </button>
+                                        <button
+                                          style={{ marginBottom: "5px" }}
+                                          onClick={() => {
+                                            removePurchaseProductFromList(
+                                              index
+                                            );
+                                          }}
+                                          className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
+                                        >
+                                          <RxCross2 />
+                                        </button>
+                                      </div>
                                     </div>
-                                    <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
-                                      <p
-                                        style={{
-                                          textAlign: "left",
-                                          margin: "5px",
-                                          padding: "5px",
-                                          marginBottom: "0px",
-                                          paddingBottom: "0px",
-                                          color: "red",
-                                        }}
-                                      >
-                                        Purchase
-                                      </p>
+                                  </td>
 
-                                      <p
-                                        style={{
-                                          fontWeight: "bold",
-                                          color: "red",
-                                          fontSize: "10px",
-                                          textAlign: "left",
-                                          margin: "0px 5px",
-                                          padding: "0px 5px",
-                                        }}
-                                      >
-                                        {`${x.CategoryName}, ${x.ProductName}`}
-                                      </p>
-                                    </div>
-                                    <div className="adminAddInvoiceMainAddLabelOptionEditIconBox">
-                                      <button
-                                        onClick={() => {
-                                          // editItem(x);
-                                          removePurchaseProductFromList(
-                                            index
-                                          ),
-                                            setPurchaseProduct(x),
-                                            setActive("Purchase"),
-                                            setConvertAmount(x.ConvertAmount),
-                                            setFinePure(x.FinePure);
-                                        }}
-                                        className="adminAddInvoiceMainAddLabelOptionEditIcon"
-                                      >
-                                        <AiOutlineEdit />
-                                      </button>
-                                      <button
-                                        style={{ marginBottom: "5px" }}
-                                        onClick={() => {
-                                          removePurchaseProductFromList(
-                                            index
-                                          );
-                                        }}
-                                        className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
-                                      >
-                                        <RxCross2 />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </td>
+                                  <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td>
 
-                                <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td>
+                                  <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
 
-                                <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
+                                  <td> {parseFloat(x.NetWt).toFixed(3)}</td>
 
-                                <td> {parseFloat(x.NetWt).toFixed(3)}</td>
+                                  <td>
+                                    {parseFloat(x.FinePercent).toFixed(3)}
+                                  </td>
+                                  <td> {parseFloat(x.WastageWt).toFixed(3)}</td>
 
-                                <td>
-                                  {parseFloat(x.FinePercent).toFixed(3)}
-                                </td>
-                                <td> {parseFloat(x.WastageWt).toFixed(3)}</td>
-
-                                <td> ₹{parseFloat(x.Making).toFixed(3)}</td>
-                                <td>
-                                  ₹
-                                  {parseFloat(
-                                    parseFloat(x.FinalPrice) +
-                                    parseFloat(x.TotalGstAmount)
-                                  ).toFixed(3)}
-                                </td>
-                              </tr>
-                            ))
+                                  <td> ₹{parseFloat(x.Making).toFixed(3)}</td>
+                                  <td>
+                                    ₹
+                                    {parseFloat(
+                                      parseFloat(x.FinalPrice) +
+                                        parseFloat(x.TotalGstAmount)
+                                    ).toFixed(3)}
+                                  </td>
+                                </tr>
+                              ))
                             : null}
                           <tr>
                             <td>
@@ -4231,7 +4197,7 @@ export default function AdminPurchaseEntry() {
                     <td>
                       {parseFloat(
                         parseFloat(selectedProduct.FinalPrice) +
-                        parseFloat(selectedProduct.TotalGstAmount)
+                          parseFloat(selectedProduct.TotalGstAmount)
                       ).toFixed(3)}
                     </td>
                   </tr>
@@ -4520,7 +4486,7 @@ export default function AdminPurchaseEntry() {
                             // value={purchaseProduct.names}
                             // value={selectedCategory}
                             value={`${purchaseProduct.CategoryId},${purchaseProduct.CategoryName}`}
-                          // value={purchaseProduct.CategoryName}
+                            // value={purchaseProduct.CategoryName}
                           >
                             <option value={""}>Select an Category</option>
                             {allCategories.map((x, y) => {
@@ -4536,7 +4502,7 @@ export default function AdminPurchaseEntry() {
                           </select>
                         </div>
                         {purchaseProduct.CategoryName &&
-                          purchaseProduct.CategoryName.toLowerCase() ==
+                        purchaseProduct.CategoryName.toLowerCase() ==
                           "diamonds" ? (
                           <div>
                             <th>METAL</th>
@@ -4550,7 +4516,7 @@ export default function AdminPurchaseEntry() {
                               // value={purchaseProduct.names}
                               // value={selectedCategory}
                               value={`${purchaseProduct.MetalId},${purchaseProduct.MetalName}`}
-                            // value={purchaseProduct.CategoryName}
+                              // value={purchaseProduct.CategoryName}
                             >
                               <option value={""}>Select an Base Metal</option>
                               {allCategories.map((x, y) => {
@@ -4567,17 +4533,19 @@ export default function AdminPurchaseEntry() {
                           </div>
                         ) : null}
 
+
+
                         {purchaseProduct.CategoryName &&
-                          purchaseProduct.CategoryName.toLowerCase() ==
+                        purchaseProduct.CategoryName.toLowerCase() ==
                           "loose diamonds" ? (
-                          <LooseDiamonds
-                            purchaseProduct={purchaseProduct}
-                            handleInputChangePurchase={
-                              handleInputChangePurchase
-                            }
-                            allDiamondSizeWeightRate={allDiamondSizeWeightRate}
-                            allDiamondAttributes={allDiamondAttributes}
-                          />
+
+                            <LooseDiamonds 
+          purchaseProduct={purchaseProduct}
+          handleInputChangePurchase={handleInputChangePurchase}
+          allDiamondSizeWeightRate={allDiamondSizeWeightRate}
+          allDiamondAttributes={allDiamondAttributes}
+        />
+                          
                         ) : (
                           <>
                             <div>
@@ -4979,20 +4947,16 @@ export default function AdminPurchaseEntry() {
                             </div>
                             <div className="adminPurchaseEntryAddStoneDiamondOptionBox">
                               <div className="adminPanelLoginFormRegisterBox">
-                                <th
-                                  onClick={() => {
-                                    setShowAddStoneBox(true);
-                                    if (!purchaseProduct.Stones.length > 0) {
-                                      setPurchaseProduct((previousState) => ({
-                                        ...previousState,
-                                        Stones: [
-                                          ...previousState.Stones,
-                                          addStone,
-                                        ],
-                                      }));
-                                    }
-                                  }}
-                                >
+                                <th onClick={() => {
+                                  setShowAddStoneBox(true)
+                                  if(!purchaseProduct.Stones.length > 0){
+                                    setPurchaseProduct((previousState) => ({
+                                      ...previousState,
+                                      Stones: [...previousState.Stones, addStone],
+                                    }))
+                                  }
+
+                                  }}>
                                   <IoMdAddCircleOutline
                                     style={{
                                       marginRight: "5px",
@@ -5074,24 +5038,22 @@ export default function AdminPurchaseEntry() {
                   </table>
                 </div>
                 {showAddStoneBox && (
-                  <div className="popup">
-                    <div
-                      style={{ maxHeight: "250px", overflowY: "auto" }}
-                      className="popup-inner"
-                    >
-                      <StonePopup
-                        purchaseProduct={purchaseProduct}
-                        handleStoneChange={handleStoneChange}
-                        deleteStone={deleteStone}
-                        addStone={addStone}
-                        setPurchaseProduct={setPurchaseProduct}
-                        updatestonewt={updatestonewt}
-                        closePopup={() => setShowAddStoneBox(false)} // Close function
-                        allStonesList={allStonesList}
-                      />
-                    </div>
-                  </div>
-                )}
+  <div className="popup">
+    <div style={{ maxHeight: "250px", overflowY: "auto" }} className="popup-inner">
+      <StonePopup
+        purchaseProduct={purchaseProduct}
+        handleStoneChange={handleStoneChange}
+        deleteStone={deleteStone}
+        addStone={addStone}
+        setPurchaseProduct={setPurchaseProduct}
+        updatestonewt={updatestonewt}
+        closePopup={() => setShowAddStoneBox(false)} // Close function
+        allStonesList={allStonesList}
+      />
+    </div>
+  </div>
+)}
+
 
                 {showAddDiamondBox ? (
                   <div className="popup">
@@ -5264,9 +5226,9 @@ export default function AdminPurchaseEntry() {
                     <option value={"Cash to Metal"}>Cash to Metal</option>
                   </select>
                   {paymentOptions !== "Advance Amount" &&
-                    paymentOptions !== "Cash to Metal" &&
-                    paymentOptions !== "Metal to Cash" &&
-                    paymentOptions !== "Metal" ? (
+                  paymentOptions !== "Cash to Metal" &&
+                  paymentOptions !== "Metal to Cash" &&
+                  paymentOptions !== "Metal" ? (
                     <>
                       <label style={{ whiteSpace: "nowrap" }}>
                         Description
@@ -5285,8 +5247,8 @@ export default function AdminPurchaseEntry() {
                               paymentType === "Paid" && paymentAmount !== 0
                                 ? "red"
                                 : paymentType === "Receive" && paymentAmount > 0
-                                  ? "green"
-                                  : "black",
+                                ? "green"
+                                : "black",
                           }}
                           tabindex="4"
                           ref={button3Ref}
@@ -5311,7 +5273,7 @@ export default function AdminPurchaseEntry() {
                             if (
                               paymentOptions == "Cash" &&
                               totalPaidCashAmount + parseInt(paymentAmount) >
-                              200000
+                                200000
                             ) {
                               alert("Could Not Take more than 200000 in Cash");
                             } else if (
@@ -5374,12 +5336,12 @@ export default function AdminPurchaseEntry() {
                         onChange={(e) => {
                           handleMetalPaymentOption("fineWt", e);
                         }}
-                      //     onChange={(e) =>
-                      //       setMetalPaymentOption({
-                      //         ...metalPaymentOption,
-                      //         fineWt: e.target.value,
-                      //     })
-                      // }
+                        //     onChange={(e) =>
+                        //       setMetalPaymentOption({
+                        //         ...metalPaymentOption,
+                        //         fineWt: e.target.value,
+                        //     })
+                        // }
                       />
                     </div>
                     <div>
@@ -5390,12 +5352,12 @@ export default function AdminPurchaseEntry() {
                         onChange={(e) => {
                           handleMetalPaymentOption("Rate", e);
                         }}
-                      // onChange={(e) =>
-                      //   setMetalPaymentOption({
-                      //     ...metalPaymentOption,
-                      //     fineRate: e.target.value,
-                      //   })
-                      // }
+                        // onChange={(e) =>
+                        //   setMetalPaymentOption({
+                        //     ...metalPaymentOption,
+                        //     fineRate: e.target.value,
+                        //   })
+                        // }
                       />
                     </div>
                     <div>
@@ -5458,12 +5420,12 @@ export default function AdminPurchaseEntry() {
                         onChange={(e) => {
                           handleMetalPaymentOption("Rate", e);
                         }}
-                      // onChange={(e) =>
-                      //   setMetalPaymentOption({
-                      //     ...metalPaymentOption,
-                      //     fineRate: e.target.value,
-                      //   })
-                      // }
+                        // onChange={(e) =>
+                        //   setMetalPaymentOption({
+                        //     ...metalPaymentOption,
+                        //     fineRate: e.target.value,
+                        //   })
+                        // }
                       />
                     </div>
 
@@ -5473,12 +5435,12 @@ export default function AdminPurchaseEntry() {
                         type="number"
                         value={metalPaymentOption.fineWt}
                         readOnly
-                      //     onChange={(e) =>
-                      //       setMetalPaymentOption({
-                      //         ...metalPaymentOption,
-                      //         fineWt: e.target.value,
-                      //     })
-                      // }
+                        //     onChange={(e) =>
+                        //       setMetalPaymentOption({
+                        //         ...metalPaymentOption,
+                        //         fineWt: e.target.value,
+                        //     })
+                        // }
                       />
                     </div>
                     <div
@@ -5533,12 +5495,12 @@ export default function AdminPurchaseEntry() {
                         onChange={(e) => {
                           handleMetalPaymentOption("finePurity", e);
                         }}
-                      // onChange={(e) =>
-                      //   setMetalPaymentOption({
-                      //     ...metalPaymentOption,
-                      //     fineRate: e.target.value,
-                      //   })
-                      // }
+                        // onChange={(e) =>
+                        //   setMetalPaymentOption({
+                        //     ...metalPaymentOption,
+                        //     fineRate: e.target.value,
+                        //   })
+                        // }
                       />
                     </div>
 
@@ -5548,12 +5510,12 @@ export default function AdminPurchaseEntry() {
                         type="number"
                         value={metalPaymentOption.fineWt}
                         readOnly
-                      //     onChange={(e) =>
-                      //       setMetalPaymentOption({
-                      //         ...metalPaymentOption,
-                      //         fineWt: e.target.value,
-                      //     })
-                      // }
+                        //     onChange={(e) =>
+                        //       setMetalPaymentOption({
+                        //         ...metalPaymentOption,
+                        //         fineWt: e.target.value,
+                        //     })
+                        // }
                       />
                     </div>
                     <div
@@ -5628,8 +5590,8 @@ export default function AdminPurchaseEntry() {
                                   ? "red"
                                   : paymentType === "Receive" &&
                                     paymentAmount > 0
-                                    ? "green"
-                                    : "black",
+                                  ? "green"
+                                  : "black",
                             }}
                             tabindex="4"
                             ref={button3Ref}
@@ -5654,7 +5616,7 @@ export default function AdminPurchaseEntry() {
                               if (
                                 paymentOptions == "Cash" &&
                                 totalPaidCashAmount + parseInt(paymentAmount) >
-                                200000
+                                  200000
                               ) {
                                 alert(
                                   "Could Not Take more than 200000 in Cash"
@@ -5726,8 +5688,8 @@ export default function AdminPurchaseEntry() {
                                   ? "red"
                                   : paymentType === "Receive" &&
                                     paymentAmount > 0
-                                    ? "green"
-                                    : "black",
+                                  ? "green"
+                                  : "black",
                             }}
                             tabindex="4"
                             ref={button3Ref}
@@ -5742,8 +5704,8 @@ export default function AdminPurchaseEntry() {
                               if (
                                 selectedCustomer &&
                                 parseFloat(selectedCustomer.advanceAmt) -
-                                parseFloat(e.target.value) >=
-                                0
+                                  parseFloat(e.target.value) >=
+                                  0
                               ) {
                                 setAdvanceAmount(e.target.value);
                               } else {
@@ -5763,7 +5725,7 @@ export default function AdminPurchaseEntry() {
                               if (
                                 paymentOptions == "Cash" &&
                                 totalPaidCashAmount + parseInt(paymentAmount) >
-                                200000
+                                  200000
                               ) {
                                 alert(
                                   "Could Not Take more than 200000 in Cash"
