@@ -24,7 +24,7 @@ import AdminInvoiceEdit from "./Components/Pages/AdminPanel/AdminTrading/AdminIn
 import AdminAddEmployee from "./Components/Pages/AdminPanel/AdminMasters/AdminAddEmployee";
 import AdminSaleReport from "./Components/Pages/AdminPanel/AdminReports/AdminSaleReport";
 import AdminCreditNote from "./Components/Pages/AdminPanel/AdminEcommerce/AdminCreditNote";
-import AdminPurchaseEntry from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntry";
+import AdminPurchaseEntry from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryn";
 import AdminPurchasePayments from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchasePayments";
 import AdminAddStone from "./Components/Pages/AdminPanel/AdminMasters/AdminAddStone";
 import AdminAddSku from "./Components/Pages/AdminPanel/AdminMasters/AdminAddSku";

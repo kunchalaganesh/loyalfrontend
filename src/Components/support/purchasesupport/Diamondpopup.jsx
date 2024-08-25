@@ -6,7 +6,7 @@ const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamon
             <div style={{ gridColumn: "span 6" }}>
                 <h4 style={{ margin: "5px" }}>Diamond {index + 1}</h4>
             </div>
-            <label>Diamond Shap1e</label>
+            <label>Diamond Shape</label>
             <input
                 value={diamond.DiamondShape}
                 onChange={(e) => handleDiamondChange(index, "DiamondShape", e.target.value)}

@@ -1831,7 +1831,7 @@ export default function AdminAddBulkStockNew() {
     if (property === "GrossWt" && !isNaN(value)) {
       updatedProduct.NetWt =
         parseFloat(value) -
-          parseFloat(updatedProduct.ClipWeight) -
+          parseFloat(parseFloat(updatedProduct.ClipWeight)) -
           parseFloat(updatedProduct.TotalStoneWeight) >
         0
           ? (
@@ -1924,6 +1924,78 @@ export default function AdminAddBulkStockNew() {
   };
 
   function findClosestHigherDiamondWeight(
+    data,
+    inputWeight,
+    inputShape,
+    inputClarity,
+    color,
+    size,
+    cut
+  ) {
+    // Convert inputWeight to a number
+    const positiveInputWeight = parseFloat(inputWeight);
+    console.log(
+      "checking diamond inputes  ",
+      inputWeight,
+      inputShape,
+      inputClarity,
+      color,
+      size,
+      cut
+    );
+
+    if (!inputWeight || parseFloat(inputWeight) === 0) {
+      return null;
+    }
+
+    // Filter and sort the weights
+    const higherWeights = data
+      .map((item) => {
+        // Convert DiamondWeight to a positive number
+        const positiveWeight = Math.abs(parseFloat(item.DiamondWeight));
+        return {
+          ...item,
+          DiamondWeight: positiveWeight,
+        };
+      })
+      // Filter weights greater than input weight
+      .filter((item) => item.DiamondShape === inputShape)
+      .filter((item) => item.DiamondClarity === inputClarity)
+      .filter((item) => item.DiamondColor === color)
+      .filter((item) => item.DiamondCut === cut);
+    // .filter(item => item.DiamondWeight == positiveInputWeight)
+
+    // .filter(item => item.DiamondWeight >= positiveInputWeight)  // Filter weights greater than or equal to input weight
+
+    const sortedDiamonds = higherWeights.sort(
+      (a, b) => a.DiamondWeight - b.DiamondWeight
+    );
+
+    // Initialize variable to hold the closest diamond found
+    let closestDiamond = null;
+
+    // Iterate through the sorted diamonds to find the exact match or the next higher weight
+    for (let i = 0; i < sortedDiamonds.length; i++) {
+      if (sortedDiamonds[i].DiamondWeight === positiveInputWeight) {
+        // Exact match found
+        closestDiamond = sortedDiamonds[i];
+        break;
+      } else if (sortedDiamonds[i].DiamondWeight > positiveInputWeight) {
+        // Next higher weight found
+        closestDiamond = sortedDiamonds[i];
+        break;
+      }
+    }
+
+    // If no exact or higher weight was found, return the closest diamond found or null
+    return closestDiamond || null;
+    // Sort in ascending order
+    //     .sort((a, b) => a.DiamondWeight - b.DiamondWeight);
+    // // Get the closest higher weight
+    // return higherWeights.length > 0 ? higherWeights[0] : null;
+  }
+
+  function findClosestHigherDiamondWeight1(
     data,
     inputWeight,
     inputShape,
@@ -2546,7 +2618,24 @@ export default function AdminAddBulkStockNew() {
 
   //   return setNewStonesList(newStones);
   // };
-  function getShapeValue(id, shape) {
+
+  function getShapeValue(id, shape, parameter) {
+    console.log("check input values ", id, "  ", shape, "  ", parameter);
+    if (id) {
+      const shapeValue = allDiamondAttributes
+        .filter((x) => x.DiamondAttribute == parameter)
+        ?.find((item) => item.Id == id);
+      return id ? shapeValue?.DiamondValue : "";
+    }
+    if (shape) {
+      const shapeValue = allDiamondAttributes
+        .filter((x) => x.DiamondAttribute == parameter)
+        ?.find((item) => item.DiamondValue == shape);
+      return shape ? shapeValue?.Id : "";
+    }
+  }
+
+  function getShapeValue1(id, shape) {
     if (id) {
       const shapeValue = allDiamondAttributes
         .filter((x) => x.DiamondAttribute == "DiamondShape")
@@ -2772,32 +2861,93 @@ export default function AdminAddBulkStockNew() {
           if (
             field === "DiamondWeight" ||
             field === "DiamondShape" ||
-            field === "DiamondClarity"
+            field === "DiamondClarity"||
+            field === "DiamondCut"
           ) {
             const diamondTemplate = allDiamondSizeWeightRate.find(
               (template) => {
                 return template.Id === diamondTemplateId;
               }
             );
+
             if (diamondTemplate) {
+              // const shape = newDiamond[index].DiamondShape ? getShapeValue(null, newDiamond[index].DiamondShape) : null;
+              // const clarity = newDiamond[index].DiamondClarity ? getDiamondClarity(null, newDiamond[index].DiamondClarity) : null;
               const shape = updatedDiamond.DiamondShape
-                ? getShapeValue(null, updatedDiamond.DiamondShape)
+                ? getShapeValue(
+                    null,
+                    updatedDiamond.DiamondShape,
+                    "DiamondShape"
+                  )
                 : null;
               const clarity = updatedDiamond.DiamondClarity
-                ? getDiamondClarity(null, updatedDiamond.DiamondClarity)
+                ? getShapeValue(
+                    null,
+                    updatedDiamond.DiamondClarity,
+                    "DiamondClarity"
+                  )
                 : null;
-
-              const findedData = findClosestHigherDiamondWeight(
-                diamondTemplate.DiamondSizeWeightRates,
-                updatedDiamond.DiamondWeight,
-                shape,
-                clarity
-              );
-              if (findedData) {
-                updatedDiamond.DiamondPurchaseRate =
-                  findedData.DiamondPurchaseRate;
+              const color = updatedDiamond.DiamondColour
+                ? getShapeValue(
+                    null,
+                    updatedDiamond.DiamondColour,
+                    "DiamondColour"
+                  )
+                : null;
+              const size = updatedDiamond.DiamondSize
+                ? getShapeValue(null, updatedDiamond.DiamondSize, "DiamondSize")
+                : null;
+              const cut = updatedDiamond.DiamondCut
+                ? getShapeValue(null, updatedDiamond.DiamondCut, "DiamondCut")
+                : null;
+              if (
+                updatedDiamond.DiamondWeight &&
+                updatedDiamond.DiamondWeight > 0
+              ) {
+                const foundData = findClosestHigherDiamondWeight(
+                  diamondTemplate.DiamondSizeWeightRates,
+                  updatedDiamond.DiamondWeight,
+                  shape,
+                  clarity,
+                  color,
+                  size,
+                  cut
+                );
+    
+                if (foundData) {
+                  // updatedDiamond = {
+                  //   ...updatedDiamond,
+                  //   DiamondRate: foundData.DiamondPurchaseRate,
+                  // };
+                  updatedDiamond.DiamondRate = foundData.DiamondSellRate
+                }
+              } else {
+                // updatedDiamond = {
+                //   ...updatedDiamond,
+                //   DiamondRate: "0",
+                // };
+                updatedDiamond.DiamondRate = '0'
               }
             }
+            // if (diamondTemplate) {
+            //   const shape = updatedDiamond.DiamondShape
+            //     ? getShapeValue(null, updatedDiamond.DiamondShape)
+            //     : null;
+            //   const clarity = updatedDiamond.DiamondClarity
+            //     ? getDiamondClarity(null, updatedDiamond.DiamondClarity)
+            //     : null;
+
+            //   const findedData = findClosestHigherDiamondWeight(
+            //     diamondTemplate.DiamondSizeWeightRates,
+            //     updatedDiamond.DiamondWeight,
+            //     shape,
+            //     clarity
+            //   );
+            //   if (findedData) {
+            //     updatedDiamond.DiamondPurchaseRate =
+            //       findedData.DiamondPurchaseRate;
+            //   }
+            // }
           }
 
           return updatedDiamond;

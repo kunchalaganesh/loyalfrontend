@@ -62,7 +62,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import GenerateRdPurchaseReceipt from "../../../Other Functions/GenerateRdPurchaseReceipt";
 import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
 
-export default function AdminPurchaseEntry() {
+export default function AdminPurchaseEntryn() {
   const [allCsData, setAllCsData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedCustomerEdit, setSelectedCustomerEdit] = useState(false);
@@ -964,7 +964,7 @@ export default function AdminPurchaseEntry() {
       parseFloat(makingCharges4) +
       parseFloat(HallmarkAmt) +
       parseFloat(selectedProduct.StoneAmount) +
-      parseFloat(selectedProduct.totalDiamondpurchaseAmount);
+      parseFloat(selectedProduct.DiamondAmount);
     let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
 
     console.log(GSTAdded, "GSTAdded");
@@ -2326,7 +2326,7 @@ export default function AdminPurchaseEntry() {
           parseFloat(makingCharges4) +
           parseFloat(updatedProduct.HallmarkAmt) +
           parseFloat(updatedProduct.StoneAmount)+
-          parseFloat(updatedProduct.totalDiamondpurchaseAmount);
+          parseFloat(updatedProduct.DiamondPurchaseAmount);
         let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
         let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
 
@@ -2337,7 +2337,7 @@ export default function AdminPurchaseEntry() {
           parseFloat(makingCharges3) +
           parseFloat(makingCharges4);
 
-        console.log("checking making  ", totalMakingCharges);
+        // console.log(netGoldRate, "netGoldRate");
         if (updatedProduct.MRP == 0 || updatedProduct.MRP == "") {
           updatedProduct.FinalPrice = parseFloat(grossTotalRate).toFixed(3);
           updatedProduct.Making = totalMakingCharges;
@@ -2808,9 +2808,7 @@ export default function AdminPurchaseEntry() {
           parseFloat(
             parseFloat(updatedProduct.ClipWeight) *
               parseFloat(updatedProduct.ClipQuantity)
-          )-
-          parseFloat((updatedProduct.DiamondWeight/5))
-        
+          )
       ).toFixed(3);
       updatedProduct.StoneWt = value;
     } else if (name === "ClipWeight") {
@@ -2820,8 +2818,6 @@ export default function AdminPurchaseEntry() {
           parseFloat(
             parseFloat(value) * parseFloat(updatedProduct.ClipQuantity)
           )
-          -
-          parseFloat((updatedProduct.DiamondWeight/5))
       ).toFixed(3);
       // updatedProduct.StoneWt = value;
       updatedProduct.ClipWeight = value;
@@ -2830,8 +2826,6 @@ export default function AdminPurchaseEntry() {
         parseFloat(updatedProduct.GrossWt) -
           parseFloat(updatedProduct.StoneWt) -
           parseFloat(parseFloat(updatedProduct.ClipWeight) * parseFloat(value))
-          -
-          parseFloat((updatedProduct.DiamondWeight/5))
       ).toFixed(3);
       // updatedProduct.StoneWt = value;
       updatedProduct.ClipQuantity = value;
@@ -2845,13 +2839,25 @@ export default function AdminPurchaseEntry() {
           parseFloat(value) -
           parseFloat(
             parseFloat(updatedProduct.ClipWeight) *
-              parseFloat(updatedProduct.ClipQuantity))
-              -
-          parseFloat((updatedProduct.DiamondWeight/5))
+              parseFloat(updatedProduct.ClipQuantity)
+          )
       ).toFixed(3);
       updatedProduct.NetWt = value;
-    } 
-    else if (name === "FinePercent") {
+    } else if (name === "FinePercent") {
+      // let fineWeight =
+      //   (parseFloat(updatedProduct.NetWt) * parseFloat(value)) / 100;
+      // let wastageWeight =
+      //   (parseFloat(updatedProduct.WastageWt) *
+      //     parseFloat(updatedProduct.NetWt)) /
+      //   100;
+      // let totalFineWastageWt =
+      //   parseFloat(fineWeight) + parseFloat(wastageWeight);
+
+      // // updatedProduct.PurityId = value !== "" ? value : 0;
+      // updatedProduct.FinePercent = value !== "" ? value : 0;
+      // updatedProduct.FineWt = parseFloat(fineWeight);
+      // updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt);
+      // updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt);
 
       if (value !== "") {
         let matchingPurity = allPurities.find(
@@ -3164,7 +3170,7 @@ export default function AdminPurchaseEntry() {
       parseFloat(makingCharges3) +
       parseFloat(makingCharges4) +
       parseFloat(purchaseProduct.StoneAmount) +
-      parseFloat(purchaseProduct.totalDiamondpurchaseAmount) +
+      parseFloat(purchaseProduct.DiamondPurchaseAmount) +
       parseFloat(purchaseProduct.HallmarkAmt);
     // parseFloat(purchaseProduct.TagAmount);
     let allItemGstRate =
@@ -3940,13 +3946,15 @@ export default function AdminPurchaseEntry() {
         0
       );
 
-      const totalDiamondpurchaseAmount = newDiamond.reduce(
-        (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
+      const tDiamondPurchaseAmount = newDiamond.reduce(
+        (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmount) || 0),
         0
       );
 
+    
+
     const totalDiamondWeight = newDiamond.reduce(
-      (acc, diamond) => acc + (parseFloat(diamond.DiamondTotalWeight) || 0),
+      (acc, diamond) => acc + (parseFloat(diamond.DiamondWeight) || 0),
       0
     );
 
@@ -3990,7 +3998,7 @@ export default function AdminPurchaseEntry() {
       Diamonds: newDiamond,
       DiamondWeight: totalDiamondWeight,
       DiamondAmount: totalDiamondAmount,
-      Diamondpurchseamount:totalDiamondpurchaseAmount,
+      DiamondPurchaseAmount: tDiamondPurchaseAmount,
       NetWt: netwt
     });
   };
@@ -5271,6 +5279,7 @@ export default function AdminPurchaseEntry() {
                                   onChange={handleInputChangePurchase}
                                   type="text"
                                   value={purchaseProduct.WastageWt}
+                                  readOnly={purchaseProduct.MakingPercentage !== null && purchaseProduct.MakingPercentage !== ''&& purchaseProduct.MakingPercentage !== 0}
                                 />
                               </div>
                             </div>
@@ -5303,6 +5312,7 @@ export default function AdminPurchaseEntry() {
                                     onChange={handleInputChangePurchase}
                                     type="text"
                                     value={purchaseProduct.MakingPercentage}
+                                    readOnly={purchaseProduct.WastageWt !== null && purchaseProduct.WastageWt !== ''&& purchaseProduct.WastageWt !== 0}
                                   />
                                 </div>
                                 <div>
@@ -5410,7 +5420,7 @@ export default function AdminPurchaseEntry() {
                                 </div>
 
                                 <div>
-                                  <th>TOTAL DIAMOND AMOUNT</th>
+                                  <th>T DIAMOND AMT</th>
                                   <input
                                     style={{
                                       cursor: "not-allowed",
@@ -5427,7 +5437,7 @@ export default function AdminPurchaseEntry() {
                                 </div>
 
                                 <div>
-                                  <th>TOTAL DIAMOND QTY</th>
+                                  <th>T DIAMOND QTY</th>
                                   <input
                                     style={{
                                       cursor: "not-allowed",
@@ -5448,7 +5458,7 @@ export default function AdminPurchaseEntry() {
                                 </div>
 
                                 <div>
-                                  <th>TOTAL DIAMOND WT</th>
+                                  <th>T DIAMOND WT</th>
                                   <input
                                     style={{
                                       cursor: "not-allowed",
