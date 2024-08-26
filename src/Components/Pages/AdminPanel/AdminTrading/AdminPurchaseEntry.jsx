@@ -307,6 +307,7 @@ export default function AdminPurchaseEntry() {
               break;
             case 1:
               setAllCsData(result.value);
+              setProductsLoading(false);
               break;
             case 2:
               setAllSkuList(result.value);
@@ -385,31 +386,7 @@ export default function AdminPurchaseEntry() {
       console.log(selectedSku, " sdjsdbn jkds jhd jkds ddjsd ");
       setAllStonesList(selectedSku.SKUStoneMain);
       console.log("checking stoness", selectedSku.SKUStoneMain);
-      // setDescription(selectedSku.description);
-      // setNetWt(selectedSku.netWt);
-      // // categoryName = selectedSku.category;
-      // // productTypeName = selectedSku.productType;
-      // // collectionName = selectedSku.collection;
-      // // purityName = selectedSku.purity;
-      // setSelectedCategory(`${selectedSku.categoryId},${selectedSku.category}`);
-      // setProductType(`${selectedSku.productTypeId},${selectedSku.productType}`);
-      // setCollection(`${selectedSku.collectionId},${selectedSku.collection}`);
-      // setPurity(`${selectedSku.purityId},${selectedSku.purity}`);
-      // // categoryId = selectedSku.categoryId;
-      // // productTypeId = selectedSku.productTypeId;
-      // // purityId = selectedSku.purityId;
-      // // collectionId = selectedSku.collectionId;
-      // setSize(selectedSku.size);
-      // setGrosswt(selectedSku.grossWt);
-      // setNetWt(selectedSku.netWt);
-      // setStoneWeight(selectedSku.totalStoneWt);
-      // setSelectedFiles(selectedSku.images);
-      // setSelectedFiles(selectedSku.images);
-      // setMaking_Percentage(selectedSku.makingPercentage);
-      // setMaking_Fixed_Amt(selectedSku.makingFixedAmt);
-      // setMaking_per_gram(selectedSku.makingPerGram);
-      // setMaking_Fixed_Wastage(selectedSku.makingFixedWastage);
-      // setMRP(selectedSku.mrp);
+      
       setSelectedCategory(
         `${selectedSku.CategoryId},${selectedSku.CategoryName}`
       );
