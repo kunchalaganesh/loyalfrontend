@@ -341,6 +341,7 @@ function AdminStockTransfer() {
             TotalGrossWT: 0,
             TotalNetWT: 0
         }));
+
         setCheckdata([]);
         setSelectedRows([]);
         setSelectAll(false);
@@ -477,7 +478,6 @@ function AdminStockTransfer() {
             Destination: destinationItem ? destinationItem.Id : 0,
             Remarks: formData.Remarks,
             ReceivedByEmployee: formData.ReceivedBy === 'Other' ? formData.ReceivedByEmployee : formData.ReceivedBy,
-            IsApproved: true
         }
         try {
             const response = await fetch(a235, {
@@ -778,12 +778,12 @@ function AdminStockTransfer() {
                                     >
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell align="center">Sr</TableCell>
-                                                <TableCell align="center">Product Name</TableCell>
-                                                <TableCell align="center">Label</TableCell>
-                                                <TableCell align="center">Gross WT</TableCell>
-                                                <TableCell align="center">Net WT</TableCell>
-                                                <TableCell align="center">Transfer</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Sr</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Product Name</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Label</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Gross WT</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Net WT</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Transfer</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -845,12 +845,12 @@ function AdminStockTransfer() {
                                 >
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell align="center">Sr</TableCell>
-                                            <TableCell align="center">Product Name</TableCell>
-                                            <TableCell align="center">Label</TableCell>
-                                            <TableCell align="center">Gross WT</TableCell>
-                                            <TableCell align="center">Net WT</TableCell>
-                                            <TableCell align="center">Remove</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Sr</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Product Name</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Label</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Gross WT</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Net WT</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Remove</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -996,22 +996,6 @@ function AdminStockTransfer() {
                                         </select>
                                     </Box>
                                 </Grid>
-                                <Grid item>
-                                    <Box sx={{width: "100%"}}>
-                                        <label
-                                            style={{
-                                                display: "block",
-                                                textAlign: "start",
-                                                marginBottom: "5px",
-                                                fontSize: "15px"
-                                            }}
-                                        >
-                                            Remark
-                                        </label>
-                                        <input type="text" className="inputstock" name={"Remarks"}
-                                               onChange={handleInputChangePurchase} value={formData.Remarks}/>
-                                    </Box>
-                                </Grid>
                                 {formData.ReceivedBy === "Other" && (
                                     <>
                                         <Grid item>
@@ -1033,6 +1017,23 @@ function AdminStockTransfer() {
                                         </Grid>
                                     </>
                                 )}
+                                <Grid item>
+                                    <Box sx={{width: "100%"}}>
+                                        <label
+                                            style={{
+                                                display: "block",
+                                                textAlign: "start",
+                                                marginBottom: "5px",
+                                                fontSize: "15px"
+                                            }}
+                                        >
+                                            Remark
+                                        </label>
+                                        <input type="text" className="inputstock" name={"Remarks"}
+                                               onChange={handleInputChangePurchase} value={formData.Remarks}/>
+                                    </Box>
+                                </Grid>
+
                             </Grid>
                         </Grid>
                     </Grid>

@@ -19,6 +19,7 @@ import {a236, a237} from "../../../Api/RootApiPath";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import {useParams} from "react-router-dom";
 import moment from "moment";
+import {InfinitySpin} from "react-loader-spinner";
 
 function AdminApprovalStockTransfer() {
     const [tableData, setTableData] = useState([]);
@@ -31,12 +32,14 @@ function AdminApprovalStockTransfer() {
     const [selectedTab, setSelectedTab] = useState(0); // New state for selected tab
     const [areButtonsDisabled, setAreButtonsDisabled] = useState(true);
     const allStates = useSelector((state) => state);
+    const [isLoading, setIsLoading] = useState(false);
     const clientCode = allStates.reducer1.ClientCode;
     const [open, setOpen] = useState(false);
     const [actionType, setActionType] = useState("");
     const {id} = useParams();
 
     const fetchAllLabelledStock = async () => {
+        setIsLoading(true);
         const formData = {ClientCode: clientCode};
         try {
             const response = await fetch(a236, {
@@ -46,8 +49,8 @@ function AdminApprovalStockTransfer() {
             });
             const data = await response.json();
             const filterData = data.find((e) => e.Id == id);
-            console.log(filterData)
             setTableData(filterData);
+            setIsLoading(false);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -67,16 +70,16 @@ function AdminApprovalStockTransfer() {
         let filtered;
         switch (selectedTab) {
             case 0:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'InTransit');
+                filtered = tableData?.LabelledStockItems?.filter(item => (item.RequestStatus === '0' || item.RequestStatus === null));
                 break;
             case 1:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'Active');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === '1');
                 break;
             case 2:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'Rejected');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === '2');
                 break;
             case 3:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.Status === 'Lost');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === '3');
                 break;
             default:
                 filtered = tableData;
@@ -285,50 +288,65 @@ function AdminApprovalStockTransfer() {
                     <Box sx={{width: '100%'}}>
                         <Grid container alignItems="start" justifyContent="space-between" sx={{my: 2}} spacing={2}>
                             <Grid item xs sx={{width: '100%'}}>
-                                <TableContainer sx={{width: '100%', 'th, td': {border: '1px solid #ccc'}}}>
-                                    <Table size="small" aria-label="stock transfer table"
-                                           sx={{width: '100%', borderRadius: '4px', borderCollapse: 'collapse'}}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Metal
-                                                    Name</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Item Code</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Branch
-                                                    Name</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">NetWt</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">GrossWt</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Status</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">Created</TableCell>
-                                                <TableCell sx={{fontWeight: "600"}} align="center">
+                                {isLoading ? (<>
+                                    <Box sx={{
+                                        height: "30vh",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        width: "100%"
+                                    }}>
+                                        <InfinitySpin width="200" color="#4fa94d"/>
+                                    </Box>
+                                </>) : (
+                                    <TableContainer sx={{width: '100%', 'th, td': {border: '1px solid #ccc'}}}>
+                                        <Table size="small" aria-label="stock transfer table"
+                                               sx={{width: '100%', borderRadius: '4px', borderCollapse: 'collapse'}}>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Metal
+                                                        Name</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Item
+                                                        Code</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Branch
+                                                        Name</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">NetWt</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}}
+                                                               align="center">GrossWt</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}}
+                                                               align="center">Status</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}}
+                                                               align="center">Created</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">
 
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {filteredData?.map((item, index) => (
-                                                <TableRow key={item.Id}>
-                                                    <TableCell align="center">{index + 1}</TableCell>
-                                                    <TableCell align="center">{item.MetalName}</TableCell>
-                                                    <TableCell align="center">{item.ItemCode}</TableCell>
-                                                    <TableCell align="center">{item.BranchName}</TableCell>
-                                                    <TableCell align="center">{item.NetWt}</TableCell>
-                                                    <TableCell align="center">{item.GrossWt}</TableCell>
-                                                    <TableCell align="center">{item.Status}</TableCell>
-                                                    <TableCell
-                                                        align="center">{moment(item.CreatedOn).format('DD/MM/YY')}</TableCell>
-                                                    <TableCell align="center">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedRows.includes(item.Id)}
-                                                            onChange={() => handleRowCheckboxChange(item.Id)}
-                                                        />
                                                     </TableCell>
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
+                                            </TableHead>
+                                            <TableBody>
+                                                {filteredData?.map((item, index) => (
+                                                    <TableRow key={item.Id}>
+                                                        <TableCell align="center">{index + 1}</TableCell>
+                                                        <TableCell align="center">{item.MetalName}</TableCell>
+                                                        <TableCell align="center">{item.ItemCode}</TableCell>
+                                                        <TableCell align="center">{item.BranchName}</TableCell>
+                                                        <TableCell align="center">{item.NetWt}</TableCell>
+                                                        <TableCell align="center">{item.GrossWt}</TableCell>
+                                                        <TableCell align="center">{item.Status}</TableCell>
+                                                        <TableCell
+                                                            align="center">{moment(item.CreatedOn).format('DD/MM/YY')}</TableCell>
+                                                        <TableCell align="center">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedRows.includes(item.TransferItemId)}
+                                                                onChange={() => handleRowCheckboxChange(item.TransferItemId)}
+                                                            />
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>)}
                             </Grid>
                         </Grid>
                     </Box>
