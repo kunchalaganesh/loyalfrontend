@@ -33,6 +33,7 @@ import ProductCalculator from "../../../support/calculations/ProductCalculator.j
 import StonePopup from '../../../support/purchasesupport/StonePopup.jsx';
 import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
 import GetApiService from "../../../Api/getapiService";
+import { createOrder } from '../../../Api/postapiservice';
 
 
 
@@ -706,10 +707,7 @@ export default function AdminPurchaseEntry() {
       parseFloat(selectedProduct.totalDiamondpurchaseAmount);
     let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
 
-    console.log(GSTAdded, "GSTAdded");
-    console.log(GSTAdded, "GSTAdded");
-    console.log(GSTAdded, "GSTAdded");
-    console.log(GSTAdded, "GSTAdded");
+    console.log(GSTAdded, "GSTAdded", );
     let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
     if (selectedProduct.MRP !== "" && selectedProduct.MRP !== 0) {
       GSTAdded = GST * parseFloat(selectedProduct.MRP);
@@ -789,11 +787,12 @@ export default function AdminPurchaseEntry() {
       setSelectedProduct([]);
     }
   };
-  console.log(allSelectedProducts, "allSelectedProducts ");
+  console.log(allSelectedProducts, "allSelectedProductss ");
   console.log(allSelectedProducts, "allSelectedProducts ");
   console.log(allSelectedProducts, "allSelectedProducts ");
   useEffect(() => {
     if (selectedProduct.length > 0) {
+
       const FinalPrice = calculateFinalPrice(
         selectedProduct.NetWt,
         selectedProduct.MakingPerGram,
@@ -806,6 +805,8 @@ export default function AdminPurchaseEntry() {
         selectedProduct.MetalRate,
         selectedProduct.Id
       );
+
+      
 
       setSelectedProductPrice(FinalPrice); // Set the calculated final price here
       setTotalPrice((x) => parseFloat(x) + FinalPrice);
@@ -990,278 +991,42 @@ export default function AdminPurchaseEntry() {
     }
   };
 
-  const createOrder = async () => {
-    setSavingInvoice(true);
-    let totalGold = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.BalanceGold),
-      0
-    );
 
-    let totalSilver = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.BalanceSilver),
-      0
-    );
-    let totalQuantity = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.Quantity),
-      0
-    );
-    let totalWtReceive = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.FineWt),
-      0
-    );
-    let totalFineWithWstageWt = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.FineWastageWt),
-      0
-    );
-    let totalHallmarkAmt = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.HallmarkAmt),
-      0
-    );
-    let totalTagWeight = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.TagWeight),
-      0
-    );
-    let totalFindingWeight = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.FindingWeight),
-      0
-    );
-    let totalLanyardWeight = allSelectedProducts.reduce(
-      (total, product) => total + parseFloat(product.LanyardWeight),
-      0
-    );
-    let unlabelledSilverWeight = allSelectedProducts
-      .filter(
-        (x) =>
-          !x.AddToUnlabelled && x.CategoryName.toLowerCase().includes("silver")
-      )
-      .reduce((total, product) => total + parseFloat(product.FineWt), 0);
-    let unlabelledGoldWeight = allSelectedProducts
-      .filter(
-        (x) =>
-          !x.AddToUnlabelled && x.CategoryName.toLowerCase().includes("gold")
-      )
-      .reduce((total, product) => total + parseFloat(product.FineWt), 0);
-    let unlabelledOtherMetalWeight = allSelectedProducts
-      .filter(
-        (x) =>
-          !x.AddToUnlabelled &&
-          !x.CategoryName.toLowerCase().includes("silver") &&
-          !x.CategoryName.toLowerCase().includes("gold")
-      )
-      .reduce((total, product) => total + parseFloat(product.FineWt), 0);
+  const handleSubmit = async () => {
+    const orderDetails = {
+      allSelectedProducts,
+      selectedCustomer,
+      selectedDate,
+      invoiceNumber,
+      selectedFiles,
+      clientCode,
+      CompanyId,
+      CounterId,
+      BranchId,
+      EmployeId,
+      totalPayableGstAmount,
+      totalPayableAmount,
+      totalPayableGold,
+      totalPayableSilver,
+      discountAmount,
+      grandTotal,
+      selectedSkuName,
+      a154,
+      allProdctsNetAmount,
+      payments,
+      gstType
+    };
 
-    let totalStoneWeight = allSelectedProducts.reduce(
-      (totalProductWeight, product) => {
-        let productStoneWeight = product.Stones.reduce(
-          (totalStoneWeight, stone) => {
-            return totalStoneWeight + parseFloat(stone.StoneWeight || 0);
-          },
-          0
-        );
-        return totalProductWeight + productStoneWeight;
-      },
-      0
-    );
-    let totalStoneAmount = allSelectedProducts.reduce(
-      (totalProductWeight, product) => {
-        let productStoneWeight = product.Stones.reduce(
-          (totalStoneWeight, stone) => {
-            return totalStoneWeight + parseFloat(stone.StoneAmount || 0);
-          },
-          0
-        );
-        return totalProductWeight + productStoneWeight;
-      },
-      0
-    );
-
-    let totalStonePieces = allSelectedProducts.reduce(
-      (totalProductWeight, product) => {
-        let productStoneWeight = product.Stones.reduce(
-          (totalStoneWeight, stone) => {
-            return totalStoneWeight + parseFloat(stone.StonePieces || 0);
-          },
-          0
-        );
-        return totalProductWeight + productStoneWeight;
-      },
-      0
-    );
-
-    let totalDiamondWeight = allSelectedProducts.reduce(
-      (totalProductWeight, product) => {
-        // Calculate the total weight of stones for the current product
-        let productStoneWeight = product.Diamonds.reduce(
-          (totalStoneWeight, stone) => {
-            return totalStoneWeight + parseFloat(stone.DiamondWeight || 0);
-          },
-          0
-        );
-        return totalProductWeight + productStoneWeight;
-      },
-      0
-    );
-    let totalDiamondPieces = allSelectedProducts.reduce(
-      (totalProductWeight, product) => {
-        // Calculate the total weight of stones for the current product
-        let productStoneWeight = product.Diamonds.reduce(
-          (totalStoneWeight, stone) => {
-            return totalStoneWeight + parseFloat(stone.DiamondPieces || 0);
-          },
-          0
-        );
-        return totalProductWeight + productStoneWeight;
-      },
-      0
-    );
-    let totalDiamondAmount = allSelectedProducts.reduce(
-      (totalProductWeight, product) => {
-        //Calculate the total weight of stones for the current product
-        let productStoneWeight = product.Diamonds.reduce(
-          (totalStoneWeight, stone) => {
-            return totalStoneWeight + parseFloat(stone.DiamondAmount || 0);
-          },
-          0
-        );
-        return totalProductWeight + productStoneWeight;
-      },
-      0
-    );
-    // Determine the date to send
-    const dateToSend = selectedDate || getTodaysDateInHTMLFormat();
-    const todaysDate = getTodaysDateInHTMLFormat();
     try {
-      const formData = new FormData();
+      const orderResponse = await createOrder(orderDetails);
+      console.log('Order response:', orderResponse);
 
-      formData.append(
-        "TotalNetAmount",
-        parseFloat(allProdctsNetAmount).toFixed(3)
-      );
-      formData.append(
-        "TotalGSTAmount",
-        parseFloat(totalPayableGstAmount).toFixed(3)
-      );
-      formData.append(
-        "TotalPurchaseAmount",
-        Math.ceil(totalPayableAmount).toFixed(3)
-      );
-      formData.append(
-        "PurchaseStatus",
-        parseFloat(grandTotal).toFixed(2) === "0.00" &&
-          parseFloat(totalPayableGold).toFixed(3) === "0.000" &&
-          parseFloat(totalPayableSilver).toFixed(3) === "0.000"
-          ? "Paid"
-          : payments.length > 0
-            ? "Partial"
-            : "None"
-      );
+      sendProductData(orderResponse.Id);
 
-      formData.append("Quantity", totalQuantity);
-      formData.append(
-        "PurchaseAmount",
-        Math.ceil(totalPayableAmount).toFixed(3)
-      );
-      formData.append("VendorId", selectedCustomer.Id);
-      formData.append("GSTApplied", gstType);
-      formData.append("Branch", "Home");
-      formData.append("PurchaseType", "Purchase");
-      formData.append("Discount", parseFloat(discountAmount).toFixed(3));
-      formData.append("Remark", "");
-      formData.append("BalanceGold", parseFloat(totalPayableGold).toFixed(3));
-      formData.append(
-        "BalanceSilver",
-        parseFloat(totalPayableSilver).toFixed(3)
-      );
-      formData.append("BalanceAmount", parseFloat(grandTotal).toFixed(3));
-      formData.append("BalanceOtherMetal", "0");
-      formData.append("DebitAmount", "0");
-      formData.append("DebitGold", "0");
-      formData.append("DebitSilver", "0");
-      formData.append("DebitOtherMetal", "0");
-      formData.append("TotalFineGold", parseFloat(totalGold).toFixed(3));
-      formData.append("TotalFineSilver", parseFloat(totalSilver).toFixed(3));
-      formData.append("TotalFineOtherMetal", "0");
-      formData.append("InvoiceNo", invoiceNumber);
-      // formData.append("InvoiceFile", "");
-      if (selectedFiles.length > 0) {
-        selectedFiles.forEach((file) => {
-          formData.append("InvoiceFile", file);
-        });
-        console.log("Images Selected");
-      } else {
-        formData.append("InvoiceFile", "");
-        console.log(" No Images Selected");
-      }
-      formData.append("InwardNo", `${parseInt(selectedCustomer.InwardNo) + 1}`);
-      formData.append("PurchaseDate", `${dateToSend}`);
-      formData.append("ClientCode", clientCode);
-      formData.append("CompanyId", CompanyId ? CompanyId : 0);
-      formData.append("CounterId", CounterId ? CounterId : 0);
-      formData.append("BranchId", BranchId ? BranchId : 0);
-      formData.append("EmployeeId", EmployeId ? EmployeId : 0);
-      formData.append("TotalWtReceive", totalWtReceive);
-      formData.append("TotalFineWithWstageWt", totalFineWithWstageWt);
-      formData.append("StockKeepingUnit", selectedSkuName);
-      formData.append("LotNumber", "");
-      formData.append("TotalHallmarkAmount", totalHallmarkAmt);
-      formData.append("TotalTagWeight", totalTagWeight);
-      formData.append("TotalFindingWeight", totalFindingWeight);
-      formData.append("TotalLanyardWeight", totalLanyardWeight);
-      formData.append("UnlabelledSilverWeight", unlabelledSilverWeight);
-      formData.append("UnlabelledGoldWeight", unlabelledGoldWeight);
-      formData.append("UnlabelledOtherMetalWeight", unlabelledOtherMetalWeight);
-      // formData.append("UnlabelledSilverWeight", unlabelledSilverWeight);
-      // formData.append("UnlabelledGoldWeight", unlabelledGoldWeight);
-      // formData.append("UnlabelledOtherMetalWeight", unlabelledOtherMetalWeight);
-      formData.append("TotalStoneWeight", totalStoneWeight);
-      formData.append("TotalStoneAmount", totalStoneAmount);
-      formData.append("TotalStonePieces", totalStonePieces);
-      formData.append("TotalDiamondWeight", totalDiamondWeight);
-      formData.append("TotalDiamondPieces", totalDiamondPieces);
-      formData.append("TotalDiamondAmount", totalDiamondAmount);
-      formData.append("AssignedGoldWeight", "0");
-      formData.append("AssignedSilverWeight", "0");
-      formData.append("AssignedOtherMetalWeight", "0");
-      formData.append("AssignedDiamondWeight", "0");
-
-      // console.log(formData, "FORMDATA FOR ORDER")
-      // const formData = {
-      //   NetAmount: `${parseFloat(allProdctsNetAmount).toFixed(3)}`,
-      //   GSTAmount: `${parseFloat(totalPayableGstAmount).toFixed(3)}`,
-      //   TotalAmount: `${Math.ceil(totalPayableAmount).toFixed(3)}`,
-      //   Quantity: allSelectedProducts.length,
-      //   PurchaseAmount: `${Math.ceil(totalPayableAmount).toFixed(3)}`,
-      //   SupplierId: selectedCustomer.id,
-      //   Branch: "Home",
-      //   PurchaseType: "purchase",
-      //   Discount: `${parseFloat(discountAmount).toFixed(3)}`,
-      //   Remark: "",
-      //   BalanceGold: `${parseFloat(totalPayableGold).toFixed(3)}`,
-      //   BalanceSilver: `${parseFloat(totalPayableSilver).toFixed(3)}`,
-      //   BalanceAmount: `${parseFloat(grandTotal).toFixed(3)}`,
-      //   FineGold: `${parseFloat(totalGold).toFixed(3)}`,
-      //   FineSilver: `${parseFloat(totalSilver).toFixed(3)}`,
-      // };
-      console.log(formData, "FORMDATA FOR ORDER");
-
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-      const response = await fetch(a154, {
-        method: "POST",
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-        body: formData,
-      });
-      const rcvdData = await response.json();
-      console.log(rcvdData, "1st hitt");
-      // createOrderItems(rcvdData.Id);
-      sendProductData(rcvdData.Id);
+      // const productResponse = await sendProductData(allSelectedProducts);
+      console.log('Product response:', orderResponse);
     } catch (error) {
-      alert(error);
-      console.error(error);
-      //   setLoading(false);
+      console.error('Error in submission:', error);
     }
   };
 
@@ -1456,13 +1221,21 @@ export default function AdminPurchaseEntry() {
       if (payments.length > 0) {
         addAllSelectedPayments(rcvdId);
       } else {
-        fetchPurchaseEntryForBill(rcvdId);
-        // resetAllFields();
+        // const orderResponse = await createOrder(orderDetails);
+        const orderResponse = await apiService.fetchPurchaseEntryForBill(rcvdId);
+
+        GenerateRdPurchaseReceipt(orderResponse, rdPurchaseFormat);
+        // fetchPurchaseEntryForBill(rcvdId);
+        resetAllFields();
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  
+
+  
 
   const createOrderItems = async (rcvdId) => {
     for (let product of allSelectedProducts) {
@@ -1492,7 +1265,7 @@ export default function AdminPurchaseEntry() {
     } else {
       // resetAllFields();
       setMessageType("success");
-      setMessageToShow("Entry Saved Successfully");
+      setMessageToShow("Entry Saved Successfullyy");
       setShowError(true);
     }
   };
@@ -1885,7 +1658,8 @@ export default function AdminPurchaseEntry() {
         setMessageType("success");
         setMessageToShow("Entry Saved Successfully");
         setShowError(true);
-        fetchPurchaseEntryForBill(rcvdId);
+        // fetchPurchaseEntryForBill(rcvdId);
+        apiService.fetchPurchaseEntryForBill(rcvdId);
         resetAllFields();
 
         window.scrollTo(0, 0);
@@ -2475,7 +2249,8 @@ export default function AdminPurchaseEntry() {
   const handleInputChangePurchase = (e) => {
     const { name, value } = e.target;
     const updatedProduct = { ...purchaseProduct };
-
+console.log('checking parameter atchange', name);
+    // Handle specific cases
     switch (name) {
       case "CategoryId":
         const [selectedCategoryId, selectedCategoryName] = value.split(",");
@@ -2484,88 +2259,74 @@ export default function AdminPurchaseEntry() {
         updatedProduct.MetalId = selectedCategoryId;
         updatedProduct.MetalName = selectedCategoryName;
         break;
-
       case "MetalId":
         const [selectedMetalId, selectedMetalName] = value.split(",");
         updatedProduct.MetalId = selectedMetalId;
         updatedProduct.MetalName = selectedMetalName;
         break;
-
       case "DiamondPieces":
         updatedProduct.DiamondPieces = value;
         break;
-
       case "ProductName":
         const [selectedProductId, selectedProductName] = value.split(",");
         updatedProduct.ProductId = selectedProductId;
         updatedProduct.ProductName = selectedProductName;
         break;
-
       case "GrossWt":
         updatedProduct.GrossWt = value;
-        break;
-
+        break; // Add missing break
       case "StoneWt":
         updatedProduct.StoneWt = value;
-        break;
-
+        break; // Add missing break
       case "ClipWeight":
         updatedProduct.ClipWeight = value;
-        break;
-
+        break; // Add missing break
       case "ClipQuantity":
         updatedProduct.ClipQuantity = value;
         updatedProduct.Quantity = value;
-        break;
-
+        break; // Add missing break
       case "Quantity":
         updatedProduct.Quantity = value;
         updatedProduct.ClipQuantity = value;
-        break;
-
+        break; // Add missing break
       case "NetWt":
         updatedProduct.NetWt = value;
-        break;
-
+        break; // Add missing break
       case "FinePercent":
         updatedProduct.FinePercent = value;
-        break;
-
+        break; // Add missing break
       case "WastageWt":
-        updatedProduct.WastageWt = value;
+        updatedProduct[name] = value;
         break;
-
       case "MetalRate":
-        updatedProduct.MetalRate = parseFloat(value) !== 0 ? value : 0;
+        updatedProduct.MetalRate = parseFloat(value) || 0; // Ensure valid number
         break;
-
       case "purityRate":
         const [selectedPurityName, selectedPurityRate] = value.split(",");
         updatedProduct.Purity = selectedPurityName;
         updatedProduct.GoldRate = selectedPurityRate;
         updatedProduct.purityRate = selectedPurityRate;
         break;
-
       case "GoldRate":
-        updatedProduct.GoldRate = parseFloat(value);
-        updatedProduct.purityRate = parseFloat(value);
+        updatedProduct.GoldRate = parseFloat(value) || 0;
+        updatedProduct.purityRate = parseFloat(value) || 0;
         break;
-
       case "DiamondSize":
         updatedProduct[name] = value;
         break;
-
       default:
         updatedProduct[name] = value;
     }
 
     setPurchaseProduct(updatedProduct);
-    setIscal(true); // Set iscal to true to trigger calculations
-  };
+    setIscal(true); // Trigger calculation
+};
+
 
   useEffect(() => {
     if (iscal) {
-      const updatedProduct = ProductCalculator.updateProduct(
+      console.log('checking calculationss', iscal)
+      const updatedProduct = ProductCalculator.calculateAll(
         purchaseProduct,
         allDiamondSizeWeightRate,
         allPurities,
@@ -2655,167 +2416,60 @@ export default function AdminPurchaseEntry() {
     // return higherWeights.length > 0 ? higherWeights[0] : null;
   }
 
-  useEffect(() => {
-    const updatedProduct = purchaseProduct;
-    // if (convertAmount === true) {
-    let fineWeight = parseFloat(purchaseProduct.FineWt);
-    let wastageWeight = !finePure
-      ? (parseFloat(purchaseProduct.WastageWt) *
-        parseFloat(purchaseProduct.NetWt)) /
-      100
-      : (parseFloat(purchaseProduct.WastageWt) * parseFloat(fineWeight)) / 100;
-    let totalFineWastageWt = parseFloat(fineWeight) + parseFloat(wastageWeight);
-    updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt).toFixed(3);
-    updatedProduct.FinePure = finePure;
-    updatedProduct.ConvertAmount = convertAmount;
+  // useEffect(() => {
+  //   const fineWeight = parseFloat(purchaseProduct.FineWt) || 0;
+  //   const wastageWeight = !finePure
+  //     ? (parseFloat(purchaseProduct.WastageWt) * (parseFloat(purchaseProduct.NetWt) || 0)) / 100
+  //     : (parseFloat(purchaseProduct.WastageWt) * fineWeight) / 100;
 
-    updatedProduct.TotalItemAmt =
-      (parseFloat(purchaseProduct.MetalRate) / 10) *
-      parseFloat(purchaseProduct.FineWastageWt);
-    // } else {
-    // updatedProduct.TotalItemAmt = purchaseProduct.FineWastageWt;
-    // }
-    setPurchaseProduct(updatedProduct);
-    calculatePurchasePrice(updatedProduct);
-  }, [convertAmount, finePure]);
+  //   const totalFineWastageWt = parseFloat(fineWeight) + parseFloat(wastageWeight);
+  //   const updatedProduct = { ...purchaseProduct, FineWastageWt: totalFineWastageWt.toFixed(3), FinePure: finePure, ConvertAmount: convertAmount };
 
-  const calculatePurchasePrice = (purchaseProduct) => {
-    let FineRate =
-      (parseFloat(purchaseProduct.FineWastageWt) *
-        parseFloat(purchaseProduct.MetalRate)) /
-      10;
-    let netRate = parseFloat(
-      parseFloat(FineRate) * parseFloat(purchaseProduct.NetWt)
-    ).toFixed(3);
-    let makingCharges1 =
-      parseFloat(purchaseProduct.NetWt) *
-      parseFloat(purchaseProduct.MakingPerGram);
-    let makingCharges2 =
-      (parseFloat(netRate) * parseFloat(purchaseProduct.MakingPercentage)) /
-      1000;
-    let makingCharges3 = parseFloat(purchaseProduct.MakingFixedAmt);
-    let makingCharges4 =
-      (parseFloat(purchaseProduct.MetalRate) *
-        parseFloat(purchaseProduct.MakingFixedWastage)) /
-      10;
-    let totalMakingCharges =
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4) +
-      parseFloat(purchaseProduct.StoneAmount) +
-      parseFloat(purchaseProduct.totalDiamondpurchaseAmount) +
-      parseFloat(purchaseProduct.HallmarkAmt);
-    // parseFloat(purchaseProduct.TagAmount);
-    let allItemGstRate =
-      (parseFloat(FineRate) + parseFloat(totalMakingCharges)) * 0.03;
-    let gstRate = parseFloat(FineRate) * 0.03;
-    let gstRateOnMaking = parseFloat(totalMakingCharges) * 0.03;
-    let totalRate = parseFloat(
-      parseFloat(FineRate) + parseFloat(totalMakingCharges)
-    );
+  //   updatedProduct.TotalItemAmt = (parseFloat(purchaseProduct.MetalRate) / 10) * totalFineWastageWt;
+  //   setPurchaseProduct(updatedProduct);
+  //   calculatePurchasePrice(updatedProduct);
+  // }, [convertAmount, finePure]);
 
-    if (convertAmount) {
-      setPurchaseProduct({
-        ...purchaseProduct,
-        Making: totalMakingCharges,
-        // TotalItemAmt: convertAmount
-        //   ? totalRate
-        //   : parseInt(totalMakingCharges) !== 0
-        //   ? parseFloat(totalMakingCharges).toFixed(3)
-        //   : parseFloat(purchaseProduct.FineWastageWt).toFixed(3),
-        TotalItemAmt: convertAmount ? totalRate : totalMakingCharges,
-        // ? parseInt(totalMakingCharges) !== 0
-        // : parseFloat(totalMakingCharges).toFixed(3),
-        // : parseFloat(purchaseProduct.FineWastageWt).toFixed(3),
-        NetAmt: netRate,
-        // GSTAmount: gstRate,
-        GSTAmount: allItemGstRate,
-        TotalAmt: totalRate,
-        toAmount: convertAmount,
-        PurchaseAmount: totalRate,
-        //   finalPrice: `${netRate + gstRate + totalMakingCharges}`,
-        // finalPrice: `${totalRate}`,
-        FinalPrice: `${totalRate}`,
-        // TotalGstAmount: `${gstRate}`,
-        TotalGstAmount: `${allItemGstRate}`,
-        BalanceGold: 0,
-        BalanceSilver: 0,
-        FineGold:
-          purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("gold")
-            ? purchaseProduct.FineWastageWt
-            : "0",
-        FineSilver:
-          purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("silver")
-            ? purchaseProduct.FineWastageWt
-            : "0",
-      });
-    } else {
-      setPurchaseProduct({
-        ...purchaseProduct,
-        Making: totalMakingCharges,
-        // TotalItemAmt: convertAmount
-        //   ? totalRate
-        //   : parseInt(totalMakingCharges) !== 0
-        //   ? parseFloat(totalMakingCharges).toFixed(3)
-        //   : parseFloat(purchaseProduct.FineWastageWt).toFixed(3),
-        TotalItemAmt: convertAmount ? totalRate : totalMakingCharges,
-        // : parseInt(totalMakingCharges) !== 0
-        // ? parseFloat(totalMakingCharges).toFixed(3)
-        // : parseFloat(purchaseProduct.FineWastageWt).toFixed(3),
-        NetAmt: 0,
-        GSTAmount: 0,
-        TotalAmt: 0,
-        toAmount: convertAmount,
-        PurchaseAmount: 0,
-        //   finalPrice: `${netRate + gstRate + totalMakingCharges}`,
-        FinalPrice: convertAmount
-          ? `${totalRate}`
-          : parseInt(totalMakingCharges) !== 0
-            ? `${parseFloat(totalMakingCharges).toFixed(3)}`
-            : `${0}`,
-        TotalGstAmount: convertAmount
-          ? `${gstRate}`
-          : parseInt(totalMakingCharges) !== 0
-            ? `${parseFloat(gstRateOnMaking).toFixed(3)}`
-            : // : `${parseFloat(purchaseProduct.FineWastageWt).toFixed(3)}`,
-            `${0}`,
-        // totalGstAmount: `${0}`,
-        BalanceGold:
-          !convertAmount &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName &&
-            purchaseProduct.MetalName.toLowerCase().includes("gold")
-            ? purchaseProduct.FineWastageWt
-            : 0,
-        BalanceSilver:
-          !convertAmount &&
-            purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("silver")
-            ? purchaseProduct.FineWastageWt
-            : 0,
-        FineGold:
-          purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("gold")
-            ? purchaseProduct.FineWastageWt
-            : "0",
-        FineSilver:
-          purchaseProduct.MetalName &&
-            purchaseProduct.MetalName !== "" &&
-            purchaseProduct.MetalName.toLowerCase().includes("silver")
-            ? purchaseProduct.FineWastageWt
-            : "0",
-      });
-    }
-  };
+  // const calculatePurchasePrice = (product) => {
+  //   const FineRate = (parseFloat(product.FineWastageWt) * parseFloat(product.MetalRate)) / 10;
+  //   const netRate = (FineRate * parseFloat(product.NetWt)).toFixed(3);
+
+  //   // Calculate making charges once
+  //   const makingCharges = [
+  //     parseFloat(product.NetWt) * parseFloat(product.MakingPerGram),
+  //     (FineRate * parseFloat(product.MakingPercentage)) / 1000,
+  //     parseFloat(product.MakingFixedAmt),
+  //     (parseFloat(product.MetalRate) * parseFloat(product.MakingFixedWastage)) / 10,
+  //     parseFloat(product.StoneAmount),
+  //     parseFloat(product.totalDiamondpurchaseAmount),
+  //     parseFloat(product.HallmarkAmt),
+  //   ].reduce((total, charge) => total + (charge || 0), 0);
+
+  //   const totalRate = FineRate + makingCharges;
+  //   const allItemGstRate = totalRate * 0.03;
+  //   const totalItemAmt = convertAmount ? totalRate : makingCharges;
+
+  //   setPurchaseProduct({
+  //     ...product,
+  //     Making: makingCharges,
+  //     TotalItemAmt: totalItemAmt,
+  //     NetAmt: netRate,
+  //     GSTAmount: allItemGstRate,
+  //     TotalAmt: totalRate,
+  //     toAmount: convertAmount,
+  //     PurchaseAmount: totalRate,
+  //     FinalPrice: `${totalRate}`,
+  //     TotalGstAmount: `${allItemGstRate}`,
+  //     BalanceGold: (product.MetalName?.toLowerCase().includes("gold") ? product.FineWastageWt : 0),
+  //     BalanceSilver: (product.MetalName?.toLowerCase().includes("silver") ? product.FineWastageWt : 0),
+  //     FineGold: (product.MetalName?.toLowerCase().includes("gold") ? product.FineWastageWt : "0"),
+  //     FineSilver: (product.MetalName?.toLowerCase().includes("silver") ? product.FineWastageWt : "0"),
+  //   });
+  // };
 
   const addPurchaseProductToList = (selectedProduct) => {
+
+    console.log('check finalitems ', selectedProduct)
     setAllSelectedProducts((prevItems) => [...prevItems, selectedProduct]);
     setLabelName("");
     setSelectedProduct([]);
@@ -3292,7 +2946,14 @@ export default function AdminPurchaseEntry() {
     const updatedDiamonds = purchaseProduct.Diamonds.filter(
       (_, i) => i !== index
     );
-    setPurchaseProduct({ ...purchaseProduct, Diamonds: updatedDiamonds });
+
+    
+
+    setPurchaseProduct({ ...purchaseProduct, Diamonds: updatedDiamonds,DiamondWeight: 0,
+      DiamondAmount: 0,
+      Diamondpurchseamount: 0 });
+
+      setIscal(true)
   };
   const handleDiamondChange = (index, property, value) => {
     const newDiamond = [...purchaseProduct.Diamonds];
@@ -3447,8 +3108,6 @@ export default function AdminPurchaseEntry() {
           DiamondRate: value,
         };
       }
-
-
       const tweight = newDiamond[index].DiamondWeight * newDiamond[index].DiamondPieces;
 
       const totalDiamondPurchaseAmount =
@@ -3463,15 +3122,6 @@ export default function AdminPurchaseEntry() {
         DiamondPurchaseAmt: truncatedAmount,
         DiamondTotalWeight: truncatedweight
       };
-
-
-
-      // setPurchaseProduct({
-      //   ...purchaseProduct,
-      //   NetWt: net
-      // });
-
-
 
     }
 
@@ -3507,7 +3157,7 @@ export default function AdminPurchaseEntry() {
 
     console.log("Total diamond weight: ", totalDiamondWeight);
     console.log("Total diamond pieces: ", totalDiamondPieces);
-    // console.log("Total diamond amount: ", totalDiamondAmount);
+    console.log("Total diamond amount: ", totalDiamondpurchaseAmount);
     console.log("Total stone weight: ", totalStoneWeight);
 
 
@@ -3533,6 +3183,8 @@ export default function AdminPurchaseEntry() {
       Diamondpurchseamount: totalDiamondpurchaseAmount,
       NetWt: netwt
     });
+
+    setIscal(true)
   };
 
   const button1Ref = useRef(null);
@@ -4074,8 +3726,8 @@ export default function AdminPurchaseEntry() {
                                 <td>
                                   ₹
                                   {parseFloat(
-                                    parseFloat(x.FinalPrice) +
-                                    parseFloat(x.TotalGstAmount)
+                                    parseFloat(x.FinalPrice) 
+                                    +parseFloat(x.TotalGstAmount)
                                   ).toFixed(3)}
                                 </td>
                               </tr>
@@ -4631,7 +4283,12 @@ export default function AdminPurchaseEntry() {
                               <div className="adminPurchaseEntryDollarSignBox">
                                 <MdChangeCircle
                                   className="adminPurchaseEntryDollarSign"
-                                  onClick={() => setFinePure(!finePure)}
+                                  onClick={() => 
+                                    {
+                                      setFinePure(!finePure)
+                                    
+                                      setIscal(true)
+                                    }}
                                   size={"17px"}
                                   style={{
                                     cursor: "pointer",
@@ -4702,8 +4359,10 @@ export default function AdminPurchaseEntry() {
                                   <div className="adminPurchaseEntryDollarSignBox">
                                     <FaDollarSign
                                       className="adminPurchaseEntryDollarSign"
-                                      onClick={() =>
+                                      onClick={() =>{
+                                        setIscal(true)
                                         setConvertAmount(!convertAmount)
+                                      }
                                       }
                                       size={"15px"}
                                       style={{
@@ -4783,7 +4442,7 @@ export default function AdminPurchaseEntry() {
                                 </div>
 
                                 <div>
-                                  <th>TOTAL DIAMOND AMOUNT</th>
+                                  <th>T DIA AMOUNT</th>
                                   <input
                                     style={{
                                       cursor: "not-allowed",
@@ -4794,13 +4453,13 @@ export default function AdminPurchaseEntry() {
                                     readOnly
                                     type="text"
                                     value={parseFloat(
-                                      purchaseProduct.DiamondAmount
+                                      purchaseProduct.Diamondpurchseamount
                                     ).toFixed(3)}
                                   />
                                 </div>
 
                                 <div>
-                                  <th>TOTAL DIAMOND QTY</th>
+                                  <th>T DIA QTY</th>
                                   <input
                                     style={{
                                       cursor: "not-allowed",
@@ -4821,7 +4480,7 @@ export default function AdminPurchaseEntry() {
                                 </div>
 
                                 <div>
-                                  <th>TOTAL DIAMOND WT</th>
+                                  <th>T DIA WT</th>
                                   <input
                                     style={{
                                       cursor: "not-allowed",
@@ -4832,7 +4491,7 @@ export default function AdminPurchaseEntry() {
                                     readOnly
                                     type="text"
                                     value={parseFloat(
-                                      purchaseProduct.DiamondWeight
+                                      purchaseProduct.DiamondWeight/5
                                     ).toFixed(3)}
                                   />
                                 </div>
@@ -5903,7 +5562,8 @@ export default function AdminPurchaseEntry() {
                   style={{ marginInline: "10px" }}
                   onClick={() => {
                     if (selectedCustomer && allSelectedProducts.length > 0) {
-                      createOrder();
+                      // createOrder();
+                      handleSubmit();
                     } else {
                       alert("Please add all details");
                     }

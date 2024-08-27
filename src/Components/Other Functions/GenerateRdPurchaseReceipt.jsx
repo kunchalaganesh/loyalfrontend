@@ -4,10 +4,10 @@ import { numberToIndianWords } from "./numberToIndianWords";
 
 export default function GenerateRdPurchaseReceipt(order, rdPurchaseFormat) {
   console.log("checking trigger", order, rdPurchaseFormat);
-  if (rdPurchaseFormat == 1) {
+  if (rdPurchaseFormat == 2) {
     // Thashna Label Below
     generateRdPurchaseReceipt1(order);
-  } else if (rdPurchaseFormat == 2) {
+  } else if (rdPurchaseFormat == 1) {
     // Nice Label Below
     generateRdPurchaseReceipt2(order);
   }
