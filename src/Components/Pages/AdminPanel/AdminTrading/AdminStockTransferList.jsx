@@ -119,33 +119,33 @@ function AdminStockTransferList() {
     const handleRowExpandToggle = (id) => {
         setExpandedRow(expandedRow === id ? null : id);
     };
-    useEffect(() => {
-        const getFilteredData = async () => {
-            const transferTypeId = transferType.find((item, _) => item.TransferType == filterFormData.TransferType);
-            const branchNameId = branchOption.find((item, _) => item.Id == filterFormData.BranchName);
-            // const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName);
-            const payload = {
-                TransferTypeId: transferTypeId ? transferTypeId.Id : 0,
-                BranchNameId: branchNameId ? branchNameId.Id : 0,
-                // DesignId: designId ? designId.Id : 0,
-            };
-            console.log("SASASASAASSASASASASASASA", payload)
-            // try {
-            //     const response = await fetch(selectedValue === 'labelled' ? a233 : a234, {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //         },
-            //         body: JSON.stringify(payload),
-            //     });
-            //     const data = await response.json();
-            //     setTableData(data);
-            // } catch (error) {
-            //     console.log(error);
-            // }
-        }
-        // getFilteredData()
-    }, [filterFormData])
+    // useEffect(() => {
+    //     const getFilteredData = async () => {
+    //         const transferTypeId = transferType.find((item, _) => item.TransferType == filterFormData.TransferType);
+    //         const branchNameId = branchOption.find((item, _) => item.Id == filterFormData.BranchName);
+    //         // const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName);
+    //         const payload = {
+    //             TransferTypeId: transferTypeId ? transferTypeId.Id : 0,
+    //             BranchNameId: branchNameId ? branchNameId.Id : 0,
+    //             DesignId: designId ? designId.Id : 0,
+    //         };
+    //         console.log("SASASASAASSASASASASASASA ", payload)
+    //         try {
+    //             const response = await fetch(selectedValue === 'labelled' ? a233 : a234, {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 },
+    //                 body: JSON.stringify(payload),
+    //             });
+    //             const data = await response.json();
+    //             setTableData(data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     }
+    //     getFilteredData()
+    // }, [filterFormData])
     const handleInputChangePurchase = (e) => {
         const {name, value} = e.target;
         setFilterFormData({

@@ -342,16 +342,16 @@ export default function AdminStockReport() {
     );
     printListAll(filteredProducts);
   };
-
   const printListAll = async (data) => {
+
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const startX = 10; // Adjusted startX value for the serial number column
+    const startX = 10;
     let startY = 20;
     const lineHeight = 5;
     const margin = 5;
-    const serialNumberWidth = 20; // Width for the serial number column
+    const serialNumberWidth = 20;
     const columnWidth =
       (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
@@ -396,6 +396,7 @@ export default function AdminStockReport() {
     // Generate data rows
 
     let y = startY + lineHeight + margin;
+      console.log("DTATATA : ",data);
     data.forEach((item, index) => {
       // Check if we need to start a new page
       if (index > 0 && y + lineHeight > pageHeight - margin) {
@@ -405,7 +406,6 @@ export default function AdminStockReport() {
         generateHeader();
         y = startY + lineHeight + margin; // Update y position for the new page
       }
-
       const serialNumber = index + 1;
       doc.text(serialNumber.toString(), startX, y);
       doc.text(

@@ -70,16 +70,16 @@ function AdminApprovalStockTransfer() {
         let filtered;
         switch (selectedTab) {
             case 0:
-                filtered = tableData?.LabelledStockItems?.filter(item => (item.RequestStatus === '0' || item.RequestStatus === null));
+                filtered = tableData?.LabelledStockItems?.filter(item => (item.RequestStatus === 0));
                 break;
             case 1:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === '1');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === 1);
                 break;
             case 2:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === '2');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === 2);
                 break;
             case 3:
-                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === '3');
+                filtered = tableData?.LabelledStockItems?.filter(item => item.RequestStatus === 3);
                 break;
             default:
                 filtered = tableData;
@@ -91,7 +91,7 @@ function AdminApprovalStockTransfer() {
         const checked = event.target.checked;
         setSelectAll(checked);
         if (checked) {
-            const allIds = filteredData.map(item => item.Id);
+            const allIds = filteredData.map(item => item.TransferItemId);
             setSelectedRows(allIds);
         } else {
             setSelectedRows([]);
