@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "../../PagesStyles/Heading.css";
 import wideLogo from "../../../Images/loyalStringLogoWide.png";
 import smallLogo from "../../../Images/loyalStringLogoSmall.png";
-import { FiCircle } from "react-icons/fi";
+import {FiCircle} from "react-icons/fi";
 import {
   AiOutlineDown,
   AiOutlineAppstore,
   AiOutlineArrowRight,
   AiOutlineSchedule,
 } from "react-icons/ai";
-import { HiMagnifyingGlass } from "react-icons/hi2";
-import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { BsFillPersonPlusFill } from "react-icons/bs";
+import {HiMagnifyingGlass} from "react-icons/hi2";
+import {RxEnterFullScreen, RxExitFullScreen} from "react-icons/rx";
+import {IoMdNotificationsOutline} from "react-icons/io";
+import {BsFillPersonPlusFill} from "react-icons/bs";
 import {
   BiUserCircle,
   BiWallet,
@@ -20,12 +20,12 @@ import {
   BiLogOut,
   BiBookBookmark,
 } from "react-icons/bi";
-import { FiSettings } from "react-icons/fi";
-import { BsFillChatLeftTextFill } from "react-icons/bs";
-import { TfiMenuAlt } from "react-icons/tfi";
-import { AiOutlineSearch, AiOutlineSetting } from "react-icons/ai";
-import { MdOutlinePersonAddAlt } from "react-icons/md";
-import { RiTeamLine } from "react-icons/ri";
+import {FiSettings} from "react-icons/fi";
+import {BsFillChatLeftTextFill} from "react-icons/bs";
+import {TfiMenuAlt} from "react-icons/tfi";
+import {AiOutlineSearch, AiOutlineSetting} from "react-icons/ai";
+import {MdOutlinePersonAddAlt} from "react-icons/md";
+import {RiTeamLine} from "react-icons/ri";
 
 import india from "../../../Images/CountriesFlags/india.png";
 import usa from "../../../Images/CountriesFlags/usa.png";
@@ -45,10 +45,10 @@ import user2 from "../../../Images/ProfileList/user2.jpg";
 import user3 from "../../../Images/ProfileList/user3.jpg";
 // import adminProfilePic from "../../../Images/AdminProfile/adminProfilePic.jpg";
 import adminProfilePic from "../../../Images/AdminProfile/loyalStringLogoSmall.png";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import ResponsiveDrawer from "./ResponsiveDrawer";
-import { useDispatch } from "react-redux";
-import { adminLoggedOut } from "../../../../redux/action/Actions";
+import {useDispatch} from "react-redux";
+import {adminLoggedOut} from "../../../../redux/action/Actions";
 
 export default function AdminTopNavbar() {
   const [dropdown, setDropdown] = useState(false);
@@ -89,18 +89,18 @@ export default function AdminTopNavbar() {
   useEffect(() => {
     const handleDocumentClick = (event) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        dropdown2Ref.current &&
-        !dropdown2Ref.current.contains(event.target) &&
-        dropdown3Ref.current &&
-        !dropdown3Ref.current.contains(event.target) &&
-        dropdown4Ref.current &&
-        !dropdown4Ref.current.contains(event.target) &&
-        dropdown5Ref.current &&
-        !dropdown5Ref.current.contains(event.target) &&
-        dropdown6Ref.current &&
-        !dropdown6Ref.current.contains(event.target)
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target) &&
+          dropdown2Ref.current &&
+          !dropdown2Ref.current.contains(event.target) &&
+          dropdown3Ref.current &&
+          !dropdown3Ref.current.contains(event.target) &&
+          dropdown4Ref.current &&
+          !dropdown4Ref.current.contains(event.target) &&
+          dropdown5Ref.current &&
+          !dropdown5Ref.current.contains(event.target) &&
+          dropdown6Ref.current &&
+          !dropdown6Ref.current.contains(event.target)
       ) {
         setDropdown(false);
         setDropdown2(false);
@@ -187,7 +187,7 @@ export default function AdminTopNavbar() {
       id: 1,
       userName: "Profile 1",
       comment:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. In, praesentium voluptatum illo obcaecati voluptate vero vel quis. Corporis, minima et.",
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. In, praesentium voluptatum illo obcaecati voluptate vero vel quis. Corporis, minima et.",
       image: user1,
     },
 
@@ -195,7 +195,7 @@ export default function AdminTopNavbar() {
       id: 2,
       userName: "Profile 2",
       comment:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. In, praesentium voluptatum illo obcaecati voluptate vero vel quis. Corporis, minima et.",
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. In, praesentium voluptatum illo obcaecati voluptate vero vel quis. Corporis, minima et.",
       image: user2,
     },
 
@@ -203,7 +203,7 @@ export default function AdminTopNavbar() {
       id: 3,
       userName: "Profile 3",
       comment:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. In, praesentium voluptatum illo obcaecati voluptate vero vel quis. Corporis, minima et.",
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. In, praesentium voluptatum illo obcaecati voluptate vero vel quis. Corporis, minima et.",
       image: user3,
     },
   ];
@@ -212,16 +212,16 @@ export default function AdminTopNavbar() {
       id: 1,
       name: "User Master",
       items: [
-        { id: 1, name: "Company", linkto: "/add_company" },
-        { id: 2, name: "Branch", linkto: "/add_branch" },
-        { id: 3, name: "Counter", linkto: "/add_counter" },
-        { id: 4, name: "Department", linkto: "/add_department" },
-        { id: 5, name: "Roles", linkto: "/add_roles" },
-        { id: 6, name: "Employees", linkto: "/add_employees" },
-        { id: 7, name: "Bank", linkto: "/add_banks" },
-        { id: 8, name: "Devices", linkto: "/add_devices" },
-        { id: 9, name: "Tax", linkto: "/add_tax" },
-        { id: 10, name: "Rate Conversion", linkto: "/add_rate" },
+        {id: 1, name: "Company", linkto: "/add_company"},
+        {id: 2, name: "Branch", linkto: "/add_branch"},
+        {id: 3, name: "Counter", linkto: "/add_counter"},
+        {id: 4, name: "Department", linkto: "/add_department"},
+        {id: 5, name: "Roles", linkto: "/add_roles"},
+        {id: 6, name: "Employees", linkto: "/add_employees"},
+        {id: 7, name: "Bank", linkto: "/add_banks"},
+        {id: 8, name: "Devices", linkto: "/add_devices"},
+        {id: 9, name: "Tax", linkto: "/add_tax"},
+        {id: 10, name: "Rate Conversion", linkto: "/add_rate"},
         // { id: 9, name: "ActivityLog", linkto: "/add_rates" },
         // { id: 10, name: "UserLog", linkto: "/add_rates" },
         // { id: 11, name: "Access Request Log", linkto: "/add_rates" },
@@ -233,23 +233,24 @@ export default function AdminTopNavbar() {
       id: 2,
       name: "Products Master",
       items: [
-        { id: 1, name: "Category", linkto: "/add_category" },
-        { id: 2, name: "Product", linkto: "/add_product" },
-        { id: 3, name: "Design", linkto: "/add_design" },
-        { id: 4, name: "Purity", linkto: "/add_purity" },
-        { id: 5, name: "Packet", linkto: "/add_packet" },
-        { id: 6, name: "Box", linkto: "/add_box" },
-        { id: 7, name: "Stone", linkto: "/add_stone" },
+        {id: 1, name: "Category", linkto: "/add_category"},
+        {id: 2, name: "Product", linkto: "/add_product"},
+        {id: 3, name: "Design", linkto: "/add_design"},
+        {id: 4, name: "Purity", linkto: "/add_purity"},
+        {id: 5, name: "Packet", linkto: "/add_packet"},
+        {id: 6, name: "Box", linkto: "/add_box"},
+        {id: 7, name: "Stone", linkto: "/add_stone"},
         // { id: 7, name: "Diamond", linkto: "/add_diamond" },
         {
           id: 8,
           name: "Diamond Size/Weight/Rate ",
           linkto: "/add_diamond_size_weight_rate",
         },
-        { id: 9, name: "SKU", linkto: "/add_sku" },
-        { id: 10, name: "Rates", linkto: "/add_rates" },
-        { id: 11, name: "Collection", linkto: "/add_collection" },
-        { id: 12, name: "Occassion", linkto: "/add_occassion" },
+        {id: 9, name: "SKU", linkto: "/add_sku"},
+        {id: 10, name: "Rates", linkto: "/add_rates"},
+        {id: 11, name: "Collection", linkto: "/add_collection"},
+        {id: 12, name: "Occassion", linkto: "/add_occassion"},
+        {id: 13, name: "Diamond Size/Weight/Rate/Template", linkto: "/"}
 
         // { id: 11, name: "Party", linkto: "/add_vendor" },
         // //{ id: 12, name: "Making", linkto: "/adminhome" },
@@ -260,18 +261,18 @@ export default function AdminTopNavbar() {
       id: 3,
       name: "Trading",
       items: [
-        { id: 1, name: "Purchase Entry", linkto: "/purchase_entry" },
-        { id: 9, name: "Create Packet", linkto: "/create_packet" },
-        { id: 2, name: "Add Bulk Stock New", linkto: "/add_bulk_stock_new" },
-        { id: 0, name: "Add Single Stock", linkto: "/add_single_stock" },
+        {id: 1, name: "Purchase Entry", linkto: "/purchase_entry"},
+        {id: 9, name: "Create Packet", linkto: "/create_packet"},
+        {id: 2, name: "Add Bulk Stock New", linkto: "/add_bulk_stock_new"},
+        {id: 0, name: "Add Single Stock", linkto: "/add_single_stock"},
         // { id: 3, name: "Add Bulk Stock", linkto: "/add_bulk_product" },
-        { id: 4, name: "Invoice", linkto: "/admin_invoice" },
-        { id: 5, name: "Make Payments", linkto: "/purchase_payments" },
-        { id: 6, name: "Recieve Payments", linkto: "/receive_payments" },
-        { id: 7, name: "Credit Note / Sale Return", linkto: "/credit_note" },
-        { id: 8, name: "Debit Note / Purchase Return", linkto: "/debit_note" },
-        // { id: 14, name: "Customize Order", linkto: "/adminhome" },
-        //{ id: 15, name: "Stock Transfer", linkto: "/adminhome" },
+        {id: 4, name: "Invoice", linkto: "/admin_invoice"},
+        {id: 5, name: "Make Payments", linkto: "/purchase_payments"},
+        {id: 6, name: "Recieve Payments", linkto: "/receive_payments"},
+        {id: 7, name: "Credit Note / Sale Return", linkto: "/credit_note"},
+        {id: 8, name: "Debit Note / Purchase Return", linkto: "/debit_note"},
+        { id: 15, name: "Stock Transfer", linkto: "/stock_transfer" },
+        {id: 14, name: "Stock Transfer List", linkto: "/stock_transfer_list"},
         //{ id: 16, name: "Stock Verification", linkto: "/adminhome" },
       ],
     },
@@ -279,21 +280,21 @@ export default function AdminTopNavbar() {
       id: 4,
       name: "Reports",
       items: [
-        { id: 1, name: "Stock", linkto: "/stock_report" },
-        { id: 0, name: "SKU Report", linkto: "/admin_sku_report" },
+        {id: 1, name: "Stock", linkto: "/stock_report"},
+        {id: 0, name: "SKU Report", linkto: "/admin_sku_report"},
         {
           id: 10,
           name: "Sku / Karigar Report",
           linkto: "/admin_sku_karigar_wise_report",
         },
-        { id: 2, name: "Inventory", linkto: "/inventory" },
-        { id: 3, name: "Sale", linkto: "/admin_sale_report" },
-        { id: 4, name: "Order List", linkto: "/admin_orders" },
-        { id: 5, name: "Purchase", linkto: "/purchase" },
-        { id: 6, name: "Customer Ledger", linkto: "/admin_customer_ledger" },
-        { id: 7, name: "Supplier Ledger", linkto: "/admin_vendor_ledger" },
-        { id: 8, name: "Old Metal", linkto: "/purchase" },
-        { id: 9, name: "Cash", linkto: "/cash_report" },
+        {id: 2, name: "Inventory", linkto: "/inventory"},
+        {id: 3, name: "Sale", linkto: "/admin_sale_report"},
+        {id: 4, name: "Order List", linkto: "/admin_orders"},
+        {id: 5, name: "Purchase", linkto: "/purchase"},
+        {id: 6, name: "Customer Ledger", linkto: "/admin_customer_ledger"},
+        {id: 7, name: "Supplier Ledger", linkto: "/admin_vendor_ledger"},
+        {id: 8, name: "Old Metal", linkto: "/purchase"},
+        {id: 9, name: "Cash", linkto: "/cash_report"},
 
         // {
         //   id: 10,
@@ -387,8 +388,8 @@ export default function AdminTopNavbar() {
       id: 9,
       name: "Settings",
       items: [
-        { id: 45, name: "Vendor Tounche", linkto: "/vendor_tounche" },
-        { id: 46, name: "Customer Tounche", linkto: "/customer_tounche" },
+        {id: 45, name: "Vendor Tounche", linkto: "/vendor_tounche"},
+        {id: 46, name: "Customer Tounche", linkto: "/customer_tounche"},
         {
           id: 47,
           name: "Diamond Attributes",
@@ -399,7 +400,7 @@ export default function AdminTopNavbar() {
           name: "Pair Customer Vendor",
           linkto: "/pair_customer_vendor",
         },
-        { id: 49, name: "Customer Slab", linkto: "/customer_slab" },
+        {id: 49, name: "Customer Slab", linkto: "/customer_slab"},
         {
           id: 50,
           name: "Customer Rate Of Interest",
@@ -443,18 +444,18 @@ export default function AdminTopNavbar() {
       id: 0,
       name: "Create New",
       items: [
-        { id: 1, name: "Add Customer", linkto: "/add_customer" },
-        { id: 2, name: "Add Vendor", linkto: "/add_vendor" },
-        { id: 2, name: "Add Employee", linkto: "/add_employees" },
+        {id: 1, name: "Add Customer", linkto: "/add_customer"},
+        {id: 2, name: "Add Vendor", linkto: "/add_vendor"},
+        {id: 2, name: "Add Employee", linkto: "/add_employees"},
       ],
     },
     ...categories,
   ];
   return (
-    <nav className="navbarDesktopMainOuterBox">
-      <div className="navbarDesktopMainInnerBox">
-        <div className="navbarDesktopMainLeftBox">
-          {/* <img
+      <nav className="navbarDesktopMainOuterBox">
+        <div className="navbarDesktopMainInnerBox">
+          <div className="navbarDesktopMainLeftBox">
+            {/* <img
             className="companyLogoLarge"
             // src={wideLogo}
             onClick={() => navigate("/adminhome")}
@@ -462,745 +463,745 @@ export default function AdminTopNavbar() {
             src={smallLogo}
             alt="companyLogoWide"
           /> */}
-          <h3
-            style={{ whiteSpace: "nowrap" }}
-            className="comapanysNameHeading"
-            onClick={() => navigate("/adminhome")}
-          >
-            LOYAL STRING
-          </h3>
-          <div className="adminPanelCompanyLogoMobile">
-            <img
-              onClick={() => navigate("/adminhome")}
-              className="companyLogoSmall"
-              src={smallLogo}
-              alt="companyLogoSmall"
-            />
             <h3
-              style={{ whiteSpace: "nowrap" }}
-              className="comapanysNameHeading adminPanelCompanyLogoMobile"
-              onClick={() => navigate("/adminhome")}
+                style={{whiteSpace: "nowrap"}}
+                className="comapanysNameHeading"
+                onClick={() => navigate("/adminhome")}
             >
               LOYAL STRING
             </h3>
-          </div>
-
-          <div className="mobileDrawerMainBox">
-            <ResponsiveDrawer categories={mobileDrawer} />
-          </div>
-          {/* Create New Below */}
-          <div className="navbarDesktopDropdownBoxesMain">
-            <div className="createNewDropdownMain" ref={dropdownRef}>
-              <div
-                className={
-                  !dropdown
-                    ? "createNewDropdownButton"
-                    : "createNewDropdownButton createNewDropdownButtonActive"
-                }
-                onClick={() => {
-                  setDropdown(!dropdown),
-                    setDropdown2(false),
-                    setDropdown3(false),
-                    setDropdown4(false),
-                    setDropdown5(false),
-                    setDropdown6(false);
-                }}
+            <div className="adminPanelCompanyLogoMobile">
+              <img
+                  onClick={() => navigate("/adminhome")}
+                  className="companyLogoSmall"
+                  src={smallLogo}
+                  alt="companyLogoSmall"
+              />
+              <h3
+                  style={{whiteSpace: "nowrap"}}
+                  className="comapanysNameHeading adminPanelCompanyLogoMobile"
+                  onClick={() => navigate("/adminhome")}
               >
-                Create New
-                <AiOutlineDown style={{ padding: "10px 5px" }} size={"12px"} />
-              </div>
-
-              <div
-                className={`createNewDropdownItems ${
-                  dropdown ? "createDropdownItemsActive" : ""
-                }`}
-              >
-                <ul className="createNewDropdownMainList">
-                  <li onClick={() => navigate("/add_customer")}>
-                    <RiTeamLine size={"17px"} />
-                    <p>Customer</p>
-                  </li>
-                  <li onClick={() => navigate("/add_vendor")}>
-                    <MdOutlinePersonAddAlt size={"17px"} />
-                    <p>Supplier</p>
-                  </li>
-                  {/* <li onClick={() => navigate("/add_employee")}> */}
-                  <li onClick={() => navigate("/add_employees")}>
-                    <BsFillPersonPlusFill size={"17px"} />
-                    <p>Employee</p>
-                  </li>
-
-                  {/* <li>
-                    <AiOutlineSchedule size={"17px"} />
-                    <p>Scheme</p>
-                  </li> */}
-                </ul>
-              </div>
+                LOYAL STRING
+              </h3>
             </div>
-            {/* Mega Menu Below */}
-            <div
-              className="createNewDropdownMain createNewDropdownMain2"
-              ref={dropdown2Ref}
-            >
-              <div
-                className={
-                  !dropdown2
-                    ? "createNewDropdownButton"
-                    : "createNewDropdownButton createNewDropdownButtonActive"
-                }
-                onClick={() => {
-                  setDropdown2(!dropdown2),
-                    setDropdown(false),
-                    setDropdown3(false),
-                    setDropdown4(false),
-                    setDropdown5(false),
-                    setDropdown6(false);
-                }}
-              >
-                Mega Menu
-                <AiOutlineDown style={{ padding: "10px 5px" }} size={"12px"} />
-              </div>
-              <div
-                className={`createNewDropdownItems fullWidth ${
-                  dropdown2 ? "createDropdownItemsActive" : ""
-                }`}
-              >
-                {categories.map((category) => (
-                  <div key={category.id} className="createNewDropdownMain">
-                    <div className="createNewDropdownItemsHead2">
-                      <h5>{category.name}</h5>
-                    </div>
-                    <div className="createNewDropdownItems2">
-                      <ul>
-                        {category.items.map((item) => (
-                          <li key={item.id}>
-                            <p onClick={() => navigate(item.linkto)}>
-                              {" "}
-                              <FiCircle
-                                size={"8px"}
-                                style={{
-                                  strokeWidth: "1px",
-                                }}
-                              />{" "}
-                              {item.name}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
+
+            <div className="mobileDrawerMainBox">
+              <ResponsiveDrawer categories={mobileDrawer}/>
             </div>
-          </div>
-        </div>
-        {/* Searchbar Below */}
-        <div className="navbarDesktopMainRightBox">
-          <div className="navbarDesktopSearchbarMainBox">
-            <input placeholder="Search..." />
-            <div className="navbarDesktopSearchbarIcon">
-              <HiMagnifyingGlass />
-            </div>
-          </div>
-          {/* Full screen Below */}
-          <div className="navbarDesktopIconBox">
-            {isFullScreen ? (
-              <RxExitFullScreen size="25px" onClick={handleFullScreen} />
-            ) : (
-              <RxEnterFullScreen size="25px" onClick={handleFullScreen} />
-            )}
-          </div>
-          {/* Appstore Below */}
-          <div className="navbarDesktopIconBox">
-            <div style={{ fontSize: "15px" }} className="navbarDesktopIconBox">
-              <div
-                className="createNewDropdownMain"
-                style={{ width: "auto" }}
-                ref={dropdown3Ref}
-              >
+            {/* Create New Below */}
+            <div className="navbarDesktopDropdownBoxesMain">
+              <div className="createNewDropdownMain" ref={dropdownRef}>
                 <div
-                  style={{ padding: "0 10px" }}
-                  className={
-                    !dropdown3
-                      ? "createNewDropdownButton"
-                      : "createNewDropdownButton createNewDropdownButtonActive"
-                  }
-                  onClick={() => {
-                    setDropdown3(!dropdown3),
-                      setDropdown(false),
-                      setDropdown2(false),
-                      setDropdown4(false),
-                      setDropdown5(false),
-                      setDropdown6(false);
-                  }}
+                    className={
+                      !dropdown
+                          ? "createNewDropdownButton"
+                          : "createNewDropdownButton createNewDropdownButtonActive"
+                    }
+                    onClick={() => {
+                      setDropdown(!dropdown),
+                          setDropdown2(false),
+                          setDropdown3(false),
+                          setDropdown4(false),
+                          setDropdown5(false),
+                          setDropdown6(false);
+                    }}
                 >
-                  <AiOutlineAppstore size={"25px"} />
+                  Create New
+                  <AiOutlineDown style={{padding: "10px 5px"}} size={"12px"}/>
                 </div>
 
                 <div
-                  className={`createNewDropdownItems appListDropdown ${
-                    dropdown3 ? "createDropdownItemsActive" : ""
-                  }`}
+                    className={`createNewDropdownItems ${
+                        dropdown ? "createDropdownItemsActive" : ""
+                    }`}
                 >
-                  <div className="navbarDesktopAppsListDropdownOuterBox">
-                    {appList.map((x) => (
-                      <div
-                        onClick={() => navigate(`${x.appAddress}`)}
-                        className="navbarDesktopAppsListDropdownBox"
-                      >
-                        <img style={{ height: "30px" }} src={x.icon} />
-                        <p style={{ whiteSpace: "nowrap" }}>{x.appName}</p>
+                  <ul className="createNewDropdownMainList">
+                    <li onClick={() => navigate("/add_customer")}>
+                      <RiTeamLine size={"17px"}/>
+                      <p>Customer</p>
+                    </li>
+                    <li onClick={() => navigate("/add_vendor")}>
+                      <MdOutlinePersonAddAlt size={"17px"}/>
+                      <p>Supplier</p>
+                    </li>
+                    {/* <li onClick={() => navigate("/add_employee")}> */}
+                    <li onClick={() => navigate("/add_employees")}>
+                      <BsFillPersonPlusFill size={"17px"}/>
+                      <p>Employee</p>
+                    </li>
+
+                    {/* <li>
+                    <AiOutlineSchedule size={"17px"} />
+                    <p>Scheme</p>
+                  </li> */}
+                  </ul>
+                </div>
+              </div>
+              {/* Mega Menu Below */}
+              <div
+                  className="createNewDropdownMain createNewDropdownMain2"
+                  ref={dropdown2Ref}
+              >
+                <div
+                    className={
+                      !dropdown2
+                          ? "createNewDropdownButton"
+                          : "createNewDropdownButton createNewDropdownButtonActive"
+                    }
+                    onClick={() => {
+                      setDropdown2(!dropdown2),
+                          setDropdown(false),
+                          setDropdown3(false),
+                          setDropdown4(false),
+                          setDropdown5(false),
+                          setDropdown6(false);
+                    }}
+                >
+                  Mega Menu
+                  <AiOutlineDown style={{padding: "10px 5px"}} size={"12px"}/>
+                </div>
+                <div
+                    className={`createNewDropdownItems fullWidth ${
+                        dropdown2 ? "createDropdownItemsActive" : ""
+                    }`}
+                >
+                  {categories.map((category) => (
+                      <div key={category.id} className="createNewDropdownMain">
+                        <div className="createNewDropdownItemsHead2">
+                          <h5>{category.name}</h5>
+                        </div>
+                        <div className="createNewDropdownItems2">
+                          <ul>
+                            {category.items.map((item) => (
+                                <li key={item.id}>
+                                  <p onClick={() => navigate(item.linkto)}>
+                                    {" "}
+                                    <FiCircle
+                                        size={"8px"}
+                                        style={{
+                                          strokeWidth: "1px",
+                                        }}
+                                    />{" "}
+                                    {item.name}
+                                  </p>
+                                </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Searchbar Below */}
+          <div className="navbarDesktopMainRightBox">
+            <div className="navbarDesktopSearchbarMainBox">
+              <input placeholder="Search..."/>
+              <div className="navbarDesktopSearchbarIcon">
+                <HiMagnifyingGlass/>
+              </div>
+            </div>
+            {/* Full screen Below */}
+            <div className="navbarDesktopIconBox">
+              {isFullScreen ? (
+                  <RxExitFullScreen size="25px" onClick={handleFullScreen}/>
+              ) : (
+                  <RxEnterFullScreen size="25px" onClick={handleFullScreen}/>
+              )}
+            </div>
+            {/* Appstore Below */}
+            <div className="navbarDesktopIconBox">
+              <div style={{fontSize: "15px"}} className="navbarDesktopIconBox">
+                <div
+                    className="createNewDropdownMain"
+                    style={{width: "auto"}}
+                    ref={dropdown3Ref}
+                >
+                  <div
+                      style={{padding: "0 10px"}}
+                      className={
+                        !dropdown3
+                            ? "createNewDropdownButton"
+                            : "createNewDropdownButton createNewDropdownButtonActive"
+                      }
+                      onClick={() => {
+                        setDropdown3(!dropdown3),
+                            setDropdown(false),
+                            setDropdown2(false),
+                            setDropdown4(false),
+                            setDropdown5(false),
+                            setDropdown6(false);
+                      }}
+                  >
+                    <AiOutlineAppstore size={"25px"}/>
+                  </div>
+
+                  <div
+                      className={`createNewDropdownItems appListDropdown ${
+                          dropdown3 ? "createDropdownItemsActive" : ""
+                      }`}
+                  >
+                    <div className="navbarDesktopAppsListDropdownOuterBox">
+                      {appList.map((x) => (
+                          <div
+                              onClick={() => navigate(`${x.appAddress}`)}
+                              className="navbarDesktopAppsListDropdownBox"
+                          >
+                            <img style={{height: "30px"}} src={x.icon}/>
+                            <p style={{whiteSpace: "nowrap"}}>{x.appName}</p>
+                          </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Countries Option Below */}
+            <div style={{fontSize: "15px"}} className="navbarDesktopIconBox">
+              <div
+                  className="createNewDropdownMain"
+                  style={{width: "auto"}}
+                  ref={dropdown4Ref}
+              >
+                <div
+                    style={{padding: "0 10px"}}
+                    className={
+                      !dropdown4
+                          ? "createNewDropdownButton"
+                          : "createNewDropdownButton createNewDropdownButtonActive"
+                    }
+                    onClick={() => {
+                      setDropdown4(!dropdown4),
+                          setDropdown(false),
+                          setDropdown2(false),
+                          setDropdown3(false),
+                          setDropdown5(false),
+                          setDropdown6(false);
+                    }}
+                >
+                  <img
+                      style={{width: "30px"}}
+                      // src={`${countries[0].flag}`}
+                      src={`${india}`}
+                      alt="selectedCountry"
+                  />
+                  {/* <AiOutlineDown style={{ padding: "10px 5px" }} size={"12px"} /> */}
+                </div>
+
+                <div
+                    className={`createNewDropdownItems countriesDropdown ${
+                        dropdown4 ? "createDropdownItemsActive" : ""
+                    }`}
+                >
+                  <div className="navbarDesktopCountriesDropdownOuterBox">
+                    {countries.map((x) => (
+                        <div className="navbarDesktopCountriesDropdownBox">
+                          <p>{x.countryName}</p>
+                          <img style={{height: "30px"}} src={x.flag}/>
+                        </div>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/* Countries Option Below */}
-          <div style={{ fontSize: "15px" }} className="navbarDesktopIconBox">
-            <div
-              className="createNewDropdownMain"
-              style={{ width: "auto" }}
-              ref={dropdown4Ref}
-            >
+            {/* Notification Below */}
+            <div style={{fontSize: "15px"}} className="navbarDesktopIconBox">
               <div
-                style={{ padding: "0 10px" }}
-                className={
-                  !dropdown4
-                    ? "createNewDropdownButton"
-                    : "createNewDropdownButton createNewDropdownButtonActive"
-                }
-                onClick={() => {
-                  setDropdown4(!dropdown4),
-                    setDropdown(false),
-                    setDropdown2(false),
-                    setDropdown3(false),
-                    setDropdown5(false),
-                    setDropdown6(false);
-                }}
+                  className="createNewDropdownMain"
+                  style={{width: "auto"}}
+                  ref={dropdown5Ref}
               >
-                <img
-                  style={{ width: "30px" }}
-                  // src={`${countries[0].flag}`}
-                  src={`${india}`}
-                  alt="selectedCountry"
-                />
-                {/* <AiOutlineDown style={{ padding: "10px 5px" }} size={"12px"} /> */}
-              </div>
-
-              <div
-                className={`createNewDropdownItems countriesDropdown ${
-                  dropdown4 ? "createDropdownItemsActive" : ""
-                }`}
-              >
-                <div className="navbarDesktopCountriesDropdownOuterBox">
-                  {countries.map((x) => (
-                    <div className="navbarDesktopCountriesDropdownBox">
-                      <p>{x.countryName}</p>
-                      <img style={{ height: "30px" }} src={x.flag} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Notification Below */}
-          <div style={{ fontSize: "15px" }} className="navbarDesktopIconBox">
-            <div
-              className="createNewDropdownMain"
-              style={{ width: "auto" }}
-              ref={dropdown5Ref}
-            >
-              <div
-                style={{ padding: "0 10px" }}
-                className={
-                  !dropdown5
-                    ? "createNewDropdownButton"
-                    : "createNewDropdownButton createNewDropdownButtonActive"
-                }
-                onClick={() => {
-                  setDropdown5(!dropdown5),
-                    setDropdown(false),
-                    setDropdown2(false),
-                    setDropdown3(false),
-                    setDropdown4(false),
-                    setDropdown6(false);
-                }}
-              >
-                <IoMdNotificationsOutline
-                  className="navbarDesktopNotificationIcon"
-                  style={{ padding: "10px 5px" }}
-                  size={"25px"}
-                />
-                {notificationList.length > 0 ? (
-                  <div className="navbarDesktopNotificationIconAlert">
-                    <p>{notificationList.length}</p>
-                  </div>
-                ) : null}
-              </div>
-
-              <div
-                className={`createNewDropdownItems notificationsDropdown ${
-                  dropdown5 ? "createDropdownItemsActive" : ""
-                }`}
-              >
-                <div className="navbarDesktopNotificationsDropdownOuterBox">
-                  <div className="navbarDesktopNotificationsDropdownClearBox">
-                    <p>Notification</p>
-                    <p>ClearAll</p>
-                  </div>
-                  {notificationList.map((x) => (
-                    <div className="navbarDesktopNotificationDropdownBox">
-                      <div className="navbarDesktopNotificationDropdownUserBox">
-                        <div className="navbarDesktopNotificationDropdownImageBox">
-                          <img
-                            className="navbarDesktopNotificationDropdownImage"
-                            src={x.image}
-                          />
-                        </div>
-                        <div className="navbarDesktopNotificationDropdownParaBox">
-                          <p>{x.userName}</p>
-                          <p>{x.comment.substring(0, 100)}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="navbarDesktopNotificationDropdownShowAllBox">
-                    <h4>View All</h4>
-                    <AiOutlineArrowRight style={{ marginLeft: "10px" }} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Admin Profile Box Below */}
-          <div style={{ fontSize: "15px" }} className="navbarDesktopIconBox">
-            <div
-              className="createNewDropdownMain"
-              style={{ width: "auto" }}
-              ref={dropdown6Ref}
-            >
-              <div
-                style={{ padding: "0 10px" }}
-                className={
-                  !dropdown6
-                    ? "createNewDropdownButton"
-                    : "createNewDropdownButton createNewDropdownButtonActive"
-                }
-                onClick={() => {
-                  setDropdown6(!dropdown6),
-                    setDropdown(false),
-                    setDropdown2(false),
-                    setDropdown3(false),
-                    setDropdown5(false),
-                    setDropdown4(false);
-                }}
-              >
-                <img
-                  className="navbarDesktopDropdownProfilePic"
-                  // src={`${countries[0].flag}`}
-                  src={userProfile.profilePic}
-                  alt="selectedProfile"
-                />
-                <p style={{ whiteSpace: "nowrap" }}>{userProfile.name}</p>
-                <AiOutlineDown style={{ padding: "10px 5px" }} size={"12px"} />
-              </div>
-
-              <div
-                className={`createNewDropdownItems adminProfileDropdown ${
-                  dropdown6 ? "createDropdownItemsActive" : ""
-                }`}
-              >
-                <div className="navbarDesktopDropdownOuterBox">
-                  <p
-                    style={{
-                      fontSize: "12px",
-                      textAlign: "left",
-                      marginLeft: "20px",
+                <div
+                    style={{padding: "0 10px"}}
+                    className={
+                      !dropdown5
+                          ? "createNewDropdownButton"
+                          : "createNewDropdownButton createNewDropdownButtonActive"
+                    }
+                    onClick={() => {
+                      setDropdown5(!dropdown5),
+                          setDropdown(false),
+                          setDropdown2(false),
+                          setDropdown3(false),
+                          setDropdown4(false),
+                          setDropdown6(false);
                     }}
-                  >
-                    Welcome
-                  </p>
+                >
+                  <IoMdNotificationsOutline
+                      className="navbarDesktopNotificationIcon"
+                      style={{padding: "10px 5px"}}
+                      size={"25px"}
+                  />
+                  {notificationList.length > 0 ? (
+                      <div className="navbarDesktopNotificationIconAlert">
+                        <p>{notificationList.length}</p>
+                      </div>
+                  ) : null}
+                </div>
 
-                  <div className="navbarDesktopAdminProfileDropdownBox">
-                    <div className="navbarDesktopAdminProfileDropdownItemsBox">
-                      <div className="navbarDesktopAdminProfileDropdownIconBox">
-                        <BiUserCircle size={"16px"} />
-                      </div>
-                      <p>My Account</p>
+                <div
+                    className={`createNewDropdownItems notificationsDropdown ${
+                        dropdown5 ? "createDropdownItemsActive" : ""
+                    }`}
+                >
+                  <div className="navbarDesktopNotificationsDropdownOuterBox">
+                    <div className="navbarDesktopNotificationsDropdownClearBox">
+                      <p>Notification</p>
+                      <p>ClearAll</p>
                     </div>
-                    <div className="navbarDesktopAdminProfileDropdownItemsBox">
-                      <div className="navbarDesktopAdminProfileDropdownIconBox">
-                        <FiSettings size={"16px"} />
-                      </div>
-                      <p>Settings</p>
-                    </div>
-                    <div className="navbarDesktopAdminProfileDropdownItemsBox">
-                      <div className="navbarDesktopAdminProfileDropdownIconBox">
-                        <BiWallet size={"16px"} />
-                      </div>
-                      <p>Wallet</p>
-                    </div>
-                    <div className="navbarDesktopAdminProfileDropdownItemsBox">
-                      <div className="navbarDesktopAdminProfileDropdownIconBox">
-                        <BiLock size={"16px"} />
-                      </div>
-                      <p>Lock Screen</p>
-                    </div>
-                  </div>
-                  <hr></hr>
-                  <div className="navbarDesktopAdminProfileDropdownBox">
-                    <div
-                      onClick={handleLogout}
-                      className="navbarDesktopAdminProfileDropdownItemsBox"
-                    >
-                      <div className="navbarDesktopAdminProfileDropdownIconBox">
-                        <BiLogOut size={"16px"} />
-                      </div>
-                      <p>Logout</p>
+                    {notificationList.map((x) => (
+                        <div className="navbarDesktopNotificationDropdownBox">
+                          <div className="navbarDesktopNotificationDropdownUserBox">
+                            <div className="navbarDesktopNotificationDropdownImageBox">
+                              <img
+                                  className="navbarDesktopNotificationDropdownImage"
+                                  src={x.image}
+                              />
+                            </div>
+                            <div className="navbarDesktopNotificationDropdownParaBox">
+                              <p>{x.userName}</p>
+                              <p>{x.comment.substring(0, 100)}</p>
+                            </div>
+                          </div>
+                        </div>
+                    ))}
+                    <div className="navbarDesktopNotificationDropdownShowAllBox">
+                      <h4>View All</h4>
+                      <AiOutlineArrowRight style={{marginLeft: "10px"}}/>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/* <h1>hello</h1> */}
-          <div style={{ fontSize: "15px" }} className="navbarDesktopIconBox">
-            <FiSettings size={"20px"} onClick={toggleDrawer} />
-          </div>
-          {settingsPanelOpen && (
-            <div
-              className="adminDrawerOverlay"
-              onClick={() => setSettingsPanelOpen(false)}
-            />
-          )}
-
-          <div
-            className={`adminSettingsDrawer ${
-              settingsPanelOpen ? "adminDrawerOpen" : ""
-            }`}
-          >
-            {/* Drawer content here */}
-            <div>
-              <div className="adminDrawerMainIconsBox">
-                <BsFillChatLeftTextFill
-                  className="adminDrawerIcons"
-                  size={"1.25rem"}
-                  onClick={() => setDrawerSection("Chats")}
-                />
-                <TfiMenuAlt
-                  onClick={() => setDrawerSection("Tasks")}
-                  className="adminDrawerIcons"
-                  size={"1.25rem"}
-                />
-                <AiOutlineSetting
-                  onClick={() => setDrawerSection("Settings")}
-                  className="adminDrawerIcons"
-                  size={"1.25rem"}
-                />
-              </div>
-              {drawerSection === "Chats" ? (
-                <div className="adminDrawerChatsMainBox">
-                  <div className="adminDrawerChatsInput">
-                    <AiOutlineSearch color="grey" size={"1.25rem"} />
-                    <input type="text" placeholder="Search..." />
-                  </div>
-                  <div className="adminDrawerAllChatsBox">
-                    <p className="adminDrawerAllChatsBoxHeading">GROUP CHATS</p>
-                    <li className="adminDrawerAllChatsBoxContent">
-                      App Development
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent">
-                      App Development
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent">
-                      App Development
-                    </li>
-                    <p
-                      style={{ marginTop: "2rem" }}
-                      className="adminDrawerAllChatsBoxHeading"
-                    >
-                      FAVOURITES
-                    </p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 1</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 2</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 3</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 4</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 5</p>
-                    <p
-                      style={{ marginTop: "2rem" }}
-                      className="adminDrawerAllChatsBoxHeading"
-                    >
-                      OTHER CHATS
-                    </p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 1</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 2</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 3</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 4</p>
-                    <p className="adminDrawerAllChatsBoxContent">Customer 5</p>
-                  </div>
-                  <button>Load More</button>
-                </div>
-              ) : drawerSection === "Tasks" ? (
-                <div className="adminDrawerTasksMainBox">
-                  <p
-                    style={{ marginTop: "0rem", marginBottom: "2rem" }}
-                    className="adminDrawerAllChatsBoxHeading"
-                  >
-                    WORKING TASKS
-                  </p>
-                  <p
-                    style={{ margin: "1rem 0" }}
-                    className="adminDrawerAllChatsBoxContent"
-                  >
-                    App Development
-                  </p>
-
-                  <p
-                    style={{ margin: "1rem 0" }}
-                    className="adminDrawerAllChatsBoxContent"
-                  >
-                    Database Repair
-                  </p>
-                  <p
-                    style={{ margin: "1rem 0" }}
-                    className="adminDrawerAllChatsBoxContent"
-                  >
-                    Backup Create
-                  </p>
-                  <p
-                    style={{ marginTop: "2rem", marginBottom: "2rem" }}
-                    className="adminDrawerAllChatsBoxHeading"
-                  >
-                    UPCOMING TASKS
-                  </p>
-                  <p
-                    style={{ margin: "1rem 0" }}
-                    className="adminDrawerAllChatsBoxContent"
-                  >
-                    Sales Reporting
-                  </p>
-
-                  <p
-                    style={{ margin: "1rem 0" }}
-                    className="adminDrawerAllChatsBoxContent"
-                  >
-                    Redesign Website
-                  </p>
-                  <p
-                    style={{ margin: "1rem 0" }}
-                    className="adminDrawerAllChatsBoxContent"
-                  >
-                    New Admin Design
-                  </p>
-                  <div className="adminDrawerTasksButtonBox">
-                    <button>Create Task</button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <p
-                    style={{
-                      padding: "1rem",
-                      fontSize: "12px",
-                      fontWeight: "bolder",
-                      backgroundColor: "rgb(186, 245, 236)",
+            {/* Admin Profile Box Below */}
+            <div style={{fontSize: "15px"}} className="navbarDesktopIconBox">
+              <div
+                  className="createNewDropdownMain"
+                  style={{width: "auto"}}
+                  ref={dropdown6Ref}
+              >
+                <div
+                    style={{padding: "0 10px"}}
+                    className={
+                      !dropdown6
+                          ? "createNewDropdownButton"
+                          : "createNewDropdownButton createNewDropdownButtonActive"
+                    }
+                    onClick={() => {
+                      setDropdown6(!dropdown6),
+                          setDropdown(false),
+                          setDropdown2(false),
+                          setDropdown3(false),
+                          setDropdown5(false),
+                          setDropdown4(false);
                     }}
-                  >
-                    THEME SETTINGS
-                  </p>
-                  <div className="adminDrawerNoteBox">
-                    <p>
-                      <strong>Customize </strong>the overall color scheme,
-                      sidebar menu, etc.
-                    </p>
-                  </div>
-                  <div className="adminDrawerAllChatsBox">
-                    <p className="adminDrawerAllChatsBoxHeading">
-                      Topbar Color
-                    </p>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
-                      </div>
-                      <label style={{ marginRight: "0.5rem" }}>Dark</label>
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
-                      </div>
-                      <label style={{ marginRight: "0.5rem" }}>Light</label>
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
-                      </div>
-                      <label style={{ marginRight: "0.5rem" }}>Brand</label>
-                    </li>
+                >
+                  <img
+                      className="navbarDesktopDropdownProfilePic"
+                      // src={`${countries[0].flag}`}
+                      src={userProfile.profilePic}
+                      alt="selectedProfile"
+                  />
+                  <p style={{whiteSpace: "nowrap"}}>{userProfile.name}</p>
+                  <AiOutlineDown style={{padding: "10px 5px"}} size={"12px"}/>
+                </div>
 
+                <div
+                    className={`createNewDropdownItems adminProfileDropdown ${
+                        dropdown6 ? "createDropdownItemsActive" : ""
+                    }`}
+                >
+                  <div className="navbarDesktopDropdownOuterBox">
                     <p
-                      style={{ marginTop: "2rem" }}
-                      className="adminDrawerAllChatsBoxHeading"
+                        style={{
+                          fontSize: "12px",
+                          textAlign: "left",
+                          marginLeft: "20px",
+                        }}
                     >
-                      Menu Color
+                      Welcome
                     </p>
 
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
+                    <div className="navbarDesktopAdminProfileDropdownBox">
+                      <div className="navbarDesktopAdminProfileDropdownItemsBox">
+                        <div className="navbarDesktopAdminProfileDropdownIconBox">
+                          <BiUserCircle size={"16px"}/>
+                        </div>
+                        <p>My Account</p>
                       </div>
-                      <label style={{ marginRight: "0.5rem" }}>Dark</label>
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
+                      <div className="navbarDesktopAdminProfileDropdownItemsBox">
+                        <div className="navbarDesktopAdminProfileDropdownIconBox">
+                          <FiSettings size={"16px"}/>
+                        </div>
+                        <p>Settings</p>
                       </div>
-                      <label style={{ marginRight: "0.5rem" }}>Light</label>
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
+                      <div className="navbarDesktopAdminProfileDropdownItemsBox">
+                        <div className="navbarDesktopAdminProfileDropdownIconBox">
+                          <BiWallet size={"16px"}/>
+                        </div>
+                        <p>Wallet</p>
                       </div>
-                      <label style={{ marginRight: "0.5rem" }}>Brand</label>
-                    </li>
-
-                    <p
-                      style={{ marginTop: "2rem" }}
-                      className="adminDrawerAllChatsBoxHeading"
-                    >
-                      Sidebar Size
-                    </p>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
+                      <div className="navbarDesktopAdminProfileDropdownItemsBox">
+                        <div className="navbarDesktopAdminProfileDropdownIconBox">
+                          <BiLock size={"16px"}/>
+                        </div>
+                        <p>Lock Screen</p>
                       </div>
-                      <label style={{ marginRight: "0.5rem" }}>Default</label>
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
+                    </div>
+                    <hr></hr>
+                    <div className="navbarDesktopAdminProfileDropdownBox">
                       <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
+                          onClick={handleLogout}
+                          className="navbarDesktopAdminProfileDropdownItemsBox"
                       >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
+                        <div className="navbarDesktopAdminProfileDropdownIconBox">
+                          <BiLogOut size={"16px"}/>
+                        </div>
+                        <p>Logout</p>
                       </div>
-                      <label style={{ marginRight: "0.5rem" }}>Icon View</label>
-                    </li>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
-                      </div>
-                      <label style={{ marginRight: "0.5rem" }}>
-                        Full Layout
-                      </label>
-                    </li>
-                    <p
-                      style={{ marginTop: "2rem" }}
-                      className="adminDrawerAllChatsBoxHeading"
-                    >
-                      Sidebar User Info
-                    </p>
-                    <li className="adminDrawerAllChatsBoxContent radioBtns">
-                      <div
-                        className={`switch ${isDarkMode ? "dark" : "light"}`}
-                        onClick={handleChange}
-                      >
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={isDarkMode}
-                          onChange={handleChange}
-                        />
-                        <div className="slider" />
-                      </div>
-                      <label style={{ marginRight: "0.5rem" }}>Enable</label>
-                    </li>
+                    </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
+            {/* <h1>hello</h1> */}
+            <div style={{fontSize: "15px"}} className="navbarDesktopIconBox">
+              <FiSettings size={"20px"} onClick={toggleDrawer}/>
+            </div>
+            {settingsPanelOpen && (
+                <div
+                    className="adminDrawerOverlay"
+                    onClick={() => setSettingsPanelOpen(false)}
+                />
+            )}
+
+            <div
+                className={`adminSettingsDrawer ${
+                    settingsPanelOpen ? "adminDrawerOpen" : ""
+                }`}
+            >
+              {/* Drawer content here */}
+              <div>
+                <div className="adminDrawerMainIconsBox">
+                  <BsFillChatLeftTextFill
+                      className="adminDrawerIcons"
+                      size={"1.25rem"}
+                      onClick={() => setDrawerSection("Chats")}
+                  />
+                  <TfiMenuAlt
+                      onClick={() => setDrawerSection("Tasks")}
+                      className="adminDrawerIcons"
+                      size={"1.25rem"}
+                  />
+                  <AiOutlineSetting
+                      onClick={() => setDrawerSection("Settings")}
+                      className="adminDrawerIcons"
+                      size={"1.25rem"}
+                  />
+                </div>
+                {drawerSection === "Chats" ? (
+                    <div className="adminDrawerChatsMainBox">
+                      <div className="adminDrawerChatsInput">
+                        <AiOutlineSearch color="grey" size={"1.25rem"}/>
+                        <input type="text" placeholder="Search..."/>
+                      </div>
+                      <div className="adminDrawerAllChatsBox">
+                        <p className="adminDrawerAllChatsBoxHeading">GROUP CHATS</p>
+                        <li className="adminDrawerAllChatsBoxContent">
+                          App Development
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent">
+                          App Development
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent">
+                          App Development
+                        </li>
+                        <p
+                            style={{marginTop: "2rem"}}
+                            className="adminDrawerAllChatsBoxHeading"
+                        >
+                          FAVOURITES
+                        </p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 1</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 2</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 3</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 4</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 5</p>
+                        <p
+                            style={{marginTop: "2rem"}}
+                            className="adminDrawerAllChatsBoxHeading"
+                        >
+                          OTHER CHATS
+                        </p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 1</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 2</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 3</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 4</p>
+                        <p className="adminDrawerAllChatsBoxContent">Customer 5</p>
+                      </div>
+                      <button>Load More</button>
+                    </div>
+                ) : drawerSection === "Tasks" ? (
+                    <div className="adminDrawerTasksMainBox">
+                      <p
+                          style={{marginTop: "0rem", marginBottom: "2rem"}}
+                          className="adminDrawerAllChatsBoxHeading"
+                      >
+                        WORKING TASKS
+                      </p>
+                      <p
+                          style={{margin: "1rem 0"}}
+                          className="adminDrawerAllChatsBoxContent"
+                      >
+                        App Development
+                      </p>
+
+                      <p
+                          style={{margin: "1rem 0"}}
+                          className="adminDrawerAllChatsBoxContent"
+                      >
+                        Database Repair
+                      </p>
+                      <p
+                          style={{margin: "1rem 0"}}
+                          className="adminDrawerAllChatsBoxContent"
+                      >
+                        Backup Create
+                      </p>
+                      <p
+                          style={{marginTop: "2rem", marginBottom: "2rem"}}
+                          className="adminDrawerAllChatsBoxHeading"
+                      >
+                        UPCOMING TASKS
+                      </p>
+                      <p
+                          style={{margin: "1rem 0"}}
+                          className="adminDrawerAllChatsBoxContent"
+                      >
+                        Sales Reporting
+                      </p>
+
+                      <p
+                          style={{margin: "1rem 0"}}
+                          className="adminDrawerAllChatsBoxContent"
+                      >
+                        Redesign Website
+                      </p>
+                      <p
+                          style={{margin: "1rem 0"}}
+                          className="adminDrawerAllChatsBoxContent"
+                      >
+                        New Admin Design
+                      </p>
+                      <div className="adminDrawerTasksButtonBox">
+                        <button>Create Task</button>
+                      </div>
+                    </div>
+                ) : (
+                    <div>
+                      <p
+                          style={{
+                            padding: "1rem",
+                            fontSize: "12px",
+                            fontWeight: "bolder",
+                            backgroundColor: "rgb(186, 245, 236)",
+                          }}
+                      >
+                        THEME SETTINGS
+                      </p>
+                      <div className="adminDrawerNoteBox">
+                        <p>
+                          <strong>Customize </strong>the overall color scheme,
+                          sidebar menu, etc.
+                        </p>
+                      </div>
+                      <div className="adminDrawerAllChatsBox">
+                        <p className="adminDrawerAllChatsBoxHeading">
+                          Topbar Color
+                        </p>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Dark</label>
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Light</label>
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Brand</label>
+                        </li>
+
+                        <p
+                            style={{marginTop: "2rem"}}
+                            className="adminDrawerAllChatsBoxHeading"
+                        >
+                          Menu Color
+                        </p>
+
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Dark</label>
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Light</label>
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Brand</label>
+                        </li>
+
+                        <p
+                            style={{marginTop: "2rem"}}
+                            className="adminDrawerAllChatsBoxHeading"
+                        >
+                          Sidebar Size
+                        </p>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Default</label>
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Icon View</label>
+                        </li>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>
+                            Full Layout
+                          </label>
+                        </li>
+                        <p
+                            style={{marginTop: "2rem"}}
+                            className="adminDrawerAllChatsBoxHeading"
+                        >
+                          Sidebar User Info
+                        </p>
+                        <li className="adminDrawerAllChatsBoxContent radioBtns">
+                          <div
+                              className={`switch ${isDarkMode ? "dark" : "light"}`}
+                              onClick={handleChange}
+                          >
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                checked={isDarkMode}
+                                onChange={handleChange}
+                            />
+                            <div className="slider"/>
+                          </div>
+                          <label style={{marginRight: "0.5rem"}}>Enable</label>
+                        </li>
+                      </div>
+                    </div>
+                )}
+              </div>
+            </div>
+            {/* <h1>hello</h1> */}
           </div>
-          {/* <h1>hello</h1> */}
         </div>
-      </div>
-    </nav>
+      </nav>
   );
 }

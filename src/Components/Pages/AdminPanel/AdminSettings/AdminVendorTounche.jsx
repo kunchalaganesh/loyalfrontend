@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
@@ -13,12 +13,13 @@ import {
     a163,
     a174,
     a179,
-    a180, a191,
+    a180,
+    a191,
     a95,
     a98,
 } from "../../../Api/RootApiPath";
-import {useSelector} from "react-redux";
-import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
+import { useSelector } from "react-redux";
+import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 
 export default function AdminVendorTounche() {
@@ -32,7 +33,7 @@ export default function AdminVendorTounche() {
     const [designData, setDesignData] = useState([]);
     const [purityData, setPurityData] = useState([]);
     const [skuData, setSkuData] = useState([]);
-    const [templateData, setTemplateData] = useState([])
+    const [templateData, setTemplateData] = useState([]);
 
     const [filteredData, setFilteredData] = useState([]);
     const [fcat, setFcat] = useState("");
@@ -198,24 +199,26 @@ export default function AdminVendorTounche() {
             });
     }, []);
 
-    useEffect(async () => {
+    useEffect( () => {
         const formData = {
             ClientCode: clientCode,
         };
-        const response = await fetch(a191, {
+        fetch(a191, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
+                Authorization:
+                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjIwMzc1MDA4NTksImlzcyI6Ijk4Nzk4ODc2NzU3NjU2NjU0NjU0IiwiYXVkIjoiSW5mb0Bsb3lhbHN0cmluZy5jb20ifQ.nOtc537wlSYm_97ljruCyOcG7wjXOrNUtxZy206OfOQ",
             },
             body: JSON.stringify(formData),
-        });
-        const data = await response.json();
-        const processedData = data?.map(item => ({
-            templateID: item?.Id,
-            templateName: item?.TemplateName || 'default'
-        }));
-        setTemplateData(processedData)
+        }).then((res) => res.json())
+            .then((data) => {
+                const processedData = data?.map((item) => ({
+                    templateID: item?.Id,
+                    templateName: item?.TemplateName || "default",
+                }));
+                setTemplateData(processedData);
+            });
     }, []);
 
     const fetchAllCompanies = async () => {
@@ -354,7 +357,7 @@ export default function AdminVendorTounche() {
     }, []);
 
     const handleNewCategoryChange = (e) => {
-        const {name, value, key} = e.target;
+        const { name, value, key } = e.target;
         let actualValue = value;
         if (name === "FinePure") {
             actualValue = value === "true";
@@ -363,13 +366,12 @@ export default function AdminVendorTounche() {
         if (name == "StockKeepingUnit") {
             let selectedSku = skuData.find((x) => x.StockKeepingUnit == value);
             if (selectedSku) {
-                console.log("I amd here");
                 handleAllSelectedTounche(e, selectedSku);
             } else {
-                setNewCategory({...newCategory, [name]: actualValue});
+                setNewCategory({ ...newCategory, [name]: actualValue });
             }
         }
-        setNewCategory({...newCategory, [name]: actualValue});
+        setNewCategory({ ...newCategory, [name]: actualValue });
     };
 
     const addNewCategory = async (e) => {
@@ -392,8 +394,10 @@ export default function AdminVendorTounche() {
             BranchId: BranchId ? BranchId : 0,
             EmployeeId: EmployeeId ? EmployeeId : 0,
             FinePure: newCategory.FinePure,
-            DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
-            ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
+            DiamondSizeWeightRateTemplateId: parseInt(
+                newCategory.DiamondSizeWeightRateTemplateId
+            ),
+            ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
         };
         let newArray = allSelectedTounche
             .filter((x) => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
@@ -416,7 +420,9 @@ export default function AdminVendorTounche() {
                     CounterId: CounterId ? CounterId : 0,
                     BranchId: BranchId ? BranchId : 0,
                     EmployeeId: EmployeeId ? EmployeeId : 0,
-                    DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId)
+                    DiamondSizeWeightRateTemplateId: parseInt(
+                        newCategory.DiamondSizeWeightRateTemplateId
+                    ),
                 };
             });
 
@@ -456,7 +462,7 @@ export default function AdminVendorTounche() {
                 EmployeeId: 0,
                 FinePure: false,
                 OldEntry: false,
-                DiamondSizeWeightRateTemplateId: 0
+                DiamondSizeWeightRateTemplateId: 0,
             });
             if (data.message) {
                 // alert(data.message);
@@ -482,13 +488,13 @@ export default function AdminVendorTounche() {
     }, [showError]);
 
     const handleEditData = (data) => {
-        console.log(data, "editData")
-        setNewCategory({...data, OldEntry: true});
+        console.log(data, "editData");
+        setNewCategory({ ...data, OldEntry: true });
         setActive("AddNew");
     };
 
     const handleAllSelectedTounche = (e, x) => {
-        const {value, checked} = e.target;
+        const { value, checked } = e.target;
         if (checked) {
             const newTounche = {
                 VendorId: parseInt(newCategory.VendorId),
@@ -507,13 +513,13 @@ export default function AdminVendorTounche() {
                 CounterId: CounterId ? CounterId : 0,
                 BranchId: BranchId ? BranchId : 0,
                 EmployeeId: EmployeeId ? EmployeeId : 0,
-                DiamondSizeWeightRateTemplateId: parseInt(x.DiamondSizeWeightRateTemplateId)
+                DiamondSizeWeightRateTemplateId: parseInt(
+                    x.DiamondSizeWeightRateTemplateId
+                ),
             };
             setAllSelectedTounche([...allSelectedTounche, newTounche]);
         } else {
-            setAllSelectedTounche(
-                allSelectedTounche.filter((item) => item.StockKeepingUnit !== value)
-            );
+            setAllSelectedTounche(allSelectedTounche.filter((item) => item.StockKeepingUnit !== value));
         }
     };
 
@@ -544,13 +550,15 @@ export default function AdminVendorTounche() {
                             : sku.ProductId === parseInt(newCategory.ProductId);
 
                     const matchesPurity =
-                        newCategory.PurityId === 0 ||
-                        newCategory.PurityId === "" ||
-                        newCategory.PurityId === null
+                        newCategory?.PurityId === 0 ||
+                        newCategory?.PurityId === "" ||
+                        newCategory?.PurityId === null
                             ? true
-                            : sku.PurityId === parseInt(newCategory.PurityId);
+                            : sku?.PurityId === parseInt(newCategory?.PurityId);
 
-                    return matchesVendor && matchesCategory && matchesProduct && matchesPurity;
+                    return (
+                        matchesVendor && matchesCategory && matchesProduct && matchesPurity
+                    );
                 })
                 .map((x) => createTouncheObject(x));
             setAllSelectedTounche(selectedItems);
@@ -588,20 +596,22 @@ export default function AdminVendorTounche() {
         CounterId: CounterId ? CounterId : 0,
         BranchId: BranchId ? BranchId : 0,
         EmployeeId: EmployeeId ? EmployeeId : 0,
-        DiamondSizeWeightRateTemplateId: parseInt(x.DiamondSizeWeightRateTemplateId)
+        DiamondSizeWeightRateTemplateId: parseInt(
+            x.DiamondSizeWeightRateTemplateId
+        ),
     });
 
     const getNameFunction = (e) => {
-        const matchedObject = templateData?.find(item => item?.templateID === e);
+        const matchedObject = templateData?.find((item) => item?.templateID === e);
         return matchedObject ? matchedObject.templateName : null;
-    }
+    };
 
     return (
         <div>
-            <AdminHeading/>
+            <AdminHeading />
             <div className="adminMainBodyBox">
                 {showError ? (
-                    <AlertMessage message={messageToShow} type={messageType}/>
+                    <AlertMessage message={messageToShow} type={messageType} />
                 ) : null}
                 <AdminBreadCrump
                     title={"Add Vendor Tounche"}
@@ -630,7 +640,7 @@ export default function AdminVendorTounche() {
                                     }
                                 >
                                     {/* 01 */}
-                                    <RiListUnordered/>
+                                    <RiListUnordered />
                                 </div>
                                 <p>All Vendor Tounche</p>
                             </div>
@@ -652,7 +662,7 @@ export default function AdminVendorTounche() {
                                             : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
                                     }
                                 >
-                                    <RiPlayListAddLine/>
+                                    <RiPlayListAddLine />
                                 </div>
                                 <p>Add Vendor Tounche</p>
                             </div>
@@ -667,7 +677,7 @@ export default function AdminVendorTounche() {
                                 <tr>
                                     <th>Sr.No</th>
                                     <th>Vendor</th>
-                                    <th>template Name</th>
+                                    <th>Template Name</th>
                                     <th>Category</th>
                                     <th>Product</th>
                                     <th>Purity</th>
@@ -684,13 +694,13 @@ export default function AdminVendorTounche() {
                                 {allCategories.map((x, index) => (
                                     <tr key={x.Id}>
                                         <td>{index + 1}</td>
-                                        <td style={{whiteSpace: "nowrap"}}>{x.VendorName}</td>
-                                        <td>{getNameFunction(x.DiamondSizeWeightRateTemplateId)}</td>
+                                        <td style={{ whiteSpace: "nowrap" }}>{x.VendorName}</td>
+                                        <td>
+                                            {getNameFunction(x.DiamondSizeWeightRateTemplateId)}
+                                        </td>
                                         <td>{x.CategoryName}</td>
                                         <td>{x.ProductName}</td>
-                                        <td>
-                                            {x.PurityDetails.PurityName}
-                                        </td>
+                                        <td>{x?.PurityDetails?.PurityName}</td>
                                         <td>{x.StockKeepingUnit}</td>
                                         <td>{x.WastageWt}</td>
                                         <td>{x.MakingFixedAmt}</td>
@@ -862,13 +872,12 @@ export default function AdminVendorTounche() {
                                         type="text"
                                     />
                                     <label>
-                                        Select Template<sup>*</sup>
+                                        Select Template
                                     </label>
                                     <select
                                         name="DiamondSizeWeightRateTemplateId"
                                         value={newCategory.DiamondSizeWeightRateTemplateId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
                                     >
                                         <option value={""}>Select an Option</option>
                                         {templateData?.map((x) => {
@@ -930,15 +939,18 @@ export default function AdminVendorTounche() {
                                             <th>Weight Categories</th>
                                         </tr>
                                         </thead>
-                                        <tbody style={{position: "relative"}}>
+                                        <tbody style={{ position: "relative" }}>
                                         {skuData
                                             .filter((sku) => {
                                                 const parsedVendorId = parseInt(newCategory.VendorId);
                                                 const matchesVendor =
                                                     newCategory.VendorId !== null &&
                                                     newCategory.VendorId !== "" &&
-                                                    sku.SKUVendor.some((x) => x.VendorId === parsedVendorId);
-                                                {/* sku.SKUVendor[0].VendorId === parsedVendorId; */
+                                                    sku.SKUVendor.some(
+                                                        (x) => x.VendorId === parsedVendorId
+                                                    );
+                                                {
+                                                    /* sku.SKUVendor[0].VendorId === parsedVendorId; */
                                                 }
                                                 const matchesCategory =
                                                     newCategory.CategoryId === 0 ||
@@ -967,13 +979,12 @@ export default function AdminVendorTounche() {
                                                     matchesPurity
                                                 );
                                             })
-
                                             .map((x, index) => (
                                                 <tr key={x.Id}>
                                                     <td>{index + 1}</td>
                                                     <td>
                                                         <input
-                                                            style={{width: "20px", height: "20px"}}
+                                                            style={{ width: "20px", height: "20px" }}
                                                             type="checkbox"
                                                             checked={allSelectedTounche.some(
                                                                 (tounche) =>
@@ -987,12 +998,12 @@ export default function AdminVendorTounche() {
                                                         />
                                                     </td>
 
-                                                    <td style={{whiteSpace: "nowrap"}}>
+                                                    <td style={{ whiteSpace: "nowrap" }}>
                                                         {x.StockKeepingUnit}
                                                     </td>
                                                     <td>{x.CategoryName}</td>
                                                     <td>{x.ProductName}</td>
-                                                    <td>{x.PurityName}</td>
+                                                    <td>{x?.PurityName}</td>
                                                     <td>{x.Pieces !== "" ? x.Pieces : 0}</td>
                                                     <td>{x.SketchNo !== "" ? x.SketchNo : 0}</td>
                                                     <td>

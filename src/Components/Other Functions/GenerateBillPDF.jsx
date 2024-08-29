@@ -1,12 +1,13 @@
-import { jsPDF } from "jspdf";
+import {jsPDF} from "jspdf";
 
 export const generateBillPDF = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
   });
-  console.log(csData,"csData44444");
-let Total=0;
+  console.log(csData, "csData44444");
+  console.log(invoiceItems, "csData44444");
+  let Total = 0;
   doc.setDrawColor(0, 0, 0, 0.3);
   doc.setFontSize(12);
   doc.setFont("times");
@@ -36,8 +37,8 @@ let Total=0;
     doc.setFont("times", "normal");
     doc.text(`${customer.CurrAddStreet || "Street"}`, 6, y + 8);
     doc.text(`${customer.CurrAddTown || "Town"}`, 6, y + 12);
-    doc.text(`${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pincode"}`, 6, y + 16);
-    doc.text(`GSTIN/UIN - ${customer.GstNo || ""}`, 6, y + 20);
+    doc.text(`Gst No. - ${customer.GstNo || "Gst No."}`, 6, y + 16);
+    doc.text(`${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`, 6, y + 20);
   };
 
   if (csData) {
@@ -49,7 +50,7 @@ let Total=0;
 
     doc.text(`Invoice No - ${csData?.invoiceNo || ""}`, 120, y);
     // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
-    doc.text(`Invoice Date - ${csData?.InvoiceDate||""}`, 120, y + 4);
+    doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 120, y + 4);
 
 
     y += 27; // Adjust y position
@@ -103,65 +104,65 @@ let Total=0;
       doc.addPage();
       y = 10;
     }
-let OtherCharges = 0; 
-let NetCharges = 0; 
-let HallmarkCharges = 0;
+    let OtherCharges = 0;
+    let NetCharges = 0;
+    let HallmarkCharges = 0;
     const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
     doc.text(srNo.toString(), 6, y);
     doc.text(`${item.Purity || ""} ${productName || ""}`, 15, y);
     doc.text(`${item.HSNCode || "-"}`, 70, y);
-    doc.text(`${item.Quantity!=='undefined'?item.Quantity: "-"}`, 85, y);
+    doc.text(`${item.Quantity !== 'undefined' ? item.Quantity : "-"}`, 85, y);
     doc.text(`${item.Purity || "-"}`, 95, y);
     doc.text(`${item.GrossWt || "-"}`, 105, y);
     doc.text(`${item.NetWt || "-"}`, 117, y);
     if (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") {
-            doc.text(`MRP -`, 130, y);
-            doc.text(`${parseFloat(item.MRP)?.toFixed(2)}`, 145, y);
-            OtherCharges = Number(item.MRP);
-          } else {
-            doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
-            doc.text(
-              parseFloat(
-                (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
-              )?.toFixed(2),
-              145,
-              y
-            );
-            OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
-          }
+      doc.text(`MRP -`, 130, y);
+      doc.text(`${parseFloat(item.MRP)?.toFixed(2)}`, 145, y);
+      OtherCharges = Number(item.MRP);
+    } else {
+      doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
+      doc.text(
+          parseFloat(
+              (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+          )?.toFixed(2),
+          145,
+          y
+      );
+      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+    }
 
-          doc.text(
-                    parseFloat(
-                      parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-                        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-                    )?.toFixed(2),
-                    160,
-                    y
-                  );
-                  NetCharges+= parseFloat(
-                    parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-                      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                      parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-                  )
-                  doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-                  HallmarkCharges+= parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-                  totalAmount =(item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0")? (parseFloat(item.MRP ? item.MRP : 0) +
-                  parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                  parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0    
-              ) :parseFloat(
-                    parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-                      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-                      parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0    
-                  )
-                  Total+=totalAmount
+    doc.text(
+        parseFloat(
+            parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+            parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+        )?.toFixed(2),
+        160,
+        y
+    );
+    NetCharges += parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+    )
+    doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
+    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
+    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+    ) : parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+    )
+    Total += totalAmount
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity!=='undefined'?item.Quantity:0) || 0;
+    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -223,10 +224,10 @@ let HallmarkCharges = 0;
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`CGST 1.5%:`, 155, y + 10);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${((Number(csData?.GST)/ 2||0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
     doc.text(`SGST 1.5%:`, 155, y + 15);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 15);
-    doc.text(`${((Number(csData?.GST)/ 2||0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
   } else {
     doc.text(`Sales Amount:`, 155, y);
     doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
@@ -249,7 +250,7 @@ let HallmarkCharges = 0;
   // );
   doc.text(`${parseFloat(csData?.BalanceAmt || 0)?.toFixed(2)}`, 185, y + 25);
   doc.text(`Total:`, 155, y + 30);
-  doc.text(`${Number(csData?.TotalAmount||0).toFixed(2)}`, 185, y + 30);
+  doc.text(`${Number(csData?.TotalAmount || 0).toFixed(2)}`, 185, y + 30);
 
   // Footer
   // doc.setFont("times", "bold");
@@ -258,9 +259,9 @@ let HallmarkCharges = 0;
   // doc.setFont("times", "normal");
   // doc.setFontSize(10);
   // doc.text("Authorised Signatory", 160, y + 55);
-  
 
-    let footerY = doc.internal.pageSize.height - 50;
+
+  let footerY = doc.internal.pageSize.height - 50;
   doc.setFontSize(9);
   // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
   // doc.text("Phone Number: 0674-2492089 ", 10, footerY + 4);
@@ -271,26 +272,26 @@ let HallmarkCharges = 0;
   doc.text("Terms And Conditions :- ", 10, footerY);
   doc.setFont("times", "normal");
   doc.text(
-    `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
-    10,
-    footerY + 5
+      `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
+      10,
+      footerY + 5
   );
   doc.text(`to Rule 138(14) of the CGST Rules.`, 10, footerY + 9);
   doc.text(
-    `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
-    10,
-    footerY + 13
+      `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
+      10,
+      footerY + 13
   );
   doc.text(
-    `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
-    10,
-    footerY + 17
+      `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
+      10,
+      footerY + 17
   );
   doc.text(`Hallmark Charges is Rs 45 Per Piece`, 10, footerY + 21);
   doc.text(
-    `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
-    10,
-    footerY + 25
+      `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
+      10,
+      footerY + 25
   );
   doc.setFont("times", "bold");
   doc.setFontSize(10);
@@ -306,12 +307,355 @@ let HallmarkCharges = 0;
 // export default generateBillPDF;
 
 
+export const generateBillInvocePDF = (csData, invoiceItems) => {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    format: "a4",
+  });
+  console.log(csData, "sjdshjdhsjhdjs")
+  console.log(invoiceItems, "sjdshjdhsjhdjs")
+  let Total = 0;
+  doc.setDrawColor(0, 0, 0, 0.3);
+  doc.setFontSize(12);
+  doc.setFont("times");
+
+  doc.setFontSize(18);
+  doc.setTextColor(0, 0, 139);
+  doc.setFont("times", "bold");
+  doc.text("TAX INVOICE", 105, 20, {align: "center"});
+  // if (csData?.billType === "false") {
+  //   doc.text(`${csData?.orderType}`, 90, 47.5);
+  // } else {
+  //   doc.text(`${`billType`}`, 90, 47.5);
+  // }
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
+  doc.line(5, 44, 205, 44);
+  doc.line(5, 290, 205, 290);
+  doc.line(5, 44, 5, 290);
+  doc.line(14, 88, 14, 193);
+  doc.line(105, 88, 105, 193);
+  doc.line(140, 88, 140, 193);
+  doc.line(175, 88, 175, 193);
+  doc.line(205, 44, 205, 290);
+  // doc.line(5, 48, 205, 48);
+  doc.setFont("times");
+
+  const startY = 47.5;
+  const headerY = 51;
+  const maxPageHeight = doc.internal.pageSize.height - 20;
+  let y = headerY;
+
+  const renderAddress = (label, customer, y) => {
+    // doc.line(5, y + 22, 115, y + 22);
+    doc.text(label, 6, y);
+    doc.setFont("times", "bold");
+    doc.text(`${customer.FirstName || ""} ${customer.LastName || ""}`, 6, y + 4);
+    doc.setFont("times", "normal");
+    doc.text(`${customer.CurrAddStreet || "add"}`, 6, y + 8);
+    doc.text(`${customer.CurrAddState} & ${customer.CurrAddPincode}`, 6, y + 22);
+    doc.text(`GST No. - ${customer.GstNo || ""}`, 6, y + 26);
+    doc.text(`Pan No. - ${customer.PanNo || ""}`, 6, y + 30);
+    doc.text(`Mob No. - ${customer.Mobile || ""}`, 6, y + 34);
+  };
+
+  if (csData) {
+    // Invoice Header
+    doc.text(`${csData?.orderType || ""}`, 90, startY);
+
+    // Consignee (Ship to)
+    renderAddress("To ", csData?.Customer, y);
+    doc.setTextColor(0, 0, 139);
+    // renderAddress("Name ", csData?.Customer, y + 8);
+    doc.setTextColor(0, 0, 0);
+    // renderAddress("add ", csData?.Customer, y + 12);
 
 
+    doc.text(`Invoice No - ${csData?.InvoiceNo || ""}`, 109, y);
+    // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
+    doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 109, y + 6);
+    doc.text(`Terms - C.O.D`, 109, y + 10);
+    doc.text(`Our GST No. - 27BCPPV7154N1ZI`, 109, y + 30);
+    doc.text(`Pan No. - BCPPV7154N`, 109, y + 34);
 
 
+    y += 16; // Adjust y position
+    // Buyer (Bill to)
+    // renderAddress("Buyer (Bill to)", csData?.Customer, y);
+    doc.line(105, y - 23, 105, y + 21);
+  }
+
+  doc.line(5, y + 21, 205, y + 21);
+  y += 26; // Adjust y position
+
+  // Table Header
+  doc.setFontSize(9);
+  doc.text("Sr", 6, y);
+  doc.text("No.", 6, y + 4);
+  doc.text("Description of Goods", 42, y);
+  doc.text("HSN CODE - 71131930", 42, y + 4);
+  doc.text("HSN / SAC", 114, y);
+  // doc.text("Pcs", 85, y);
+  // doc.text("Purity", 95, y);
+  doc.text("Gross Wgt.", 150, y);
+  doc.text("In Grms.", 152, y + 4);
+  // doc.text("Wt", 105, y + 3);
+  // doc.text("Net", 117, y);
+  // doc.text("Wt", 117, y + 3);
+  // doc.text("Other", 130, y);
+  // doc.text("Charges", 130, y + 3);
+  // doc.text("Rate", 145, y);
+  // doc.text("Amount", 160, y);
+  // doc.text("Hallmark", 175, y);
+  // doc.text("Charges", 175, y + 3);
+  // doc.text("Total", 190, y);
+  doc.text("Sale Value", 182, y);
+  doc.text("In Rs.", 186, y + 4);
+  doc.line(5, y + 5, 205, y + 5);
+
+  y += 10;
+
+  // Invoice Items
+  let srNo = 1;
+  let totalQuantity = 0;
+  let totalGrossWt = 0;
+  let totalNetWt = 0;
+  let totalStoneAmount = 0;
+  let totalNetAmount = 0;
+  let totalHallmarkCharges = 0;
+  let totalProductAmount = 0;
+
+  doc.setFontSize(8);
+
+  invoiceItems.forEach((item) => {
+    let totalAmount = 0;
+    if (y + 8 > maxPageHeight) {
+      doc.addPage();
+      y = 10;
+    }
+    let OtherCharges = 0;
+    let NetCharges = 0;
+    let HallmarkCharges = 0;
+    const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
+    doc.text(srNo.toString(), 6, y);
+    doc.text(`${productName || ""}`, 15, y);
+    doc.text(`${item.HSNCode || "-"}`, 114, y);
+    // doc.text(`${item.Quantity!=='undefined'?item.Quantity: "-"}`, 85, y);
+    // doc.text(`${item.Purity || "-"}`, 95, y);
+    doc.text(`${item.GrossWt || "-"}`, 150, y);
+    // doc.text(`${item.NetWt || "-"}`, 117, y);
+    if (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") {
+      // doc.text(`MRP -`, 130, y);
+      // doc.text(`${parseFloat(item.MRP)?.toFixed(2)}`, 145, y);
+      OtherCharges = Number(item.MRP);
+    } else {
+      // doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
+      // doc.text(
+      //     parseFloat(
+      //         (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+      //     )?.toFixed(2),
+      //     145,
+      //     y
+      // );
+      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+    }
+
+    // doc.text(
+    //     parseFloat(
+    //         parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+    //         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+    //         parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+    //     )?.toFixed(2),
+    //     160,
+    //     y
+    // );
+    NetCharges += parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+    )
+    // doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
+    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
+    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+    ) : parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+    )
+    Total += totalAmount
+    // doc.text(`${item.StoneAmount || "-"}`, 130, y);
+    // doc.text(`${item.MetalRate || "-"}`, 145, y);
+    // doc.text(`${item.Amount || "-"}`, 160, y);
+    // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
+    doc.text(`${totalAmount || "-"}`, 190, y);
+
+    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
+    totalGrossWt += parseFloat(item.GrossWt) || 0;
+    totalNetWt += parseFloat(item.NetWt) || 0;
+    // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
+    totalStoneAmount += OtherCharges;
+    // totalNetAmount += parseFloat(item.NetAmount) || 0;
+    totalNetAmount += NetCharges;
+    // totalHallmarkCharges += parseFloat(item.HallmarkAmount) || 0;
+    totalHallmarkCharges += HallmarkCharges;
+    totalProductAmount += parseFloat(totalAmount) || 0;
+
+    srNo++;
+    y += 8;
+  });
+
+  doc.text("CGST", 15, y + 52)
+  doc.text("SGST", 15, y + 56)
+  doc.setFont("times", "bold");
+  doc.text("IGST", 90, y + 60)
+  doc.text("3.0%", 130, y + 60)
+  doc.text("DISCOUNT", 90, y + 64)
+  doc.text("R / d", 90, y + 68)
+  // doc.line(5, y - 3, 205, y - 3);
+  doc.setFont("times", "normal");
 
 
+  // doc.setFont("times", "bold");
+  // doc.text("Total", 10, y);
+  // doc.text(totalQuantity.toFixed(0), 85, y);
+  // doc.text(totalGrossWt.toFixed(3), 105, y);
+  // doc.text(totalNetWt.toFixed(3), 117, y);
+  // doc.text(totalStoneAmount?.toFixed(2), 130, y);
+  // doc.text(totalNetAmount?.toFixed(2), 160, y);
+  // doc.text(totalHallmarkCharges?.toFixed(2), 175, y);
+  // doc.text(totalProductAmount?.toFixed(2), 190, y);
+
+  y += 10;
+
+  // Payment Modes
+  if (csData?.paymentMode) {
+    const paymentModes = csData?.paymentMode.split(",");
+    doc.setFontSize(9);
+    doc.text("Payment Mode", 10, y);
+    let yPaymentModes = y + 5;
+    paymentModes.forEach((paymentMode) => {
+      if (yPaymentModes > maxPageHeight - 10) {
+        doc.addPage();
+        yPaymentModes = 5;
+      }
+      const [mode, amount] = paymentMode.split(":");
+      doc.text(mode, 10, yPaymentModes);
+      doc.text(amount, 40, yPaymentModes);
+      yPaymentModes += 5;
+    });
+    y = yPaymentModes + 10;
+  }
+
+  // Summary
+  const totalSaleAmount = invoiceItems.reduce((total, product) => {
+    return total + parseFloat((parseFloat(product.TotalAmount) * 100) / 103 || 0);
+  }, 0);
+
+  const payableGst = totalSaleAmount * 0.03;
+
+  // if (csData?.Customer.currAddState === "Maharashtra") {
+  //   doc.text(`Sales Amount:`, 155, y);
+  //   doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
+  //   doc.text(`R.O./Discount:`, 155, y + 5);
+  //   doc.text(`${csData?.offer || 0}`, 185, y + 5);
+  //   doc.text(`CGST 1.5%:`, 155, y + 10);
+  //   // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 10);
+  //   doc.text(`${((Number(csData?.GST)/ 2||0))?.toFixed(2)}`, 185, y + 15);
+  //   doc.text(`SGST 1.5%:`, 155, y + 15);
+  //   // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 15);
+  //   doc.text(`${((Number(csData?.GST)/ 2||0))?.toFixed(2)}`, 185, y + 15);
+  // } else {
+  //   doc.text(`Sales Amount:`, 155, y);
+  //   doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
+  //   doc.text(`R.O./Discount:`, 155, y + 5);
+  //   doc.text(`${csData?.offer || 0}`, 185, y + 5);
+  //   doc.text(`IGST 3%:`, 155, y + 10);
+  //   // doc.text(`${payableGst?.toFixed(2)}`, 185, y + 10);
+  //   doc.text(`${(Number(csData?.GST))?.toFixed(2)}`, 185, y + 10);
+  // }
+
+  // doc.text(`Purchase Amount (-):`, 155, y + 15);
+  // doc.text(`${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`, 185, y + 15);
+  // doc.text(`Received Amount:`, 155, y + 20);
+  // doc.text(`${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`, 185, y + 20);
+  // doc.text(`Balance Amount:`, 155, y + 25);
+  // // doc.text(
+  // //   `${(Number(csData?.TotalAmount||0) - Number(csData?.receivedAmt||0))?.toFixed(2)}`,
+  // //   185,
+  // //   y + 25
+  // // );
+  // doc.text(`${parseFloat(csData?.BalanceAmt || 0)?.toFixed(2)}`, 185, y + 25);
+  // doc.text(`Total:`, 155, y + 30);
+  // doc.text(`${Number(csData?.TotalAmount||0).toFixed(2)}`, 185, y + 30);
+
+  // Footer
+  // doc.setFont("times", "bold");
+  // doc.setFontSize(11);
+  // doc.text("for TMJ Enterprises", 155, y + 45);
+  // doc.setFont("times", "normal");
+  // doc.setFontSize(10);
+  // doc.text("Authorised Signatory", 160, y + 55);
+
+
+  let footerY = doc.internal.pageSize.height - 50;
+  doc.setFontSize(9);
+  // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
+  // doc.text("Phone Number: 0674-2492089 ", 10, footerY + 4);
+  // doc.text("Mobile / Whatsapp: +91 7978114496 ", 10, footerY + 8);
+  // doc.text("Customer Signature", 10, footerY);
+  doc.setFont("times", "bold");
+  doc.line(5, footerY - 60, 205, footerY - 60);
+  doc.text("TOTAL", 90, footerY - 56)
+  doc.text(csData.TotalAmount, 182, footerY - 56);
+
+  doc.line(5, footerY - 54, 205, footerY - 54);
+  doc.text("Amount Chargeable (in words): ", 7, footerY - 50)
+  doc.text("Rs.", 7, footerY - 46)
+  doc.line(5, footerY - 44, 205, footerY - 44);
+  doc.text("Company's Bank details", 140, footerY - 40)
+  doc.text("Bank Name : Indusind bank", 140, footerY - 36)
+  doc.text("Branch : BKC Branch", 140, footerY - 32)
+  doc.text("A/c No: 255024002400", 140, footerY - 28)
+  doc.text("IFSC CODE : INDB0000342", 140, footerY - 24)
+  doc.text("Corporate Office : DIAGLITER 1003, 10th Floor, D Square, Dadabhai Road, Vile Parle (West), Mumbai - 400056", 10, footerY);
+  doc.text("Mo. No. 9152011005", 10, footerY + 4);
+  doc.text("FOR DIAGLITER", 140, footerY + 18);
+  doc.setFont("times", "normal");
+  // doc.text(
+  //     `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
+  //     10,
+  //     footerY + 5
+  // );
+  // doc.text(`to Rule 138(14) of the CGST Rules.`, 10, footerY + 9);
+  // doc.text(
+  //     `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
+  //     10,
+  //     footerY + 13
+  // );
+  // doc.text(
+  //     `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
+  //     10,
+  //     footerY + 17
+  // );
+  // doc.text(`Hallmark Charges is Rs 45 Per Piece`, 10, footerY + 21);
+  // doc.text(
+  //     `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
+  //     10,
+  //     footerY + 25
+  // );
+  doc.setFont("times", "bold");
+  doc.setFontSize(10);
+  doc.text(`(SIGNATURE OF THE RECEIVER)`, 10, footerY + 40);
+  doc.text(`PROPRIETOR / AUTHORISED SIGN`, 140, footerY + 40);
+  doc.setFont("times", "normal");
+  doc.setFontSize(7);
+  // doc.line(5, footerY + 27, 205, footerY + 27);
+
+  // Save PDF
+  doc.save(`Invoice-${csData?.InvoiceNo}.pdf`);
+};
 
 
 

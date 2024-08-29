@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-//
+
 // //   Customer List All (GET)
 // export const a1 =
 //   // "https://sunshineteam.in/loyalstring/api_ls_customerall_data.php";
@@ -427,8 +427,8 @@ import { useNavigate } from "react-router-dom";
 //
 // export const a93 =
 //   "https://goldstringwebapp.loyalstring.co.in/api/ClientOnboarding/AddClientOnboarding";
-// Gold String Add New client
-
+// // Gold String Add New client
+//
 // export const a94 =
 //     "https://goldstringwebapp.loyalstring.co.in/api/ClientOnboarding/ClientOnboardingLogin";
 // // Gold String Client Login
@@ -753,7 +753,7 @@ import { useNavigate } from "react-router-dom";
 //
 // export const a175 =
 //   "https://goldstringwebapp.loyalstring.co.in/api/ProductMaster/GetAllRFID";
-//Fetch All RFID Data
+// // Fetch All RFID Data
 //
 // export const a176 =
 //   "https://goldstringwebapp.loyalstring.co.in/api/ProductMaster/AddLabeledStock";
@@ -1006,7 +1006,6 @@ import { useNavigate } from "react-router-dom";
 // export const postAdminadddiamondsizeweightrate = `https://testing.loyalstring.co.in/api/ProductMaster/SaveDiamondSizeWeightRateTemplate`;
 
 
-// import { useNavigate } from "react-router-dom";
 
 // Customer List All (GET)
 export const a1 =
@@ -1104,7 +1103,7 @@ export const a17 =
 export const a18 =
     // "https://sunshineteam.in/loyalstring/api_ls_categoryall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllCategory";
-    "https://testing.loyalstring.co.in/api/ProductMaster/fetchAllCategory";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCategory";
 // Get All Categories (GET)
 
 export const a19 =
@@ -1116,7 +1115,7 @@ export const a19 =
 export const a20 =
     // "https://sunshineteam.in/loyalstring/api_ls_producttypeall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllProductType";
-    "https://testing.loyalstring.co.in/api/ProductMaster/fetchAllProductType";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllProductMaster";
 // Get All ProductTypes (GET)
 
 export const a21 =
@@ -1229,7 +1228,7 @@ export const a42 =
 // Get All Products
 
 export const a43 =
-    "https://testing.loyalstring.co.in/api/Device/GetAllRFID";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllRFID";
 // Get All Barcode and Tid
 
 export const a44 =
@@ -1282,7 +1281,7 @@ export const a55 =
 // Add Unlabelled Items
 
 export const a56 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetfetchAllUnLabeledProducts";
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
 // Get All Unlabelled Items
 
 export const a57 =
@@ -1826,6 +1825,8 @@ export const a190 =
 export const a191 =
     "https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate";
 //Get All Diamond Size Weight Rate
+export const getAllSizeWeightRate =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondSizeWeightRate";
 
 export const a192 =
     "https://testing.loyalstring.co.in/api/ProductMaster/AddDiamondSizeWeightRate";
@@ -1925,7 +1926,6 @@ export const a215 =
 
 export const a216 =
     "https://testing.loyalstring.co.in/api/ProductMaster/GetStockReport";
-//Get Stock Report
 
 export const a217 =
     "https://testing.loyalstring.co.in/api/ProductMaster/InsertLabelledStock";
@@ -1985,6 +1985,8 @@ export const a230 =
 
 export const a231 =
     "https://testing.loyalstring.co.in/api/Invoice/AddDebitNote";
+
+
 // Add Debit Note
 
 // export const s1 = `http://localhost:3000/demo/Images/`;
@@ -2006,9 +2008,36 @@ export const s3 =
     "https://jewellerywebapplications.blob.core.windows.net/images";
 // "https://testing.loyalstring.co.in/api/RDPurchase/GetAllRDPurchase";
 
+
 export const paymentApi = "http://localhost:5000";
 // export const paymentApi = "https://goldkarizma.com";
 // export const paymentApi = "https://goldkarizma.com/nodjs";
 
 // adminadddiamondsizeweightrate post api
 export const postAdminadddiamondsizeweightrate = `https://testing.loyalstring.co.in/api/ProductMaster/SaveDiamondSizeWeightRateTemplate`;
+
+
+
+//Get Stock Transfer Type
+export const a232 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetStockTransferTypes";
+
+// Filter labeled stock
+export const a233 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllLabeledStockByFilter";
+
+// Filter unlabeled stock
+export const a234 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStockByFilter";
+
+// add stock transfer
+export const a235 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/AddStockTransfer";
+
+//get all stock transfers
+export const a236 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllStockTransfers";
+
+//add Approve Stock Transfer
+export const a237 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/ApproveStockTransfer";

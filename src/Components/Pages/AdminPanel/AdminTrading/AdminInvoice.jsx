@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminTrading.css";
@@ -38,28 +38,28 @@ import {
   a74,
   s1,
 } from "../../../Api/RootApiPath";
-import { AiOutlineEdit, AiOutlinePlusSquare } from "react-icons/ai";
-import { RxCross2 } from "react-icons/rx";
-import { RiDeleteBin2Line } from "react-icons/ri";
-import { BsCardImage } from "react-icons/bs";
+import {AiOutlineEdit, AiOutlinePlusSquare} from "react-icons/ai";
+import {RxCross2} from "react-icons/rx";
+import {RiDeleteBin2Line} from "react-icons/ri";
+import {BsCardImage} from "react-icons/bs";
 import jsPDF from "jspdf";
 import logoImage from "../../../Images/soniJewellersBillTitle.jpg";
-import { GiCheckMark } from "react-icons/gi";
-import { AiOutlineSend } from "react-icons/ai";
-import { LiaCartPlusSolid } from "react-icons/lia";
-import { MdOutlineLabelOff } from "react-icons/md";
-import { numberToIndianWords } from "../../../Other Functions/numberToIndianWords";
+import {GiCheckMark} from "react-icons/gi";
+import {AiOutlineSend} from "react-icons/ai";
+import {LiaCartPlusSolid} from "react-icons/lia";
+import {MdOutlineLabelOff} from "react-icons/md";
+import {numberToIndianWords} from "../../../Other Functions/numberToIndianWords";
 import DateTime from "../../../Other Functions/DateTime";
-import { createPurchaseReceiptPDF } from "../../../Other Functions/CreatePurchaseReceiptPDF";
-import { generateBillPDF } from "../../../Other Functions/GenerateBillPDF";
-import { FaDollarSign, FaRegCircle, FaRegDotCircle } from "react-icons/fa";
-import { allStateList } from "../../../Api/StateList";
-import { useNavigate } from "react-router-dom";
-import { IoIosList } from "react-icons/io";
-import { BiReset } from "react-icons/bi";
-import { MdOutlineSaveAlt } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { Category, Description, Visibility } from "@mui/icons-material";
+import {createPurchaseReceiptPDF} from "../../../Other Functions/CreatePurchaseReceiptPDF";
+import {generateBillPDF} from "../../../Other Functions/GenerateBillPDF";
+import {FaDollarSign, FaRegCircle, FaRegDotCircle} from "react-icons/fa";
+import {allStateList} from "../../../Api/StateList";
+import {useNavigate} from "react-router-dom";
+import {IoIosList} from "react-icons/io";
+import {BiReset} from "react-icons/bi";
+import {MdOutlineSaveAlt} from "react-icons/md";
+import {useSelector} from "react-redux";
+import {Category, Description, Visibility} from "@mui/icons-material";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 
 export default function AdminInvoice() {
@@ -75,7 +75,7 @@ export default function AdminInvoice() {
   const [allProducts, setAllProducts] = useState([]);
   const [labelName, setLabelName] = useState("");
   const [wholesaleProductLabelName, setWholesaleProductLabelName] =
-    useState("");
+      useState("");
   const [selectedProduct, setSelectedProduct] = useState([]);
   const [selectedProductPrice, setSelectedProductPrice] = useState(0);
   const [barcode, setBarcode] = useState("");
@@ -195,7 +195,6 @@ export default function AdminInvoice() {
     MakingFixedWastage: "0",
     GoldRate: "0",
     Finepercent: "100",
-    making: "0",
     NetAmt: "0",
     GSTAmount: "0",
     TotalAmt: "0",
@@ -616,7 +615,7 @@ export default function AdminInvoice() {
   const [selectedSku, setSelectedSku] = useState([]);
   const [selectedSkuName, setSelectedSkuName] = useState("");
   const handleSkuInputChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setSelectedSkuName(value);
     let selectedSkuItem = [];
     selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == value);
@@ -626,7 +625,7 @@ export default function AdminInvoice() {
     const allSkuList = allSku;
     if (selectedSku) {
       let skuProducts = allProducts.filter(
-        (x) => x.SKU && x.SKU === selectedSkuName
+          (x) => x.SKU && x.SKU === selectedSkuName
       );
       setAllProducts(skuProducts);
     } else {
@@ -641,16 +640,16 @@ export default function AdminInvoice() {
   useEffect(() => {
     if (selectedCustomer) {
       setCustomerName(
-        // selectedCustomer.MemberType == "Customer"
-        // ?
-        `${selectedCustomer.FirstName} ${selectedCustomer.LastName}`
-        // : `${selectedCustomer.VendorName}`
+          // selectedCustomer.MemberType == "Customer"
+          // ?
+          `${selectedCustomer.FirstName} ${selectedCustomer.LastName}`
+          // : `${selectedCustomer.VendorName}`
       );
       setCustomerMobile(
-        // selectedCustomer.MemberType == "Customer"
-        //   ?
-        selectedCustomer.Mobile
-        // : selectedCustomer.ContactNo
+          // selectedCustomer.MemberType == "Customer"
+          //   ?
+          selectedCustomer.Mobile
+          // : selectedCustomer.ContactNo
       );
       setCustomerId(selectedCustomer.Id);
       setCustomerEmail(selectedCustomer.Email);
@@ -673,7 +672,7 @@ export default function AdminInvoice() {
   });
 
   const handleNameInputChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setCustomerName(value); // Update the name input value
     const cleanedValue = value.replace(/^👤\s|^🏢\s/, "");
 
@@ -696,15 +695,15 @@ export default function AdminInvoice() {
   };
 
   const handleMobileInputChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setCustomerMobile(value); // Update the mobile input value
 
     const selected = allCsData.find((customer) => {
       const csMobile = customer.Mobile;
       const vendorMobile = customer.ContactNo;
       return customer.MemberType == "Customer"
-        ? csMobile === value
-        : vendorMobile === value;
+          ? csMobile === value
+          : vendorMobile === value;
     });
     if (selected) {
       setCustomerEmail(selected.Email);
@@ -716,7 +715,7 @@ export default function AdminInvoice() {
   };
 
   const handleEmailInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setCustomerEmail(value); // Update the mobile input value
 
     const selected = allCsData.find((customer) => customer.Email == value);
@@ -724,11 +723,11 @@ export default function AdminInvoice() {
     setSelectedCustomer(selected); // Update the selected customer based on mobile match
   };
   const handleAddressInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setCustomerAddress(value); // Update the mobile input value
 
     const selected = allCsData.find(
-      (customer) => customer.CurrAddStreet == value
+        (customer) => customer.CurrAddStreet == value
     );
     setSelectedCustomerEdit(false);
     setSelectedCustomer(selected); // Update the selected customer based on mobile match
@@ -751,8 +750,11 @@ export default function AdminInvoice() {
   console.log(selectedProduct, "selectedProduct");
   console.log(selectedProduct, "selectedProduct");
   console.log(selectedProduct, "selectedProduct");
+  const [rate, setRate] = useState(0)
   const handleProductLabelChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
+    const singleProduct = allProducts.find((item, ind) => item.ItemCode == value);
+    setRate(singleProduct.TodaysRate)
     setLabelName(value.toUpperCase());
     setSelectedProduct([]);
     setCategoryName("");
@@ -764,7 +766,7 @@ export default function AdminInvoice() {
     setSelectedProductPrice(0);
     if (value) {
       const selected = allProducts.find(
-        (product) => product.ItemCode === value || product.RFIDCode === value
+          (product) => product.ItemCode === value || product.RFIDCode === value
       );
       const isAdded = allSelectedProducts.find((x) => x.ItemCode == value);
       if (selected && !isAdded) {
@@ -791,7 +793,7 @@ export default function AdminInvoice() {
     }
   };
   const handleWholesaleProductLabelChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setWholesaleProductLabelName(value.toUpperCase());
     setSelectedProduct([]);
     setCategoryName("");
@@ -804,7 +806,7 @@ export default function AdminInvoice() {
     setSelectedProductPrice(0);
     if (value) {
       const selected = allProducts.find(
-        (product) => product.ItemCode === value || product.RFIDCode === value
+          (product) => product.ItemCode === value || product.RFIDCode === value
       );
       const isAdded = allSelectedProducts.find((x) => x.ItemCode == value);
       if (selected && !isAdded) {
@@ -823,9 +825,9 @@ export default function AdminInvoice() {
         changeSelectedProduct.MRP = selected.MRP;
         changeSelectedProduct.GoldRate = selected.TodaysRate;
         (changeSelectedProduct.Quantity = selected.Quantity
-          ? selected.Quantity
-          : 1),
-          setSelectedProduct(changeSelectedProduct);
+            ? selected.Quantity
+            : 1),
+            setSelectedProduct(changeSelectedProduct);
 
         // setSelectedCollection(
         //   `${(selected.collectionId, selected.collection)}`
@@ -852,7 +854,7 @@ export default function AdminInvoice() {
   console.log(selectedProduct, "selectedProduct");
   console.log(selectedProduct, "selectedProduct");
   const handleProductBarcodeChange = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setBarcode(value.toUpperCase());
     setLabelName("");
     setSelectedProduct([]);
@@ -864,7 +866,7 @@ export default function AdminInvoice() {
     setSelectedProductPrice(0);
     if (value) {
       const selected = allProducts.find(
-        (product) => product.RFIDCode === value
+          (product) => product.RFIDCode === value
       );
       if (selected) {
         setSelectedProduct(selected);
@@ -878,40 +880,40 @@ export default function AdminInvoice() {
   const calculateFinalPrice = (selectedProduct, adding) => {
     console.log("CALCCCC");
     let netGoldRate =
-      (parseFloat(selectedProduct.NetWt) *
-        parseFloat(selectedProduct.TodaysRate)) /
-      //  parseFloat(selectedProduct.PurityId)) /
-      10;
+        (parseFloat(selectedProduct.NetWt) *
+            parseFloat(selectedProduct.TodaysRate)) /
+        //  parseFloat(selectedProduct.PurityId)) /
+        10;
     let makingCharges1 =
-      parseFloat(selectedProduct.NetWt) *
-      parseFloat(selectedProduct.MakingPerGram);
+        parseFloat(selectedProduct.NetWt) *
+        parseFloat(selectedProduct.MakingPerGram);
     let makingCharges2 =
-      (parseFloat(netGoldRate) * parseFloat(selectedProduct.MakingPercentage)) /
-      100;
+        (parseFloat(netGoldRate) * parseFloat(selectedProduct.MakingPercentage)) /
+        100;
     let makingCharges3 = parseFloat(selectedProduct.MakingFixedAmt);
     let makingCharges4 =
-      (parseFloat(selectedProduct.TodaysRate) *
-        parseFloat(selectedProduct.MakingFixedWastage)) /
-      10;
+        (parseFloat(selectedProduct.TodaysRate) *
+            parseFloat(selectedProduct.MakingFixedWastage)) /
+        10;
     let hallmark_amt = parseFloat(selectedProduct.HallmarkAmount);
 
     let GST = 0.03;
 
     let grossTotalRate =
-      parseFloat(netGoldRate) +
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4) +
-      parseFloat(hallmark_amt) +
-      parseFloat(selectedProduct.TotalStoneAmount);
+        parseFloat(netGoldRate) +
+        parseFloat(makingCharges1) +
+        parseFloat(makingCharges2) +
+        parseFloat(makingCharges3) +
+        parseFloat(makingCharges4) +
+        parseFloat(hallmark_amt) +
+        parseFloat(selectedProduct.TotalStoneAmount);
     let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
     let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
     if (
-      selectedProduct.MRP !== "" &&
-      selectedProduct.MRP !== 0 &&
-      parseFloat(selectedProduct.MRP) !== 0 &&
-      selectedProduct.MRP !== "0"
+        selectedProduct.MRP !== "" &&
+        selectedProduct.MRP !== 0 &&
+        parseFloat(selectedProduct.MRP) !== 0 &&
+        selectedProduct.MRP !== "0"
     ) {
       GSTAdded = GST * parseFloat(selectedProduct.MRP);
       finalPrice = parseFloat(selectedProduct.MRP) + parseFloat(GSTAdded);
@@ -919,18 +921,18 @@ export default function AdminInvoice() {
 
     // Calculate total making charges
     let totalMakingCharges =
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4);
+        parseFloat(makingCharges1) +
+        parseFloat(makingCharges2) +
+        parseFloat(makingCharges3) +
+        parseFloat(makingCharges4);
 
     let updatedProduct = {};
     // Update selectedProduct with additional properties and calculated price
     if (
-      selectedProduct.MRP !== "" &&
-      selectedProduct.MRP !== 0 &&
-      parseFloat(selectedProduct.MRP) !== 0 &&
-      selectedProduct.MRP !== "0"
+        selectedProduct.MRP !== "" &&
+        selectedProduct.MRP !== 0 &&
+        parseFloat(selectedProduct.MRP) !== 0 &&
+        selectedProduct.MRP !== "0"
     ) {
       updatedProduct = {
         ...selectedProduct,
@@ -940,8 +942,8 @@ export default function AdminInvoice() {
         making: 0,
         totalGstAmount: parseFloat(selectedProduct.MRP).toFixed(3) * GST,
         finalPrice:
-          parseFloat(selectedProduct.MRP) -
-          parseFloat(selectedProduct.MRP).toFixed(3) * GST,
+            parseFloat(selectedProduct.MRP) -
+            parseFloat(selectedProduct.MRP).toFixed(3) * GST,
         // making: totalMakingCharges,
         // totalGstAmount: GSTAdded,
       };
@@ -986,57 +988,57 @@ export default function AdminInvoice() {
     console.log("I am here", selectedProduct);
     console.log("I am here", selectedProduct);
     let netGoldRate =
-      (parseFloat(selectedProduct.NetWt) *
-        parseFloat(selectedProduct.TodaysRate)) /
-      10;
+        (parseFloat(selectedProduct.NetWt) *
+            parseFloat(selectedProduct.TodaysRate)) /
+        10;
     let makingCharges1 =
-      parseFloat(selectedProduct.NetWt) *
-      parseFloat(selectedProduct.MakingPerGram);
+        parseFloat(selectedProduct.NetWt) *
+        parseFloat(selectedProduct.MakingPerGram);
     let makingCharges2 =
-      (parseFloat(netGoldRate) * parseFloat(selectedProduct.MakingPercentage)) /
-      100;
+        (parseFloat(netGoldRate) * parseFloat(selectedProduct.MakingPercentage)) /
+        100;
     let makingCharges3 = parseFloat(selectedProduct.MakingFixedAmt);
     let makingCharges4 =
-      (parseFloat(selectedProduct.TodaysRate) *
-        parseFloat(selectedProduct.MakingFixedWastage)) /
-      10;
+        (parseFloat(selectedProduct.TodaysRate) *
+            parseFloat(selectedProduct.MakingFixedWastage)) /
+        10;
     let hallmark_amt = parseFloat(selectedProduct.HallmarkAmount);
 
     let GST = 0.03;
 
     let grossTotalRate =
-      parseFloat(netGoldRate) +
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4) +
-      parseFloat(hallmark_amt) +
-      parseFloat(selectedProduct.TotalStoneAmount);
+        parseFloat(netGoldRate) +
+        parseFloat(makingCharges1) +
+        parseFloat(makingCharges2) +
+        parseFloat(makingCharges3) +
+        parseFloat(makingCharges4) +
+        parseFloat(hallmark_amt) +
+        parseFloat(selectedProduct.TotalStoneAmount);
     let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
     let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
     let OrderAmount = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
     let CategorySelected = selectedProduct.CategoryName.toLowerCase().includes(
-      "gold"
+        "gold"
     )
-      ? "gold"
-      : selectedProduct.CategoryName.toLowerCase().includes("silver")
-      ? "silver"
-      : "other";
+        ? "gold"
+        : selectedProduct.CategoryName.toLowerCase().includes("silver")
+            ? "silver"
+            : "other";
     let FineWeight =
-      (parseFloat(selectedProduct.NetWt) *
-        parseFloat(selectedProduct.FinePercent)) /
-      100;
+        (parseFloat(selectedProduct.NetWt) *
+            parseFloat(selectedProduct.FinePercent)) /
+        100;
     let WastageWeight =
-      (parseFloat(selectedProduct.WastagePercent) *
-        parseFloat(selectedProduct.NetWt)) /
-      100;
+        (parseFloat(selectedProduct.WastagePercent) *
+            parseFloat(selectedProduct.NetWt)) /
+        100;
     let TotalFineWastageWeight =
-      parseFloat(FineWeight) + parseFloat(WastageWeight);
+        parseFloat(FineWeight) + parseFloat(WastageWeight);
     if (
-      selectedProduct.MRP !== "" &&
-      selectedProduct.MRP !== 0 &&
-      selectedProduct.MRP !== "0" &&
-      selectedProduct.MRP !== "0.00"
+        selectedProduct.MRP !== "" &&
+        selectedProduct.MRP !== 0 &&
+        selectedProduct.MRP !== "0" &&
+        selectedProduct.MRP !== "0.00"
     ) {
       GSTAdded = GST * parseFloat(selectedProduct.MRP);
       finalPrice = parseFloat(selectedProduct.MRP) + parseFloat(GSTAdded);
@@ -1045,20 +1047,20 @@ export default function AdminInvoice() {
 
     // Calculate total making charges
     let totalMakingCharges =
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4) +
-      parseFloat(selectedProduct.HallmarkAmount) +
-      parseFloat(selectedProduct.TotalStoneAmount);
+        parseFloat(makingCharges1) +
+        parseFloat(makingCharges2) +
+        parseFloat(makingCharges3) +
+        parseFloat(makingCharges4) +
+        parseFloat(selectedProduct.HallmarkAmount) +
+        parseFloat(selectedProduct.TotalStoneAmount);
 
     let updatedProduct = {};
     // Update selectedProduct with additional properties and calculated price
     if (
-      selectedProduct.MRP !== "" &&
-      selectedProduct.MRP !== 0 &&
-      selectedProduct.MRP !== "0" &&
-      selectedProduct.MRP !== "0.00"
+        selectedProduct.MRP !== "" &&
+        selectedProduct.MRP !== 0 &&
+        selectedProduct.MRP !== "0" &&
+        selectedProduct.MRP !== "0.00"
     ) {
       updatedProduct = {
         ...selectedProduct,
@@ -1068,19 +1070,19 @@ export default function AdminInvoice() {
         making: 0,
         totalGstAmount: parseFloat(selectedProduct.MRP).toFixed(3) * GST,
         finalPrice:
-          parseFloat(selectedProduct.MRP) -
-          parseFloat(selectedProduct.MRP).toFixed(3) * GST,
-        OrderAmount:
-          parseFloat(selectedProduct.MRP) -
-          parseFloat(selectedProduct.MRP).toFixed(3) * GST,
+            parseFloat(selectedProduct.MRP) -
+            parseFloat(selectedProduct.MRP).toFixed(3) * GST,
+        // OrderAmount:
+        //   parseFloat(selectedProduct.MRP) -
+        //   parseFloat(selectedProduct.MRP).toFixed(3) * GST,
         NetAmt: selectedProduct.MRP,
         GSTAmount: parseFloat(selectedProduct.MRP).toFixed(3) * GST,
         TotalAmt:
-          parseFloat(selectedProduct.MRP) -
-          parseFloat(selectedProduct.MRP).toFixed(3) * GST,
+            parseFloat(selectedProduct.MRP) -
+            parseFloat(selectedProduct.MRP).toFixed(3) * GST,
         OrderAmount:
-          parseFloat(selectedProduct.MRP) -
-          parseFloat(selectedProduct.MRP).toFixed(3) * GST,
+            parseFloat(selectedProduct.MRP) -
+            parseFloat(selectedProduct.MRP).toFixed(3) * GST,
 
         // making: totalMakingCharges,
         // totalGstAmount: GSTAdded,
@@ -1092,9 +1094,9 @@ export default function AdminInvoice() {
         purchase: false,
         unlabel: false,
         finalPrice: convertAmount
-          ? parseFloat(grossTotalRate).toFixed(3)
-          : totalMakingCharges,
-        OrderAmount: parseFloat(grossTotalRate).toFixed(3),
+            ? parseFloat(grossTotalRate).toFixed(3)
+            : totalMakingCharges,
+        // OrderAmount: parseFloat(grossTotalRate).toFixed(3),
         //   finalPrice: parseFloat(finalPrice).toFixed(3),
         making: totalMakingCharges,
         totalGstAmount: convertAmount ? GSTAdded : totalMakingCharges * 0.03,
@@ -1103,19 +1105,19 @@ export default function AdminInvoice() {
         TotalAmt: parseFloat(grossTotalRate).toFixed(3),
         OrderAmount: convertAmount ? parseFloat(grossTotalRate).toFixed(3) : 0,
         TotalItemAmount: convertAmount
-          ? parseFloat(grossTotalRate).toFixed(3)
-          : totalMakingCharges,
+            ? parseFloat(grossTotalRate).toFixed(3)
+            : totalMakingCharges,
         FineWastageWeight: !convertAmount
-          ? parseFloat(TotalFineWastageWeight).toFixed(3)
-          : 0,
+            ? parseFloat(TotalFineWastageWeight).toFixed(3)
+            : 0,
         FineGold:
-          !convertAmount && CategorySelected == "gold"
-            ? parseFloat(TotalFineWastageWeight).toFixed(3)
-            : 0,
+            !convertAmount && CategorySelected == "gold"
+                ? parseFloat(TotalFineWastageWeight).toFixed(3)
+                : 0,
         FineSilver:
-          !convertAmount && CategorySelected == "silver"
-            ? parseFloat(TotalFineWastageWeight).toFixed(3)
-            : 0,
+            !convertAmount && CategorySelected == "silver"
+                ? parseFloat(TotalFineWastageWeight).toFixed(3)
+                : 0,
       };
       setSelectedProductPrice(parseFloat(finalPrice).toFixed(3));
     }
@@ -1181,32 +1183,32 @@ export default function AdminInvoice() {
     if (selectedProduct.length > 0) {
       if (selectedProduct.sell) {
         const finalPrice = calculateFinalPrice(
-          selectedProduct.NetWt,
-          selectedProduct.MakingPerGram,
-          selectedProduct.MakingPercentage,
-          selectedProduct.MakingFixedAmt,
-          selectedProduct.MakingFixedWastage,
-          selectedProduct.TotalStoneAmount,
-          selectedProduct.MRP,
-          // selectedProduct.todaysRate,
+            selectedProduct.NetWt,
+            selectedProduct.MakingPerGram,
+            selectedProduct.MakingPercentage,
+            selectedProduct.MakingFixedAmt,
+            selectedProduct.MakingFixedWastage,
+            selectedProduct.TotalStoneAmount,
+            selectedProduct.MRP,
+            // selectedProduct.todaysRate,
 
-          selectedProduct.TodaysRate,
-          selectedProduct.Id
+            selectedProduct.TodaysRate,
+            selectedProduct.Id
         );
         setSelectedProductPrice(finalPrice); // Set the calculated final price here
         setTotalPrice((x) => parseFloat(x) + finalPrice);
       } else {
         const finalPrice = calculateFinalPrice(
-          selectedProduct.NetWt,
-          selectedProduct.MakingPerGram,
-          selectedProduct.MakingPercentage,
-          selectedProduct.MakingFixedAmt,
-          selectedProduct.MakingFixedWastage,
-          selectedProduct.TotalStoneAmount,
-          selectedProduct.MRP,
-          selectedProduct.TodaysRate,
+            selectedProduct.NetWt,
+            selectedProduct.MakingPerGram,
+            selectedProduct.MakingPercentage,
+            selectedProduct.MakingFixedAmt,
+            selectedProduct.MakingFixedWastage,
+            selectedProduct.TotalStoneAmount,
+            selectedProduct.MRP,
+            selectedProduct.TodaysRate,
 
-          selectedProduct.Id
+            selectedProduct.Id
         );
         setSelectedProductPrice(finalPrice); // Set the calculated final price here
         setTotalPrice((x) => parseFloat(x) + finalPrice);
@@ -1217,36 +1219,36 @@ export default function AdminInvoice() {
   const calculateNetAmount = () => {
     if (allSelectedProducts.length > 0) {
       let totalNetAmount = allSelectedProducts.reduce(
-        (total, product) => total + parseFloat(product.finalPrice),
-        0
+          (total, product) => total + parseFloat(product.finalPrice),
+          0
       );
       let totalGstAmount = applyGstAmount
-        ? allSelectedProducts.reduce(
-            (total, product) => total + parseFloat(product.totalGstAmount),
-            0
+          ? allSelectedProducts.reduce(
+              (total, product) => total + parseFloat(product.totalGstAmount),
+              0
           )
-        : 0;
+          : 0;
       let totalAmountPaying = applyGstAmount
-        ? allSelectedProducts.reduce(
-            (total, product) =>
-              total +
-              parseFloat(product.finalPrice) +
-              parseFloat(product.totalGstAmount),
-            0
+          ? allSelectedProducts.reduce(
+              (total, product) =>
+                  total +
+                  parseFloat(product.finalPrice) +
+                  parseFloat(product.totalGstAmount),
+              0
           )
-        : allSelectedProducts.reduce(
-            (total, product) => total + parseFloat(product.finalPrice),
-            0
+          : allSelectedProducts.reduce(
+              (total, product) => total + parseFloat(product.finalPrice),
+              0
           );
       let totalGoldPaying = allSelectedProducts.reduce(
-        (total, product) =>
-          total + product.FineGold ? parseFloat(product.FineGold) : 0,
-        0
+          (total, product) =>
+              total + product.FineGold ? parseFloat(product.FineGold) : 0,
+          0
       );
       let totalSilverPaying = allSelectedProducts.reduce(
-        (total, product) =>
-          total + product.FineSilver ? parseFloat(product.FineSilver) : 0,
-        0
+          (total, product) =>
+              total + product.FineSilver ? parseFloat(product.FineSilver) : 0,
+          0
       );
 
       setAllProdctsNetAmount(parseFloat(totalNetAmount).toFixed(3));
@@ -1286,7 +1288,7 @@ export default function AdminInvoice() {
   }, [selectedProduct, allSelectedProducts, applyGstAmount]);
 
   const handleProductDiscount = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setDiscountAmount(value);
     setAllProdctsNetAmount((x) => x - value);
   };
@@ -1320,23 +1322,23 @@ export default function AdminInvoice() {
       setAllProdctsNetAmount((parseInt(e.target.value) * 100) / 103);
 
       let totalAmountPaying = allSelectedProducts.reduce(
-        (total, product) =>
-          total +
-          parseFloat(product.finalPrice) +
-          parseFloat(product.totalGstAmount),
-        0
+          (total, product) =>
+              total +
+              parseFloat(product.finalPrice) +
+              parseFloat(product.totalGstAmount),
+          0
       );
       const totalMaking = allSelectedProducts.reduce(
-        (total, item) => total + parseFloat(item.making),
-        0
+          (total, item) => total + parseFloat(item.making),
+          0
       );
       setDiscountAmount(parseInt(totalAmountPaying) - parseInt(e.target.value));
       setDiscountPercentage(
-        parseFloat(
-          ((parseFloat(totalAmountPaying) - parseFloat(e.target.value)) /
-            parseFloat(totalMaking)) *
-            100
-        ).toFixed(2)
+          parseFloat(
+              ((parseFloat(totalAmountPaying) - parseFloat(e.target.value)) /
+                  parseFloat(totalMaking)) *
+              100
+          ).toFixed(2)
       );
       setGrandTotal(e.target.value);
       setDeductGold(0);
@@ -1350,20 +1352,20 @@ export default function AdminInvoice() {
       setAllProdctsNetAmount((parseInt(e.target.value) * 100) / 100);
 
       let totalAmountPaying = allSelectedProducts.reduce(
-        (total, product) => total + parseFloat(product.finalPrice),
-        0
+          (total, product) => total + parseFloat(product.finalPrice),
+          0
       );
       const totalMaking = allSelectedProducts.reduce(
-        (total, item) => total + parseFloat(item.making),
-        0
+          (total, item) => total + parseFloat(item.making),
+          0
       );
       setDiscountAmount(parseInt(totalAmountPaying) - parseInt(e.target.value));
       setDiscountPercentage(
-        parseFloat(
-          ((parseFloat(totalAmountPaying) - parseFloat(e.target.value)) /
-            parseFloat(totalMaking)) *
-            100
-        ).toFixed(2)
+          parseFloat(
+              ((parseFloat(totalAmountPaying) - parseFloat(e.target.value)) /
+                  parseFloat(totalMaking)) *
+              100
+          ).toFixed(2)
       );
       setGrandTotal(e.target.value);
     }
@@ -1383,12 +1385,12 @@ export default function AdminInvoice() {
     // );
   };
   const changeGrandTotal = (e) => {
-    const { value } = parseInt(e.target);
+    const {value} = parseInt(e.target);
     setOldGoldAmount(parseInt(value));
     // console.log("TotalPayAmt", totalPayableAmount);
     // console.log("NewTotalPayAmt", newTotalPayableAmount);
     setGrandTotal(
-      parseInt(parseInt(totalPayableAmount) - parseInt(oldGoldAmount))
+        parseInt(parseInt(totalPayableAmount) - parseInt(oldGoldAmount))
     );
     // setTotalPayableAmount(parseFloat(e.target.value));
     // setTotalPayableGstAmount(
@@ -1400,7 +1402,7 @@ export default function AdminInvoice() {
   const handleInputChange = (e, productId, property) => {
     const barcodeInput = document.getElementById("barcodeNumberInput");
     // barcodeInput.style.setProperty("color", "black");
-    const { value } = e.target;
+    const {value} = e.target;
     // setBarCodeAlert(false);
     const updatedProducts = allSelectedProducts.map((product) => {
       if (product.id === productId) {
@@ -1410,7 +1412,7 @@ export default function AdminInvoice() {
         const netWt = parseFloat(product.netWt) || 0;
 
         // Update the specific property in the product object
-        let updatedProduct = { ...product, [property]: value };
+        let updatedProduct = {...product, [property]: value};
 
         if (property === "barcodeNumber") {
           // Convert the barcode number to uppercase before doing the comparison
@@ -1419,7 +1421,7 @@ export default function AdminInvoice() {
 
           // Find a matching product in the rifdData array
           const matchingProduct = rifdData.find(
-            (item) => item.barcodeNumber === barcodeValue
+              (item) => item.barcodeNumber === barcodeValue
           );
 
           if (matchingProduct) {
@@ -1449,28 +1451,28 @@ export default function AdminInvoice() {
         // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
         if (property === "netWt" && !isNaN(value)) {
           let totalMakingCharges =
-            parseFloat(updatedProduct.making_per_gram) +
-            parseFloat(updatedProduct.making_Percentage) +
-            parseFloat(updatedProduct.making_Fixed_Amt) +
-            parseFloat(updatedProduct.making_Fixed_Wastage);
+              parseFloat(updatedProduct.making_per_gram) +
+              parseFloat(updatedProduct.making_Percentage) +
+              parseFloat(updatedProduct.making_Fixed_Amt) +
+              parseFloat(updatedProduct.making_Fixed_Wastage);
           updatedProduct.grosswt = (parseFloat(value) + stoneWeight).toFixed(3);
           updatedProduct.stoneWeight = (grosswt - parseFloat(value)).toFixed(3);
         }
         if (property === "mrp" && !isNaN(value)) {
           let totalMakingCharges =
-            parseFloat(updatedProduct.making_per_gram) +
-            parseFloat(updatedProduct.making_Percentage) +
-            parseFloat(updatedProduct.making_Fixed_Amt) +
-            parseFloat(updatedProduct.making_Fixed_Wastage);
+              parseFloat(updatedProduct.making_per_gram) +
+              parseFloat(updatedProduct.making_Percentage) +
+              parseFloat(updatedProduct.making_Fixed_Amt) +
+              parseFloat(updatedProduct.making_Fixed_Wastage);
           let GST = 0.03;
           //   updatedProduct.finalPrice = parseFloat(value).toFixed(3);
           (updatedProduct.finalPrice =
-            parseFloat(updatedProduct.mrp) -
-            parseFloat(updatedProduct.mrp).toFixed(3) * GST),
-            (updatedProduct.making = 0);
+              parseFloat(updatedProduct.mrp) -
+              parseFloat(updatedProduct.mrp).toFixed(3) * GST),
+              (updatedProduct.making = 0);
           //   updatedProduct.totalGstAmount = 0;
           updatedProduct.totalGstAmount =
-            parseFloat(updatedProduct.mrp).toFixed(3) * GST;
+              parseFloat(updatedProduct.mrp).toFixed(3) * GST;
           //   updatedProduct.making = parseFloat(totalMakingCharges).toFixed(3);
           //   console.log(totalMakingCharges);
           //   updatedProduct.totalGstAmount = parseFloat(
@@ -1480,50 +1482,50 @@ export default function AdminInvoice() {
           //   );
         }
         if (
-          property === "netWt" ||
-          property === "grossWt" ||
-          property === "stoneWt" ||
-          property === "making_per_gram" ||
-          property === "making_Percentage" ||
-          property === "making_Fixed_Amt" ||
-          property === "making_Fixed_Wastage"
+            property === "netWt" ||
+            property === "grossWt" ||
+            property === "stoneWt" ||
+            property === "making_per_gram" ||
+            property === "making_Percentage" ||
+            property === "making_Fixed_Amt" ||
+            property === "making_Fixed_Wastage"
         ) {
           let netGoldRate =
-            (parseFloat(updatedProduct.netWt) *
-              parseFloat(updatedProduct.tblPurity.todaysRate)) /
-            10;
+              (parseFloat(updatedProduct.netWt) *
+                  parseFloat(updatedProduct.tblPurity.todaysRate)) /
+              10;
           let makingCharges1 =
-            parseFloat(updatedProduct.netWt) *
-            parseFloat(updatedProduct.making_per_gram);
+              parseFloat(updatedProduct.netWt) *
+              parseFloat(updatedProduct.making_per_gram);
           let makingCharges2 =
-            (parseFloat(netGoldRate) *
-              parseFloat(updatedProduct.making_Percentage)) /
-            100;
+              (parseFloat(netGoldRate) *
+                  parseFloat(updatedProduct.making_Percentage)) /
+              100;
           let makingCharges3 = parseFloat(updatedProduct.making_Fixed_Amt);
           let hallmark_amt = parseFloat(updatedProduct.hallmark_amt);
 
           let makingCharges4 =
-            (parseFloat(updatedProduct.tblPurity.todaysRate) *
-              parseFloat(updatedProduct.making_Fixed_Wastage)) /
-            10;
+              (parseFloat(updatedProduct.tblPurity.todaysRate) *
+                  parseFloat(updatedProduct.making_Fixed_Wastage)) /
+              10;
           let GST = 0.03;
 
           let grossTotalRate =
-            parseFloat(netGoldRate) +
-            parseFloat(makingCharges1) +
-            parseFloat(makingCharges2) +
-            parseFloat(makingCharges3) +
-            parseFloat(makingCharges4) +
-            parseFloat(updatedProduct.stoneAmount);
+              parseFloat(netGoldRate) +
+              parseFloat(makingCharges1) +
+              parseFloat(makingCharges2) +
+              parseFloat(makingCharges3) +
+              parseFloat(makingCharges4) +
+              parseFloat(updatedProduct.stoneAmount);
           let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
           let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
 
           // Calculate total making charges
           let totalMakingCharges =
-            parseFloat(makingCharges1) +
-            parseFloat(makingCharges2) +
-            parseFloat(makingCharges3) +
-            parseFloat(makingCharges4);
+              parseFloat(makingCharges1) +
+              parseFloat(makingCharges2) +
+              parseFloat(makingCharges3) +
+              parseFloat(makingCharges4);
 
           // console.log(netGoldRate, "netGoldRate");
           if (updatedProduct.mrp == 0 || updatedProduct.mrp == "") {
@@ -1611,7 +1613,7 @@ export default function AdminInvoice() {
         purchaseProductList.forEach((product, index) => {
           product.id = purchaseProductsData[index].id;
           product.purchase_invoice_no =
-            purchaseProductsData[index].purchase_invoice_no;
+              purchaseProductsData[index].purchase_invoice_no;
         });
 
         if (unlabelProductList.length > 0) {
@@ -1636,25 +1638,25 @@ export default function AdminInvoice() {
       const updatedUnlabelItems = unlabelProductList.map((product) => {
         // Find the corresponding item in allUnlabelList based on id
         const filteredUnlabelItem = allUnlabelList.find(
-          (x) => x.Id === product.Id
+            (x) => x.Id === product.Id
         );
 
         if (filteredUnlabelItem) {
           // Subtract quantities and other properties from filteredUnlabelItem
           filteredUnlabelItem.TotalGrossWt = (
-            parseFloat(filteredUnlabelItem.TotalGrossWt) -
-            parseFloat(product.GrossWt)
+              parseFloat(filteredUnlabelItem.TotalGrossWt) -
+              parseFloat(product.GrossWt)
           ).toFixed(3);
           filteredUnlabelItem.TotalStoneWeight = (
-            parseFloat(filteredUnlabelItem.TotalStoneWeight) -
-            parseFloat(product.TotalStoneWeight)
+              parseFloat(filteredUnlabelItem.TotalStoneWeight) -
+              parseFloat(product.TotalStoneWeight)
           ).toFixed(3);
           filteredUnlabelItem.TotalNetWt = (
-            parseFloat(filteredUnlabelItem.TotalNetWt) -
-            parseFloat(product.NetWt)
+              parseFloat(filteredUnlabelItem.TotalNetWt) -
+              parseFloat(product.NetWt)
           ).toFixed(3);
           filteredUnlabelItem.quantity = (
-            parseInt(filteredUnlabelItem.Quantity) - parseInt(product.Quantity)
+              parseInt(filteredUnlabelItem.Quantity) - parseInt(product.Quantity)
           ).toString();
         }
 
@@ -1807,32 +1809,32 @@ export default function AdminInvoice() {
         GSTAmount: `${x.GSTAmount}`,
         PacketId: x.PacketId ? x.PacketId : 0,
         BillType: x.sell
-          ? "sale"
-          : x.purchase
-          ? "purchase"
-          : x.unlabel
-          ? "unlabelled"
-          : "wholesale",
+            ? "sale"
+            : x.purchase
+                ? "purchase"
+                : x.unlabel
+                    ? "unlabelled"
+                    : "wholesale",
         LabelledStockId: x.sell ? x.Id : 0,
       };
     });
 
     const totalGrossWt = allSelectedProducts.reduce(
-      (a, b) => a + parseFloat(b.GrossWt ? b.GrossWt : 0).toFixed(3),
-      0
+        (a, b) => a + parseFloat(b.GrossWt ? b.GrossWt : 0).toFixed(3),
+        0
     );
     const totalNetWt = allSelectedProducts.reduce(
-      (a, b) => a + parseFloat(b.NetWt ? b.NetWt : 0).toFixed(3),
-      0
+        (a, b) => a + parseFloat(b.NetWt ? b.NetWt : 0).toFixed(3),
+        0
     );
     const totalQuantity = allSelectedProducts.reduce(
-      (a, b) => a + parseFloat(b.Quantity ? b.Quantity : 0).toFixed(3),
-      0
+        (a, b) => a + parseFloat(b.Quantity ? b.Quantity : 0).toFixed(3),
+        0
     );
     const totalStoneWt = allSelectedProducts.reduce(
-      (a, b) =>
-        a + parseFloat(b.TotalStoneWeight ? b.TotalStoneWeight : 0).toFixed(3),
-      0
+        (a, b) =>
+            a + parseFloat(b.TotalStoneWeight ? b.TotalStoneWeight : 0).toFixed(3),
+        0
     );
 
     // Determine the date to send
@@ -1848,7 +1850,7 @@ export default function AdminInvoice() {
         //   parseFloat(allProdctsNetAmount) + parseFloat(allProdctsGstAmount)
         // )}`,
         // Price: `${parseFloat(totalPayableAmount).toFixed(2)}`,
-        TotalAmount: `${Math.ceil(totalPayableAmount).toFixed(2)}`,
+        // TotalAmount: `${Math.ceil(totalPayableAmount).toFixed(2)}`,
         Billedby: `${selectedCashierEmployee}`,
         SaleType: "Sale",
         Soldby: `${selectedSalesEmployee}`,
@@ -1858,7 +1860,7 @@ export default function AdminInvoice() {
         // ReceivedAmt: Math.ceil(parseFloat(totalPaidAmount)),
         ReceivedAmount: parseFloat(totalPaidAmount).toFixed(2),
         InvoiceStatus:
-          wholesaleProductList.length > 0 ? "Invoice Created" : "Delivered",
+            wholesaleProductList.length > 0 ? "Invoice Created" : "Delivered",
         Visibility: gstType ? "Visible" : "Hidden",
         // CategoryName: `${
         //   allSelectedProducts[0].purchase == true ||
@@ -1900,10 +1902,10 @@ export default function AdminInvoice() {
         BalanceGold: "0",
         BalanceSilver: "0",
         OrderType: pendingApproval
-          ? "Pending Approval"
-          : !pendingApproval && !applyGstAmount
-          ? "Estimate"
-          : "Tax Invoice",
+            ? "Pending Approval"
+            : !pendingApproval && !applyGstAmount
+                ? "Estimate"
+                : "Tax Invoice",
 
         InvoiceItem: newAllSelectedProducts,
       };
@@ -1938,7 +1940,7 @@ export default function AdminInvoice() {
     }
   };
   const createOrderItems = async (rcvdId, x) => {
-    
+
     try {
       const orderItemsList = allSelectedProducts.map((product) => {
         let item = {
@@ -1953,7 +1955,6 @@ export default function AdminInvoice() {
           TotalStoneWeight: product.TotalStoneWeight,
           HSNCode: `${product.HSNCode}` || "",
           // ItemCode: product.itemCode,
-          GrossWt: product.GrossWt,
           MakingFixedAmt: product.MakingFixedAmt,
           MakingFixedWastage: product.MakingFixedWastage,
           MakingPerGram: product.MakingPerGram,
@@ -1973,7 +1974,7 @@ export default function AdminInvoice() {
           WastageWt: `${product.MakingFixedWastage}`,
           OnlineStatus: "Billed",
           Price: `${(
-            parseFloat(product.finalPrice) + parseFloat(product.totalGstAmount)
+              parseFloat(product.finalPrice) + parseFloat(product.totalGstAmount)
           ).toFixed(3)}`,
         };
         if (product.sell) {
@@ -1997,8 +1998,8 @@ export default function AdminInvoice() {
             PurProductId: 0,
             FinePercentage: `${product.FinePercent}`,
             PurProductAmt: `${(
-              parseFloat(product.finalPrice) +
-              parseFloat(product.totalGstAmount)
+                parseFloat(product.finalPrice) +
+                parseFloat(product.totalGstAmount)
             ).toFixed(3)}`,
             // Add additional properties or modify existing properties for products with purchase = true
           };
@@ -2034,8 +2035,8 @@ export default function AdminInvoice() {
             WastageWt: product.making_Fixed_Wastage,
             UnlProductId: product.Id,
             UnlProductAmt: `${(
-              parseFloat(product.finalPrice) +
-              parseFloat(product.totalGstAmount)
+                parseFloat(product.finalPrice) +
+                parseFloat(product.totalGstAmount)
             ).toFixed(3)}`,
             // Add additional properties or modify existing properties for products with purchase = true
           };
@@ -2070,8 +2071,8 @@ export default function AdminInvoice() {
             TotalWt: product.grosswt,
             WastageWt: product.making_Fixed_Wastage,
             price: `${(
-              parseFloat(product.finalPrice) +
-              parseFloat(product.totalGstAmount)
+                parseFloat(product.finalPrice) +
+                parseFloat(product.totalGstAmount)
             ).toFixed(3)}`,
             // Add additional properties or modify existing properties for products with purchase = true
           };
@@ -2190,11 +2191,11 @@ export default function AdminInvoice() {
         alert(rcvdData.message);
       } else {
         if (
-          labelProductList.length <= 0 &&
-          unlabelProductList.length <= 0 &&
-          wholesaleProductList.length <= 0
+            labelProductList.length <= 0 &&
+            unlabelProductList.length <= 0 &&
+            wholesaleProductList.length <= 0
         ) {
-          
+
           createPurchaseReceiptPDF(dataRcvd, x);
         } else {
           console.log("checking rcvdatat", rcvdData);
@@ -2516,24 +2517,25 @@ export default function AdminInvoice() {
     // Make the API POST request with the ID
     fetch(a51, {
       method: "POST",
-      body: JSON.stringify({ id: id }),
+      body: JSON.stringify({id: id}),
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.blob()) // Convert response to Blob
-      .then((blob) => {
-        // Create a URL for the Blob object
-        const pdfUrl = URL.createObjectURL(blob);
+        .then((response) => response.blob()) // Convert response to Blob
+        .then((blob) => {
+          // Create a URL for the Blob object
+          const pdfUrl = URL.createObjectURL(blob);
 
-        // Open the PDF in a new window or tab
-        window.open(pdfUrl, "_blank");
-        // setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+          // Open the PDF in a new window or tab
+          window.open(pdfUrl, "_blank");
+          // setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
   }
+
   const scrollToCenter = (elementId) => {
     const element = document.getElementById(elementId);
     if (element) {
@@ -2593,7 +2595,7 @@ export default function AdminInvoice() {
       addNewCustomerData();
     } else {
       alert(
-        "Either Customer mobile should be greater than 8 char / customer already exists "
+          "Either Customer mobile should be greater than 8 char / customer already exists "
       );
     }
   };
@@ -2647,14 +2649,14 @@ export default function AdminInvoice() {
   const editDiscountPrices = () => {
     setDiscountAmount(0);
     let totalAmountPaying = allSelectedProducts.reduce(
-      (total, product) =>
-        total +
-        parseFloat(product.finalPrice) +
-        parseFloat(product.totalGstAmount),
-      0
+        (total, product) =>
+            total +
+            parseFloat(product.finalPrice) +
+            parseFloat(product.totalGstAmount),
+        0
     );
     let amountToDeduct =
-      parseFloat(totalAmountPaying) - parseFloat(totalPayableAmount);
+        parseFloat(totalAmountPaying) - parseFloat(totalPayableAmount);
 
     let totalAdjustment = 0;
     let updatedProductList = [...allSelectedProducts];
@@ -2669,12 +2671,12 @@ export default function AdminInvoice() {
           const deduction = Math.min(amountToDeduct, updatedProductList[i].mrp);
           updatedProductList[i].mrp -= deduction;
           updatedProductList[i].finalPrice = (
-            (updatedProductList[i].mrp * 100) /
-            103
+              (updatedProductList[i].mrp * 100) /
+              103
           ).toFixed(2);
           updatedProductList[i].totalGstAmount = (
-            (updatedProductList[i].mrp * 3) /
-            103
+              (updatedProductList[i].mrp * 3) /
+              103
           ).toFixed(2);
           totalAdjustment += deduction;
           amountToDeduct -= deduction;
@@ -2687,18 +2689,18 @@ export default function AdminInvoice() {
     // Distribute any remaining amount among the products
     if (amountToDeduct > 0 && updatedProductList.length > 0) {
       const totalOriginalAmount = updatedProductList.reduce(
-        (total, product) =>
-          total +
-          parseFloat(product.finalPrice) +
-          parseFloat(product.totalGstAmount),
-        0
+          (total, product) =>
+              total +
+              parseFloat(product.finalPrice) +
+              parseFloat(product.totalGstAmount),
+          0
       );
       //   setDiscountAmount(0);
       updatedProductList = updatedProductList.map((product) => {
         const originalAmount =
-          parseFloat(product.finalPrice) + parseFloat(product.totalGstAmount);
+            parseFloat(product.finalPrice) + parseFloat(product.totalGstAmount);
         const adjustment =
-          (originalAmount / totalOriginalAmount) * amountToDeduct;
+            (originalAmount / totalOriginalAmount) * amountToDeduct;
         // console.log(
         //   typeof parseFloat(product.finalPrice),
         //   "product.finalPrice"
@@ -2709,15 +2711,15 @@ export default function AdminInvoice() {
         //   "totalPayableAmount"
         // );
         const deductAmount = parseFloat(
-          parseFloat(product.finalPrice) +
+            parseFloat(product.finalPrice) +
             parseFloat(product.totalGstAmount) -
             parseFloat(totalPayableAmount)
         );
         const newTotalGstAmount =
-          parseFloat(product.totalGstAmount) - parseFloat(deductAmount) * 0.03;
+            parseFloat(product.totalGstAmount) - parseFloat(deductAmount) * 0.03;
         const newFinalPrice = (parseFloat(totalPayableAmount) * 100) / 103;
         const newMakingPerGram =
-          parseFloat(product.making) - parseFloat(deductAmount);
+            parseFloat(product.making) - parseFloat(deductAmount);
         // console.log(totalPayableAmount, "totalPayableAmount");
         // console.log(typeof deductAmount, "deductAmount");
         // console.log(newTotalGstAmount, "newTotalGstAmount");
@@ -2765,12 +2767,12 @@ export default function AdminInvoice() {
     // document.body.classList.add("body-no-scroll");
   };
   const handleInputChange2 = (e, property) => {
-    const { value } = e.target;
+    const {value} = e.target;
     if (selectedProduct) {
       const updatedProduct = {
         ...openEditProduct,
         [property]:
-          e.target.value !== "" || e.target.value > 0 ? e.target.value : 0,
+            e.target.value !== "" || e.target.value > 0 ? e.target.value : 0,
       };
       const grosswt = parseFloat(updatedProduct.GrossWt) || 0;
       const grosswtPrevious = parseFloat(openEditProduct.TotalGrossWt) || 0;
@@ -2798,8 +2800,8 @@ export default function AdminInvoice() {
         // calculateFinalPrice(selectedProduct);
       }
       if (
-        (property === "TotalStoneWeight" || property === "StoneWt") &&
-        !isNaN(value)
+          (property === "TotalStoneWeight" || property === "StoneWt") &&
+          !isNaN(value)
       ) {
         if (value < grosswt) {
           updatedProduct.NetWt = (grosswt - parseFloat(value)).toFixed(3);
@@ -2810,19 +2812,19 @@ export default function AdminInvoice() {
         }
       }
       if (
-        (property === "NetWt" || property === "TotalNetWt") &&
-        !isNaN(value)
+          (property === "NetWt" || property === "TotalNetWt") &&
+          !isNaN(value)
       ) {
         if (
-          updatedProduct.purchase === true ||
-          updatedProduct.unlabel === true
+            updatedProduct.purchase === true ||
+            updatedProduct.unlabel === true
         ) {
           updatedProduct.GrossWt = (
-            parseFloat(stonewt) + parseFloat(value)
+              parseFloat(stonewt) + parseFloat(value)
           ).toFixed(3);
         } else {
           updatedProduct.GrossWt = (
-            parseFloat(stoneWeight) + parseFloat(value)
+              parseFloat(stoneWeight) + parseFloat(value)
           ).toFixed(3);
         }
       }
@@ -2834,69 +2836,69 @@ export default function AdminInvoice() {
       }
 
       if (
-        property === "NetWt" ||
-        property === "GrossWt" ||
-        property === "TotalStoneWt" ||
-        property === "TotalStoneAmount" ||
-        property === "MakingPerGram" ||
-        property === "MakingPercentage" ||
-        property === "MakingFixedAmt" ||
-        property === "MakingFixedWastage" ||
-        property === "TodaysRate" ||
-        property === "MRP" ||
-        property === "HallmarkAmount"
+          property === "NetWt" ||
+          property === "GrossWt" ||
+          property === "TotalStoneWt" ||
+          property === "TotalStoneAmount" ||
+          property === "MakingPerGram" ||
+          property === "MakingPercentage" ||
+          property === "MakingFixedAmt" ||
+          property === "MakingFixedWastage" ||
+          property === "TodaysRate" ||
+          property === "MRP" ||
+          property === "HallmarkAmount"
       ) {
         let netGoldRate =
-          (!updatedProduct.unlabel && updatedProduct.purchase) ||
-          (updatedProduct.unlabel && !updatedProduct.purchase)
-            ? (parseFloat(updatedProduct.NetWt) *
+            (!updatedProduct.unlabel && updatedProduct.purchase) ||
+            (updatedProduct.unlabel && !updatedProduct.purchase)
+                ? (parseFloat(updatedProduct.NetWt) *
                 parseFloat(updatedProduct.TodaysRate)) /
-              10
-            : (parseFloat(updatedProduct.NetWt) *
+                10
+                : (parseFloat(updatedProduct.NetWt) *
                 parseFloat(updatedProduct.TodaysRate)) /
-              10;
+                10;
         let makingCharges1 =
-          (!updatedProduct.unlabel && updatedProduct.purchase) ||
-          (updatedProduct.unlabel && !updatedProduct.purchase)
-            ? parseFloat(updatedProduct.NetWt) *
-              parseFloat(updatedProduct.MakingPerGram)
-            : parseFloat(updatedProduct.NetWt) *
-              parseFloat(updatedProduct.MakingPerGram);
+            (!updatedProduct.unlabel && updatedProduct.purchase) ||
+            (updatedProduct.unlabel && !updatedProduct.purchase)
+                ? parseFloat(updatedProduct.NetWt) *
+                parseFloat(updatedProduct.MakingPerGram)
+                : parseFloat(updatedProduct.NetWt) *
+                parseFloat(updatedProduct.MakingPerGram);
         let makingCharges2 =
-          (parseFloat(netGoldRate) *
-            parseFloat(updatedProduct.MakingPercentage)) /
-          100;
+            (parseFloat(netGoldRate) *
+                parseFloat(updatedProduct.MakingPercentage)) /
+            100;
         let makingCharges3 = parseFloat(updatedProduct.MakingFixedAmt);
         let makingCharges4 =
-          (parseFloat(updatedProduct.TodaysRate) *
-            parseFloat(updatedProduct.MakingFixedWastage)) /
-          10;
+            (parseFloat(updatedProduct.TodaysRate) *
+                parseFloat(updatedProduct.MakingFixedWastage)) /
+            10;
         let GST = 0.03;
 
         let grossTotalRate =
-          parseFloat(netGoldRate) +
-          parseFloat(makingCharges1) +
-          parseFloat(makingCharges2) +
-          parseFloat(makingCharges3) +
-          parseFloat(makingCharges4) +
-          parseFloat(updatedProduct.HallmarkAmount) +
-          parseFloat(updatedProduct.TotalStoneAmount);
+            parseFloat(netGoldRate) +
+            parseFloat(makingCharges1) +
+            parseFloat(makingCharges2) +
+            parseFloat(makingCharges3) +
+            parseFloat(makingCharges4) +
+            parseFloat(updatedProduct.HallmarkAmount) +
+            parseFloat(updatedProduct.TotalStoneAmount);
         let GSTAdded = parseFloat(GST) * parseFloat(grossTotalRate);
         let finalPrice = parseFloat(grossTotalRate) + parseFloat(GSTAdded);
 
         // Calculate total making charges
         let totalMakingCharges =
-          parseFloat(makingCharges1) +
-          parseFloat(makingCharges2) +
-          parseFloat(makingCharges3) +
-          parseFloat(makingCharges4);
+            parseFloat(makingCharges1) +
+            parseFloat(makingCharges2) +
+            parseFloat(makingCharges3) +
+            parseFloat(makingCharges4);
 
         // console.log(netGoldRate, "netGoldRate");
         if (
-          (updatedProduct.MRP == 0 ||
-            updatedProduct.MRP == "" ||
-            updatedProduct.MRP == "0") &&
-          !updatedProduct.purchase
+            (updatedProduct.MRP == 0 ||
+                updatedProduct.MRP == "" ||
+                updatedProduct.MRP == "0") &&
+            !updatedProduct.purchase
         ) {
           updatedProduct.finalPrice = parseFloat(grossTotalRate).toFixed(3);
           updatedProduct.making = totalMakingCharges;
@@ -2911,13 +2913,13 @@ export default function AdminInvoice() {
           // };
 
           updatedProduct.finalPrice = (
-            (parseFloat(updatedProduct.MRP) * 100) /
-            103
+              (parseFloat(updatedProduct.MRP) * 100) /
+              103
           ).toFixed(3);
           updatedProduct.making = 0;
           updatedProduct.totalGstAmount = (
-            (parseFloat(updatedProduct.MRP) * 3) /
-            103
+              (parseFloat(updatedProduct.MRP) * 3) /
+              103
           ).toFixed(3);
           //   finalPrice: parseFloat(finalPrice).toFixed(3),
           // }
@@ -2927,9 +2929,9 @@ export default function AdminInvoice() {
           if (updatedProduct.purchase === true) {
             updatedProduct.NetAmt = parseFloat(grossTotalRate).toFixed(3);
             updatedProduct.PurchaseAmount =
-              parseFloat(grossTotalRate).toFixed(3);
+                parseFloat(grossTotalRate).toFixed(3);
             updatedProduct.finalPrice = `${-parseFloat(grossTotalRate).toFixed(
-              3
+                3
             )}`;
             updatedProduct.making = totalMakingCharges;
             updatedProduct.totalGstAmount = 0;
@@ -2947,7 +2949,7 @@ export default function AdminInvoice() {
       }
       // Update the specific product in allSelectedProducts array without changing its position
       const updatedProducts = allSelectedProducts.map((product) =>
-        product.Id === updatedProduct.Id ? updatedProduct : product
+          product.Id === updatedProduct.Id ? updatedProduct : product
       );
       // Update the state with the modified products array
       setOpenEditProduct(updatedProduct);
@@ -3206,19 +3208,19 @@ export default function AdminInvoice() {
   // };
   const addPayment = () => {
     if (
-      ((paymentOptions !== "Cash to Metal" || paymentOptions !== "Metal") &&
-        paymentAmount !== "" &&
-        parseInt(paymentAmount) !== 0) ||
-      ((paymentOptions == "Cash to Metal" || paymentOptions == "Metal") &&
-        parseFloat(paymentGold).toFixed(3) !== 0.0 &&
-        parseFloat(paymentSilver).toFixed(3) !== 0.0)
+        ((paymentOptions !== "Cash to Metal" || paymentOptions !== "Metal") &&
+            paymentAmount !== "" &&
+            parseInt(paymentAmount) !== 0) ||
+        ((paymentOptions == "Cash to Metal" || paymentOptions == "Metal") &&
+            parseFloat(paymentGold).toFixed(3) !== 0.0 &&
+            parseFloat(paymentSilver).toFixed(3) !== 0.0)
     ) {
       // Check if both payment mode and amount are provided
       if (paymentOptions && paymentAmount >= 0 && paymentType === "Receive") {
         // Update the payments array with new payment mode and amount
         if (
-          paymentOptions === "Metal to Cash" ||
-          paymentOptions === "Cash to Metal"
+            paymentOptions === "Metal to Cash" ||
+            paymentOptions === "Cash to Metal"
         ) {
           setPayments([
             ...payments,
@@ -3231,44 +3233,44 @@ export default function AdminInvoice() {
               deductSilver: deductSilver,
               paymentType: paymentType,
               goldRate: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.fineRate
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? metalPaymentOption.fineRate
+                  : 0,
               silverRate: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.fineRate
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? metalPaymentOption.fineRate
+                  : 0,
               goldAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.totalAmount
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? metalPaymentOption.totalAmount
+                  : 0,
               silverAmount: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.totalAmount
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? metalPaymentOption.totalAmount
+                  : 0,
               paymentDescription: paymentDescription,
             },
           ]);
           setTotalPayableGold(
-            parseFloat(totalPayableGold - deductGold).toFixed(3)
+              parseFloat(totalPayableGold - deductGold).toFixed(3)
           );
           setTotalPayableSilver(
-            parseFloat(totalPayableSilver - deductSilver).toFixed(3)
+              parseFloat(totalPayableSilver - deductSilver).toFixed(3)
           );
         } else {
           setPayments([
             ...payments,
             {
               mode: !paymentOptions.toLowerCase().includes("advance")
-                ? paymentOptions
-                : advanceType,
+                  ? paymentOptions
+                  : advanceType,
               amount: !paymentOptions.toLowerCase().includes("advance")
-                ? paymentAmount
-                : advanceAmount,
+                  ? paymentAmount
+                  : advanceAmount,
               fineGold: 0,
               fineSilver: 0,
               deductGold: 0,
@@ -3286,14 +3288,14 @@ export default function AdminInvoice() {
           setGrandTotal(parseInt(grandTotal) - parseInt(paymentAmount));
           setPaymentAmount(parseInt(grandTotal) - parseInt(paymentAmount));
         } else if (
-          paymentOptions.toLowerCase().includes("advance") &&
-          advanceType === "Deduct Advance"
+            paymentOptions.toLowerCase().includes("advance") &&
+            advanceType === "Deduct Advance"
         ) {
           setSelectedCustomer({
             ...selectedCustomer,
             advanceAmt:
-              parseFloat(selectedCustomer.advanceAmt) -
-              parseFloat(advanceAmount),
+                parseFloat(selectedCustomer.advanceAmt) -
+                parseFloat(advanceAmount),
           });
           setGrandTotal(parseInt(grandTotal) - parseInt(advanceAmount));
           setPaymentAmount(parseInt(grandTotal) - parseInt(advanceAmount));
@@ -3306,14 +3308,14 @@ export default function AdminInvoice() {
         // Clear the input fields
         // setPaymentOptions("Cash");
       } else if (
-        paymentOptions &&
-        paymentAmount > 0 &&
-        paymentType === "Paid"
+          paymentOptions &&
+          paymentAmount > 0 &&
+          paymentType === "Paid"
       ) {
         // Update the payments array with new payment mode and amount
         if (
-          paymentOptions === "Metal to Cash" ||
-          paymentOptions === "Cash to Metal"
+            paymentOptions === "Metal to Cash" ||
+            paymentOptions === "Cash to Metal"
         ) {
           setPayments([
             ...payments,
@@ -3326,25 +3328,25 @@ export default function AdminInvoice() {
               deductSilver: parseFloat(-deductSilver),
               paymentType: paymentType,
               goldRate: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.fineRate
+                  : 0,
               silverRate: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.fineRate
+                  : 0,
               goldAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.totalAmount
+                  : 0,
               silverAmount: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.totalAmount
+                  : 0,
               paymentDescription: paymentDescription,
             },
           ]);
@@ -3371,17 +3373,17 @@ export default function AdminInvoice() {
         // Clear the input fields
         // setPaymentOptions("Cash");
         setPaymentAmount(
-          Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
+            Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
         );
       } else if (
-        paymentOptions &&
-        paymentAmount <= 0 &&
-        paymentType === "Paid"
+          paymentOptions &&
+          paymentAmount <= 0 &&
+          paymentType === "Paid"
       ) {
         // Update the payments array with new payment mode and amount
         if (
-          paymentOptions === "Cash to Metal" ||
-          paymentOptions === "Metal to Cash"
+            paymentOptions === "Cash to Metal" ||
+            paymentOptions === "Metal to Cash"
         ) {
           setPayments([
             ...payments,
@@ -3394,25 +3396,25 @@ export default function AdminInvoice() {
               deductSilver: parseFloat(-deductSilver),
               paymentType: paymentType,
               goldRate: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.fineRate
+                  : 0,
               silverRate: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.fineRate
+                  : 0,
               goldAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.totalAmount
+                  : 0,
               silverAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
+                  .toLowerCase()
+                  .includes("gold")
+                  ? -metalPaymentOption.totalAmount
+                  : 0,
               paymentDescription: paymentDescription,
             },
           ]);
@@ -3505,8 +3507,8 @@ export default function AdminInvoice() {
       setSelectedCustomer({
         ...selectedCustomer,
         advanceAmt:
-          parseFloat(selectedCustomer.advanceAmt) +
-          parseFloat(payments[index].amount),
+            parseFloat(selectedCustomer.advanceAmt) +
+            parseFloat(payments[index].amount),
       });
       setGrandTotal(newGrandTotal);
       const remainingGoldWeight = totalPayableGold + deletedGoldWeight;
@@ -3517,9 +3519,9 @@ export default function AdminInvoice() {
     } else {
       setGrandTotal(newGrandTotal);
       const remainingGoldWeight =
-        parseFloat(totalPayableGold) + parseFloat(deletedGoldWeight);
+          parseFloat(totalPayableGold) + parseFloat(deletedGoldWeight);
       const remainingSilverWeight =
-        parseFloat(totalPayableSilver) + parseFloat(deletedSilverWeight);
+          parseFloat(totalPayableSilver) + parseFloat(deletedSilverWeight);
       setTotalPayableGold(parseFloat(remainingGoldWeight).toFixed(3));
       setTotalPayableSilver(parseFloat(remainingSilverWeight).toFixed(3));
       setPaymentAmount(Math.abs(parseInt(newGrandTotal)));
@@ -3600,16 +3602,16 @@ export default function AdminInvoice() {
   // };
   // Convert payments array to a comma-separated string whenever you need it
   const paymentsString = payments
-    .map((payment) => `${payment.mode}:${payment.amount}`)
-    .join(",");
+      .map((payment) => `${payment.mode}:${payment.amount}`)
+      .join(",");
   // Function to calculate total payment amount
   const calculateTotalAmount = () => {
     // Use reduce to sum all payment amounts
     const totalPaidAmount = payments.reduce(
-      (total, payment) =>
-        total +
-        (payment.mode !== "Advance Received" ? parseFloat(payment.amount) : 0),
-      0
+        (total, payment) =>
+            total +
+            (payment.mode !== "Advance Received" ? parseFloat(payment.amount) : 0),
+        0
     );
 
     return totalPaidAmount;
@@ -3642,20 +3644,20 @@ export default function AdminInvoice() {
   // let selectedPurityRate = "";
   // console.log(purchaseProduct, "purchaseProduct");
   const handleInputChangePurchase = (e) => {
-    const { name, value } = e.target;
-    const updatedProduct = { ...purchaseProduct }; // Create a copy of the purchaseProduct object
+    const {name, value} = e.target;
+    const updatedProduct = {...purchaseProduct}; // Create a copy of the purchaseProduct object
     const grosswt = parseFloat(updatedProduct.GrossWt) || 0;
     const stoneWeight = parseFloat(updatedProduct.StoneWt) || 0;
     // Update the edited data in the updatedProduct object
     if (name === "CategoryName") {
       const [selectedCategoryId, selectedCategoryName] = value.split(",");
       setSelectedCategory(selectedCategoryName),
-        (updatedProduct.CategoryId = parseInt(selectedCategoryId)),
-        (updatedProduct.CategoryName = selectedCategoryName);
+          (updatedProduct.CategoryId = parseInt(selectedCategoryId)),
+          (updatedProduct.CategoryName = selectedCategoryName);
     } else if (name === "GrossWt") {
       if (stoneWeight < value) {
         updatedProduct.NetWt = parseFloat(
-          parseFloat(value) - parseFloat(updatedProduct.StoneWt)
+            parseFloat(value) - parseFloat(updatedProduct.StoneWt)
         ).toFixed(3);
         updatedProduct.GrossWt = value;
       } else {
@@ -3666,7 +3668,7 @@ export default function AdminInvoice() {
     } else if (name === "StoneWt") {
       if (value < grosswt) {
         updatedProduct.NetWt = parseFloat(
-          parseFloat(updatedProduct.GrossWt) - parseFloat(value)
+            parseFloat(updatedProduct.GrossWt) - parseFloat(value)
         ).toFixed(3);
         updatedProduct.StoneWt = value;
       } else {
@@ -3675,7 +3677,7 @@ export default function AdminInvoice() {
     } else if (name === "NetWt") {
       if (value < grosswt) {
         updatedProduct.StoneWt = parseFloat(
-          parseFloat(updatedProduct.GrossWt) - parseFloat(value)
+            parseFloat(updatedProduct.GrossWt) - parseFloat(value)
         ).toFixed(3);
         updatedProduct.NetWt = value;
       } else {
@@ -3713,8 +3715,8 @@ export default function AdminInvoice() {
     // Rest of the function logic...
   };
   const handleInputChangeUnlabel = (e) => {
-    const { name, value } = e.target;
-    const updatedProduct = { ...unlabelProduct }; // Create a copy of the purchaseProduct object
+    const {name, value} = e.target;
+    const updatedProduct = {...unlabelProduct}; // Create a copy of the purchaseProduct object
     const grosswt = parseFloat(updatedProduct.GrossWt) || 0;
     const stoneWeight = parseFloat(updatedProduct.StoneWt) || 0;
 
@@ -3722,35 +3724,35 @@ export default function AdminInvoice() {
     if (name === "CategoryId") {
       const [selectedCategoryId, selectedCategoryName] = value.split(",");
       setSelectedCategory(selectedCategoryName),
-        (updatedProduct.CategoryId = parseInt(selectedCategoryId)),
-        (updatedProduct.CategoryName = selectedCategoryName);
+          (updatedProduct.CategoryId = parseInt(selectedCategoryId)),
+          (updatedProduct.CategoryName = selectedCategoryName);
       (updatedProduct.ProductTypeId = ""),
-        (updatedProduct.ProductName = ""),
-        (updatedProduct.DesignName = ""),
-        (updatedProduct.SelectedUnlabelId = 0),
-        (updatedProduct.GrossWt = "0"),
-        (updatedProduct.NetWt = "0"),
-        (updatedProduct.StoneWt = "0"),
-        (updatedProduct.GoldRate = "0"),
-        (updatedProduct.FinePercent = "0"),
-        (updatedProduct.making = "0"),
-        (updatedProduct.NetAmt = "0"),
-        (updatedProduct.GSTAmount = "0"),
-        (updatedProduct.TotalAmt = "0"),
-        (updatedProduct.Quantity = "1"),
-        (updatedProduct.UnlabelAmount = "0"),
-        (updatedProduct.PurityRate = "0"),
-        (updatedProduct.Purity = "100%"),
-        (updatedProduct.finalPrice = "0"),
-        (updatedProduct.totalGstAmount = "0"),
-        (updatedProduct.purchase = false),
-        (updatedProduct.unlabel = true),
-        (updatedProduct.TodaysRate = "0");
+          (updatedProduct.ProductName = ""),
+          (updatedProduct.DesignName = ""),
+          (updatedProduct.SelectedUnlabelId = 0),
+          (updatedProduct.GrossWt = "0"),
+          (updatedProduct.NetWt = "0"),
+          (updatedProduct.StoneWt = "0"),
+          (updatedProduct.GoldRate = "0"),
+          (updatedProduct.FinePercent = "0"),
+          (updatedProduct.making = "0"),
+          (updatedProduct.NetAmt = "0"),
+          (updatedProduct.GSTAmount = "0"),
+          (updatedProduct.TotalAmt = "0"),
+          (updatedProduct.Quantity = "1"),
+          (updatedProduct.UnlabelAmount = "0"),
+          (updatedProduct.PurityRate = "0"),
+          (updatedProduct.Purity = "100%"),
+          (updatedProduct.finalPrice = "0"),
+          (updatedProduct.totalGstAmount = "0"),
+          (updatedProduct.purchase = false),
+          (updatedProduct.unlabel = true),
+          (updatedProduct.TodaysRate = "0");
     } else if (name === "GrossWt") {
       if (value <= updatedProduct.MaxNetWt) {
         if (stoneWeight < value) {
           updatedProduct.NetWt = parseFloat(
-            parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight)
+              parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight)
           ).toFixed(3);
           updatedProduct.GrossWt = value;
         } else {
@@ -3764,7 +3766,7 @@ export default function AdminInvoice() {
     } else if (name === "TotalStoneWeight") {
       if (value < grosswt) {
         updatedProduct.NetWt = parseFloat(
-          parseFloat(updatedProduct.GrossWt) - parseFloat(value)
+            parseFloat(updatedProduct.GrossWt) - parseFloat(value)
         ).toFixed(3);
         updatedProduct.TotalStoneWeight = value;
       } else {
@@ -3774,7 +3776,7 @@ export default function AdminInvoice() {
       if (value <= updatedProduct.MaxGrossWt) {
         if (value < grosswt) {
           updatedProduct.TotalStoneWeight = parseFloat(
-            parseFloat(updatedProduct.GrossWt) - parseFloat(value)
+              parseFloat(updatedProduct.GrossWt) - parseFloat(value)
           ).toFixed(3);
           updatedProduct.NetWt = value;
         } else {
@@ -3801,7 +3803,7 @@ export default function AdminInvoice() {
       updatedProduct.ProductName = productTypeName;
     } else if (name === "DesignId") {
       const [selectedUnlabelId, collectionNameSelected, collectionIdSelected] =
-        value.split(",");
+          value.split(",");
       updatedProduct.DesignName = collectionNameSelected;
       updatedProduct.DesignId = parseInt(selectedUnlabelId);
       // Trial
@@ -3810,7 +3812,7 @@ export default function AdminInvoice() {
       //   (x) => x.id === parseInt(selectedUnlabelId)
       // )[0].purity;
       let availablePurity = allUnlabelList.filter(
-        (x) => x.DesignName === collectionNameSelected
+          (x) => x.DesignName === collectionNameSelected
       );
       // updatedProduct.purity = availablePurity;
       // filteredPuritiesUnlabel = availablePurity;
@@ -3820,7 +3822,7 @@ export default function AdminInvoice() {
       // updatedProduct.DesignId = collectionIdSelected;
     } else if (name === "PurityId") {
       const [selectedPurityId, selectedPurityName, selectedPurityRate] =
-        value.split(",");
+          value.split(",");
       setSelectedPurity(selectedPurityName);
       updatedProduct.PurityId = parseInt(selectedPurityId);
       updatedProduct.PurityName = selectedPurityName;
@@ -3832,37 +3834,37 @@ export default function AdminInvoice() {
       updatedProduct.Id = parseInt(selectedPurityId);
 
       let availableQty = allUnlabelList
-        .filter(
-          (x) =>
-            x.PurityId === parseInt(selectedPurityId) &&
-            x.DesignId === updatedProduct.DesignId
-        )
-        .reduce((a, b) => a + parseFloat(b.Quantity), 0);
+          .filter(
+              (x) =>
+                  x.PurityId === parseInt(selectedPurityId) &&
+                  x.DesignId === updatedProduct.DesignId
+          )
+          .reduce((a, b) => a + parseFloat(b.Quantity), 0);
       console.log(availableQty, "availableQty");
       console.log(availableQty, "availableQty");
       console.log(availableQty, "availableQty");
       let availableGrossWt = allUnlabelList
-        .filter(
-          (x) =>
-            x.PurityId === parseInt(selectedPurityId) &&
-            x.DesignId === updatedProduct.DesignId
-        )
-        .reduce((a, b) => a + parseFloat(b.TotalGrossWt), 0);
+          .filter(
+              (x) =>
+                  x.PurityId === parseInt(selectedPurityId) &&
+                  x.DesignId === updatedProduct.DesignId
+          )
+          .reduce((a, b) => a + parseFloat(b.TotalGrossWt), 0);
 
       let availableNetWt = allUnlabelList
-        .filter(
-          (x) =>
-            x.PurityId === parseInt(selectedPurityId) &&
-            x.DesignId === updatedProduct.DesignId
-        )
-        .reduce((a, b) => a + parseFloat(b.TotalNetWt), 0);
+          .filter(
+              (x) =>
+                  x.PurityId === parseInt(selectedPurityId) &&
+                  x.DesignId === updatedProduct.DesignId
+          )
+          .reduce((a, b) => a + parseFloat(b.TotalNetWt), 0);
       let availableFineWastage = allUnlabelList
-        .filter(
-          (x) =>
-            x.PurityId === parseInt(selectedPurityId) &&
-            x.DesignId === updatedProduct.DesignId
-        )
-        .reduce((a, b) => a + parseFloat(b.FinePlusWastageWeight), 0);
+          .filter(
+              (x) =>
+                  x.PurityId === parseInt(selectedPurityId) &&
+                  x.DesignId === updatedProduct.DesignId
+          )
+          .reduce((a, b) => a + parseFloat(b.FinePlusWastageWeight), 0);
       updatedProduct.MaxQuantity = availableQty;
       // updatedProduct.grosswt = availableGrossWt;
       // updatedProduct.netwt = availableNetWt;
@@ -3885,8 +3887,8 @@ export default function AdminInvoice() {
   };
 
   const handleInputChangeWholesale = (e) => {
-    const { name, value } = e.target;
-    const updatedProduct = { ...wholesaleProduct }; // Create a copy of the purchaseProduct object
+    const {name, value} = e.target;
+    const updatedProduct = {...wholesaleProduct}; // Create a copy of the purchaseProduct object
     const grosswt = parseFloat(updatedProduct.GrossWt) || 0;
     const stoneWeight = parseFloat(updatedProduct.TotalStoneWeight) || 0;
     // console.log(name, "name");
@@ -3897,34 +3899,34 @@ export default function AdminInvoice() {
     if (name === "CategoryId") {
       const [selectedCategoryId, selectedCategoryName] = value.split(",");
       setSelectedCategory(selectedCategoryName),
-        (updatedProduct.CategoryId = selectedCategoryId),
-        (updatedProduct.CategoryName = selectedCategoryName);
+          (updatedProduct.CategoryId = selectedCategoryId),
+          (updatedProduct.CategoryName = selectedCategoryName);
       (updatedProduct.ProductId = ""),
-        (updatedProduct.ProductName = ""),
-        (updatedProduct.DesignId = ""),
-        (updatedProduct.TotalStoneAmount = 0),
-        (updatedProduct.GrossWt = "0"),
-        (updatedProduct.NetWt = "0"),
-        (updatedProduct.GoldRate = "0"),
-        (updatedProduct.FinePercent = "0"),
-        (updatedProduct.making = "0"),
-        (updatedProduct.NetAmt = "0"),
-        (updatedProduct.GSTAmount = "0"),
-        (updatedProduct.TotalAmt = "0"),
-        (updatedProduct.Quantity = "1"),
-        (updatedProduct.PurityRate = "0"),
-        (updatedProduct.PurityId = "0"),
-        (updatedProduct.finalPrice = "0"),
-        (updatedProduct.totalGstAmount = "0"),
-        (updatedProduct.purchase = false),
-        (updatedProduct.order = false),
-        (updatedProduct.wholesale = true),
-        (updatedProduct.unlabel = false),
-        (updatedProduct.TodaysRate = "0");
+          (updatedProduct.ProductName = ""),
+          (updatedProduct.DesignId = ""),
+          (updatedProduct.TotalStoneAmount = 0),
+          (updatedProduct.GrossWt = "0"),
+          (updatedProduct.NetWt = "0"),
+          (updatedProduct.GoldRate = "0"),
+          (updatedProduct.FinePercent = "0"),
+          (updatedProduct.making = "0"),
+          (updatedProduct.NetAmt = "0"),
+          (updatedProduct.GSTAmount = "0"),
+          (updatedProduct.TotalAmt = "0"),
+          (updatedProduct.Quantity = "1"),
+          (updatedProduct.PurityRate = "0"),
+          (updatedProduct.PurityId = "0"),
+          (updatedProduct.finalPrice = "0"),
+          (updatedProduct.totalGstAmount = "0"),
+          (updatedProduct.purchase = false),
+          (updatedProduct.order = false),
+          (updatedProduct.wholesale = true),
+          (updatedProduct.unlabel = false),
+          (updatedProduct.TodaysRate = "0");
     } else if (name === "GrossWt") {
       if (stoneWeight < value) {
         updatedProduct.NetWt = parseFloat(
-          parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight)
+            parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight)
         ).toFixed(3);
         updatedProduct.GrossWt = value;
       } else {
@@ -3935,10 +3937,10 @@ export default function AdminInvoice() {
     } else if (name === "StoneWt" || name === "TotalStoneWeight") {
       if (value < grosswt) {
         updatedProduct.NetWt = parseFloat(
-          parseFloat(updatedProduct.GrossWt) -
+            parseFloat(updatedProduct.GrossWt) -
             (parseFloat(value) *
-              (100 - parseFloat(updatedProduct.StoneLessPercent))) /
-              100
+                (100 - parseFloat(updatedProduct.StoneLessPercent))) /
+            100
         ).toFixed(3);
         updatedProduct.TotalStoneWeight = value;
       } else {
@@ -3947,7 +3949,7 @@ export default function AdminInvoice() {
     } else if (name === "NetWt") {
       if (value < grosswt) {
         updatedProduct.TotalStoneWeight = parseFloat(
-          parseFloat(updatedProduct.GrossWt) - parseFloat(value)
+            parseFloat(updatedProduct.GrossWt) - parseFloat(value)
         ).toFixed(3);
         updatedProduct.NetWt = value;
       } else {
@@ -3957,7 +3959,7 @@ export default function AdminInvoice() {
       }
     } else if (name === "PurityId") {
       const [selectedPurityId, selectedPurityName, selectedPurityRate] =
-        value.split(",");
+          value.split(",");
       setSelectedPurity(selectedPurityName);
       updatedProduct.PurityId = selectedPurityId;
       updatedProduct.PurityName = selectedPurityName;
@@ -3966,33 +3968,33 @@ export default function AdminInvoice() {
       updatedProduct.FinePercent = 100;
       updatedProduct.TodaysRate = parseFloat(selectedPurityRate);
       const mathchingCustomerTounche = allCustomerTounche.filter(
-        (tounches) =>
-          tounches.CategoryId == parseInt(updatedProduct.CategoryId) &&
-          tounches.ProductId == parseInt(updatedProduct.ProductId) &&
-          tounches.DesignId == parseInt(updatedProduct.DesignId) &&
-          selectedCustomer &&
-          tounches.PurityId == parseInt(updatedProduct.PurityId) &&
-          tounches.CustomerId == selectedCustomer.Id
+          (tounches) =>
+              tounches.CategoryId == parseInt(updatedProduct.CategoryId) &&
+              tounches.ProductId == parseInt(updatedProduct.ProductId) &&
+              tounches.DesignId == parseInt(updatedProduct.DesignId) &&
+              selectedCustomer &&
+              tounches.PurityId == parseInt(updatedProduct.PurityId) &&
+              tounches.CustomerId == selectedCustomer.Id
       );
       console.log(allCustomerTounche, "allCustomerTounche");
       console.log(mathchingCustomerTounche, "mathchingCustomerTounche");
       console.log(mathchingCustomerTounche, "mathchingCustomerTounche");
       if (selectedCustomer && mathchingCustomerTounche.length > 0) {
         updatedProduct.StoneLessPercent = mathchingCustomerTounche
-          ? mathchingCustomerTounche[0].StoneLessPercent
-          : 0;
+            ? mathchingCustomerTounche[0].StoneLessPercent
+            : 0;
         updatedProduct.MakingPercentage = mathchingCustomerTounche
-          ? mathchingCustomerTounche[0].MakingPercentage
-          : 0;
+            ? mathchingCustomerTounche[0].MakingPercentage
+            : 0;
         updatedProduct.MakingFixedAmt = mathchingCustomerTounche
-          ? mathchingCustomerTounche[0].MakingFixedAmt
-          : 0;
+            ? mathchingCustomerTounche[0].MakingFixedAmt
+            : 0;
         updatedProduct.MakingFixedWastage = mathchingCustomerTounche
-          ? mathchingCustomerTounche[0].MakingFixedWastage
-          : 0;
+            ? mathchingCustomerTounche[0].MakingFixedWastage
+            : 0;
         updatedProduct.MakingPerGram = mathchingCustomerTounche
-          ? mathchingCustomerTounche[0].MakingPerGram
-          : 9;
+            ? mathchingCustomerTounche[0].MakingPerGram
+            : 9;
 
         console.log("TouncheMatched", mathchingCustomerTounche);
         console.log("TouncheMatched", mathchingCustomerTounche);
@@ -4057,9 +4059,9 @@ export default function AdminInvoice() {
 
   const calculatePurchasePrice = (product) => {
     let FineRate =
-      (parseFloat(product.FinePercent) * parseFloat(product.PurityRate)) / 1000;
+        (parseFloat(product.FinePercent) * parseFloat(product.PurityRate)) / 1000;
     let netRate = parseFloat(
-      parseFloat(FineRate) *
+        parseFloat(FineRate) *
         parseFloat(product.NetWt) *
         parseFloat(product.Quantity)
     ).toFixed(3);
@@ -4089,9 +4091,9 @@ export default function AdminInvoice() {
   };
   const calculateOrderPrice = (product) => {
     let FineRate =
-      (parseFloat(product.Finepercent) * parseFloat(product.purityRate)) / 1000;
+        (parseFloat(product.Finepercent) * parseFloat(product.purityRate)) / 1000;
     let netRate = parseFloat(
-      parseFloat(FineRate) *
+        parseFloat(FineRate) *
         parseFloat(product.netwt) *
         parseFloat(product.Quantity)
     ).toFixed(3);
@@ -4124,30 +4126,30 @@ export default function AdminInvoice() {
   const calculateUnlabelPrice = (unlabelProduct) => {
     let FineRate = (100 * parseFloat(unlabelProduct.PurityRate)) / 1000;
     let netRate = parseFloat(
-      parseFloat(FineRate) * parseFloat(unlabelProduct.NetWt)
+        parseFloat(FineRate) * parseFloat(unlabelProduct.NetWt)
     ).toFixed(3);
     let totalRate = parseFloat(parseFloat(netRate));
 
     let netGoldRate =
-      (parseFloat(unlabelProduct.NetWt) * parseFloat(unlabelProduct.GoldRate)) /
-      10;
+        (parseFloat(unlabelProduct.NetWt) * parseFloat(unlabelProduct.GoldRate)) /
+        10;
     let makingCharges1 =
-      parseFloat(unlabelProduct.NetWt) *
-      parseFloat(unlabelProduct.MakingPerGram);
+        parseFloat(unlabelProduct.NetWt) *
+        parseFloat(unlabelProduct.MakingPerGram);
     let makingCharges2 =
-      (parseFloat(netGoldRate) * parseFloat(unlabelProduct.MakingPercentage)) /
-      100;
+        (parseFloat(netGoldRate) * parseFloat(unlabelProduct.MakingPercentage)) /
+        100;
     let makingCharges3 = parseFloat(unlabelProduct.MakingFixedAmt);
     let makingCharges4 =
-      (parseFloat(unlabelProduct.GoldRate) *
-        parseFloat(unlabelProduct.MakingFixedWastage)) /
-      10;
+        (parseFloat(unlabelProduct.GoldRate) *
+            parseFloat(unlabelProduct.MakingFixedWastage)) /
+        10;
 
     let totalMaking =
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4);
+        parseFloat(makingCharges1) +
+        parseFloat(makingCharges2) +
+        parseFloat(makingCharges3) +
+        parseFloat(makingCharges4);
     let gstRate = (parseFloat(netRate) + parseFloat(totalMaking)) * 0.03;
 
     setUnlabelProduct({
@@ -4156,9 +4158,9 @@ export default function AdminInvoice() {
       making: parseFloat(totalMaking),
       GSTAmount: gstRate,
       TotalAmt:
-        parseFloat(netRate) + parseFloat(totalMaking) + parseFloat(gstRate),
+          parseFloat(netRate) + parseFloat(totalMaking) + parseFloat(gstRate),
       UnlabelAmount: parseFloat(
-        parseFloat(netRate) +
+          parseFloat(netRate) +
           (gstType ? parseFloat(gstRate) : 0) +
           parseFloat(totalMaking)
       ).toFixed(3),
@@ -4179,32 +4181,32 @@ export default function AdminInvoice() {
   const calculateOrderProductPrice = (wholesaleProduct) => {
     let FineRate = (100 * parseFloat(wholesaleProduct.PurityRate)) / 1000;
     let netRate = parseFloat(
-      parseFloat(FineRate) * parseFloat(wholesaleProduct.NetWt)
+        parseFloat(FineRate) * parseFloat(wholesaleProduct.NetWt)
     ).toFixed(3);
     let totalRate = parseFloat(parseFloat(netRate));
 
     let netGoldRate =
-      (parseFloat(wholesaleProduct.NetWt) *
-        parseFloat(wholesaleProduct.GoldRate)) /
-      10;
+        (parseFloat(wholesaleProduct.NetWt) *
+            parseFloat(wholesaleProduct.GoldRate)) /
+        10;
     let makingCharges1 =
-      parseFloat(wholesaleProduct.NetWt) *
-      parseFloat(wholesaleProduct.MakingPerGram);
+        parseFloat(wholesaleProduct.NetWt) *
+        parseFloat(wholesaleProduct.MakingPerGram);
     let makingCharges2 =
-      (parseFloat(netGoldRate) *
-        parseFloat(wholesaleProduct.MakingPercentage)) /
-      100;
+        (parseFloat(netGoldRate) *
+            parseFloat(wholesaleProduct.MakingPercentage)) /
+        100;
     let makingCharges3 = parseFloat(wholesaleProduct.MakingFixedAmt);
     let makingCharges4 =
-      (parseFloat(wholesaleProduct.GoldRate) *
-        parseFloat(wholesaleProduct.MakingFixedWastage)) /
-      10;
+        (parseFloat(wholesaleProduct.GoldRate) *
+            parseFloat(wholesaleProduct.MakingFixedWastage)) /
+        10;
 
     let totalMaking =
-      parseFloat(makingCharges1) +
-      parseFloat(makingCharges2) +
-      parseFloat(makingCharges3) +
-      parseFloat(makingCharges4);
+        parseFloat(makingCharges1) +
+        parseFloat(makingCharges2) +
+        parseFloat(makingCharges3) +
+        parseFloat(makingCharges4);
     let gstRate = (parseFloat(netRate) + parseFloat(totalMaking)) * 0.03;
     setWholesaleProduct({
       ...wholesaleProduct,
@@ -4212,9 +4214,9 @@ export default function AdminInvoice() {
       making: parseFloat(totalMaking),
       GSTAmount: gstRate,
       TotalAmt:
-        parseFloat(netRate) + parseFloat(totalMaking) + parseFloat(gstRate),
+          parseFloat(netRate) + parseFloat(totalMaking) + parseFloat(gstRate),
       UnlabelAmount: parseFloat(
-        parseFloat(netRate) + parseFloat(gstRate) + parseFloat(totalMaking)
+          parseFloat(netRate) + parseFloat(gstRate) + parseFloat(totalMaking)
       ).toFixed(3),
       finalPrice: `${parseFloat(netRate) + parseFloat(totalMaking)}`,
       totalGstAmount: `${gstRate}`,
@@ -4237,9 +4239,9 @@ export default function AdminInvoice() {
     // if (!allSelectedProducts.some((x) => x.id === selectedProduct.id)) {
 
     if (
-      selectedProduct.purchase === true &&
-      selectedProduct.ProductName !== "" &&
-      selectedProduct.PurchaseAmount !== 0
+        selectedProduct.purchase === true &&
+        selectedProduct.ProductName !== "" &&
+        selectedProduct.PurchaseAmount !== 0
     ) {
       setAllSelectedProducts((prevItems) => [...prevItems, selectedProduct]);
       setLabelName("");
@@ -4262,7 +4264,6 @@ export default function AdminInvoice() {
         StoneAmount: "0",
         MRP: "0",
         HallmarkAmount: "0",
-        making: "0",
         MakingFixedAmt: "0",
         MakingPercentage: "0",
         MakingPerGram: "0",
@@ -4325,10 +4326,10 @@ export default function AdminInvoice() {
       });
       setActive("Sell");
     } else if (
-      selectedProduct.unlabel === true &&
-      selectedProduct.purchase === false &&
-      selectedProduct.collectionName !== "" &&
-      selectedProduct.TotalAmt !== 0
+        selectedProduct.unlabel === true &&
+        selectedProduct.purchase === false &&
+        selectedProduct.collectionName !== "" &&
+        selectedProduct.TotalAmt !== 0
     ) {
       setAllSelectedProducts((prevItems) => [...prevItems, selectedProduct]);
       setLabelName("");
@@ -4351,7 +4352,6 @@ export default function AdminInvoice() {
         StoneAmount: "0",
         MRP: "0",
         HallmarkAmount: "0",
-        making: "0",
         MakingFixedAmt: "0",
         MakingPercentage: "0",
         MakingPerGram: "0",
@@ -4426,9 +4426,9 @@ export default function AdminInvoice() {
     // if (!allSelectedProducts.some((x) => x.id === selectedProduct.id)) {
 
     if (
-      selectedProduct.wholesale === true &&
-      selectedProduct.productname !== ""
-      // &&      selectedProduct.PurchaseAmount !== 0
+        selectedProduct.wholesale === true &&
+        selectedProduct.productname !== ""
+        // &&      selectedProduct.PurchaseAmount !== 0
     ) {
       setAllSelectedProducts((prevItems) => [...prevItems, selectedProduct]);
       setLabelName("");
@@ -4508,20 +4508,20 @@ export default function AdminInvoice() {
   console.log(applyGstAmount, "applyGstAmount");
   useEffect(() => {
     const totalPurchaseAmount = allSelectedProducts
-      .filter((x) => x.purchase === true)
-      .reduce(
-        (total, product) => total + parseFloat(product.PurchaseAmount),
-        0
-      );
+        .filter((x) => x.purchase === true)
+        .reduce(
+            (total, product) => total + parseFloat(product.PurchaseAmount),
+            0
+        );
     setOldGoldAmount(totalPurchaseAmount);
     setPurchaseProductList(
-      allSelectedProducts.filter((x) => x.purchase === true)
+        allSelectedProducts.filter((x) => x.purchase === true)
     );
     setUnlabelProductList(
-      allSelectedProducts.filter((x) => x.unlabel === true)
+        allSelectedProducts.filter((x) => x.unlabel === true)
     );
     setWholesaleProductList(
-      allSelectedProducts.filter((x) => x.wholesale === true)
+        allSelectedProducts.filter((x) => x.wholesale === true)
     );
     setlabelProductList(allSelectedProducts.filter((x) => x.sell === true));
 
@@ -4529,7 +4529,7 @@ export default function AdminInvoice() {
   }, [allSelectedProducts]);
   const removePurchaseProductFromList = (index) => {
     const updatedProductList = allSelectedProducts.filter(
-      (_, i) => i !== index
+        (_, i) => i !== index
     );
     setAllSelectedProducts(updatedProductList);
   };
@@ -4540,7 +4540,7 @@ export default function AdminInvoice() {
   // console.log(openEditProduct, "openEditProduct");
   // console.log(paymentsString, "paymentsString");
   const filteredProducts = allProductTypes.filter(
-    (product) => product.CategoryId == purchaseProduct.CategoryId
+      (product) => product.CategoryId == purchaseProduct.CategoryId
   );
   const filteredPurities = allPurities.filter((product) => {
     if (purchaseProduct.CategoryName === "Old Gold") {
@@ -4551,10 +4551,10 @@ export default function AdminInvoice() {
   });
 
   const filteredProductsUnlabel = allProductTypes.filter(
-    (product) => product.CategoryId == unlabelProduct.CategoryId
+      (product) => product.CategoryId == unlabelProduct.CategoryId
   );
   const filteredProductsWholesale = allProductTypes.filter(
-    (product) => product.CategoryId == wholesaleProduct.CategoryId
+      (product) => product.CategoryId == wholesaleProduct.CategoryId
   );
 
   // const filteredPuritiesUnlabel = allPurities.filter((product) => {
@@ -4594,46 +4594,46 @@ export default function AdminInvoice() {
   //    );
   // });
   const filteredByCollection = allUnlabelList.filter(
-    (product) => product.DesignId === unlabelProduct.DesignId
+      (product) => product.DesignId === unlabelProduct.DesignId
   );
 
   let filteredPuritiesUnlabel = filteredByCollection.reduce(
-    (unique, product) => {
-      // Check if the purity of the current product is already in the unique list
-      const isPurityUnique = !unique.some(
-        (uniqueProduct) => uniqueProduct.PurityId == product.PurityId
-      );
-      if (isPurityUnique) {
-        // If the purity is unique, add the product to the list of unique products
-        unique.push(product);
-      }
-      return unique;
-    },
-    []
+      (unique, product) => {
+        // Check if the purity of the current product is already in the unique list
+        const isPurityUnique = !unique.some(
+            (uniqueProduct) => uniqueProduct.PurityId == product.PurityId
+        );
+        if (isPurityUnique) {
+          // If the purity is unique, add the product to the list of unique products
+          unique.push(product);
+        }
+        return unique;
+      },
+      []
   );
 
   const filteredPuritiesWholesaleProduct = allPurities.filter((product) => {
     return (
-      product.CategoryId == wholesaleProduct.CategoryId
-      // &&
-      // product.category.toLowerCase() ==
-      //   unlabelProduct.CategoryName.toLowerCase()
+        product.CategoryId == wholesaleProduct.CategoryId
+        // &&
+        // product.category.toLowerCase() ==
+        //   unlabelProduct.CategoryName.toLowerCase()
     );
   });
 
   const filteredUnlabelCollection = allUnlabelList.filter(
-    (product) => product.ProductId == unlabelProduct.ProductId
+      (product) => product.ProductId == unlabelProduct.ProductId
   );
   const filteredWholesaleCollection = allCollection.filter(
-    (product) => product.ProductId == wholesaleProduct.ProductId
+      (product) => product.ProductId == wholesaleProduct.ProductId
   );
   const handleMetalPaymentOption = (a, b) => {
-    const { value } = b.target;
+    const {value} = b.target;
     if (paymentOptions === "Metal to Cash") {
       let totalAmount = 0;
       if (
-        metalPaymentOption.optionSelected !== "" &&
-        metalPaymentOption.optionSelected.toLowerCase().includes("gold")
+          metalPaymentOption.optionSelected !== "" &&
+          metalPaymentOption.optionSelected.toLowerCase().includes("gold")
       ) {
         if (a == "Rate") {
           totalAmount = (value / 10) * metalPaymentOption.fineWt;
@@ -4682,12 +4682,12 @@ export default function AdminInvoice() {
     } else if (paymentOptions === "Cash to Metal") {
       let fineWt = 0;
       if (
-        metalPaymentOption.optionSelected !== "" &&
-        metalPaymentOption.optionSelected.toLowerCase().includes("gold")
+          metalPaymentOption.optionSelected !== "" &&
+          metalPaymentOption.optionSelected.toLowerCase().includes("gold")
       ) {
         if (a == "Amount") {
           fineWt = parseFloat(
-            (value * 10) / metalPaymentOption.fineRate
+              (value * 10) / metalPaymentOption.fineRate
           ).toFixed(3);
           setMetalPaymentOption({
             ...metalPaymentOption,
@@ -4703,7 +4703,7 @@ export default function AdminInvoice() {
           // setPaymentMetal();
         } else {
           fineWt = parseFloat(
-            (metalPaymentOption.totalAmount * 10) / value
+              (metalPaymentOption.totalAmount * 10) / value
           ).toFixed(3);
           setMetalPaymentOption({
             ...metalPaymentOption,
@@ -4720,7 +4720,7 @@ export default function AdminInvoice() {
       } else {
         if (a == "Amount") {
           fineWt = (
-            parseFloat(value * 10) / metalPaymentOption.fineRate
+              parseFloat(value * 10) / metalPaymentOption.fineRate
           ).toFixed(3);
           setMetalPaymentOption({
             ...metalPaymentOption,
@@ -4736,7 +4736,7 @@ export default function AdminInvoice() {
           // setPaymentAmount(totalAmount);
         } else {
           fineWt = parseFloat(
-            (metalPaymentOption.totalAmount * 10) / value
+              (metalPaymentOption.totalAmount * 10) / value
           ).toFixed(3);
           setMetalPaymentOption({
             ...metalPaymentOption,
@@ -4768,72 +4768,72 @@ export default function AdminInvoice() {
   let totalPaidCashAmount = 0;
   useEffect(() => {
     totalPaidCashAmount = payments
-      .filter((x) => x.mode == "Cash")
-      .reduce((a, b) => parseInt(a) + parseInt(b.amount), 0);
+        .filter((x) => x.mode == "Cash")
+        .reduce((a, b) => parseInt(a) + parseInt(b.amount), 0);
   }, [payments, paymentAmount, paymentOptions]);
   const totalAmountInput = document.getElementById("totalAmount");
   const uniqueNamesSet = new Set();
 
   const handleDiscountPercentage = (e) => {
-    const { value } = e.target;
+    const {value} = e.target;
     setDiscountPercentage(value);
     const totalMaking = allSelectedProducts.reduce(
-      (total, item) => total + parseFloat(item.making),
-      0
+        (total, item) => total + parseFloat(item.making),
+        0
     );
     setDiscountAmount((parseFloat(totalMaking) / 100) * parseFloat(value));
     // alert("Here");
     if (allSelectedProducts.length > 0) {
       let totalNetAmount = allSelectedProducts.reduce(
-        (total, product) => total + parseFloat(product.finalPrice),
-        0
+          (total, product) => total + parseFloat(product.finalPrice),
+          0
       );
       let totalGstAmount = allSelectedProducts.reduce(
-        (total, product) => total + parseFloat(product.totalGstAmount),
-        0
+          (total, product) => total + parseFloat(product.totalGstAmount),
+          0
       );
       let totalAmountPaying = allSelectedProducts.reduce(
-        (total, product) =>
-          total +
-          parseFloat(product.finalPrice) +
-          parseFloat(product.totalGstAmount),
-        0
+          (total, product) =>
+              total +
+              parseFloat(product.finalPrice) +
+              parseFloat(product.totalGstAmount),
+          0
       );
       setAllProdctsNetAmount(
-        (
-          parseFloat(totalNetAmount) -
-          ((parseFloat(totalMaking) / 100) * parseFloat(value) * 100) / 100
-        ).toFixed(3)
+          (
+              parseFloat(totalNetAmount) -
+              ((parseFloat(totalMaking) / 100) * parseFloat(value) * 100) / 100
+          ).toFixed(3)
       );
       setAllProdctsGstAmount(
-        (
-          parseFloat(totalGstAmount) -
-          ((parseFloat(totalMaking) / 100) * parseFloat(value) * 3) / 103
-        ).toFixed(3)
+          (
+              parseFloat(totalGstAmount) -
+              ((parseFloat(totalMaking) / 100) * parseFloat(value) * 3) / 103
+          ).toFixed(3)
       );
       setTotalPayableGstAmount(
-        (
-          parseFloat(totalGstAmount) -
-          ((parseFloat(totalMaking) / 100) * parseFloat(value) * 3) / 103
-        ).toFixed(3)
+          (
+              parseFloat(totalGstAmount) -
+              ((parseFloat(totalMaking) / 100) * parseFloat(value) * 3) / 103
+          ).toFixed(3)
       );
       setTotalPayableAmount(
-        (
-          parseFloat(totalAmountPaying) -
-          (parseFloat(totalMaking) / 97) * parseFloat(value)
-        ).toFixed(3)
+          (
+              parseFloat(totalAmountPaying) -
+              (parseFloat(totalMaking) / 97) * parseFloat(value)
+          ).toFixed(3)
       );
       setGrandTotal(
-        Math.ceil(
-          parseFloat(totalAmountPaying) -
-            (parseFloat(totalMaking) / 97) * parseFloat(value)
-        ).toFixed(3)
+          Math.ceil(
+              parseFloat(totalAmountPaying) -
+              (parseFloat(totalMaking) / 97) * parseFloat(value)
+          ).toFixed(3)
       );
       setPaymentAmount(
-        Math.ceil(
-          parseFloat(totalAmountPaying) -
-            (parseFloat(totalMaking) / 97) * parseFloat(value)
-        ).toFixed(0)
+          Math.ceil(
+              parseFloat(totalAmountPaying) -
+              (parseFloat(totalMaking) / 97) * parseFloat(value)
+          ).toFixed(0)
       );
     }
     // setGrandTotal(
@@ -4883,142 +4883,141 @@ export default function AdminInvoice() {
   };
 
 
-  
   return (
-    <div>
-      <AdminHeading />
+      <div>
+        <AdminHeading/>
 
-      <div className="adminMainBodyBox">
-        {/* <AdminBreadCrump
+        <div className="adminMainBodyBox">
+          {/* <AdminBreadCrump
           title={"New Invoice"}
           companyName={"Loyalstring"}
           module={"Trading"}
           page={"Invoice"}
         /> */}
-        {showError ? (
-          <AlertMessage message={messageToShow} type={messageType} />
-        ) : null}
-        <div className="adminAddCategoryMainBox">
-          <div
-            style={{ marginBottom: "50px", paddingTop: "0px" }}
-            className="adminAddCategoryInnerBox"
-          >
-            {/* {gstType ? (
+          {showError ? (
+              <AlertMessage message={messageToShow} type={messageType}/>
+          ) : null}
+          <div className="adminAddCategoryMainBox">
+            <div
+                style={{marginBottom: "50px", paddingTop: "0px"}}
+                className="adminAddCategoryInnerBox"
+            >
+              {/* {gstType ? (
               <DateTime showInv={true} gstType={true} />
             ) : (
               <DateTime showInv={true} gstType={false} />
             )} */}
 
-            <div className="invoiceFormDateTimeBox">
-              <DateTime
-                dateRcvd={selectedDate ? selectedDate : null}
-                showInv={true}
-                gstType={gstType}
-              />
-              <div className="invoiceFormDateTimeSelectDateBox">
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
+              <div className="invoiceFormDateTimeBox">
+                <DateTime
+                    dateRcvd={selectedDate ? selectedDate : null}
+                    showInv={true}
+                    gstType={gstType}
                 />
+                <div className="invoiceFormDateTimeSelectDateBox">
+                  <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
-            {/* <h4 className="adminInvoiceAddTitles">Add Customer</h4> */}
-            <div
-              id="adminInvoiceAddCustomerTitle"
-              className="adminInvoiceSelectLabelBox"
-            >
-              <div className="adminInvoiceSelectItem">
-                {/* <button >Check</button> */}
-                <label>Customer Name</label>
-                <input
-                  style={{ width: "20vw" }}
-                  type="text"
-                  name="customerName"
-                  value={customerName}
-                  onInput={handleNameInputChange}
-                  list="customerNamesList"
-                />
-                <datalist id="customerNamesList">
-                  {allCsData.map((customer, index) => (
-                    <option
-                      key={index}
-                      value={
-                        `👤 ${customer.FirstName} ${customer.LastName}`
-                        // customer.MemberType == "Customer"
-                        //   ? `👤 ${customer.FirstName} ${customer.LastName}`
-                        //   : `🏢 ${customer.VendorName}`
-                      }
-                    />
-                  ))}
-                </datalist>
-                <button
-                  onClick={() => {
-                    // checkIfNewCs();
-                    navigate(
-                      `/add_customer?openView=addNew&csName=${customerName}&csMobile=${customerMobile}&csAddress=${customerAddress}`
-                    );
-                  }}
-                  className="adminInvoiceAddCustomerOption"
-                >
-                  <AiOutlinePlusSquare size={"20px"} />
-                </button>
-                {selectedCustomer ? (
-                  <div className="adminInvoiceAddedCustomerEditIconBox">
-                    <button
+              {/* <h4 className="adminInvoiceAddTitles">Add Customer</h4> */}
+              <div
+                  id="adminInvoiceAddCustomerTitle"
+                  className="adminInvoiceSelectLabelBox"
+              >
+                <div className="adminInvoiceSelectItem">
+                  {/* <button >Check</button> */}
+                  <label>Customer Name</label>
+                  <input
+                      style={{width: "20vw"}}
+                      type="text"
+                      name="customerName"
+                      value={customerName}
+                      onInput={handleNameInputChange}
+                      list="customerNamesList"
+                  />
+                  <datalist id="customerNamesList">
+                    {allCsData.map((customer, index) => (
+                        <option
+                            key={index}
+                            value={
+                              `👤 ${customer.FirstName} ${customer.LastName}`
+                              // customer.MemberType == "Customer"
+                              //   ? `👤 ${customer.FirstName} ${customer.LastName}`
+                              //   : `🏢 ${customer.VendorName}`
+                            }
+                        />
+                    ))}
+                  </datalist>
+                  <button
                       onClick={() => {
-                        // if (
-                        //   selectedCustomer &&
-                        //   selectedCustomer.MemberType == "Customer"
-                        // ) {
-                        setSelectedCustomerEdit(!selectedCustomerEdit);
-                        // scrollToCenter("adminInvoiceAddedCustomerEdit");
-                        scrollToCenter("adminInvoiceAddProductsOptionsTypeBox");
-                        // } else {
-                        //   navigate("/add_vendor");
-                        // }
+                        // checkIfNewCs();
+                        navigate(
+                            `/add_customer?openView=addNew&csName=${customerName}&csMobile=${customerMobile}&csAddress=${customerAddress}`
+                        );
                       }}
-                    >
-                      <AiOutlineEdit size={"20px"} />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedCustomer(null);
-                        setCustomerName("");
-                        scrollToCenter("adminInvoiceAddCustomerTitle");
-                        // scrollToCenter("adminInvoiceAddProductsOptionsTypeBox");
-                      }}
-                      id="adminInvoiceAddedCustomerRemoveIcon"
-                    >
-                      <RiDeleteBin2Line size={"20px"} />
-                    </button>
-                  </div>
-                ) : null}
-              </div>
+                      className="adminInvoiceAddCustomerOption"
+                  >
+                    <AiOutlinePlusSquare size={"20px"}/>
+                  </button>
+                  {selectedCustomer ? (
+                      <div className="adminInvoiceAddedCustomerEditIconBox">
+                        <button
+                            onClick={() => {
+                              // if (
+                              //   selectedCustomer &&
+                              //   selectedCustomer.MemberType == "Customer"
+                              // ) {
+                              setSelectedCustomerEdit(!selectedCustomerEdit);
+                              // scrollToCenter("adminInvoiceAddedCustomerEdit");
+                              scrollToCenter("adminInvoiceAddProductsOptionsTypeBox");
+                              // } else {
+                              //   navigate("/add_vendor");
+                              // }
+                            }}
+                        >
+                          <AiOutlineEdit size={"20px"}/>
+                        </button>
+                        <button
+                            onClick={() => {
+                              setSelectedCustomer(null);
+                              setCustomerName("");
+                              scrollToCenter("adminInvoiceAddCustomerTitle");
+                              // scrollToCenter("adminInvoiceAddProductsOptionsTypeBox");
+                            }}
+                            id="adminInvoiceAddedCustomerRemoveIcon"
+                        >
+                          <RiDeleteBin2Line size={"20px"}/>
+                        </button>
+                      </div>
+                  ) : null}
+                </div>
 
-              <div className="adminInvoiceSelectItem">
-                <label>Customer Mobile</label>
-                <input
-                  type="text"
-                  name="customerMobile"
-                  value={customerMobile}
-                  onInput={handleMobileInputChange}
-                  onBlur={() => {
-                    if (!selectedCustomer) {
-                      checkIfNewCs();
-                    } else {
-                      null;
-                    }
-                  }}
-                  list="customerMobilesList"
-                />
-                <datalist id="customerMobilesList">
-                  {allCsData.map((customer, index) => (
-                    <option key={index} value={customer.Mobile} />
-                  ))}
-                </datalist>
-              </div>
-              {/* <div className="adminInvoiceSelectItem">
+                <div className="adminInvoiceSelectItem">
+                  <label>Customer Mobile</label>
+                  <input
+                      type="text"
+                      name="customerMobile"
+                      value={customerMobile}
+                      onInput={handleMobileInputChange}
+                      onBlur={() => {
+                        if (!selectedCustomer) {
+                          checkIfNewCs();
+                        } else {
+                          null;
+                        }
+                      }}
+                      list="customerMobilesList"
+                  />
+                  <datalist id="customerMobilesList">
+                    {allCsData.map((customer, index) => (
+                        <option key={index} value={customer.Mobile}/>
+                    ))}
+                  </datalist>
+                </div>
+                {/* <div className="adminInvoiceSelectItem">
                 <label>Customer Email</label>
                 <input
                   type="text"
@@ -5033,89 +5032,89 @@ export default function AdminInvoice() {
                   ))}
                 </datalist>
               </div> */}
-              <div className="adminInvoiceSelectItem">
-                <label>Customer Address</label>
-                <input
-                  // onKeyPress={(e) => {
-                  //   if (e.key == "Enter") {
-                  //     checkIfNewCs();
-                  //   }
-                  // }}
-                  type="text"
-                  name="customerAddress"
-                  value={customerAddress}
-                  onInput={handleAddressInputChange}
-                  list="customersAddressList"
-                />
-                <datalist id="customersAddressList">
-                  {allCsData.map((customer, index) => (
-                    <option key={index} value={customer.CurrAddStreet} />
-                  ))}
-                </datalist>
+                <div className="adminInvoiceSelectItem">
+                  <label>Customer Address</label>
+                  <input
+                      // onKeyPress={(e) => {
+                      //   if (e.key == "Enter") {
+                      //     checkIfNewCs();
+                      //   }
+                      // }}
+                      type="text"
+                      name="customerAddress"
+                      value={customerAddress}
+                      onInput={handleAddressInputChange}
+                      list="customersAddressList"
+                  />
+                  <datalist id="customersAddressList">
+                    {allCsData.map((customer, index) => (
+                        <option key={index} value={customer.CurrAddStreet}/>
+                    ))}
+                  </datalist>
+                </div>
               </div>
-            </div>
 
-            {selectedCustomer &&
-            !selectedCustomerEdit ? null : selectedCustomer &&
+              {selectedCustomer &&
+              !selectedCustomerEdit ? null : selectedCustomer &&
               selectedCustomerEdit ? (
-              <div className="adminInvoiceAddedCustomerEditMainBox">
-                <p>Personal Details</p>
-                <div className="adminInvoiceAddedCustomerEditBox">
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>First Name</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "FirstName")
-                      }
-                      value={selectedCustomer.FirstName}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Last Name</label>
-                    <input
-                      onChange={(e) => handleCustomerInputChange(e, "LastName")}
-                      value={selectedCustomer.LastName}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Mobile</label>
-                    <input
-                      onChange={(e) => handleCustomerInputChange(e, "Mobile")}
-                      value={selectedCustomer.Mobile}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Aadhar No.</label>
-                    <input
-                      onChange={(e) => handleCustomerInputChange(e, "AadharNo")}
-                      value={selectedCustomer.AadharNo}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Adv Amt</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "AdvanceAmount")
-                      }
-                      value={selectedCustomer.AdvanceAmount}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Bal Amount</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "BalanceAmount")
-                      }
-                      value={selectedCustomer.BalanceAmount}
-                      type="text"
-                    />
-                  </div>
-                  {/* <div className="adminInvoiceAddedCustomerEditItems">
+                  <div className="adminInvoiceAddedCustomerEditMainBox">
+                    <p>Personal Details</p>
+                    <div className="adminInvoiceAddedCustomerEditBox">
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>First Name</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "FirstName")
+                            }
+                            value={selectedCustomer.FirstName}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Last Name</label>
+                        <input
+                            onChange={(e) => handleCustomerInputChange(e, "LastName")}
+                            value={selectedCustomer.LastName}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Mobile</label>
+                        <input
+                            onChange={(e) => handleCustomerInputChange(e, "Mobile")}
+                            value={selectedCustomer.Mobile}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Aadhar No.</label>
+                        <input
+                            onChange={(e) => handleCustomerInputChange(e, "AadharNo")}
+                            value={selectedCustomer.AadharNo}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Adv Amt</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "AdvanceAmount")
+                            }
+                            value={selectedCustomer.AdvanceAmount}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Bal Amount</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "BalanceAmount")
+                            }
+                            value={selectedCustomer.BalanceAmount}
+                            type="text"
+                        />
+                      </div>
+                      {/* <div className="adminInvoiceAddedCustomerEditItems">
                     <label>Email</label>
                     <input
                       onChange={(e) => handleCustomerInputChange(e, "email")}
@@ -5124,65 +5123,65 @@ export default function AdminInvoice() {
                     />
                   </div> */}
 
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Pan No.</label>
-                    <input
-                      onChange={(e) => handleCustomerInputChange(e, "PanNo")}
-                      value={selectedCustomer.PanNo}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>GSTIN No.</label>
-                    <input
-                      onChange={(e) => handleCustomerInputChange(e, "GstNo")}
-                      value={selectedCustomer.GstNo}
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <p>Billing Add</p>
-                <div className="adminInvoiceAddedCustomerEditBox">
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Street</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "CurrAddStreet")
-                      }
-                      value={selectedCustomer.CurrAddStreet}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Town</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "CurrAddTown")
-                      }
-                      value={selectedCustomer.CurrAddTown}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>State</label>
-                    <select
-                      required="required"
-                      type="text"
-                      name="state"
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "CurrAddState")
-                      }
-                      value={selectedCustomer.CurrAddState}
-                    >
-                      <option value="">Select a state</option>
-                      {allStateList.map((state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                      ))}
-                    </select>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Pan No.</label>
+                        <input
+                            onChange={(e) => handleCustomerInputChange(e, "PanNo")}
+                            value={selectedCustomer.PanNo}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>GSTIN No.</label>
+                        <input
+                            onChange={(e) => handleCustomerInputChange(e, "GstNo")}
+                            value={selectedCustomer.GstNo}
+                            type="text"
+                        />
+                      </div>
+                    </div>
+                    <p>Billing Add</p>
+                    <div className="adminInvoiceAddedCustomerEditBox">
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Street</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "CurrAddStreet")
+                            }
+                            value={selectedCustomer.CurrAddStreet}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Town</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "CurrAddTown")
+                            }
+                            value={selectedCustomer.CurrAddTown}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>State</label>
+                        <select
+                            required="required"
+                            type="text"
+                            name="state"
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "CurrAddState")
+                            }
+                            value={selectedCustomer.CurrAddState}
+                        >
+                          <option value="">Select a state</option>
+                          {allStateList.map((state) => (
+                              <option key={state} value={state}>
+                                {state}
+                              </option>
+                          ))}
+                        </select>
 
-                    {/* <label>State</label>
+                        {/* <label>State</label>
                     <input
                       onChange={(e) =>
                         handleCustomerInputChange(e, "currAddState")
@@ -5190,59 +5189,59 @@ export default function AdminInvoice() {
                       value={selectedCustomer.currAddState}
                       type="text"
                     /> */}
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Pincode</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "CurrAddPinCode")
-                      }
-                      value={selectedCustomer.CurrAddPinCode}
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <p>Per Add</p>
-                <div className="adminInvoiceAddedCustomerEditBox">
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Street</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "PerAddStreet")
-                      }
-                      value={selectedCustomer.PerAddStreet}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Town</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "PerAddTown")
-                      }
-                      value={selectedCustomer.PerAddTown}
-                      type="text"
-                    />
-                  </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>State</label>
-                    <select
-                      required="required"
-                      type="text"
-                      name="state"
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "PerAddState")
-                      }
-                      value={selectedCustomer.PerAddState}
-                    >
-                      <option value="">Select a state</option>
-                      {allStateList.map((state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                      ))}
-                    </select>
-                    {/* <label>State</label>
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Pincode</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "CurrAddPinCode")
+                            }
+                            value={selectedCustomer.CurrAddPinCode}
+                            type="text"
+                        />
+                      </div>
+                    </div>
+                    <p>Per Add</p>
+                    <div className="adminInvoiceAddedCustomerEditBox">
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Street</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "PerAddStreet")
+                            }
+                            value={selectedCustomer.PerAddStreet}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Town</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "PerAddTown")
+                            }
+                            value={selectedCustomer.PerAddTown}
+                            type="text"
+                        />
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>State</label>
+                        <select
+                            required="required"
+                            type="text"
+                            name="state"
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "PerAddState")
+                            }
+                            value={selectedCustomer.PerAddState}
+                        >
+                          <option value="">Select a state</option>
+                          {allStateList.map((state) => (
+                              <option key={state} value={state}>
+                                {state}
+                              </option>
+                          ))}
+                        </select>
+                        {/* <label>State</label>
                     <input
                       onChange={(e) =>
                         handleCustomerInputChange(e, "perAddState")
@@ -5250,692 +5249,689 @@ export default function AdminInvoice() {
                       value={selectedCustomer.perAddState}
                       type="text"
                     /> */}
+                      </div>
+                      <div className="adminInvoiceAddedCustomerEditItems">
+                        <label>Pincode</label>
+                        <input
+                            onChange={(e) =>
+                                handleCustomerInputChange(e, "PerAddPinCode")
+                            }
+                            value={selectedCustomer.PerAddPinCode}
+                            type="text"
+                        />
+                      </div>
+                    </div>
+                    <div className="adminInvoiceAddedCustomerEditButtonBox">
+                      <button onClick={() => updateCustomerDetails()}>Save</button>
+                      <button
+                          onClick={() => {
+                            scrollToCenter("adminInvoiceAddCustomerTitle"),
+                                setSelectedCustomerEdit(!selectedCustomerEdit);
+                          }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                  <div className="adminInvoiceAddedCustomerEditItems">
-                    <label>Pincode</label>
-                    <input
-                      onChange={(e) =>
-                        handleCustomerInputChange(e, "PerAddPinCode")
-                      }
-                      value={selectedCustomer.PerAddPinCode}
-                      type="text"
-                    />
-                  </div>
-                </div>
-                <div className="adminInvoiceAddedCustomerEditButtonBox">
-                  <button onClick={() => updateCustomerDetails()}>Save</button>
+              ) : null}
+
+              <h4
+                  id="adminInvoiceAddedCustomerEdit"
+                  className="adminInvoiceAddTitles"
+              >
+                Add Product
+              </h4>
+
+              <div className="adminInvoiceAddProductsOptionsTypeBox">
+                <div className="adminAddCategoryInnerBoxTitlesBox">
                   <button
-                    onClick={() => {
-                      scrollToCenter("adminInvoiceAddCustomerTitle"),
-                        setSelectedCustomerEdit(!selectedCustomerEdit);
-                    }}
+                      tabIndex="1"
+                      onClick={() => {
+                        setActive("Sell");
+                      }}
+                      style={{height: "40px"}}
+                      className={
+                        active === "Sell"
+                            ? "adminAddCategoryInnerBoxTitle"
+                            : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                      }
                   >
-                    Cancel
+                    <div
+                        className={
+                          active === "Sell"
+                              ? "adminAddCategoryInnerBoxTitleLogo"
+                              : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                        }
+                        style={{
+                          height: "20px",
+                          width: "20px",
+                          padding: "3px",
+                          marginInline: "3px",
+                        }}
+                    >
+                      {/* 01 */}
+                      <AiOutlineSend size={"15px"}/>
+                    </div>
+                    <p style={{fontSize: "12px"}}>Sell</p>
+                  </button>
+
+                  <button
+                      onClick={() => {
+                        allSelectedProducts.filter((x) => x.order || x.wholesale)
+                            .length > 0
+                            ? alert("Could Not Add Purchase Item in Existing Bill")
+                            : setActive("Purchase");
+                      }}
+                      style={{height: "40px", marginRight: "10px"}}
+                      className={
+                        active === "Purchase"
+                            ? "adminAddCategoryInnerBoxTitle"
+                            : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                      }
+                  >
+                    <div
+                        style={{
+                          height: "20px",
+                          width: "20px",
+                          padding: "3px",
+                          marginInline: "3px",
+                        }}
+                        className={
+                          active === "Purchase"
+                              ? "adminAddCategoryInnerBoxTitleLogo"
+                              : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                        }
+                    >
+                      {/* 02 */}
+
+                      <LiaCartPlusSolid size={"30px"}/>
+                    </div>
+                    <p style={{fontSize: "12px"}}>Purchase</p>
+                  </button>
+                  <button
+                      onClick={() => {
+                        allSelectedProducts.filter((x) => x.order || x.wholesale)
+                            .length > 0
+                            ? alert("Could Not Add Unlabel Item in Existing Bill")
+                            : setActive("Unlabel");
+                      }}
+                      style={{height: "40px"}}
+                      className={
+                        active === "Unlabel"
+                            ? "adminAddCategoryInnerBoxTitle"
+                            : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                      }
+                  >
+                    <div
+                        style={{
+                          height: "20px",
+                          width: "20px",
+                          padding: "3px",
+                          marginInline: "3px",
+                        }}
+                        className={
+                          active === "Unlabel"
+                              ? "adminAddCategoryInnerBoxTitleLogo"
+                              : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                        }
+                    >
+                      {/* 02 */}
+
+                      <MdOutlineLabelOff size={"17px"}/>
+                    </div>
+                    <p style={{fontSize: "12px"}}>Unlabel</p>
+                  </button>
+                  <button
+                      onClick={() => {
+                        // allSelectedProducts.filter(
+                        //   (x) => x.purchase || x.sell || x.unlabel || x.wholesale
+                        // ).length > 0
+                        //   ? alert("Could Not Add Wholesale in Existing Bill")
+                        //   :
+                        setActive("Wholesale");
+                      }}
+                      style={{height: "40px"}}
+                      className={
+                        active === "Wholesale"
+                            ? "adminAddCategoryInnerBoxTitle"
+                            : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                      }
+                  >
+                    <div
+                        style={{
+                          height: "20px",
+                          width: "20px",
+                          padding: "3px",
+                          marginInline: "3px",
+                        }}
+                        className={
+                          active === "Wholesale"
+                              ? "adminAddCategoryInnerBoxTitleLogo"
+                              : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                        }
+                    >
+                      {/* 02 */}
+
+                      <MdOutlineLabelOff size={"17px"}/>
+                    </div>
+                    <p style={{fontSize: "12px"}}>Wholesale</p>
                   </button>
                 </div>
               </div>
-            ) : null}
-
-            <h4
-              id="adminInvoiceAddedCustomerEdit"
-              className="adminInvoiceAddTitles"
-            >
-              Add Product
-            </h4>
-
-            <div className="adminInvoiceAddProductsOptionsTypeBox">
-              <div className="adminAddCategoryInnerBoxTitlesBox">
-                <button
-                  tabIndex="1"
-                  onClick={() => {
-                    setActive("Sell");
-                  }}
-                  style={{ height: "40px" }}
-                  className={
-                    active === "Sell"
-                      ? "adminAddCategoryInnerBoxTitle"
-                      : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                  }
-                >
-                  <div
-                    className={
-                      active === "Sell"
-                        ? "adminAddCategoryInnerBoxTitleLogo"
-                        : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                    }
-                    style={{
-                      height: "20px",
-                      width: "20px",
-                      padding: "3px",
-                      marginInline: "3px",
-                    }}
-                  >
-                    {/* 01 */}
-                    <AiOutlineSend size={"15px"} />
-                  </div>
-                  <p style={{ fontSize: "12px" }}>Sell</p>
-                </button>
-
-                <button
-                  onClick={() => {
-                    allSelectedProducts.filter((x) => x.order || x.wholesale)
-                      .length > 0
-                      ? alert("Could Not Add Purchase Item in Existing Bill")
-                      : setActive("Purchase");
-                  }}
-                  style={{ height: "40px", marginRight: "10px" }}
-                  className={
-                    active === "Purchase"
-                      ? "adminAddCategoryInnerBoxTitle"
-                      : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                  }
-                >
-                  <div
-                    style={{
-                      height: "20px",
-                      width: "20px",
-                      padding: "3px",
-                      marginInline: "3px",
-                    }}
-                    className={
-                      active === "Purchase"
-                        ? "adminAddCategoryInnerBoxTitleLogo"
-                        : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                    }
-                  >
-                    {/* 02 */}
-
-                    <LiaCartPlusSolid size={"30px"} />
-                  </div>
-                  <p style={{ fontSize: "12px" }}>Purchase</p>
-                </button>
-                <button
-                  onClick={() => {
-                    allSelectedProducts.filter((x) => x.order || x.wholesale)
-                      .length > 0
-                      ? alert("Could Not Add Unlabel Item in Existing Bill")
-                      : setActive("Unlabel");
-                  }}
-                  style={{ height: "40px" }}
-                  className={
-                    active === "Unlabel"
-                      ? "adminAddCategoryInnerBoxTitle"
-                      : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                  }
-                >
-                  <div
-                    style={{
-                      height: "20px",
-                      width: "20px",
-                      padding: "3px",
-                      marginInline: "3px",
-                    }}
-                    className={
-                      active === "Unlabel"
-                        ? "adminAddCategoryInnerBoxTitleLogo"
-                        : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                    }
-                  >
-                    {/* 02 */}
-
-                    <MdOutlineLabelOff size={"17px"} />
-                  </div>
-                  <p style={{ fontSize: "12px" }}>Unlabel</p>
-                </button>
-                <button
-                  onClick={() => {
-                    // allSelectedProducts.filter(
-                    //   (x) => x.purchase || x.sell || x.unlabel || x.wholesale
-                    // ).length > 0
-                    //   ? alert("Could Not Add Wholesale in Existing Bill")
-                    //   :
-                    setActive("Wholesale");
-                  }}
-                  style={{ height: "40px" }}
-                  className={
-                    active === "Wholesale"
-                      ? "adminAddCategoryInnerBoxTitle"
-                      : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                  }
-                >
-                  <div
-                    style={{
-                      height: "20px",
-                      width: "20px",
-                      padding: "3px",
-                      marginInline: "3px",
-                    }}
-                    className={
-                      active === "Wholesale"
-                        ? "adminAddCategoryInnerBoxTitleLogo"
-                        : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                    }
-                  >
-                    {/* 02 */}
-
-                    <MdOutlineLabelOff size={"17px"} />
-                  </div>
-                  <p style={{ fontSize: "12px" }}>Wholesale</p>
-                </button>
-              </div>
-            </div>
-            <div className="adminInviceAddedProductsTotalItemBox adminInvoiceAddProductsOptionsMainSkuBox">
-              <label>SKU</label>
-              <input
-                // style={{ width: "30vw" }}
-                type="text"
-                name="skuList"
-                placeholder="Enter SKU"
-                value={selectedSkuName}
-                onInput={handleSkuInputChange}
-                list="skuList"
-              />
-              <datalist id="skuList">
-                {allSku.map((sku, index) => (
-                  <option key={index} value={`${sku.StockKeepingUnit}`} />
-                ))}
-              </datalist>
-              {/* <label style={{ marginLeft: "10px" }}>Select Date</label>
+              <div className="adminInviceAddedProductsTotalItemBox adminInvoiceAddProductsOptionsMainSkuBox">
+                <label>SKU</label>
+                <input
+                    // style={{ width: "30vw" }}
+                    type="text"
+                    name="skuList"
+                    placeholder="Enter SKU"
+                    value={selectedSkuName}
+                    onInput={handleSkuInputChange}
+                    list="skuList"
+                />
+                <datalist id="skuList">
+                  {allSku.map((sku, index) => (
+                      <option key={index} value={`${sku.StockKeepingUnit}`}/>
+                  ))}
+                </datalist>
+                {/* <label style={{ marginLeft: "10px" }}>Select Date</label>
               <input
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
               /> */}
-            </div>
-            {active === "Sell" ? (
-              <div className="adminInvoiceAddProductsOptionsMainSellBox">
-                {!productsLoading ? (
-                  <div className="adminInvoiceAddProductsOptionsMainBox">
-                    <div
-                      id="adminInvoiceAddProductsOptionsInnerBox"
-                      className="adminInvoiceAddProductsOptionsInnerBox"
-                    >
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>ITEM DETAILS</th>
-                            <th>RATE</th>
-                            <th>GROSS WT</th>
-                            <th>NET WT</th>
-                            <th>PURITY</th>
-                            <th>MAKING</th>
-                            <th>PRICE</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {allSelectedProducts.length > 0
-                            ? allSelectedProducts.map((x, index) => {
-                                let image1 = x.images
-                                  ? x.Images.split(",")[0]
-                                  : "";
-                                return (
-                                  <tr
-                                    key={index}
-                                    style={{
-                                      borderBottom:
-                                        "1px solid  rgba(128, 128, 128, 0.3)",
-                                    }}
-                                  >
-                                    <td>
-                                      <div className="adminAddInvoiceMainAddLabelOption">
-                                        <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                          {x.sell && image1 !== "" ? (
-                                            <img
-                                              src={`${s1}/${image1}`}
-                                              style={{
-                                                maxWidth: "50px",
-                                                maxHeight: "50px",
-                                                // margin: "5px",
-                                              }}
-                                            />
+              </div>
+              {active === "Sell" ? (
+                  <div className="adminInvoiceAddProductsOptionsMainSellBox">
+                    {!productsLoading ? (
+                        <div className="adminInvoiceAddProductsOptionsMainBox">
+                          <div
+                              id="adminInvoiceAddProductsOptionsInnerBox"
+                              className="adminInvoiceAddProductsOptionsInnerBox"
+                          >
+                            <table>
+                              <thead>
+                              <tr>
+                                <th>ITEM DETAILS</th>
+                                <th>RATE</th>
+                                <th>GROSS WT</th>
+                                <th>NET WT</th>
+                                <th>PURITY</th>
+                                <th>MAKING</th>
+                                <th>PRICE</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {allSelectedProducts.length > 0
+                                  ? allSelectedProducts.map((x, index) => {
+                                    let image1 = x.images
+                                        ? x.Images.split(",")[0]
+                                        : "";
+                                    return (
+                                        <tr
+                                            key={index}
+                                            style={{
+                                              borderBottom:
+                                                  "1px solid  rgba(128, 128, 128, 0.3)",
+                                            }}
+                                        >
+                                          <td>
+                                            <div className="adminAddInvoiceMainAddLabelOption">
+                                              <div
+                                                  className="adminAddInvoiceMainAddLabelOptionImageBox">
+                                                {x.sell && image1 !== "" ? (
+                                                    <img
+                                                        src={`${s1}/${image1}`}
+                                                        style={{
+                                                          maxWidth: "50px",
+                                                          maxHeight: "50px",
+                                                          // margin: "5px",
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <BsCardImage size={"30px"}/>
+                                                )}
+                                              </div>
+                                              <div
+                                                  className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                                {x.purchase ? (
+                                                    <p
+                                                        style={{
+                                                          textAlign: "left",
+                                                          margin: "5px",
+                                                          padding: "5px",
+                                                          marginBottom: "0px",
+                                                          paddingBottom: "0px",
+                                                          color: "red",
+                                                        }}
+                                                    >
+                                                      Purchase
+                                                    </p>
+                                                ) : x.unlabel ? (
+                                                    <p
+                                                        style={{
+                                                          textAlign: "left",
+                                                          margin: "5px",
+                                                          padding: "5px",
+                                                          marginBottom: "0px",
+                                                          paddingBottom: "0px",
+                                                          color: "green",
+                                                        }}
+                                                    >
+                                                      Unlabel
+                                                    </p>
+                                                ) : x.wholesale ? (
+                                                    <p
+                                                        style={{
+                                                          textAlign: "left",
+                                                          margin: "5px",
+                                                          padding: "5px",
+                                                          marginBottom: "0px",
+                                                          paddingBottom: "0px",
+                                                          color: "purple",
+                                                        }}
+                                                    >
+                                                      Wholesale
+                                                    </p>
+                                                ) : x.sell ? (
+                                                    <p
+                                                        style={{
+                                                          textAlign: "left",
+                                                          margin: "5px",
+                                                          padding: "5px",
+                                                          marginBottom: "0px",
+                                                          paddingBottom: "0px",
+                                                          color: "#02a8b5",
+                                                        }}
+                                                    >
+                                                      {x.ItemCode}
+                                                    </p>
+                                                ) : null}
+                                                {x.purchase ? (
+                                                    <p
+                                                        style={{
+                                                          fontWeight: "bold",
+                                                          color: "red",
+                                                          fontSize: "10px",
+                                                          textAlign: "left",
+                                                          margin: "0px 5px",
+                                                          padding: "0px 5px",
+                                                        }}
+                                                    >
+                                                      {`${x.CategoryName}, ${x.ProductName}`}
+                                                    </p>
+                                                ) : x.unlabel ? (
+                                                    <p
+                                                        style={{
+                                                          fontWeight: "bold",
+                                                          color: "green",
+                                                          fontSize: "10px",
+                                                          textAlign: "left",
+                                                          margin: "0px 5px",
+                                                          padding: "0px 5px",
+                                                        }}
+                                                    >
+                                                      {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
+                                                    </p>
+                                                ) : x.sell ? (
+                                                    <p
+                                                        style={{
+                                                          fontWeight: "bold",
+                                                          color: "#02a8b5",
+                                                          fontSize: "10px",
+                                                          textAlign: "left",
+                                                          margin: "0px 5px",
+                                                          padding: "0px 5px",
+                                                        }}
+                                                    >
+                                                      {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
+                                                    </p>
+                                                ) : x.wholesale ? (
+                                                    <p
+                                                        style={{
+                                                          fontWeight: "bold",
+                                                          color: "#02a8b5",
+                                                          fontSize: "10px",
+                                                          textAlign: "left",
+                                                          margin: "0px 5px",
+                                                          padding: "0px 5px",
+                                                        }}
+                                                    >
+                                                      {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
+                                                    </p>
+                                                ) : null}
+                                              </div>
+                                              <div
+                                                  className="adminAddInvoiceMainAddLabelOptionEditIconBox">
+                                                <button
+                                                    onClick={() => {
+                                                      if (x.sell) {
+                                                        editItem(x);
+                                                      } else if (x.purchase) {
+                                                        setActive("Purchase"),
+                                                            removePurchaseProductFromList(
+                                                                index
+                                                            ),
+                                                            setPurchaseProduct(x);
+                                                      } else if (x.unlabel) {
+                                                        setActive("Unlabel"),
+                                                            removePurchaseProductFromList(
+                                                                index
+                                                            ),
+                                                            setUnlabelProduct(x);
+                                                      } else if (x.wholesale) {
+                                                        setActive("Wholesale"),
+                                                            removePurchaseProductFromList(
+                                                                index
+                                                            ),
+                                                            setWholesaleProduct(x),
+                                                            setWholesaleProductLabelName(
+                                                                x.ItemCode
+                                                            );
+                                                      }
+                                                    }}
+                                                    className="adminAddInvoiceMainAddLabelOptionEditIcon"
+                                                >
+                                                  <AiOutlineEdit/>
+                                                </button>
+                                                <button
+                                                    style={{marginBottom: "5px"}}
+                                                    onClick={() => {
+                                                      x.purchase
+                                                          ? removePurchaseProductFromList(
+                                                          index
+                                                          )
+                                                          : x.unlabel
+                                                          ? removePurchaseProductFromList(
+                                                              index
+                                                          )
+                                                          : removeProductFromList(x.Id);
+                                                    }}
+                                                    className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
+                                                >
+                                                  <RxCross2/>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          {/*<td>*/}
+                                          {/*    {rate}*/}
+                                          {/*</td>*/}
+                                          {x.purchase ? (
+                                              <td>
+                                                {" "}
+                                                ₹{parseFloat(x.GoldRate).toFixed(0)}
+                                              </td>
+                                          ) : x.unlabel ? (
+                                              <td>
+                                                {" "}
+                                                ₹{parseFloat(x.GoldRate).toFixed(0)}
+                                              </td>
+                                          ) : x.sell ? (
+                                              <td>
+                                                ₹{parseFloat(x.TodaysRate).toFixed(0)}
+                                              </td>
                                           ) : (
-                                            <BsCardImage size={"30px"} />
+                                              <td>
+                                                ₹{parseFloat(x.GoldRate).toFixed(0)}
+                                              </td>
+                                          )}{" "}
+                                          <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
+                                          {x.purchase ? (
+                                              <td> {parseFloat(x.NetWt).toFixed(3)}</td>
+                                          ) : x.unlabel ? (
+                                              <td> {parseFloat(x.NetWt).toFixed(3)}</td>
+                                          ) : x.wholesale ? (
+                                              <td> {parseFloat(x.NetWt).toFixed(3)}</td>
+                                          ) : (
+                                              <td> {parseFloat(x.NetWt).toFixed(3)}</td>
                                           )}
-                                        </div>
-                                        <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                          {/* {x.sell ? ( */}
+                                          {/* <td>{parseFloat(x.Purity).toFixed(3)}</td> */}
+                                          {/* ) : ( */}
+                                          <td>
+                                            {parseFloat(x.PurityName).toFixed(3)}
+                                          </td>
+                                          {/* )} */}
+                                          <td> ₹{parseFloat(x.making).toFixed(3)}</td>
                                           {x.purchase ? (
-                                            <p
-                                              style={{
-                                                textAlign: "left",
-                                                margin: "5px",
-                                                padding: "5px",
-                                                marginBottom: "0px",
-                                                paddingBottom: "0px",
-                                                color: "red",
-                                              }}
-                                            >
-                                              Purchase
-                                            </p>
-                                          ) : x.unlabel ? (
-                                            <p
-                                              style={{
-                                                textAlign: "left",
-                                                margin: "5px",
-                                                padding: "5px",
-                                                marginBottom: "0px",
-                                                paddingBottom: "0px",
-                                                color: "green",
-                                              }}
-                                            >
-                                              Unlabel
-                                            </p>
+                                              <td>
+                                                ₹
+                                                {parseFloat(x.PurchaseAmount).toFixed(
+                                                    3
+                                                )}
+                                              </td>
                                           ) : x.wholesale ? (
-                                            <p
-                                              style={{
-                                                textAlign: "left",
-                                                margin: "5px",
-                                                padding: "5px",
-                                                marginBottom: "0px",
-                                                paddingBottom: "0px",
-                                                color: "purple",
-                                              }}
-                                            >
-                                              Wholesale
-                                            </p>
-                                          ) : x.sell ? (
-                                            <p
-                                              style={{
-                                                textAlign: "left",
-                                                margin: "5px",
-                                                padding: "5px",
-                                                marginBottom: "0px",
-                                                paddingBottom: "0px",
-                                                color: "#02a8b5",
-                                              }}
-                                            >
-                                              {x.ItemCode}
-                                            </p>
-                                          ) : null}
-                                          {x.purchase ? (
-                                            <p
-                                              style={{
-                                                fontWeight: "bold",
-                                                color: "red",
-                                                fontSize: "10px",
-                                                textAlign: "left",
-                                                margin: "0px 5px",
-                                                padding: "0px 5px",
-                                              }}
-                                            >
-                                              {`${x.CategoryName}, ${x.ProductName}`}
-                                            </p>
-                                          ) : x.unlabel ? (
-                                            <p
-                                              style={{
-                                                fontWeight: "bold",
-                                                color: "green",
-                                                fontSize: "10px",
-                                                textAlign: "left",
-                                                margin: "0px 5px",
-                                                padding: "0px 5px",
-                                              }}
-                                            >
-                                              {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
-                                            </p>
-                                          ) : x.sell ? (
-                                            <p
-                                              style={{
-                                                fontWeight: "bold",
-                                                color: "#02a8b5",
-                                                fontSize: "10px",
-                                                textAlign: "left",
-                                                margin: "0px 5px",
-                                                padding: "0px 5px",
-                                              }}
-                                            >
-                                              {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
-                                            </p>
-                                          ) : x.wholesale ? (
-                                            <p
-                                              style={{
-                                                fontWeight: "bold",
-                                                color: "#02a8b5",
-                                                fontSize: "10px",
-                                                textAlign: "left",
-                                                margin: "0px 5px",
-                                                padding: "0px 5px",
-                                              }}
-                                            >
-                                              {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
-                                            </p>
-                                          ) : null}
-                                        </div>
-                                        <div className="adminAddInvoiceMainAddLabelOptionEditIconBox">
-                                          <button
-                                            onClick={() => {
-                                              if (x.sell) {
-                                                editItem(x);
-                                              } else if (x.purchase) {
-                                                setActive("Purchase"),
-                                                  removePurchaseProductFromList(
-                                                    index
-                                                  ),
-                                                  setPurchaseProduct(x);
-                                              } else if (x.unlabel) {
-                                                setActive("Unlabel"),
-                                                  removePurchaseProductFromList(
-                                                    index
-                                                  ),
-                                                  setUnlabelProduct(x);
-                                              } else if (x.wholesale) {
-                                                setActive("Wholesale"),
-                                                  removePurchaseProductFromList(
-                                                    index
-                                                  ),
-                                                  setWholesaleProduct(x),
-                                                  setWholesaleProductLabelName(
-                                                    x.ItemCode
-                                                  );
+                                              <td>
+                                                ₹
+                                                {/* {parseFloat(x.OrderAmount).toFixed(3)} */}
+                                                {parseFloat(
+                                                    parseFloat(x.finalPrice)
+                                                    // +                                            parseFloat(x.totalGstAmount)
+                                                ).toFixed(3)}
+                                              </td>
+                                          ) : (
+                                              <td>
+                                                ₹
+                                                {parseFloat(
+                                                    parseFloat(x.finalPrice) +
+                                                    parseFloat(x.totalGstAmount)
+                                                ).toFixed(3)}
+                                              </td>
+                                          )}
+                                        </tr>
+                                    );
+                                  })
+                                  : null}
+                              <tr>
+                                <td>
+                                  <div className="adminAddInvoiceMainAddLabelOption">
+                                    <div className="adminAddInvoiceMainAddLabelOptionImageBox">
+                                      <BsCardImage size={"30px"}/>
+                                    </div>
+                                    <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                      <input
+                                          // tabIndex="1"
+                                          type="text"
+                                          placeholder="Type or click to select an item"
+                                          name="productLabel"
+                                          value={labelName}
+                                          onInput={handleProductLabelChange}
+                                          onKeyPress={(e) => {
+                                            if (e.key === "Ctrl") {
+                                              e.preventDefault();
+                                              // button1Ref.current.focus();
+                                              alert("Space");
+                                            } else if (e.key === "Enter") {
+                                              // Call your function here
+                                              if (selectedProduct.length !== 0) {
+                                                calculateFinalPrice(
+                                                    selectedProduct,
+                                                    true
+                                                );
+                                              } else {
+                                                // null;
+                                                button1Ref.current.focus();
                                               }
-                                            }}
-                                            className="adminAddInvoiceMainAddLabelOptionEditIcon"
-                                          >
-                                            <AiOutlineEdit />
-                                          </button>
-                                          <button
-                                            style={{ marginBottom: "5px" }}
-                                            onClick={() => {
-                                              x.purchase
-                                                ? removePurchaseProductFromList(
-                                                    index
-                                                  )
-                                                : x.unlabel
-                                                ? removePurchaseProductFromList(
-                                                    index
-                                                  )
-                                                : removeProductFromList(x.Id);
-                                            }}
-                                            className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
-                                          >
-                                            <RxCross2 />
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    {x.purchase ? (
-                                      <td>
-                                        {" "}
-                                        ₹{parseFloat(x.GoldRate).toFixed(0)}
-                                      </td>
-                                    ) : x.unlabel ? (
-                                      <td>
-                                        {" "}
-                                        ₹{parseFloat(x.GoldRate).toFixed(0)}
-                                      </td>
-                                    ) : x.sell ? (
-                                      <td>
-                                        {/* <input
-                                        type="number"
-                                        onChange={(e) =>
-                                          handleInputChange2(e, "todaysRate")
-                                        }
-                                        value={parseFloat(
-                                          x.tblPurity.todaysRate
-                                        ).toFixed(0)}
-                                      /> */}
-                                        ₹{parseFloat(x.TodaysRate).toFixed(0)}
-                                      </td>
-                                    ) : (
-                                      <td>
-                                        ₹{parseFloat(x.GoldRate).toFixed(0)}
-                                      </td>
-                                    )}{" "}
-                                    <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
-                                    {x.purchase ? (
-                                      <td> {parseFloat(x.NetWt).toFixed(3)}</td>
-                                    ) : x.unlabel ? (
-                                      <td> {parseFloat(x.NetWt).toFixed(3)}</td>
-                                    ) : x.wholesale ? (
-                                      <td> {parseFloat(x.NetWt).toFixed(3)}</td>
-                                    ) : (
-                                      <td> {parseFloat(x.NetWt).toFixed(3)}</td>
-                                    )}
-                                    {/* {x.sell ? ( */}
-                                    {/* <td>{parseFloat(x.Purity).toFixed(3)}</td> */}
-                                    {/* ) : ( */}
-                                    <td>
-                                      {parseFloat(x.PurityName).toFixed(3)}
-                                    </td>
-                                    {/* )} */}
-                                    <td> ₹{parseFloat(x.making).toFixed(3)}</td>
-                                    {x.purchase ? (
-                                      <td>
-                                        ₹
-                                        {parseFloat(x.PurchaseAmount).toFixed(
-                                          3
-                                        )}
-                                      </td>
-                                    ) : x.wholesale ? (
-                                      <td>
-                                        ₹
-                                        {/* {parseFloat(x.OrderAmount).toFixed(3)} */}
-                                        {parseFloat(
-                                          parseFloat(x.finalPrice)
-                                          // +                                            parseFloat(x.totalGstAmount)
-                                        ).toFixed(3)}
-                                      </td>
-                                    ) : (
-                                      <td>
-                                        ₹
-                                        {parseFloat(
-                                          parseFloat(x.finalPrice) +
-                                            parseFloat(x.totalGstAmount)
-                                        ).toFixed(3)}
-                                      </td>
-                                    )}
-                                  </tr>
-                                );
-                              })
-                            : null}
-                          <tr>
-                            <td>
-                              <div className="adminAddInvoiceMainAddLabelOption">
-                                <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                  <BsCardImage size={"30px"} />
-                                </div>
-                                <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
-                                  <input
-                                    // tabIndex="1"
+                                            }
+                                          }}
+                                          list="productLabelList"
+                                      />
+                                      <datalist id="productLabelList">
+                                        {allProducts.map((product) => (
+                                            <option
+                                                key={product.Id}
+                                                value={product.ItemCode}
+                                            />
+                                        ))}
+                                      </datalist>
+                                    </div>
+                                  </div>
+                                </td>
+                                {selectedProduct.length > 0 ? (
+                                    <td>{selectedProduct.TodaysRate}</td>
+                                ) : (
+                                    <td>0</td>
+                                )}
+                                <td>{selectedProduct.GrossWt}</td>
+                                <td> {selectedProduct.NetWt}</td>
+                                <td> {selectedProduct.PurityName}</td>
+                                <td> {selectedProduct.making}</td>
+
+                                <td>₹{Math.ceil(totalPayableAmount)} </td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                    ) : (
+                        <tr>
+                          <td>
+                            <div className="adminAddInvoiceMainAddLabelOption">
+                              <div className="adminAddInvoiceMainAddLabelOptionImageBox">
+                                <BsCardImage size={"30px"}/>
+                              </div>
+                              <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                <input
                                     type="text"
                                     placeholder="Type or click to select an item"
                                     name="productLabel"
                                     value={labelName}
                                     onInput={handleProductLabelChange}
-                                    onKeyPress={(e) => {
-                                      if (e.key === "Ctrl") {
-                                        e.preventDefault();
-                                        // button1Ref.current.focus();
-                                        alert("Space");
-                                      } else if (e.key === "Enter") {
-                                        // Call your function here
-                                        if (selectedProduct.length !== 0) {
-                                          calculateFinalPrice(
-                                            selectedProduct,
-                                            true
-                                          );
-                                        } else {
-                                          // null;
-                                          button1Ref.current.focus();
-                                        }
-                                      }
-                                    }}
                                     list="productLabelList"
-                                  />
-                                  <datalist id="productLabelList">
-                                    {allProducts.map((product) => (
+                                />
+                                <datalist id="productLabelList">
+                                  {allProducts.map((product) => (
                                       <option
-                                        key={product.Id}
-                                        value={product.ItemCode}
+                                          key={product.Id}
+                                          value={product.ItemCode}
                                       />
-                                    ))}
-                                  </datalist>
-                                </div>
+                                  ))}
+                                </datalist>
                               </div>
-                            </td>
-                            {selectedProduct.length > 0 ? (
-                              <td>{selectedProduct.TodaysRate}</td>
-                            ) : (
-                              <td>0</td>
-                            )}
-                            <td>{selectedProduct.GrossWt}</td>
-                            <td> {selectedProduct.NetWt}</td>
-                            <td> {selectedProduct.PurityName}</td>
-                            <td> {selectedProduct.making}</td>
+                            </div>
+                          </td>
+                          <td>{selectedProduct.GrossWt}</td>
+                          <td> {selectedProduct.NetWt}</td>
+                          <td> {selectedProduct.PurityName}</td>
+                          <td> {selectedProduct.making}</td>
 
-                            <td>₹{Math.ceil(totalPayableAmount)} </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ) : (
-                  <tr>
-                    <td>
-                      <div className="adminAddInvoiceMainAddLabelOption">
-                        <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                          <BsCardImage size={"30px"} />
-                        </div>
-                        <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
-                          <input
-                            type="text"
-                            placeholder="Type or click to select an item"
-                            name="productLabel"
-                            value={labelName}
-                            onInput={handleProductLabelChange}
-                            list="productLabelList"
-                          />
-                          <datalist id="productLabelList">
-                            {allProducts.map((product) => (
-                              <option
-                                key={product.Id}
-                                value={product.ItemCode}
-                              />
-                            ))}
-                          </datalist>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{selectedProduct.GrossWt}</td>
-                    <td> {selectedProduct.NetWt}</td>
-                    <td> {selectedProduct.PurityName}</td>
-                    <td> {selectedProduct.making}</td>
+                          <td>
+                            {parseFloat(
+                                parseFloat(selectedProduct.finalPrice) +
+                                parseFloat(selectedProduct.totalGstAmount)
+                            ).toFixed(3)}
+                          </td>
+                        </tr>
+                    )}
 
-                    <td>
-                      {parseFloat(
-                        parseFloat(selectedProduct.finalPrice) +
-                          parseFloat(selectedProduct.totalGstAmount)
-                      ).toFixed(3)}
-                    </td>
-                  </tr>
-                )}
+                    {openEditBox ? (
+                        <div className="adminInvoiceOpenEditMainBox">
+                          <div className="adminInvoiceOpenEditInnerBox">
+                            <div className="adminInvoiceOpenEditInnerTitleBox">
+                              <p>Edit Item</p>
+                              <button
+                                  onClick={closeEditItem}
+                                  className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
+                              >
+                                <RxCross2 size={"25px"}/>
+                              </button>
+                            </div>
+                            <div className="adminInvoiceOpenEditOuterGridBox">
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Gross Wt</label>
+                                <input
+                                    type="text"
+                                    placeholder={openEditProduct.GrossWt}
+                                    value={openEditProduct.GrossWt}
+                                    onChange={(e) => handleInputChange2(e, "GrossWt")}
+                                />
+                              </div>
 
-                {openEditBox ? (
-                  <div className="adminInvoiceOpenEditMainBox">
-                    <div className="adminInvoiceOpenEditInnerBox">
-                      <div className="adminInvoiceOpenEditInnerTitleBox">
-                        <p>Edit Item</p>
-                        <button
-                          onClick={closeEditItem}
-                          className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
-                        >
-                          <RxCross2 size={"25px"} />
-                        </button>
-                      </div>
-                      <div className="adminInvoiceOpenEditOuterGridBox">
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Gross Wt</label>
-                          <input
-                            type="text"
-                            placeholder={openEditProduct.GrossWt}
-                            value={openEditProduct.GrossWt}
-                            onChange={(e) => handleInputChange2(e, "GrossWt")}
-                          />
-                        </div>
-
-                        {openEditProduct.order ||
-                        openEditProduct.purchase ||
-                        openEditProduct.unlabel ? (
-                          <div className="adminInvoiceOpenEditInnerGridItem">
-                            <label>Stone Wt</label>{" "}
-                            <input
-                              type="number"
-                              placeholder={openEditProduct.TotalStoneWeight}
-                              value={openEditProduct.TotalStoneWeight}
-                              onChange={(e) =>
-                                handleInputChange2(e, "TotalStoneWeight")
-                              }
-                            />
-                          </div>
-                        ) : (
-                          <div className="adminInvoiceOpenEditInnerGridItem">
-                            <label>Stone Wt</label>{" "}
-                            <input
-                              type="number"
-                              placeholder={openEditProduct.TotalStoneWeight}
-                              value={openEditProduct.TotalStoneWeight}
-                              onChange={(e) =>
-                                handleInputChange2(e, "TotalStoneWeight")
-                              }
-                            />
-                          </div>
-                        )}
-                        {openEditProduct.order ||
-                        openEditProduct.purchase ||
-                        openEditProduct.unlabel ? (
-                          <div className="adminInvoiceOpenEditInnerGridItem">
-                            <label>Net Wt</label>
-                            <input
-                              type="text"
-                              placeholder={openEditProduct.NetWt}
-                              value={openEditProduct.NetWt}
-                              onChange={(e) => handleInputChange2(e, "NetWt")}
-                            />
-                          </div>
-                        ) : (
-                          <div className="adminInvoiceOpenEditInnerGridItem">
-                            <label>Net Wt</label>
-                            <input
-                              type="text"
-                              placeholder={openEditProduct.NetWt}
-                              value={openEditProduct.NetWt}
-                              onChange={(e) => handleInputChange2(e, "NetWt")}
-                            />
-                          </div>
-                        )}
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Stone Amount</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.TotalStoneAmount}
-                            value={openEditProduct.TotalStoneAmount}
-                            onChange={(e) =>
-                              handleInputChange2(e, "TotalStoneAmount")
-                            }
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Cutting Gross Wt</label>
-                          <input
-                            type="text"
-                            placeholder={openEditProduct.CuttingGrossWt}
-                            value={openEditProduct.CuttingGrossWt}
-                            onChange={(e) =>
-                              handleInputChange2(e, "CuttingGrossWt")
-                            }
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Cutting Net Wt</label>
-                          <input
-                            type="text"
-                            placeholder={openEditProduct.CuttingNetWt}
-                            value={openEditProduct.CuttingNetWt}
-                            onChange={(e) =>
-                              handleInputChange2(e, "CuttingNetWt")
-                            }
-                          />
-                        </div>
-                        {/* <div className="adminInvoiceOpenEditInnerGridItem">
+                              {openEditProduct.order ||
+                              openEditProduct.purchase ||
+                              openEditProduct.unlabel ? (
+                                  <div className="adminInvoiceOpenEditInnerGridItem">
+                                    <label>Stone Wt</label>{" "}
+                                    <input
+                                        type="number"
+                                        placeholder={openEditProduct.TotalStoneWeight}
+                                        value={openEditProduct.TotalStoneWeight}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, "TotalStoneWeight")
+                                        }
+                                    />
+                                  </div>
+                              ) : (
+                                  <div className="adminInvoiceOpenEditInnerGridItem">
+                                    <label>Stone Wt</label>{" "}
+                                    <input
+                                        type="number"
+                                        placeholder={openEditProduct.TotalStoneWeight}
+                                        value={openEditProduct.TotalStoneWeight}
+                                        onChange={(e) =>
+                                            handleInputChange2(e, "TotalStoneWeight")
+                                        }
+                                    />
+                                  </div>
+                              )}
+                              {openEditProduct.order ||
+                              openEditProduct.purchase ||
+                              openEditProduct.unlabel ? (
+                                  <div className="adminInvoiceOpenEditInnerGridItem">
+                                    <label>Net Wt</label>
+                                    <input
+                                        type="text"
+                                        placeholder={openEditProduct.NetWt}
+                                        value={openEditProduct.NetWt}
+                                        onChange={(e) => handleInputChange2(e, "NetWt")}
+                                    />
+                                  </div>
+                              ) : (
+                                  <div className="adminInvoiceOpenEditInnerGridItem">
+                                    <label>Net Wt</label>
+                                    <input
+                                        type="text"
+                                        placeholder={openEditProduct.NetWt}
+                                        value={openEditProduct.NetWt}
+                                        onChange={(e) => handleInputChange2(e, "NetWt")}
+                                    />
+                                  </div>
+                              )}
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Stone Amount</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.TotalStoneAmount}
+                                    value={openEditProduct.TotalStoneAmount}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "TotalStoneAmount")
+                                    }
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Cutting Gross Wt</label>
+                                <input
+                                    type="text"
+                                    placeholder={openEditProduct.CuttingGrossWt}
+                                    value={openEditProduct.CuttingGrossWt}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "CuttingGrossWt")
+                                    }
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Cutting Net Wt</label>
+                                <input
+                                    type="text"
+                                    placeholder={openEditProduct.CuttingNetWt}
+                                    value={openEditProduct.CuttingNetWt}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "CuttingNetWt")
+                                    }
+                                />
+                              </div>
+                              {/* <div className="adminInvoiceOpenEditInnerGridItem">
                           <label>Product Name</label>
                           <input
                             type="text"
@@ -5946,103 +5942,103 @@ export default function AdminInvoice() {
                             }
                           />
                         </div> */}
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>HUID Code</label>
-                          <input
-                            type="text"
-                            maxLength={6}
-                            placeholder={openEditProduct.HUIDCode}
-                            value={openEditProduct.HUIDCode}
-                            onChange={(e) => handleInputChange2(e, "HUIDCode")}
-                          />
-                        </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>HUID Code</label>
+                                <input
+                                    type="text"
+                                    maxLength={6}
+                                    placeholder={openEditProduct.HUIDCode}
+                                    value={openEditProduct.HUIDCode}
+                                    onChange={(e) => handleInputChange2(e, "HUIDCode")}
+                                />
+                              </div>
 
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Making PerGram</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.MakingPerGram}
-                            value={openEditProduct.MakingPerGram}
-                            onChange={(e) =>
-                              handleInputChange2(e, "MakingPerGram")
-                            }
-                          />
-                        </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Making PerGram</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.MakingPerGram}
+                                    value={openEditProduct.MakingPerGram}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "MakingPerGram")
+                                    }
+                                />
+                              </div>
 
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Making Percentage</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.MakingPercentage}
-                            value={openEditProduct.MakingPercentage}
-                            onChange={(e) =>
-                              handleInputChange2(e, "MakingPercentage")
-                            }
-                          />
-                        </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Making Percentage</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.MakingPercentage}
+                                    value={openEditProduct.MakingPercentage}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "MakingPercentage")
+                                    }
+                                />
+                              </div>
 
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Making Fixed Amount</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.MakingFixedAmt}
-                            value={openEditProduct.MakingFixedAmt}
-                            onChange={(e) =>
-                              handleInputChange2(e, "MakingFixedAmt")
-                            }
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Making Fixed Wastage</label>
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.MakingFixedWastage}
-                            value={openEditProduct.MakingFixedWastage}
-                            onChange={(e) =>
-                              handleInputChange2(e, "MakingFixedWastage")
-                            }
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Pieces</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.Pieces}
-                            value={openEditProduct.Pieces}
-                            onChange={(e) => handleInputChange2(e, "Pieces")}
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Size</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.Size}
-                            value={openEditProduct.Size}
-                            onChange={(e) => handleInputChange2(e, "Size")}
-                          />
-                        </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Making Fixed Amount</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.MakingFixedAmt}
+                                    value={openEditProduct.MakingFixedAmt}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "MakingFixedAmt")
+                                    }
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Making Fixed Wastage</label>
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.MakingFixedWastage}
+                                    value={openEditProduct.MakingFixedWastage}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "MakingFixedWastage")
+                                    }
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Pieces</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.Pieces}
+                                    value={openEditProduct.Pieces}
+                                    onChange={(e) => handleInputChange2(e, "Pieces")}
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Size</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.Size}
+                                    value={openEditProduct.Size}
+                                    onChange={(e) => handleInputChange2(e, "Size")}
+                                />
+                              </div>
 
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>MRP</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.MRP}
-                            value={openEditProduct.MRP}
-                            onChange={(e) => handleInputChange2(e, "MRP")}
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Description</label>{" "}
-                          <input
-                            type="text"
-                            placeholder={openEditProduct.Description}
-                            value={openEditProduct.Description}
-                            onChange={(e) =>
-                              handleInputChange2(e, "Description")
-                            }
-                          />
-                        </div>
-                        {/* <div className="adminInvoiceOpenEditInnerGridItem">
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>MRP</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.MRP}
+                                    value={openEditProduct.MRP}
+                                    onChange={(e) => handleInputChange2(e, "MRP")}
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Description</label>{" "}
+                                <input
+                                    type="text"
+                                    placeholder={openEditProduct.Description}
+                                    value={openEditProduct.Description}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "Description")
+                                    }
+                                />
+                              </div>
+                              {/* <div className="adminInvoiceOpenEditInnerGridItem">
                           <label>Occasion</label>{" "}
                           <input
                             type="text"
@@ -6051,133 +6047,133 @@ export default function AdminInvoice() {
                             onChange={(e) => handleInputChange2(e, "occasion")}
                           />
                         </div> */}
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Todays Rate</label>{" "}
-                          <input
-                            type="text"
-                            placeholder={openEditProduct.TodaysRate}
-                            value={openEditProduct.TodaysRate}
-                            onChange={(e) =>
-                              handleInputChange2(e, "TodaysRate")
-                            }
-                          />
-                        </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Hallmark Amount</label>{" "}
-                          <input
-                            type="number"
-                            placeholder={openEditProduct.HallmarkAmount}
-                            value={openEditProduct.HallmarkAmount}
-                            onChange={(e) =>
-                              handleInputChange2(e, "HallmarkAmount")
-                            }
-                          />
-                        </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Todays Rate</label>{" "}
+                                <input
+                                    type="text"
+                                    placeholder={openEditProduct.TodaysRate}
+                                    value={openEditProduct.TodaysRate}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "TodaysRate")
+                                    }
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Hallmark Amount</label>{" "}
+                                <input
+                                    type="number"
+                                    placeholder={openEditProduct.HallmarkAmount}
+                                    value={openEditProduct.HallmarkAmount}
+                                    onChange={(e) =>
+                                        handleInputChange2(e, "HallmarkAmount")
+                                    }
+                                />
+                              </div>
 
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          <label>Featured</label>{" "}
-                          <input
-                            type="text"
-                            placeholder={openEditProduct.Featured}
-                            value={openEditProduct.Featured}
-                            onChange={(e) => handleInputChange2(e, "Featured")}
-                          />
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                <label>Featured</label>{" "}
+                                <input
+                                    type="text"
+                                    placeholder={openEditProduct.Featured}
+                                    value={openEditProduct.Featured}
+                                    onChange={(e) => handleInputChange2(e, "Featured")}
+                                />
+                              </div>
+                              <div className="adminInvoiceOpenEditInnerGridItem">
+                                {/* <label>Update</label>{" "} */}.{" "}
+                                <button
+                                    onClick={() => {
+                                      setOpenEditBox(false),
+                                          setSelectedProduct([]),
+                                          setLabelName("");
+                                    }}
+                                    className="adminInvoiceEditProductSaveButton"
+                                >
+                                  Save
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="adminInvoiceOpenEditInnerGridItem">
-                          {/* <label>Update</label>{" "} */}.{" "}
-                          <button
-                            onClick={() => {
-                              setOpenEditBox(false),
-                                setSelectedProduct([]),
-                                setLabelName("");
-                            }}
-                            className="adminInvoiceEditProductSaveButton"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            ) : active === "Purchase" ? (
-              <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Category</label>
-                  <select
-                    name="CategoryName"
-                    onChange={handleInputChangePurchase}
-                    value={`${purchaseProduct.CategoryId},${purchaseProduct.CategoryName}`}
-                  >
-                    <option value={""}>Select an Category</option>
-                    {allCategories.map((x) => {
-                      return (
-                        <option key={x.Id} value={`${x.Id},${x.CategoryName}`}>
-                          {x.CategoryName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Product</label>
+              ) : active === "Purchase" ? (
+                  <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Category</label>
+                      <select
+                          name="CategoryName"
+                          onChange={handleInputChangePurchase}
+                          value={`${purchaseProduct.CategoryId},${purchaseProduct.CategoryName}`}
+                      >
+                        <option value={""}>Select an Category</option>
+                        {allCategories.map((x) => {
+                          return (
+                              <option key={x.Id} value={`${x.Id},${x.CategoryName}`}>
+                                {x.CategoryName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Product</label>
 
-                  <select
-                    name="ProductName"
-                    onChange={handleInputChangePurchase}
-                    value={purchaseProduct.ProductName}
-                  >
-                    <option value={""}>Select an Product</option>
-                    {filteredProducts.map((x, index) => {
-                      return (
-                        <option key={index} value={x.ProductName}>
-                          {x.ProductName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Purity</label>
+                      <select
+                          name="ProductName"
+                          onChange={handleInputChangePurchase}
+                          value={purchaseProduct.ProductName}
+                      >
+                        <option value={""}>Select an Product</option>
+                        {filteredProducts.map((x, index) => {
+                          return (
+                              <option key={index} value={x.ProductName}>
+                                {x.ProductName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Purity</label>
 
-                  <select
-                    name="PurityRate"
-                    onChange={handleInputChangePurchase}
-                    value={`${purchaseProduct.PurityName},${purchaseProduct.TodaysRate}`}
-                  >
-                    <option>Select an Purity</option>
-                    {filteredPurities.map((x, index) => {
-                      return (
-                        <option
-                          key={index}
-                          value={`${x.PurityName},${x.TodaysRate}`}
-                        >
-                          {x.PurityName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Gross Wt</label>
-                  <input
-                    name="GrossWt"
-                    onChange={handleInputChangePurchase}
-                    type="text"
-                    value={purchaseProduct.GrossWt}
-                  />
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Net Wt</label>
-                  <input
-                    name="NetWt"
-                    onChange={handleInputChangePurchase}
-                    type="text"
-                    value={purchaseProduct.NetWt}
-                  />
-                </div>
-                {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <select
+                          name="PurityRate"
+                          onChange={handleInputChangePurchase}
+                          value={`${purchaseProduct.PurityName},${purchaseProduct.TodaysRate}`}
+                      >
+                        <option>Select an Purity</option>
+                        {filteredPurities.map((x, index) => {
+                          return (
+                              <option
+                                  key={index}
+                                  value={`${x.PurityName},${x.TodaysRate}`}
+                              >
+                                {x.PurityName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Gross Wt</label>
+                      <input
+                          name="GrossWt"
+                          onChange={handleInputChangePurchase}
+                          type="text"
+                          value={purchaseProduct.GrossWt}
+                      />
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Net Wt</label>
+                      <input
+                          name="NetWt"
+                          onChange={handleInputChangePurchase}
+                          type="text"
+                          value={purchaseProduct.NetWt}
+                      />
+                    </div>
+                    {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                   <label>Stone Wt</label>
                   <input
                     name="stonewt"
@@ -6186,129 +6182,129 @@ export default function AdminInvoice() {
                     value={purchaseProduct.stonewt}
                   />
                 </div> */}
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Gold Rate</label>
-                  <input
-                    name="GoldRate"
-                    onChange={handleInputChangePurchase}
-                    type="text"
-                    value={purchaseProduct.GoldRate}
-                  />
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Fine Percentage</label>
-                  <input
-                    name="FinePercent"
-                    onChange={handleInputChangePurchase}
-                    type="text"
-                    value={purchaseProduct.FinePercent}
-                  />
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Quantity</label>
-                  <input
-                    name="Quantity"
-                    onChange={handleInputChangePurchase}
-                    type="text"
-                    value={purchaseProduct.Quantity}
-                  />
-                </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Gold Rate</label>
+                      <input
+                          name="GoldRate"
+                          onChange={handleInputChangePurchase}
+                          type="text"
+                          value={purchaseProduct.GoldRate}
+                      />
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Fine Percentage</label>
+                      <input
+                          name="FinePercent"
+                          onChange={handleInputChangePurchase}
+                          type="text"
+                          value={purchaseProduct.FinePercent}
+                      />
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Quantity</label>
+                      <input
+                          name="Quantity"
+                          onChange={handleInputChangePurchase}
+                          type="text"
+                          value={purchaseProduct.Quantity}
+                      />
+                    </div>
 
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  <label>Purchase Amount</label>
-                  <input
-                    name="PurchaseAmount"
-                    onChange={handleInputChangePurchase}
-                    type="text"
-                    value={purchaseProduct.PurchaseAmount}
-                  />
-                </div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                  {/* <label>Add</label>  */}
-                  <button
-                    onClick={() => addPurchaseProductToList(purchaseProduct)}
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-            ) : active === "Unlabel" ? (
-              <div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Category</label>
-                    <select
-                      name="CategoryId"
-                      onChange={handleInputChangeUnlabel}
-                      value={`${unlabelProduct.CategoryId},${unlabelProduct.CategoryName}`}
-                    >
-                      <option value={""}>Select an Category</option>
-                      {allCategories.map((x, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={`${x.Id},${x.CategoryName}`}
-                          >
-                            {x.CategoryName}
-                          </option>
-                        );
-                      })}
-                    </select>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      <label>Purchase Amount</label>
+                      <input
+                          name="PurchaseAmount"
+                          onChange={handleInputChangePurchase}
+                          type="text"
+                          value={purchaseProduct.PurchaseAmount}
+                      />
+                    </div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      {/* <label>Add</label>  */}
+                      <button
+                          onClick={() => addPurchaseProductToList(purchaseProduct)}
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Product</label>
+              ) : active === "Unlabel" ? (
+                  <div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Category</label>
+                        <select
+                            name="CategoryId"
+                            onChange={handleInputChangeUnlabel}
+                            value={`${unlabelProduct.CategoryId},${unlabelProduct.CategoryName}`}
+                        >
+                          <option value={""}>Select an Category</option>
+                          {allCategories.map((x, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={`${x.Id},${x.CategoryName}`}
+                                >
+                                  {x.CategoryName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Product</label>
 
-                    <select
-                      name="ProductId"
-                      onChange={handleInputChangeUnlabel}
-                      value={`${unlabelProduct.ProductId},${unlabelProduct.ProductName}`}
-                    >
-                      <option value={""}>Select an Product</option>
-                      {filteredProductsUnlabel.map((x, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={`${x.Id},${x.ProductName}`}
-                          >
-                            {x.ProductName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Design</label>
+                        <select
+                            name="ProductId"
+                            onChange={handleInputChangeUnlabel}
+                            value={`${unlabelProduct.ProductId},${unlabelProduct.ProductName}`}
+                        >
+                          <option value={""}>Select an Product</option>
+                          {filteredProductsUnlabel.map((x, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={`${x.Id},${x.ProductName}`}
+                                >
+                                  {x.ProductName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Design</label>
 
-                    <select
-                      name="DesignId"
-                      onChange={handleInputChangeUnlabel}
-                      value={`${unlabelProduct.DesignId},${unlabelProduct.DesignName}`}
-                    >
-                      <option value={""}>Select an Design</option>
-                      {filteredUnlabelCollection
-                        .reduce((unique, item) => {
-                          // Check if there is already an item with the same collection in the unique array
-                          if (
-                            !unique.some(
-                              (x) => x.DesignName === item.DesignName
-                            )
-                          ) {
-                            unique.push(item); // If not, add this item to the unique array
+                        <select
+                            name="DesignId"
+                            onChange={handleInputChangeUnlabel}
+                            value={`${unlabelProduct.DesignId},${unlabelProduct.DesignName}`}
+                        >
+                          <option value={""}>Select an Design</option>
+                          {filteredUnlabelCollection
+                              .reduce((unique, item) => {
+                                // Check if there is already an item with the same collection in the unique array
+                                if (
+                                    !unique.some(
+                                        (x) => x.DesignName === item.DesignName
+                                    )
+                                ) {
+                                  unique.push(item); // If not, add this item to the unique array
 
-                            console.log(item, "item");
-                          }
-                          return unique;
-                        }, [])
-                        .map((x, index) => (
-                          <option
-                            key={index}
-                            value={`${x.DesignId},${x.DesignName}`}
-                          >
-                            {x.DesignName}
-                          </option>
-                        ))}
+                                  console.log(item, "item");
+                                }
+                                return unique;
+                              }, [])
+                              .map((x, index) => (
+                                  <option
+                                      key={index}
+                                      value={`${x.DesignId},${x.DesignName}`}
+                                  >
+                                    {x.DesignName}
+                                  </option>
+                              ))}
 
-                      {/* {filteredUnlabelCollection.map((x) => {
+                          {/* {filteredUnlabelCollection.map((x) => {
                         return (
                           <option
                             value={`${x.id},${x.collection},${x.collectionId}`}
@@ -6317,7 +6313,7 @@ export default function AdminInvoice() {
                           </option>
                         );
                       })} */}
-                      {/* {filteredUnlabelCollection.map((x) => {
+                          {/* {filteredUnlabelCollection.map((x) => {
                         if (!uniqueNamesSet.has(x.collection)) {
                           uniqueNamesSet.add(x.collection);
 
@@ -6333,52 +6329,52 @@ export default function AdminInvoice() {
 
                         return null;
                       })} */}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Purity</label>
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Purity</label>
 
-                    <select
-                      name="PurityId"
-                      onChange={handleInputChangeUnlabel}
-                      value={`${unlabelProduct.PurityId},${unlabelProduct.PurityName},${unlabelProduct.PurityRate}`}
-                      // value={unlabelProduct.purity}
-                    >
-                      <option>Select an Purity</option>
-                      {filteredPuritiesUnlabel.map((x, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={`${x.PurityId},${x.PurityName},${x.TodaysRate}`}
-                          >
-                            {x.PurityName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Gross Wt</label>
-                    <input
-                      name="GrossWt"
-                      onChange={handleInputChangeUnlabel}
-                      // type="text"
-                      value={unlabelProduct.GrossWt}
-                      type="number"
-                      max={unlabelProduct.MaxGrossWt}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Net Wt</label>
-                    <input
-                      name="NetWt"
-                      onChange={handleInputChangeUnlabel}
-                      type="number"
-                      max={unlabelProduct.MaxNetWt}
-                      value={unlabelProduct.NetWt}
-                    />
-                  </div>
-                  {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <select
+                            name="PurityId"
+                            onChange={handleInputChangeUnlabel}
+                            value={`${unlabelProduct.PurityId},${unlabelProduct.PurityName},${unlabelProduct.PurityRate}`}
+                            // value={unlabelProduct.purity}
+                        >
+                          <option>Select an Purity</option>
+                          {filteredPuritiesUnlabel.map((x, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={`${x.PurityId},${x.PurityName},${x.TodaysRate}`}
+                                >
+                                  {x.PurityName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Gross Wt</label>
+                        <input
+                            name="GrossWt"
+                            onChange={handleInputChangeUnlabel}
+                            // type="text"
+                            value={unlabelProduct.GrossWt}
+                            type="number"
+                            max={unlabelProduct.MaxGrossWt}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Net Wt</label>
+                        <input
+                            name="NetWt"
+                            onChange={handleInputChangeUnlabel}
+                            type="number"
+                            max={unlabelProduct.MaxNetWt}
+                            value={unlabelProduct.NetWt}
+                        />
+                      </div>
+                      {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                   <label>Stone Wt</label>
                   <input
                     name="stonewt"
@@ -6387,186 +6383,186 @@ export default function AdminInvoice() {
                     value={purchaseProduct.stonewt}
                   />
                 </div> */}
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Gold Rate</label>
-                    <input
-                      name="GoldRate"
-                      onChange={handleInputChangeUnlabel}
-                      type="text"
-                      value={unlabelProduct.GoldRate}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Fixed Amt</label>
-                    <input
-                      name="MakingFixedAmt"
-                      onChange={handleInputChangeUnlabel}
-                      type="text"
-                      value={unlabelProduct.MakingFixedAmt}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Percentage</label>
-                    <input
-                      name="MakingPercentage"
-                      onChange={handleInputChangeUnlabel}
-                      type="text"
-                      value={unlabelProduct.MakingPercentage}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Pergram</label>
-                    <input
-                      name="MakingPerGram"
-                      onChange={handleInputChangeUnlabel}
-                      type="text"
-                      value={unlabelProduct.MakingPerGram}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Fixed Wastage</label>
-                    <input
-                      name="MakingFixedWastage"
-                      onChange={handleInputChangeUnlabel}
-                      type="text"
-                      value={unlabelProduct.MakingFixedWastage}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Quantity</label>
-                    <input
-                      name="Quantity"
-                      onChange={handleInputChangeUnlabel}
-                      type="number"
-                      min={0}
-                      max={parseInt(unlabelProduct.MaxQuantity)}
-                      value={unlabelProduct.Quantity}
-                    />
-                  </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Gold Rate</label>
+                        <input
+                            name="GoldRate"
+                            onChange={handleInputChangeUnlabel}
+                            type="text"
+                            value={unlabelProduct.GoldRate}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Fixed Amt</label>
+                        <input
+                            name="MakingFixedAmt"
+                            onChange={handleInputChangeUnlabel}
+                            type="text"
+                            value={unlabelProduct.MakingFixedAmt}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Percentage</label>
+                        <input
+                            name="MakingPercentage"
+                            onChange={handleInputChangeUnlabel}
+                            type="text"
+                            value={unlabelProduct.MakingPercentage}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Pergram</label>
+                        <input
+                            name="MakingPerGram"
+                            onChange={handleInputChangeUnlabel}
+                            type="text"
+                            value={unlabelProduct.MakingPerGram}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Fixed Wastage</label>
+                        <input
+                            name="MakingFixedWastage"
+                            onChange={handleInputChangeUnlabel}
+                            type="text"
+                            value={unlabelProduct.MakingFixedWastage}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Quantity</label>
+                        <input
+                            name="Quantity"
+                            onChange={handleInputChangeUnlabel}
+                            type="number"
+                            min={0}
+                            max={parseInt(unlabelProduct.MaxQuantity)}
+                            value={unlabelProduct.Quantity}
+                        />
+                      </div>
 
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Total Amount</label>
-                    <input
-                      name="UnlabelAmount"
-                      onChange={handleInputChangeUnlabel}
-                      type="text"
-                      value={unlabelProduct.UnlabelAmount}
-                    />
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Total Amount</label>
+                        <input
+                            name="UnlabelAmount"
+                            onChange={handleInputChangeUnlabel}
+                            type="text"
+                            value={unlabelProduct.UnlabelAmount}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        {/* <label>Add</label>  */}
+                        <button
+                            onClick={() => addPurchaseProductToList(unlabelProduct)}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    {/* <label>Add</label>  */}
-                    <button
-                      onClick={() => addPurchaseProductToList(unlabelProduct)}
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : active === "Wholesale" ? (
-              <div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Label</label>
-                    <input
-                      // tabIndex="1"
-                      type="text"
-                      placeholder="Type or click to select an item"
-                      name="productLabel"
-                      value={wholesaleProductLabelName}
-                      onInput={handleWholesaleProductLabelChange}
-                      onKeyPress={(e) => {
-                        if (e.key === "Ctrl") {
-                          e.preventDefault();
-                          // button1Ref.current.focus();
-                          alert("Space");
-                        } else if (e.key === "Enter") {
-                          // Call your function here
-                          if (selectedProduct.length !== 0) {
-                            let changeSelectedProduct = selectedProduct;
+              ) : active === "Wholesale" ? (
+                  <div>
+                    <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Label</label>
+                        <input
+                            // tabIndex="1"
+                            type="text"
+                            placeholder="Type or click to select an item"
+                            name="productLabel"
+                            value={wholesaleProductLabelName}
+                            onInput={handleWholesaleProductLabelChange}
+                            onKeyPress={(e) => {
+                              if (e.key === "Ctrl") {
+                                e.preventDefault();
+                                // button1Ref.current.focus();
+                                alert("Space");
+                              } else if (e.key === "Enter") {
+                                // Call your function here
+                                if (selectedProduct.length !== 0) {
+                                  let changeSelectedProduct = selectedProduct;
 
+                                  return (
+                                      (changeSelectedProduct.sell = false),
+                                          (changeSelectedProduct.wholesale = true),
+                                          calculateWholesaleProductFinalPrice(
+                                              changeSelectedProduct,
+                                              true
+                                          ),
+                                          setActive("Sell")
+                                  );
+                                  // setOrderProductLabelName("");
+                                } else {
+                                  // null;
+                                  button1Ref.current.focus();
+                                }
+                              }
+                            }}
+                            list="productLabelList"
+                        />
+                        <datalist id="productLabelList">
+                          {allProducts.map((product) => (
+                              <option key={product.Id} value={product.ItemCode}/>
+                          ))}
+                        </datalist>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Category</label>
+                        <select
+                            name="CategoryId"
+                            onChange={handleInputChangeWholesale}
+                            value={`${wholesaleProduct.CategoryId},${wholesaleProduct.CategoryName}`}
+                        >
+                          <option value={""}>Select an Category</option>
+                          {allCategories.map((x, index) => {
                             return (
-                              (changeSelectedProduct.sell = false),
-                              (changeSelectedProduct.wholesale = true),
-                              calculateWholesaleProductFinalPrice(
-                                changeSelectedProduct,
-                                true
-                              ),
-                              setActive("Sell")
+                                <option
+                                    key={index}
+                                    value={`${x.Id},${x.CategoryName}`}
+                                >
+                                  {x.CategoryName}
+                                </option>
                             );
-                            // setOrderProductLabelName("");
-                          } else {
-                            // null;
-                            button1Ref.current.focus();
-                          }
-                        }
-                      }}
-                      list="productLabelList"
-                    />
-                    <datalist id="productLabelList">
-                      {allProducts.map((product) => (
-                        <option key={product.Id} value={product.ItemCode} />
-                      ))}
-                    </datalist>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Category</label>
-                    <select
-                      name="CategoryId"
-                      onChange={handleInputChangeWholesale}
-                      value={`${wholesaleProduct.CategoryId},${wholesaleProduct.CategoryName}`}
-                    >
-                      <option value={""}>Select an Category</option>
-                      {allCategories.map((x, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={`${x.Id},${x.CategoryName}`}
-                          >
-                            {x.CategoryName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Product</label>
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Product</label>
 
-                    <select
-                      name="ProductId"
-                      onChange={handleInputChangeWholesale}
-                      value={`${wholesaleProduct.ProductId},${wholesaleProduct.ProductName}`}
-                    >
-                      <option value={""}>Select an Product</option>
-                      {filteredProductsWholesale.map((x, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={`${x.Id},${x.ProductName}`}
-                          >
-                            {x.ProductName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Design</label>
+                        <select
+                            name="ProductId"
+                            onChange={handleInputChangeWholesale}
+                            value={`${wholesaleProduct.ProductId},${wholesaleProduct.ProductName}`}
+                        >
+                          <option value={""}>Select an Product</option>
+                          {filteredProductsWholesale.map((x, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={`${x.Id},${x.ProductName}`}
+                                >
+                                  {x.ProductName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Design</label>
 
-                    <select
-                      name="DesignId"
-                      onChange={handleInputChangeWholesale}
-                      value={`${wholesaleProduct.DesignId},${wholesaleProduct.DesignName}`}
-                    >
-                      <option value={""}>Select an Product</option>
-                      {filteredWholesaleCollection.map((x, index) => {
-                        return (
-                          <option key={index} value={`${x.Id},${x.DesignName}`}>
-                            {x.DesignName}
-                          </option>
-                        );
-                      })}
-                      {/* {filteredUnlabelCollection.map((x) => {
+                        <select
+                            name="DesignId"
+                            onChange={handleInputChangeWholesale}
+                            value={`${wholesaleProduct.DesignId},${wholesaleProduct.DesignName}`}
+                        >
+                          <option value={""}>Select an Product</option>
+                          {filteredWholesaleCollection.map((x, index) => {
+                            return (
+                                <option key={index} value={`${x.Id},${x.DesignName}`}>
+                                  {x.DesignName}
+                                </option>
+                            );
+                          })}
+                          {/* {filteredUnlabelCollection.map((x) => {
                       if (!uniqueNamesSet.has(x.collection)) {
                         uniqueNamesSet.add(x.collection);
 
@@ -6582,63 +6578,63 @@ export default function AdminInvoice() {
 
                       return null;
                     })} */}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Purity</label>
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Purity</label>
 
-                    <select
-                      name="PurityId"
-                      onChange={handleInputChangeWholesale}
-                      value={`${wholesaleProduct.PurityId},${wholesaleProduct.PurityName},${wholesaleProduct.PurityRate}`}
-                      // value={unlabelProduct.purity}
-                    >
-                      <option>Select an Purity</option>
-                      {filteredPuritiesWholesaleProduct.map((x, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={`${x.Id},${x.PurityName},${x.TodaysRate}`}
-                          >
-                            {x.PurityName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Gross Wt</label>
-                    <input
-                      name="GrossWt"
-                      onChange={handleInputChangeWholesale}
-                      // type="text"
-                      value={wholesaleProduct.GrossWt}
-                      type="number"
-                      max={wholesaleProduct.MaxGrossWt}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Stone Wt</label>
-                    <input
-                      name="TotalStoneWeight"
-                      onChange={handleInputChangeWholesale}
-                      // type="text"
-                      value={wholesaleProduct.TotalStoneWeight}
-                      type="number"
-                      // max={wholesaleProduct.GrossWt}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Net Wt</label>
-                    <input
-                      name="NetWt"
-                      onChange={handleInputChangeWholesale}
-                      type="number"
-                      max={wholesaleProduct.MaxNetWt}
-                      value={wholesaleProduct.NetWt}
-                    />
-                  </div>
-                  {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <select
+                            name="PurityId"
+                            onChange={handleInputChangeWholesale}
+                            value={`${wholesaleProduct.PurityId},${wholesaleProduct.PurityName},${wholesaleProduct.PurityRate}`}
+                            // value={unlabelProduct.purity}
+                        >
+                          <option>Select an Purity</option>
+                          {filteredPuritiesWholesaleProduct.map((x, index) => {
+                            return (
+                                <option
+                                    key={index}
+                                    value={`${x.Id},${x.PurityName},${x.TodaysRate}`}
+                                >
+                                  {x.PurityName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Gross Wt</label>
+                        <input
+                            name="GrossWt"
+                            onChange={handleInputChangeWholesale}
+                            // type="text"
+                            value={wholesaleProduct.GrossWt}
+                            type="number"
+                            max={wholesaleProduct.MaxGrossWt}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Stone Wt</label>
+                        <input
+                            name="TotalStoneWeight"
+                            onChange={handleInputChangeWholesale}
+                            // type="text"
+                            value={wholesaleProduct.TotalStoneWeight}
+                            type="number"
+                            // max={wholesaleProduct.GrossWt}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Net Wt</label>
+                        <input
+                            name="NetWt"
+                            onChange={handleInputChangeWholesale}
+                            type="number"
+                            max={wholesaleProduct.MaxNetWt}
+                            value={wholesaleProduct.NetWt}
+                        />
+                      </div>
+                      {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                 <label>Stone Wt</label>
                 <input
                   name="stonewt"
@@ -6647,115 +6643,115 @@ export default function AdminInvoice() {
                   value={purchaseProduct.stonewt}
                 />
               </div> */}
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Gold Rate</label>
-                    <div
-                      style={{ width: "auto" }}
-                      className="adminPurchaseEntryDollarSignBox"
-                    >
-                      <FaDollarSign
-                        className="adminPurchaseEntryDollarSign"
-                        onClick={() => setConvertAmount(!convertAmount)}
-                        size={"15px"}
-                        style={{
-                          cursor: "pointer",
-                          color: convertAmount ? "green" : "grey",
-                        }}
-                      />
-                      <input
-                        name="GoldRate"
-                        onChange={handleInputChangeWholesale}
-                        type="text"
-                        value={wholesaleProduct.GoldRate}
-                      />
-                    </div>
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Fine%</label>
-                    <input
-                      name="FinePercent"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.FinePercent}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Wastage%</label>
-                    <input
-                      name="WastagePercent"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.WastagePercent}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>StoneLess%</label>
-                    <input
-                      name="StoneLessPercent"
-                      // onChange={handleInputChangeWholesale}
-                      readOnly
-                      type="text"
-                      value={wholesaleProduct.StoneLessPercent}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Stone Amount</label>
-                    <input
-                      name="TotalStoneAmount"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.TotalStoneAmount}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Fixed Amt</label>
-                    <input
-                      name="MakingFixedAmt"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.MakingFixedAmt}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Percentage</label>
-                    <input
-                      name="MakingPercentage"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.MakingPercentage}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Pergram</label>
-                    <input
-                      name="MakingPerGram"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.MakingPerGram}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Making Fixed Wastage</label>
-                    <input
-                      name="MakingFixedWastage"
-                      onChange={handleInputChangeWholesale}
-                      type="text"
-                      value={wholesaleProduct.MakingFixedWastage}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Quantity</label>
-                    <input
-                      name="Quantity"
-                      onChange={handleInputChangeWholesale}
-                      type="number"
-                      min={0}
-                      max={parseInt(wholesaleProduct.MaxQuantity)}
-                      value={wholesaleProduct.Quantity}
-                    />
-                  </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Gold Rate</label>
+                        <div
+                            style={{width: "auto"}}
+                            className="adminPurchaseEntryDollarSignBox"
+                        >
+                          <FaDollarSign
+                              className="adminPurchaseEntryDollarSign"
+                              onClick={() => setConvertAmount(!convertAmount)}
+                              size={"15px"}
+                              style={{
+                                cursor: "pointer",
+                                color: convertAmount ? "green" : "grey",
+                              }}
+                          />
+                          <input
+                              name="GoldRate"
+                              onChange={handleInputChangeWholesale}
+                              type="text"
+                              value={wholesaleProduct.GoldRate}
+                          />
+                        </div>
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Fine%</label>
+                        <input
+                            name="FinePercent"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.FinePercent}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Wastage%</label>
+                        <input
+                            name="WastagePercent"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.WastagePercent}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>StoneLess%</label>
+                        <input
+                            name="StoneLessPercent"
+                            // onChange={handleInputChangeWholesale}
+                            readOnly
+                            type="text"
+                            value={wholesaleProduct.StoneLessPercent}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Stone Amount</label>
+                        <input
+                            name="TotalStoneAmount"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.TotalStoneAmount}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Fixed Amt</label>
+                        <input
+                            name="MakingFixedAmt"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.MakingFixedAmt}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Percentage</label>
+                        <input
+                            name="MakingPercentage"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.MakingPercentage}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Pergram</label>
+                        <input
+                            name="MakingPerGram"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.MakingPerGram}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Making Fixed Wastage</label>
+                        <input
+                            name="MakingFixedWastage"
+                            onChange={handleInputChangeWholesale}
+                            type="text"
+                            value={wholesaleProduct.MakingFixedWastage}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Quantity</label>
+                        <input
+                            name="Quantity"
+                            onChange={handleInputChangeWholesale}
+                            type="number"
+                            min={0}
+                            max={parseInt(wholesaleProduct.MaxQuantity)}
+                            value={wholesaleProduct.Quantity}
+                        />
+                      </div>
 
-                  {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                      {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     <label>Fine Percentage</label>
                     <input
                       name="Finepercent"
@@ -6765,595 +6761,595 @@ export default function AdminInvoice() {
                     />
                   </div> */}
 
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Fine + Wastage Wt</label>
-                    <input
-                      name="FineWastageWeight"
-                      // onChange={handleInputChangeWholesale}
-                      type="text"
-                      readOnly
-                      // value={wholesaleProduct.OrderAmount}
-                      value={wholesaleProduct.FineWastageWeight}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Item Amount</label>
-                    <input
-                      name="ItemAmount"
-                      // onChange={handleInputChangeWholesale}
-                      type="text"
-                      readOnly
-                      // value={wholesaleProduct.OrderAmount}
-                      value={wholesaleProduct.TotalItemAmount}
-                    />
-                  </div>
-                  <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    {/* <label>Add</label>  */}
-                    <button
-                      onClick={() =>
-                        addWholesaleProductToList(wholesaleProduct, true)
-                      }
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-            <div
-              style={{ justifyContent: "flex-start", alignItems: "flex-start" }}
-              className="adminInviceAddedProductsTotalOuterBox"
-            >
-              {" "}
-              <div className="adminInviceAddedProductsTotalAmountOuterBox">
-                <div
-                  style={{ gridAutoFlow: "row" }}
-                  className="adminInviceAddedProductsTotalItemBoxPaymentType"
-                >
-                  <div
-                    onClick={() => {
-                      setPaymentAmount(Math.abs(paymentAmount));
-                      setPaymentType("Paid");
-                      setPaymentOptions("Cash");
-                    }}
-                  >
-                    {paymentType === "Paid" ? (
-                      <FaRegDotCircle style={{ marginRight: "5px" }} />
-                    ) : (
-                      <FaRegCircle style={{ marginRight: "5px" }} />
-                    )}
-                    Paid
-                  </div>
-                  <div onClick={() => setPaymentType("Receive")}>
-                    {paymentType === "Receive" ? (
-                      <FaRegDotCircle style={{ marginRight: "5px" }} />
-                    ) : (
-                      <FaRegCircle style={{ marginRight: "5px" }} />
-                    )}
-                    Receive
-                  </div>
-                </div>
-                <div
-                  style={{
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                    textAlign: "left",
-                  }}
-                  className="adminInviceAddedProductsTotalItemBox"
-                >
-                  <label>Payment Mode</label>
-                  <select
-                    tabIndex="3"
-                    ref={button2Ref}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        button3Ref.current.focus();
-                      }
-                    }}
-                    style={{ width: "auto" }}
-                    onChange={(e) => {
-                      if (
-                        e.target.value !== "Cash to Metal" &&
-                        e.target.value !== "Metal to Cash" &&
-                        e.target.value !== "Metal"
-                      ) {
-                        setPaymentOptions(e.target.value),
-                          setPaymentAmount(grandTotal);
-                      } else {
-                        setPaymentAmount(0), setPaymentOptions(e.target.value);
-                      }
-                    }}
-                    value={paymentOptions}
-                  >
-                    <option value={"Cash"}>Cash</option>
-                    <option value={"Card"}>Card</option>
-                    <option value={"UPI"}>UPI</option>
-                    <option value={"Cheque"}>Cheque</option>
-                    <option value={"RTGS"}>RTGS</option>
-                    <option value={"MDS"}>MDS</option>
-                    {paymentType === "Receive" ? (
-                      <>
-                        <option value={"Advance Amount"}>Advance Amount</option>
-                      </>
-                    ) : null}
-
-                    {paymentType === "Paid" ? (
-                      <>
-                        <option value={"Advance Returned"}>
-                          Advance Returned
-                        </option>
-                      </>
-                    ) : null}
-                    <option value={"Metal to Cash"}>Metal to Cash</option>
-                    <option value={"Cash to Metal"}>Cash to Metal</option>
-                    {/* <option value={"Advance Amount"}>Advance Amount</option> */}
-                  </select>
-
-                  {paymentOptions !== "Advance Amount" &&
-                  paymentOptions !== "Cash to Metal" &&
-                  paymentOptions !== "Metal to Cash" ? (
-                    <>
-                      <label style={{ whiteSpace: "nowrap" }}>
-                        Description
-                      </label>
-                      <input
-                        style={{ width: "100%" }}
-                        type="text"
-                        value={paymentDescription}
-                        onChange={(e) => setPaymentDescription(e.target.value)}
-                      />
-                      <label>Amount</label>
-                      <div className="adminInviceAddedProductsAmountInputBox">
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Fine + Wastage Wt</label>
                         <input
-                          style={{
-                            color:
-                              paymentType === "Paid" && paymentAmount !== 0
-                                ? "red"
-                                : paymentType === "Receive" && paymentAmount > 0
-                                ? "green"
-                                : "black",
-                          }}
-                          tabIndex="4"
-                          ref={button3Ref}
-                          onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                              button4Ref.current.focus();
-                            }
-                          }}
-                          type="number"
-                          value={paymentAmount}
-                          onChange={(e) => setPaymentAmount(e.target.value)}
+                            name="FineWastageWeight"
+                            // onChange={handleInputChangeWholesale}
+                            type="text"
+                            readOnly
+                            // value={wholesaleProduct.OrderAmount}
+                            value={wholesaleProduct.FineWastageWeight}
                         />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        <label>Item Amount</label>
+                        <input
+                            name="ItemAmount"
+                            // onChange={handleInputChangeWholesale}
+                            type="text"
+                            readOnly
+                            // value={wholesaleProduct.OrderAmount}
+                            value={wholesaleProduct.TotalItemAmount}
+                        />
+                      </div>
+                      <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                        {/* <label>Add</label>  */}
                         <button
-                          tabIndex="5"
-                          ref={button4Ref}
-                          onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                              button5Ref.current.focus();
+                            onClick={() =>
+                                addWholesaleProductToList(wholesaleProduct, true)
                             }
-                          }}
-                          onClick={() => {
-                            if (
-                              paymentOptions == "Cash" &&
-                              totalPaidCashAmount + parseInt(paymentAmount) >
-                                200000
-                            ) {
-                              alert("Could Not Take more than 200000 in Cash");
-                            } else if (
-                              paymentAmount > 200000 &&
-                              paymentOptions == "Cash"
-                            ) {
-                              alert("Could'nt Take more than 200000 in Cash");
-                            } else {
-                              addPayment();
-                            }
-                          }}
                         >
-                          <GiCheckMark />
-                        </button>
-                        <button
-                          tabIndex="6"
-                          ref={button5Ref}
-                          onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                              button6Ref.current.focus();
-                            }
-                          }}
-                          onClick={() => {
-                            setPaymentAmount(0), setPaymentOptions("Cash");
-                          }}
-                        >
-                          <RxCross2 />
+                          Add
                         </button>
                       </div>
-                    </>
-                  ) : null}
-                </div>
-
-                {paymentOptions === "Advance Amount" ? (
-                  <div style={{ marginTop: "20px" }}>
-                    <div
-                      style={{ gridAutoFlow: "row" }}
+                    </div>
+                  </div>
+              ) : null}
+              <div
+                  style={{justifyContent: "flex-start", alignItems: "flex-start"}}
+                  className="adminInviceAddedProductsTotalOuterBox"
+              >
+                {" "}
+                <div className="adminInviceAddedProductsTotalAmountOuterBox">
+                  <div
+                      style={{gridAutoFlow: "row"}}
                       className="adminInviceAddedProductsTotalItemBoxPaymentType"
-                    >
-                      <div
+                  >
+                    <div
                         onClick={() => {
                           setPaymentAmount(Math.abs(paymentAmount));
-                          setAdvanceType("Advance Received");
+                          setPaymentType("Paid");
+                          setPaymentOptions("Cash");
                         }}
-                      >
+                    >
+                      {paymentType === "Paid" ? (
+                          <FaRegDotCircle style={{marginRight: "5px"}}/>
+                      ) : (
+                          <FaRegCircle style={{marginRight: "5px"}}/>
+                      )}
+                      Paid
+                    </div>
+                    <div onClick={() => setPaymentType("Receive")}>
+                      {paymentType === "Receive" ? (
+                          <FaRegDotCircle style={{marginRight: "5px"}}/>
+                      ) : (
+                          <FaRegCircle style={{marginRight: "5px"}}/>
+                      )}
+                      Receive
+                    </div>
+                  </div>
+                  <div
+                      style={{
+                        justifyContent: "flex-start",
+                        alignItems: "flex-start",
+                        textAlign: "left",
+                      }}
+                      className="adminInviceAddedProductsTotalItemBox"
+                  >
+                    <label>Payment Mode</label>
+                    <select
+                        tabIndex="3"
+                        ref={button2Ref}
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            button3Ref.current.focus();
+                          }
+                        }}
+                        style={{width: "auto"}}
+                        onChange={(e) => {
+                          if (
+                              e.target.value !== "Cash to Metal" &&
+                              e.target.value !== "Metal to Cash" &&
+                              e.target.value !== "Metal"
+                          ) {
+                            setPaymentOptions(e.target.value),
+                                setPaymentAmount(grandTotal);
+                          } else {
+                            setPaymentAmount(0), setPaymentOptions(e.target.value);
+                          }
+                        }}
+                        value={paymentOptions}
+                    >
+                      <option value={"Cash"}>Cash</option>
+                      <option value={"Card"}>Card</option>
+                      <option value={"UPI"}>UPI</option>
+                      <option value={"Cheque"}>Cheque</option>
+                      <option value={"RTGS"}>RTGS</option>
+                      <option value={"MDS"}>MDS</option>
+                      {paymentType === "Receive" ? (
+                          <>
+                            <option value={"Advance Amount"}>Advance Amount</option>
+                          </>
+                      ) : null}
+
+                      {paymentType === "Paid" ? (
+                          <>
+                            <option value={"Advance Returned"}>
+                              Advance Returned
+                            </option>
+                          </>
+                      ) : null}
+                      <option value={"Metal to Cash"}>Metal to Cash</option>
+                      <option value={"Cash to Metal"}>Cash to Metal</option>
+                      {/* <option value={"Advance Amount"}>Advance Amount</option> */}
+                    </select>
+
+                    {paymentOptions !== "Advance Amount" &&
+                    paymentOptions !== "Cash to Metal" &&
+                    paymentOptions !== "Metal to Cash" ? (
+                        <>
+                          <label style={{whiteSpace: "nowrap"}}>
+                            Description
+                          </label>
+                          <input
+                              style={{width: "100%"}}
+                              type="text"
+                              value={paymentDescription}
+                              onChange={(e) => setPaymentDescription(e.target.value)}
+                          />
+                          <label>Amount</label>
+                          <div className="adminInviceAddedProductsAmountInputBox">
+                            <input
+                                style={{
+                                  color:
+                                      paymentType === "Paid" && paymentAmount !== 0
+                                          ? "red"
+                                          : paymentType === "Receive" && paymentAmount > 0
+                                          ? "green"
+                                          : "black",
+                                }}
+                                tabIndex="4"
+                                ref={button3Ref}
+                                onKeyPress={(e) => {
+                                  if (e.key === "Enter") {
+                                    button4Ref.current.focus();
+                                  }
+                                }}
+                                type="number"
+                                value={paymentAmount}
+                                onChange={(e) => setPaymentAmount(e.target.value)}
+                            />
+                            <button
+                                tabIndex="5"
+                                ref={button4Ref}
+                                onKeyPress={(e) => {
+                                  if (e.key === "Enter") {
+                                    button5Ref.current.focus();
+                                  }
+                                }}
+                                onClick={() => {
+                                  if (
+                                      paymentOptions == "Cash" &&
+                                      totalPaidCashAmount + parseInt(paymentAmount) >
+                                      200000
+                                  ) {
+                                    alert("Could Not Take more than 200000 in Cash");
+                                  } else if (
+                                      paymentAmount > 200000 &&
+                                      paymentOptions == "Cash"
+                                  ) {
+                                    alert("Could'nt Take more than 200000 in Cash");
+                                  } else {
+                                    addPayment();
+                                  }
+                                }}
+                            >
+                              <GiCheckMark/>
+                            </button>
+                            <button
+                                tabIndex="6"
+                                ref={button5Ref}
+                                onKeyPress={(e) => {
+                                  if (e.key === "Enter") {
+                                    button6Ref.current.focus();
+                                  }
+                                }}
+                                onClick={() => {
+                                  setPaymentAmount(0), setPaymentOptions("Cash");
+                                }}
+                            >
+                              <RxCross2/>
+                            </button>
+                          </div>
+                        </>
+                    ) : null}
+                  </div>
+
+                  {paymentOptions === "Advance Amount" ? (
+                      <div style={{marginTop: "20px"}}>
+                        <div
+                            style={{gridAutoFlow: "row"}}
+                            className="adminInviceAddedProductsTotalItemBoxPaymentType"
+                        >
+                          <div
+                              onClick={() => {
+                                setPaymentAmount(Math.abs(paymentAmount));
+                                setAdvanceType("Advance Received");
+                              }}
+                          >
+                            {advanceType === "Advance Received" ? (
+                                <FaRegDotCircle style={{marginRight: "5px"}}/>
+                            ) : (
+                                <FaRegCircle style={{marginRight: "5px"}}/>
+                            )}
+                            Adv Rcvd
+                          </div>
+                          <div onClick={() => setAdvanceType("Deduct Advance")}>
+                            {advanceType === "Deduct Advance" ? (
+                                <FaRegDotCircle style={{marginRight: "5px"}}/>
+                            ) : (
+                                <FaRegCircle style={{marginRight: "5px"}}/>
+                            )}
+                            Deduct Adv
+                          </div>
+                        </div>
+
                         {advanceType === "Advance Received" ? (
-                          <FaRegDotCircle style={{ marginRight: "5px" }} />
+                            <div
+                                style={{
+                                  justifyContent: "flex-start",
+                                  alignItems: "flex-start",
+                                  textAlign: "left",
+                                }}
+                                className="adminInviceAddedProductsTotalItemBox"
+                            >
+                              <label style={{whiteSpace: "nowrap"}}>
+                                Description
+                              </label>
+                              <input
+                                  style={{width: "100%"}}
+                                  type="text"
+                                  value={paymentDescription}
+                                  onChange={(e) =>
+                                      setPaymentDescription(e.target.value)
+                                  }
+                              />
+                              <label>Amount</label>
+                              <div className="adminInviceAddedProductsAmountInputBox">
+                                <input
+                                    style={{
+                                      color:
+                                          paymentType === "Paid" && paymentAmount !== 0
+                                              ? "red"
+                                              : paymentType === "Receive" &&
+                                              paymentAmount > 0
+                                              ? "green"
+                                              : "black",
+                                    }}
+                                    tabIndex="4"
+                                    ref={button3Ref}
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        button4Ref.current.focus();
+                                      }
+                                    }}
+                                    type="number"
+                                    value={advanceAmount}
+                                    onChange={(e) => setAdvanceAmount(e.target.value)}
+                                />
+                                <button
+                                    tabIndex="5"
+                                    ref={button4Ref}
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        button5Ref.current.focus();
+                                      }
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                          paymentOptions == "Cash" &&
+                                          totalPaidCashAmount + parseInt(paymentAmount) >
+                                          200000
+                                      ) {
+                                        alert(
+                                            "Could Not Take more than 200000 in Cash"
+                                        );
+                                      } else if (
+                                          paymentAmount > 200000 &&
+                                          paymentOptions == "Cash"
+                                      ) {
+                                        alert("Could'nt Take more than 200000 in Cash");
+                                      } else {
+                                        addPayment();
+                                      }
+                                    }}
+                                >
+                                  <GiCheckMark/>
+                                </button>
+                                <button
+                                    tabIndex="6"
+                                    ref={button5Ref}
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        button6Ref.current.focus();
+                                      }
+                                    }}
+                                    onClick={() => {
+                                      setPaymentAmount(0), setPaymentOptions("Cash");
+                                    }}
+                                >
+                                  <RxCross2/>
+                                </button>
+                              </div>
+                            </div>
                         ) : (
-                          <FaRegCircle style={{ marginRight: "5px" }} />
+                            <div
+                                style={{
+                                  justifyContent: "flex-start",
+                                  alignItems: "flex-start",
+                                  textAlign: "left",
+                                }}
+                                className="adminInviceAddedProductsTotalItemBox"
+                            >
+                              <label style={{whiteSpace: "nowrap"}}>
+                                Description
+                              </label>
+                              <input
+                                  style={{width: "100%"}}
+                                  type="text"
+                                  value={paymentDescription}
+                                  onChange={(e) =>
+                                      setPaymentDescription(e.target.value)
+                                  }
+                              />
+                              <label>Amount Available</label>
+                              {/* <div className="adminInviceAddedProductsAmountInputBox"> */}
+                              <input
+                                  type="text"
+                                  value={
+                                    selectedCustomer
+                                        ? selectedCustomer.advanceAmount
+                                        : "0"
+                                  }
+                                  readOnly
+                              />
+                              {/* </div> */}
+                              <label>Deduct Amount</label>
+                              <div className="adminInviceAddedProductsAmountInputBox">
+                                <input
+                                    style={{
+                                      color:
+                                          paymentType === "Paid" && paymentAmount !== 0
+                                              ? "red"
+                                              : paymentType === "Receive" &&
+                                              paymentAmount > 0
+                                              ? "green"
+                                              : "black",
+                                    }}
+                                    tabIndex="4"
+                                    ref={button3Ref}
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        button4Ref.current.focus();
+                                      }
+                                    }}
+                                    type="number"
+                                    value={advanceAmount}
+                                    onChange={(e) => {
+                                      if (
+                                          selectedCustomer &&
+                                          parseFloat(selectedCustomer.advanceAmount) -
+                                          parseFloat(e.target.value) >=
+                                          0
+                                      ) {
+                                        setAdvanceAmount(e.target.value);
+                                      } else {
+                                        null;
+                                      }
+                                    }}
+                                />
+                                <button
+                                    tabIndex="5"
+                                    ref={button4Ref}
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        button5Ref.current.focus();
+                                      }
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                          paymentOptions == "Cash" &&
+                                          totalPaidCashAmount + parseInt(paymentAmount) >
+                                          200000
+                                      ) {
+                                        alert(
+                                            "Could Not Take more than 200000 in Cash"
+                                        );
+                                      } else if (
+                                          paymentAmount > 200000 &&
+                                          paymentOptions == "Cash"
+                                      ) {
+                                        alert("Could'nt Take more than 200000 in Cash");
+                                      } else {
+                                        addPayment();
+                                      }
+                                    }}
+                                >
+                                  <GiCheckMark/>
+                                </button>
+                                <button
+                                    tabIndex="6"
+                                    ref={button5Ref}
+                                    onKeyPress={(e) => {
+                                      if (e.key === "Enter") {
+                                        button6Ref.current.focus();
+                                      }
+                                    }}
+                                    onClick={() => {
+                                      setPaymentAmount(0), setPaymentOptions("Cash");
+                                    }}
+                                >
+                                  <RxCross2/>
+                                </button>
+                              </div>
+                            </div>
                         )}
-                        Adv Rcvd
                       </div>
-                      <div onClick={() => setAdvanceType("Deduct Advance")}>
-                        {advanceType === "Deduct Advance" ? (
-                          <FaRegDotCircle style={{ marginRight: "5px" }} />
-                        ) : (
-                          <FaRegCircle style={{ marginRight: "5px" }} />
-                        )}
-                        Deduct Adv
-                      </div>
-                    </div>
-
-                    {advanceType === "Advance Received" ? (
-                      <div
-                        style={{
-                          justifyContent: "flex-start",
-                          alignItems: "flex-start",
-                          textAlign: "left",
-                        }}
-                        className="adminInviceAddedProductsTotalItemBox"
-                      >
-                        <label style={{ whiteSpace: "nowrap" }}>
-                          Description
-                        </label>
-                        <input
-                          style={{ width: "100%" }}
-                          type="text"
-                          value={paymentDescription}
-                          onChange={(e) =>
-                            setPaymentDescription(e.target.value)
-                          }
-                        />
-                        <label>Amount</label>
-                        <div className="adminInviceAddedProductsAmountInputBox">
+                  ) : null}
+                  {paymentOptions === "Metal to Cash" ? (
+                      <div className="adminInviceAddedProductsMetaltoCashMainBox">
+                        <div>
+                          <label>Metal</label>
+                          <select
+                              onChange={(e) =>
+                                  setMetalPaymentOption({
+                                    ...metalPaymentOption,
+                                    optionSelected: `${e.target.value}`,
+                                  })
+                              }
+                              value={metalPaymentOption.optionSelected}
+                          >
+                            <option value={"GOLD"}>GOLD</option>
+                            <option value={"SILVER"}>SILVER</option>
+                            <option value={"PLATINUM"}>PLATINUM</option>
+                            <option value={"PURE GOLD"}>PURE GOLD</option>
+                            <option value={"PURE SILVER"}>PURE SILVER</option>
+                            <option value={"OLD GOLD"}>OLD GOLD</option>
+                            <option value={"OLD SILVER"}>OLD SILVER</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label>Fine Paid</label>
                           <input
-                            style={{
-                              color:
-                                paymentType === "Paid" && paymentAmount !== 0
-                                  ? "red"
-                                  : paymentType === "Receive" &&
-                                    paymentAmount > 0
-                                  ? "green"
-                                  : "black",
-                            }}
-                            tabIndex="4"
-                            ref={button3Ref}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                button4Ref.current.focus();
-                              }
-                            }}
-                            type="number"
-                            value={advanceAmount}
-                            onChange={(e) => setAdvanceAmount(e.target.value)}
+                              type="number"
+                              value={metalPaymentOption.fineWt}
+                              onChange={(e) => {
+                                handleMetalPaymentOption("fineWt", e);
+                              }}
+                              //     onChange={(e) =>
+                              //       setMetalPaymentOption({
+                              //         ...metalPaymentOption,
+                              //         fineWt: e.target.value,
+                              //     })
+                              // }
                           />
-                          <button
-                            tabIndex="5"
-                            ref={button4Ref}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                button5Ref.current.focus();
-                              }
+                        </div>
+                        <div>
+                          <label>Rate 10/Gm</label>
+                          <input
+                              type="number"
+                              value={metalPaymentOption.fineRate}
+                              onChange={(e) => {
+                                handleMetalPaymentOption("Rate", e);
+                              }}
+                              // onChange={(e) =>
+                              //   setMetalPaymentOption({
+                              //     ...metalPaymentOption,
+                              //     fineRate: e.target.value,
+                              //   })
+                              // }
+                          />
+                        </div>
+                        <div>
+                          <label>Total amount</label>
+                          <input
+                              type="number"
+                              value={metalPaymentOption.totalAmount}
+                              readOnly
+                          />
+                        </div>
+                        <div
+                            style={{
+                              margin: "10px",
+                              width: "100px",
+                              marginLeft: "auto",
+                              marginRight: "0px",
                             }}
-                            onClick={() => {
-                              if (
-                                paymentOptions == "Cash" &&
-                                totalPaidCashAmount + parseInt(paymentAmount) >
-                                  200000
-                              ) {
-                                alert(
-                                  "Could Not Take more than 200000 in Cash"
-                                );
-                              } else if (
-                                paymentAmount > 200000 &&
-                                paymentOptions == "Cash"
-                              ) {
-                                alert("Could'nt Take more than 200000 in Cash");
-                              } else {
-                                addPayment();
-                              }
-                            }}
-                          >
-                            <GiCheckMark />
-                          </button>
-                          <button
-                            tabIndex="6"
-                            ref={button5Ref}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                button6Ref.current.focus();
-                              }
-                            }}
-                            onClick={() => {
-                              setPaymentAmount(0), setPaymentOptions("Cash");
-                            }}
-                          >
-                            <RxCross2 />
-                          </button>
+                            className="adminInvoiceMainSaveButtonBox"
+                        >
+                          <button onClick={addPayment}>Add</button>
                         </div>
                       </div>
-                    ) : (
-                      <div
-                        style={{
-                          justifyContent: "flex-start",
-                          alignItems: "flex-start",
-                          textAlign: "left",
-                        }}
-                        className="adminInviceAddedProductsTotalItemBox"
-                      >
-                        <label style={{ whiteSpace: "nowrap" }}>
-                          Description
-                        </label>
-                        <input
-                          style={{ width: "100%" }}
-                          type="text"
-                          value={paymentDescription}
-                          onChange={(e) =>
-                            setPaymentDescription(e.target.value)
-                          }
-                        />
-                        <label>Amount Available</label>
-                        {/* <div className="adminInviceAddedProductsAmountInputBox"> */}
-                        <input
-                          type="text"
-                          value={
-                            selectedCustomer
-                              ? selectedCustomer.advanceAmount
-                              : "0"
-                          }
-                          readOnly
-                        />
-                        {/* </div> */}
-                        <label>Deduct Amount</label>
-                        <div className="adminInviceAddedProductsAmountInputBox">
+                  ) : paymentOptions === "Cash to Metal" ? (
+                      <div className="adminInviceAddedProductsMetaltoCashMainBox">
+                        <div>
+                          <label>Metal</label>
+                          <select
+                              onChange={(e) =>
+                                  setMetalPaymentOption({
+                                    ...metalPaymentOption,
+                                    optionSelected: `${e.target.value}`,
+                                  })
+                              }
+                              value={metalPaymentOption.optionSelected}
+                          >
+                            <option value={"GOLD"}>GOLD</option>
+                            <option value={"SILVER"}>SILVER</option>
+                            <option value={"PLATINUM"}>PLATINUM</option>
+                            <option value={"PURE GOLD"}>PURE GOLD</option>
+                            <option value={"PURE SILVER"}>PURE SILVER</option>
+                            <option value={"OLD GOLD"}>OLD GOLD</option>
+                            <option value={"OLD SILVER"}>OLD SILVER</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label>Total amount</label>
                           <input
-                            style={{
-                              color:
-                                paymentType === "Paid" && paymentAmount !== 0
-                                  ? "red"
-                                  : paymentType === "Receive" &&
-                                    paymentAmount > 0
-                                  ? "green"
-                                  : "black",
-                            }}
-                            tabIndex="4"
-                            ref={button3Ref}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                button4Ref.current.focus();
-                              }
-                            }}
-                            type="number"
-                            value={advanceAmount}
-                            onChange={(e) => {
-                              if (
-                                selectedCustomer &&
-                                parseFloat(selectedCustomer.advanceAmount) -
-                                  parseFloat(e.target.value) >=
-                                  0
-                              ) {
-                                setAdvanceAmount(e.target.value);
-                              } else {
-                                null;
-                              }
-                            }}
+                              type="number"
+                              value={metalPaymentOption.totalAmount}
+                              onChange={(e) => {
+                                handleMetalPaymentOption("Amount", e);
+                              }}
                           />
-                          <button
-                            tabIndex="5"
-                            ref={button4Ref}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                button5Ref.current.focus();
-                              }
+                        </div>
+                        <div>
+                          <label>Rate 10/Gm</label>
+                          <input
+                              type="number"
+                              value={metalPaymentOption.fineRate}
+                              onChange={(e) => {
+                                handleMetalPaymentOption("Rate", e);
+                              }}
+                              // onChange={(e) =>
+                              //   setMetalPaymentOption({
+                              //     ...metalPaymentOption,
+                              //     fineRate: e.target.value,
+                              //   })
+                              // }
+                          />
+                        </div>
+
+                        <div>
+                          <label>Fine Paid</label>
+                          <input
+                              type="number"
+                              value={metalPaymentOption.fineWt}
+                              readOnly
+                              //     onChange={(e) =>
+                              //       setMetalPaymentOption({
+                              //         ...metalPaymentOption,
+                              //         fineWt: e.target.value,
+                              //     })
+                              // }
+                          />
+                        </div>
+                        <div
+                            style={{
+                              margin: "10px",
+                              width: "100px",
+                              marginLeft: "auto",
+                              marginRight: "0px",
                             }}
-                            onClick={() => {
-                              if (
-                                paymentOptions == "Cash" &&
-                                totalPaidCashAmount + parseInt(paymentAmount) >
-                                  200000
-                              ) {
-                                alert(
-                                  "Could Not Take more than 200000 in Cash"
-                                );
-                              } else if (
-                                paymentAmount > 200000 &&
-                                paymentOptions == "Cash"
-                              ) {
-                                alert("Could'nt Take more than 200000 in Cash");
-                              } else {
-                                addPayment();
-                              }
-                            }}
-                          >
-                            <GiCheckMark />
-                          </button>
-                          <button
-                            tabIndex="6"
-                            ref={button5Ref}
-                            onKeyPress={(e) => {
-                              if (e.key === "Enter") {
-                                button6Ref.current.focus();
-                              }
-                            }}
-                            onClick={() => {
-                              setPaymentAmount(0), setPaymentOptions("Cash");
-                            }}
-                          >
-                            <RxCross2 />
-                          </button>
+                            className="adminInvoiceMainSaveButtonBox"
+                        >
+                          <button onClick={addPayment}>Add</button>
                         </div>
                       </div>
-                    )}
-                  </div>
-                ) : null}
-                {paymentOptions === "Metal to Cash" ? (
-                  <div className="adminInviceAddedProductsMetaltoCashMainBox">
-                    <div>
-                      <label>Metal</label>
-                      <select
-                        onChange={(e) =>
-                          setMetalPaymentOption({
-                            ...metalPaymentOption,
-                            optionSelected: `${e.target.value}`,
-                          })
-                        }
-                        value={metalPaymentOption.optionSelected}
-                      >
-                        <option value={"GOLD"}>GOLD</option>
-                        <option value={"SILVER"}>SILVER</option>
-                        <option value={"PLATINUM"}>PLATINUM</option>
-                        <option value={"PURE GOLD"}>PURE GOLD</option>
-                        <option value={"PURE SILVER"}>PURE SILVER</option>
-                        <option value={"OLD GOLD"}>OLD GOLD</option>
-                        <option value={"OLD SILVER"}>OLD SILVER</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Fine Paid</label>
-                      <input
-                        type="number"
-                        value={metalPaymentOption.fineWt}
-                        onChange={(e) => {
-                          handleMetalPaymentOption("fineWt", e);
-                        }}
-                        //     onChange={(e) =>
-                        //       setMetalPaymentOption({
-                        //         ...metalPaymentOption,
-                        //         fineWt: e.target.value,
-                        //     })
-                        // }
-                      />
-                    </div>
-                    <div>
-                      <label>Rate 10/Gm</label>
-                      <input
-                        type="number"
-                        value={metalPaymentOption.fineRate}
-                        onChange={(e) => {
-                          handleMetalPaymentOption("Rate", e);
-                        }}
-                        // onChange={(e) =>
-                        //   setMetalPaymentOption({
-                        //     ...metalPaymentOption,
-                        //     fineRate: e.target.value,
-                        //   })
-                        // }
-                      />
-                    </div>
-                    <div>
-                      <label>Total amount</label>
-                      <input
-                        type="number"
-                        value={metalPaymentOption.totalAmount}
-                        readOnly
-                      />
-                    </div>
-                    <div
-                      style={{
-                        margin: "10px",
-                        width: "100px",
-                        marginLeft: "auto",
-                        marginRight: "0px",
-                      }}
-                      className="adminInvoiceMainSaveButtonBox"
-                    >
-                      <button onClick={addPayment}>Add</button>
-                    </div>
-                  </div>
-                ) : paymentOptions === "Cash to Metal" ? (
-                  <div className="adminInviceAddedProductsMetaltoCashMainBox">
-                    <div>
-                      <label>Metal</label>
-                      <select
-                        onChange={(e) =>
-                          setMetalPaymentOption({
-                            ...metalPaymentOption,
-                            optionSelected: `${e.target.value}`,
-                          })
-                        }
-                        value={metalPaymentOption.optionSelected}
-                      >
-                        <option value={"GOLD"}>GOLD</option>
-                        <option value={"SILVER"}>SILVER</option>
-                        <option value={"PLATINUM"}>PLATINUM</option>
-                        <option value={"PURE GOLD"}>PURE GOLD</option>
-                        <option value={"PURE SILVER"}>PURE SILVER</option>
-                        <option value={"OLD GOLD"}>OLD GOLD</option>
-                        <option value={"OLD SILVER"}>OLD SILVER</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label>Total amount</label>
-                      <input
-                        type="number"
-                        value={metalPaymentOption.totalAmount}
-                        onChange={(e) => {
-                          handleMetalPaymentOption("Amount", e);
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label>Rate 10/Gm</label>
-                      <input
-                        type="number"
-                        value={metalPaymentOption.fineRate}
-                        onChange={(e) => {
-                          handleMetalPaymentOption("Rate", e);
-                        }}
-                        // onChange={(e) =>
-                        //   setMetalPaymentOption({
-                        //     ...metalPaymentOption,
-                        //     fineRate: e.target.value,
-                        //   })
-                        // }
-                      />
-                    </div>
-
-                    <div>
-                      <label>Fine Paid</label>
-                      <input
-                        type="number"
-                        value={metalPaymentOption.fineWt}
-                        readOnly
-                        //     onChange={(e) =>
-                        //       setMetalPaymentOption({
-                        //         ...metalPaymentOption,
-                        //         fineWt: e.target.value,
-                        //     })
-                        // }
-                      />
-                    </div>
-                    <div
-                      style={{
-                        margin: "10px",
-                        width: "100px",
-                        marginLeft: "auto",
-                        marginRight: "0px",
-                      }}
-                      className="adminInvoiceMainSaveButtonBox"
-                    >
-                      <button onClick={addPayment}>Add</button>
-                    </div>
-                  </div>
-                ) : null}
-                <div className="adminInviceAddedProductsTotalAmountBox">
-                  <table>
-                    <thead>
+                  ) : null}
+                  <div className="adminInviceAddedProductsTotalAmountBox">
+                    <table>
+                      <thead>
                       <tr>
                         <th>Mode</th>
                         <th>Amount</th>
@@ -7362,264 +7358,264 @@ export default function AdminInvoice() {
                         <th>Description</th>
                         <th>Delete</th>
                       </tr>
-                    </thead>
-                    <tbody>
+                      </thead>
+                      <tbody>
                       {payments.map((payment, index) => (
-                        <tr key={index}>
-                          <td>{payment.mode}</td>
-                          <td
-                            style={{
-                              color:
-                                parseInt(payment.amount) >= 0 ? "green" : "red",
-                              fontWeight:
-                                parseInt(payment.amount) >= 0
-                                  ? "bold"
-                                  : "normal",
-                            }}
-                          >
-                            {payment.amount}
-                          </td>
-                          <td>{payment.fineGold}</td>
-                          <td>{payment.fineSilver}</td>
-                          <td>{payment.paymentDescription}</td>
-                          {/* Button to delete the payment */}
-                          <td onClick={() => deletePayment(index)}>
-                            <button
-                              tabIndex="7"
-                              ref={button6Ref}
-                              onKeyPress={(e) => {
-                                if (e.key === "Enter") {
-                                  button7Ref.current.focus();
-                                }
-                              }}
-                              className="adminInviceAddedProductsTotalAmountDeleteOption"
-                              onClick={() => deletePayment(index)}
+                          <tr key={index}>
+                            <td>{payment.mode}</td>
+                            <td
+                                style={{
+                                  color:
+                                      parseInt(payment.amount) >= 0 ? "green" : "red",
+                                  fontWeight:
+                                      parseInt(payment.amount) >= 0
+                                          ? "bold"
+                                          : "normal",
+                                }}
                             >
-                              Delete
-                            </button>
-                          </td>
-                        </tr>
+                              {payment.amount}
+                            </td>
+                            <td>{payment.fineGold}</td>
+                            <td>{payment.fineSilver}</td>
+                            <td>{payment.paymentDescription}</td>
+                            {/* Button to delete the payment */}
+                            <td onClick={() => deletePayment(index)}>
+                              <button
+                                  tabIndex="7"
+                                  ref={button6Ref}
+                                  onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                      button7Ref.current.focus();
+                                    }
+                                  }}
+                                  className="adminInviceAddedProductsTotalAmountDeleteOption"
+                                  onClick={() => deletePayment(index)}
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
                       ))}
-                    </tbody>
-                  </table>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <div className="adminInviceAddedProductsTotalItemBox">
-                {allSelectedProducts.filter((x) => x.wholesale).length > 0 ? (
-                  <>
-                    <label>Balance Gold</label>
-                    <input type="text" value={totalPayableGold} readOnly />
-                  </>
-                ) : null}
-                {allSelectedProducts.filter((x) => x.wholesale).length > 0 ? (
-                  <>
-                    <label>Balance Silver</label>
-                    <input type="text" value={totalPayableSilver} readOnly />
-                  </>
-                ) : null}
-                <label>Taxable Amount</label>
-                <input
-                  type="text"
-                  value={parseInt(allProdctsNetAmount).toLocaleString("en-IN")}
-                  readOnly
-                />
-                <label>R.O./Discount(-)</label>
-                <div className="invoiceDiscountInputBox">
+                <div className="adminInviceAddedProductsTotalItemBox">
+                  {allSelectedProducts.filter((x) => x.wholesale).length > 0 ? (
+                      <>
+                        <label>Balance Gold</label>
+                        <input type="text" value={totalPayableGold} readOnly/>
+                      </>
+                  ) : null}
+                  {allSelectedProducts.filter((x) => x.wholesale).length > 0 ? (
+                      <>
+                        <label>Balance Silver</label>
+                        <input type="text" value={totalPayableSilver} readOnly/>
+                      </>
+                  ) : null}
+                  <label>Taxable Amount</label>
                   <input
-                    id="discount"
-                    type="text"
-                    // value={parseInt(discountAmount).toLocaleString("en-IN")}
-                    value={parseFloat(discountAmount).toFixed(0)}
-                    readOnly
+                      type="text"
+                      value={parseInt(allProdctsNetAmount).toLocaleString("en-IN")}
+                      readOnly
                   />
-                  <input
-                    id="discountPercentage"
-                    type="number"
-                    placeholder="%"
-                    value={discountPercentage}
-                    onChange={(e) => {
-                      e.target.value <= 100 && e.target.value >= 0
-                        ? handleDiscountPercentage(e)
-                        : null;
-                    }}
-                  />
-                </div>
+                  <label>R.O./Discount(-)</label>
+                  <div className="invoiceDiscountInputBox">
+                    <input
+                        id="discount"
+                        type="text"
+                        // value={parseInt(discountAmount).toLocaleString("en-IN")}
+                        value={parseFloat(discountAmount).toFixed(0)}
+                        readOnly
+                    />
+                    <input
+                        id="discountPercentage"
+                        type="number"
+                        placeholder="%"
+                        value={discountPercentage}
+                        onChange={(e) => {
+                          e.target.value <= 100 && e.target.value >= 0
+                              ? handleDiscountPercentage(e)
+                              : null;
+                        }}
+                    />
+                  </div>
 
-                <div className="invoiceGstCheckBox1">
-                  <input
-                    // className="invoiceGstCheckBox1"
-                    type="checkbox"
-                    defaultChecked={applyGstAmount}
-                    value={applyGstAmount}
-                    onChange={handleGstType}
-                  />
-                  <label>GST {applyGstAmount ? "3%" : "0%"}</label>
+                  <div className="invoiceGstCheckBox1">
+                    <input
+                        // className="invoiceGstCheckBox1"
+                        type="checkbox"
+                        defaultChecked={applyGstAmount}
+                        value={applyGstAmount}
+                        onChange={handleGstType}
+                    />
+                    <label>GST {applyGstAmount ? "3%" : "0%"}</label>
 
-                  <input
-                    // className="invoiceGstCheckBox1"
+                    <input
+                        // className="invoiceGstCheckBox1"
 
-                    type="checkbox"
-                    checked={gstType}
-                    onChange={() => setGstType(!gstType)}
+                        type="checkbox"
+                        checked={gstType}
+                        onChange={() => setGstType(!gstType)}
+                    />
+                  </div>
+                  <input
+                      type="text"
+                      value={parseInt(totalPayableGstAmount).toLocaleString(
+                          "en-IN"
+                      )}
+                      readOnly
                   />
-                </div>
-                <input
-                  type="text"
-                  value={parseInt(totalPayableGstAmount).toLocaleString(
-                    "en-IN"
-                  )}
-                  readOnly
-                />
-                <label>Purchase Amount</label>
-                <input
-                  type="text"
-                  readOnly
-                  value={parseInt(oldGoldAmount)}
-                  onChange={(e) => {
-                    if (!isNaN(oldGoldAmount)) {
-                      setOldGoldAmount(e.target.value),
-                        // Check if the input value is a valid number
-                        setGrandTotal(
-                          parseFloat(
-                            parseFloat(totalPayableAmount) -
-                              parseFloat(e.target.value)
-                          )
+                  <label>Purchase Amount</label>
+                  <input
+                      type="text"
+                      readOnly
+                      value={parseInt(oldGoldAmount)}
+                      onChange={(e) => {
+                        if (!isNaN(oldGoldAmount)) {
+                          setOldGoldAmount(e.target.value),
+                              // Check if the input value is a valid number
+                              setGrandTotal(
+                                  parseFloat(
+                                      parseFloat(totalPayableAmount) -
+                                      parseFloat(e.target.value)
+                                  )
+                              );
+                          setPaymentAmount(
+                              parseFloat(
+                                  parseFloat(totalPayableAmount) -
+                                  parseFloat(e.target.value)
+                              )
+                          );
+                        } else {
+                          // setTotalPayableAmount(allProdctsNetAmount);
+                          setGrandTotal(0);
+                          setOldGoldAmount(0);
+                        }
+                      }}
+                  />
+                  <label>Total Amount</label>
+                  <input
+                      id="totalAmount"
+                      tabIndex="2"
+                      ref={button1Ref}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          button2Ref.current.focus();
+                        }
+                      }}
+                      type="text"
+                      style={{backgroundColor: "wheat"}}
+                      value={Math.ceil(totalPayableAmount)}
+                      onChange={(e) => {
+                        const newTotalPayableAmount = parseFloat(e.target.value);
+                        if (!isNaN(newTotalPayableAmount)) {
+                          // Check if the input value is a valid number
+                          if (applyGstAmount) {
+                            setTotalPayableGstAmount(
+                                ((newTotalPayableAmount / 103) * 3).toFixed(2)
+                            );
+                          } else {
+                            setTotalPayableGstAmount(0);
+                          }
+                          changeTotalPrice(e);
+
+                          // setGrandTotal(0);
+                          // setOldGoldAmount(0);
+                        } else {
+                          //   setTotalPayableAmount(allProdctsNetAmount);
+                          setTotalPayableAmount(0);
+                        }
+                      }}
+                      onBlur={() => {
+                        const totalMaking = allSelectedProducts.reduce(
+                            (total, item) => total + parseFloat(item.making),
+                            0
                         );
-                      setPaymentAmount(
-                        parseFloat(
-                          parseFloat(totalPayableAmount) -
-                            parseFloat(e.target.value)
-                        )
+
+                        let totalAmountPayingNow = allSelectedProducts.reduce(
+                            (total, product) =>
+                                total +
+                                parseFloat(product.finalPrice) +
+                                parseFloat(product.totalGstAmount),
+                            0
+                        );
+                        let totalDiscount =
+                            parseInt(totalAmountPayingNow) -
+                            parseInt(document.getElementById("totalAmount").value);
+                        if (totalDiscount <= totalMaking) {
+                          // alert("Changed");
+                        } else {
+                          alert("Discount Amount Exceeded");
+                          setDiscountAmount(0);
+                          setDiscountPercentage(0);
+                          calculateNetAmount();
+                        }
+                        // const discount =
+                        //   parseFloat(document.getElementById("discount").value) ||
+                        //   0;
+
+                        // if (discount > totalAmount) {
+
+                        // }
+                      }}
+                  />
+
+                  <label>Paid Amount</label>
+                  <input type="text" value={parseInt(totalPaidAmount)} readOnly/>
+                  <label>Balance Amount</label>
+                  <input
+                      type="text"
+                      value={parseInt(grandTotal).toLocaleString("en-IN")}
+                      readOnly
+                  />
+                  <label>Sales By:</label>
+                  <select
+                      tabIndex="8"
+                      ref={button7Ref}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          button8Ref.current.focus();
+                        }
+                      }}
+                      value={selectedSalesEmployee}
+                      onChange={(e) => setSelectedSalesEmployee(e.target.value)}
+                  >
+                    <option value={""}>Sold By:</option>
+                    {allSalesTeam.map((x) => {
+                      return (
+                          <option
+                              value={`${x.firstname} ${x.lastname}`}
+                              key={x.id}
+                          >{`${x.firstname} ${x.lastname}`}</option>
                       );
-                    } else {
-                      // setTotalPayableAmount(allProdctsNetAmount);
-                      setGrandTotal(0);
-                      setOldGoldAmount(0);
-                    }
-                  }}
-                />
-                <label>Total Amount</label>
-                <input
-                  id="totalAmount"
-                  tabIndex="2"
-                  ref={button1Ref}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      button2Ref.current.focus();
-                    }
-                  }}
-                  type="text"
-                  style={{ backgroundColor: "wheat" }}
-                  value={Math.ceil(totalPayableAmount)}
-                  onChange={(e) => {
-                    const newTotalPayableAmount = parseFloat(e.target.value);
-                    if (!isNaN(newTotalPayableAmount)) {
-                      // Check if the input value is a valid number
-                      if (applyGstAmount) {
-                        setTotalPayableGstAmount(
-                          ((newTotalPayableAmount / 103) * 3).toFixed(2)
-                        );
-                      } else {
-                        setTotalPayableGstAmount(0);
-                      }
-                      changeTotalPrice(e);
-
-                      // setGrandTotal(0);
-                      // setOldGoldAmount(0);
-                    } else {
-                      //   setTotalPayableAmount(allProdctsNetAmount);
-                      setTotalPayableAmount(0);
-                    }
-                  }}
-                  onBlur={() => {
-                    const totalMaking = allSelectedProducts.reduce(
-                      (total, item) => total + parseFloat(item.making),
-                      0
-                    );
-
-                    let totalAmountPayingNow = allSelectedProducts.reduce(
-                      (total, product) =>
-                        total +
-                        parseFloat(product.finalPrice) +
-                        parseFloat(product.totalGstAmount),
-                      0
-                    );
-                    let totalDiscount =
-                      parseInt(totalAmountPayingNow) -
-                      parseInt(document.getElementById("totalAmount").value);
-                    if (totalDiscount <= totalMaking) {
-                      // alert("Changed");
-                    } else {
-                      alert("Discount Amount Exceeded");
-                      setDiscountAmount(0);
-                      setDiscountPercentage(0);
-                      calculateNetAmount();
-                    }
-                    // const discount =
-                    //   parseFloat(document.getElementById("discount").value) ||
-                    //   0;
-
-                    // if (discount > totalAmount) {
-
-                    // }
-                  }}
-                />
-
-                <label>Paid Amount</label>
-                <input type="text" value={parseInt(totalPaidAmount)} readOnly />
-                <label>Balance Amount</label>
-                <input
-                  type="text"
-                  value={parseInt(grandTotal).toLocaleString("en-IN")}
-                  readOnly
-                />
-                <label>Sales By:</label>
-                <select
-                  tabIndex="8"
-                  ref={button7Ref}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      button8Ref.current.focus();
-                    }
-                  }}
-                  value={selectedSalesEmployee}
-                  onChange={(e) => setSelectedSalesEmployee(e.target.value)}
-                >
-                  <option value={""}>Sold By:</option>
-                  {allSalesTeam.map((x) => {
-                    return (
-                      <option
-                        value={`${x.firstname} ${x.lastname}`}
-                        key={x.id}
-                      >{`${x.firstname} ${x.lastname}`}</option>
-                    );
-                  })}
-                </select>
-                <label>Cashed By:</label>
-                <select
-                  tabIndex="9"
-                  ref={button8Ref}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      button9Ref.current.focus();
-                    }
-                  }}
-                  value={selectedCashierEmployee}
-                  onChange={(e) => setSelectedCashierEmployee(e.target.value)}
-                >
-                  <option value={""}>Cashed By:</option>
-                  {allCashiersTeam.map((x) => {
-                    return (
-                      <option
-                        value={`${x.firstname} ${x.lastname}`}
-                        key={x.id}
-                      >{`${x.firstname} ${x.lastname}`}</option>
-                    );
-                  })}
-                </select>
+                    })}
+                  </select>
+                  <label>Cashed By:</label>
+                  <select
+                      tabIndex="9"
+                      ref={button8Ref}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          button9Ref.current.focus();
+                        }
+                      }}
+                      value={selectedCashierEmployee}
+                      onChange={(e) => setSelectedCashierEmployee(e.target.value)}
+                  >
+                    <option value={""}>Cashed By:</option>
+                    {allCashiersTeam.map((x) => {
+                      return (
+                          <option
+                              value={`${x.firstname} ${x.lastname}`}
+                              key={x.id}
+                          >{`${x.firstname} ${x.lastname}`}</option>
+                      );
+                    })}
+                  </select>
+                </div>
               </div>
-            </div>
-            {/* <div
+              {/* <div
               id="adminInvoiceSelectLabelBox"
               className="adminInvoiceSelectLabelBox"
             >
@@ -7686,95 +7682,95 @@ export default function AdminInvoice() {
                 </button>
               </div>
             </div> */}
-            <div className="adminInvoiceMainSaveButtonBox">
-              {!loading ? (
+              <div className="adminInvoiceMainSaveButtonBox">
+                {!loading ? (
+                    <button
+                        tabIndex="10"
+                        ref={button9Ref}
+                        // onKeyPress={(e) => {
+                        //   if (e.key === "Enter") {
+                        //     button10Ref.current.focus();
+                        //   }
+                        // }}
+                        style={{marginInline: "10px"}}
+                        onClick={() => {
+                          if (selectedCustomer && allSelectedProducts.length > 0) {
+                            createOrder(gstType);
+                            // checkPurchaseItems();
+                          } else {
+                            alert("Please add all details");
+                          }
+                        }}
+                    >
+                      <MdOutlineSaveAlt
+                          size={"15px"}
+                          style={{marginRight: "5px"}}
+                      />
+                      Save
+                    </button>
+                ) : null}{" "}
+                {!loading ? (
+                    <button
+                        tabIndex="10"
+                        ref={button9Ref}
+                        // onKeyPress={(e) => {
+                        //   if (e.key === "Enter") {
+                        //     button10Ref.current.focus();
+                        //   }
+                        // }}
+                        style={{marginInline: "10px"}}
+                        onClick={() => {
+                          if (selectedCustomer && allSelectedProducts.length > 0) {
+                            // createOrder();
+                            handlePendingApproval();
+                            // setPendingApproval(true);
+                            // console.log(pendingApproval);
+                            // checkPurchaseItems();
+                          } else {
+                            alert("Please add all details");
+                          }
+                        }}
+                    >
+                      <MdOutlineSaveAlt
+                          size={"15px"}
+                          style={{marginRight: "5px"}}
+                      />
+                      Pending
+                    </button>
+                ) : null}{" "}
                 <button
-                  tabIndex="10"
-                  ref={button9Ref}
-                  // onKeyPress={(e) => {
-                  //   if (e.key === "Enter") {
-                  //     button10Ref.current.focus();
-                  //   }
-                  // }}
-                  style={{ marginInline: "10px" }}
-                  onClick={() => {
-                    if (selectedCustomer && allSelectedProducts.length > 0) {
-                      createOrder(gstType);
-                      // checkPurchaseItems();
-                    } else {
-                      alert("Please add all details");
-                    }
-                  }}
+                    tabIndex="11"
+                    ref={button10Ref}
+                    //  onKeyPress={(e) => {
+                    //    if (e.key === "Enter") {
+                    //      button1Ref.current.focus();
+                    //    }
+                    //  }}
+                    style={{marginInline: "10px"}}
+                    onClick={() => resetAllFields()}
                 >
-                  <MdOutlineSaveAlt
-                    size={"15px"}
-                    style={{ marginRight: "5px" }}
-                  />
-                  Save
+                  <BiReset size={"16px"} style={{marginRight: "5px"}}/>
+                  Reset
                 </button>
-              ) : null}{" "}
-              {!loading ? (
                 <button
-                  tabIndex="10"
-                  ref={button9Ref}
-                  // onKeyPress={(e) => {
-                  //   if (e.key === "Enter") {
-                  //     button10Ref.current.focus();
-                  //   }
-                  // }}
-                  style={{ marginInline: "10px" }}
-                  onClick={() => {
-                    if (selectedCustomer && allSelectedProducts.length > 0) {
-                      // createOrder();
-                      handlePendingApproval();
-                      // setPendingApproval(true);
-                      // console.log(pendingApproval);
-                      // checkPurchaseItems();
-                    } else {
-                      alert("Please add all details");
-                    }
-                  }}
-                >
-                  <MdOutlineSaveAlt
-                    size={"15px"}
-                    style={{ marginRight: "5px" }}
-                  />
-                  Pending
-                </button>
-              ) : null}{" "}
-              <button
-                tabIndex="11"
-                ref={button10Ref}
-                //  onKeyPress={(e) => {
-                //    if (e.key === "Enter") {
-                //      button1Ref.current.focus();
-                //    }
-                //  }}
-                style={{ marginInline: "10px" }}
-                onClick={() => resetAllFields()}
-              >
-                <BiReset size={"16px"} style={{ marginRight: "5px" }} />
-                Reset
-              </button>
-              <button
-                //  onKeyPress={(e) => {
-                //    if (e.key === "Enter") {
-                //      button1Ref.current.focus();
-                //    }
-                //  }}
+                    //  onKeyPress={(e) => {
+                    //    if (e.key === "Enter") {
+                    //      button1Ref.current.focus();
+                    //    }
+                    //  }}
 
-                style={{
-                  marginInline: "10px",
-                }}
-                onClick={() => navigate("/admin_orders")}
-              >
-                <IoIosList size={"16px"} style={{ marginRight: "5px" }} />
-                List
-              </button>
+                    style={{
+                      marginInline: "10px",
+                    }}
+                    onClick={() => navigate("/admin_orders")}
+                >
+                  <IoIosList size={"16px"} style={{marginRight: "5px"}}/>
+                  List
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
