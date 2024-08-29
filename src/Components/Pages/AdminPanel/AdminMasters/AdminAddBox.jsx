@@ -636,12 +636,12 @@ export default function AdminAddBox() {
 
                       <select
                           type="number"
-                          required="required"
+                          // required="required"
                           // name="VendorId"
                           value={inputPacketMaster}
                           onChange={(e) => setInputPacketMaster(e.target.value)}
                       >
-                        <option value={0}>Select Vendor</option>
+                        <option value={0}>Select Packet</option>
                         {PacketMasterData.map((x) => (
                             <option value={`${x.PacketName} - ${x.Id}`}>
                               {`${x.PacketName} - ${x.Id}`}
@@ -653,7 +653,7 @@ export default function AdminAddBox() {
                           type="button"
                           onClick={handleAddVendor}
                       >
-                        Add Vendor
+                        Add Packet
                       </button>
 
                     </div>

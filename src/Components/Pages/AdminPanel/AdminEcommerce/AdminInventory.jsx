@@ -690,16 +690,16 @@ export default function AdminInventory() {
     );
     // Generate header on the first page
     generateHeader();
-    doc.text(
-        `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
-        startX + 5 * columnWidth,
-        startY - 10
-    );
-    doc.text(
-        `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
-        startX,
-        startY - 10
-    );
+    // doc.text(
+    //     `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
+    //     startX + 5 * columnWidth,
+    //     startY - 10
+    // );
+    // doc.text(
+    //     `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
+    //     startX,
+    //     startY - 10
+    // );
     // Generate data rows
 
 

@@ -677,14 +677,13 @@ export default function AdminAddPacketMaster() {
                     <option value={"InActive"}>InActive</option>
                   </select>
                   <label>
-                    Box<sup>*</sup>
+                    Box
                   </label>
                   <select
                       name="BoxId"
                       value={newCategory.BoxId}
                       onChange={handleNewCategoryChange}
                       type="text"
-                      required="required"
                   >
                     <option value={""}>Select an option</option>;
                     {allBoxList.map((x) => {
