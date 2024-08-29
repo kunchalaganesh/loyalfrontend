@@ -176,18 +176,18 @@ export default function AdminStockReport() {
     // setAllCategories(data);
     console.log(data, "data");
     console.log(data, "data");
-    let setInitialDefaultData = data.map((x, index) => {
+    let setInitialDefaultData = data?.map((x, index) => {
       return {
         "S No": index + 1,
         Category: x.Category,
-        "Opening G.WT": x.OpeningGrossWeight,
-        "Opening N.WT": x.OpeningNetWeight,
         "Opening Qty": x.OpeningQuantity,
         "Stock In Qty": x.StockEntryQuantity,
-        "Stock In WT": x.StockEntryGrWt,
         "Sale Qty": x.SaleQty,
-        "Sale WT": x.SaleGrossWt,
         "Closing Qty": x.ClosingQty,
+        "Opening G.WT": x.OpeningGrossWeight,
+        "Opening N.WT": x.OpeningNetWeight,
+        "Stock In WT": x.StockEntryGrWt,
+        "Sale WT": x.SaleGrossWt,
         "Closing G.WT": x.ClosingGrossWeight,
         "Closing N.WT": x.ClosingNetWeight,
         Id: x.CategoryId,
@@ -222,25 +222,23 @@ export default function AdminStockReport() {
     });
     const data = await response.json();
     // setAllCategories(data);
-    console.log(data, "data");
-    console.log(data, "data");
-    let setInitialDefaultData = data.map((x, index) => {
+    let setInitialDefaultData = data?.map((x, index) => {
       return {
         "S No": index + 1,
         Category: x.Category,
         Product: x.Product,
-        "Opening G.WT": x.OpeningGrossWeight,
-        "Opening N.WT": x.OpeningNetWeight,
         "Opening Qty": x.OpeningQuantity,
         "Stock In Qty": x.StockEntryQuantity,
-        "Stock In WT": x.StockEntryGrWt,
         "Sale Qty": x.SaleQty,
-        "Sale WT": x.SaleGrossWt,
         "Closing Qty": x.ClosingQty,
+        "Opening G.WT": x.OpeningGrossWeight,
+        "Opening N.WT": x.OpeningNetWeight,
+        "Stock In WT": x.StockEntryGrWt,
+        "Sale WT": x.SaleGrossWt,
         "Closing G.WT": x.ClosingGrossWeight,
         "Closing N.WT": x.ClosingNetWeight,
-        Id: `${x.CategoryId}`,
-        ProductId: `${x.ProductId}`,
+        // Id: `${x.CategoryId}`,
+        // ProductId: `${x.ProductId}`,
       };
     });
 
@@ -273,22 +271,20 @@ export default function AdminStockReport() {
     });
     const data = await response.json();
     // setAllCategories(data);
-    console.log(data, "data");
-    console.log(data, "data");
-    let setInitialDefaultData = data.map((x, index) => {
+    let setInitialDefaultData = data?.map((x, index) => {
       return {
         "S No": index + 1,
         Category: x.Category,
         Product: x.Product,
         Design: x.Design,
-        "Opening G.WT": x.OpeningGrossWeight,
-        "Opening N.WT": x.OpeningNetWeight,
         "Opening Qty": x.OpeningQuantity,
         "Stock In Qty": x.StockEntryQuantity,
-        "Stock In WT": x.StockEntryGrWt,
         "Sale Qty": x.SaleQty,
-        "Sale WT": x.SaleGrossWt,
         "Closing Qty": x.ClosingQty,
+        "Opening G.WT": x.OpeningGrossWeight,
+        "Opening N.WT": x.OpeningNetWeight,
+        "Stock In WT": x.StockEntryGrWt,
+        "Sale WT": x.SaleGrossWt,
         "Closing G.WT": x.ClosingGrossWeight,
         "Closing N.WT": x.ClosingNetWeight,
         // Id: x.CategoryId,
@@ -340,14 +336,15 @@ export default function AdminStockReport() {
     const selectedProductData = allProducts.filter((x) =>
       selectedProducts.includes(x.id)
     );
-    printListAll(filteredProducts);
+    // filteredProducts
+    printListAll(tablesDataDefault);
   };
   const printListAll = async (data) => {
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const startX = 10;
+    const startX = 8;
     let startY = 20;
     const lineHeight = 5;
     const margin = 5;
@@ -360,18 +357,23 @@ export default function AdminStockReport() {
     doc.setFontSize(8);
 
     const generateHeader = () => {
-      doc.text("S. No.", startX, startY); // Serial Number
-      doc.text("Collection", startX + columnWidth, startY);
-      doc.text("Gross Wt", startX + 2 * columnWidth, startY);
-      doc.text("Net Wt", startX + 3 * columnWidth, startY);
-      doc.text("Item Code", startX + 4 * columnWidth, startY);
-      doc.text("Barcode No", startX + 5.5 * columnWidth, startY);
+      doc.text("S No.", startX, startY); // Serial Number
+      doc.text("Category", startX - 0.5 + columnWidth, startY);
+      doc.text("Opening Qty", startX + 2.4 * columnWidth, startY);
+      doc.text("StockIn Qty", startX + 3.8 * columnWidth, startY);
+      // doc.text("Sale Qty", startX + 4.8 * columnWidth, startY);
+      doc.text("Closing Qty", startX + 5.2 * columnWidth, startY);
+      doc.text("Opening G.WT", startX + 6.5 * columnWidth, startY);
+      doc.text("Opening N.WT", startX + 8.2 * columnWidth, startY);
+      doc.text("StockIn WT", startX + 9.9 * columnWidth, startY);
+      // doc.text("Sale WT", startX +11.5 * columnWidth, startY);
       // doc.text("M Fixed Amt", startX + 7 * columnWidth, startY);
       // doc.text("M Fix Wastage", startX + 8.5 * columnWidth, startY);
       // doc.text("M Percentage", startX + 10 * columnWidth, startY);
       // doc.text("M per_gram", startX + 11.5 * columnWidth, startY);
       // doc.text("stoneAmount", startX + 13 * columnWidth, startY);
-      doc.text("Tid", startX + 7.53 * columnWidth, startY);
+      doc.text("Closing G.WT", startX + 11.4 * columnWidth, startY);
+      doc.text("Closing N.WT", startX + 13 * columnWidth, startY);
     };
     const totalNetWt = data.reduce(
       (total, item) => total + (parseFloat(item.NetWt) || 0),
@@ -396,7 +398,6 @@ export default function AdminStockReport() {
     // Generate data rows
 
     let y = startY + lineHeight + margin;
-      console.log("DTATATA : ",data);
     data.forEach((item, index) => {
       // Check if we need to start a new page
       if (index > 0 && y + lineHeight > pageHeight - margin) {
@@ -409,28 +410,41 @@ export default function AdminStockReport() {
       const serialNumber = index + 1;
       doc.text(serialNumber.toString(), startX, y);
       doc.text(
-        item.collection ? item.collection.toString().substr(0, 8) : "N/A",
-        startX + columnWidth,
+        item.Category ? item.Category.substr(0, 8) : "N/A",
+        startX - 0.5 + columnWidth,
         y
       );
       doc.text(
-        item.GrossWt ? item.GrossWt.toString() : "N/A",
-        startX + 2 * columnWidth,
+        item['Opening Qty'] || item['Opening Qty'] === 0 ? item['Opening Qty'].toString() : "N/A",
+          startX + 2.6 * columnWidth,
         y
       );
       doc.text(
-        item.netWt ? item.netWt.toString() : "N/A",
-        startX + 3 * columnWidth,
+        item['Stock In Qty'] || item['Stock In Qty'] === 0 ? item['Stock In Qty'].toString() : "N/A",
+          startX + 4 * columnWidth,
+        y
+      );
+      // doc.text(
+      //   item['Sale Qty'] || item['Sale Qty'] === 0 ? item['Sale Qty'].toString() : "N/A",
+      //   startX + 4.8 * columnWidth,
+      //   y
+      // );
+      doc.text(
+        item['Closing Qty'] || item['Closing Qty'] === 0 ? item['Closing Qty'].toString() : "N/A",
+        startX + 5.2 * columnWidth,
         y
       );
       doc.text(
-        item.itemCode ? item.itemCode.toString() : "N/A",
-        startX + 4 * columnWidth,
+        item['Opening G.WT'] ||  item['Opening G.WT'] === 0 ? item['Opening G.WT'].toString() : "N/A",
+        startX + 6.5 * columnWidth,
         y
-      );
-      doc.text(
-        item.barcodeNumber ? item.barcodeNumber.toString() : "N/A",
-        startX + 5.5 * columnWidth,
+      );doc.text(
+          item['Opening N.WT'] ||  item['Opening N.WT'] === 0  ? item['Opening N.WT'].toString() : "N/A",
+        startX + 8.2 * columnWidth,
+        y
+      );doc.text(
+        item['Stock In WT'] ||  item['Stock In WT'] === 0 ? item['Stock In WT'].toString() : "N/A",
+        startX + 9.9 * columnWidth,
         y
       );
       // doc.text(
@@ -460,9 +474,19 @@ export default function AdminStockReport() {
       //   startX + 13 * columnWidth,
       //   y
       // );
+      // doc.text(
+      //   item['Sale WT']  ||  item['Sale WT'] === 0 ? item['Sale WT'].toString() : "N/A",
+      //   startX + 11.5  * columnWidth,
+      //   y
+      // );
       doc.text(
-        item.tid ? item.tid.toString() : "N/A",
-        startX + 7.5 * columnWidth,
+        item['Closing G.WT'] ||  item['Closing G.WT'] === 0 ? item['Closing G.WT'].toString() : "N/A",
+        startX + 11.4  * columnWidth,
+        y
+      );
+      doc.text(
+          item['Closing N.WT'] ||  item['Closing N.WT'] === 0  ? item['Closing N.WT'].toString() : "N/A",
+        startX + 13  * columnWidth,
         y
       );
       y += lineHeight + margin;

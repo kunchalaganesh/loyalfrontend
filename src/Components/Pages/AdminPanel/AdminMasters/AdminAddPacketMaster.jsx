@@ -12,7 +12,7 @@ import {
   a163,
   a224,
   a225,
-  a226,
+  a226, a30,
   a95,
   a98,
 } from "../../../Api/RootApiPath";
@@ -38,7 +38,7 @@ export default function AdminAddPacketMaster() {
     BranchId: "",
     EmployeeId: "",
     Status: "",
-
+    BoxId : "",
     OldEntry: false,
   });
   const [allCompaniesList, setAllCompaniesList] = useState([]);
@@ -46,6 +46,7 @@ export default function AdminAddPacketMaster() {
   const [allDepartmentsList, setAllDepartmentsList] = useState([]);
   const [allRolesList, setAllRolesList] = useState([]);
   const [allCategoriesList, setAllCategoriesList] = useState([]);
+  const [allBoxList, setAllBoxList] = useState([]);
   const [allProductsList, setAllProductsList] = useState([]);
   const [allSkuList, setAllSkuList] = useState([]);
   const allStates = useSelector((state) => state);
@@ -114,8 +115,32 @@ export default function AdminAddPacketMaster() {
       console.log(error);
     }
   };
+  const fetchAllBox = async () => {
+    const formData = {
+      ClientCode: clientCode,
+    };
+    const response = await fetch(a30, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await response.json();
+    console.log(data, "data,");
+    try {
+      if (data.length > 0) {
+        setAllBoxList(data);
+      } else {
+        // alert("Please Add Company First");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     fetchAllCompanies();
+    fetchAllBox();
   }, []);
 
   const fetchAllBranches = async () => {
@@ -326,6 +351,7 @@ export default function AdminAddPacketMaster() {
       CompanyId: parseInt(newCategory.CompanyId),
       BranchId: parseInt(newCategory.BranchId),
       Status: newCategory.Status,
+      BoxId: newCategory.BoxId,
       EmployeeId: employeeId || 0,
 
       ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
@@ -650,6 +676,25 @@ export default function AdminAddPacketMaster() {
                     <option value={"Active"}>Active</option>
                     <option value={"InActive"}>InActive</option>
                   </select>
+                  <label>
+                    Box<sup>*</sup>
+                  </label>
+                  <select
+                      name="BoxId"
+                      value={newCategory.BoxId}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                      required="required"
+                  >
+                    <option value={""}>Select an option</option>;
+                    {allBoxList.map((x) => {
+                      return (
+                          <>
+                            <option value={x.Id}>{x.BoxName}</option>;
+                          </>
+                      );
+                    })}
+                  </select>{" "}
                 </div>
                 {!loading ? <button type="submit">Submit</button> : null}
               </form>
