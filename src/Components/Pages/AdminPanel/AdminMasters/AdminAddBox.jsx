@@ -663,7 +663,7 @@ export default function AdminAddBox() {
                         id="adminSkuAddSkuSelectVendor"
                     >
                       <label htmlFor="netWt">
-                        Total {selectedPacketMaster.length} Vendors
+                        Total {selectedPacketMaster.length} Packets
                       </label>
                       <div
                           style={{
