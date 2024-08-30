@@ -1,8 +1,8 @@
 import React from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
 import {
   a125,
   a128,
@@ -15,15 +15,15 @@ import {
   a41,
   a47,
 } from "../../../Api/RootApiPath";
-import { useState } from "react";
-import { InfinitySpin, MagnifyingGlass } from "react-loader-spinner";
+import {useState} from "react";
+import {InfinitySpin, MagnifyingGlass} from "react-loader-spinner";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
-import { BsHandbag } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import { AiOutlineEdit } from "react-icons/ai";
+import {BsHandbag} from "react-icons/bs";
+import {useNavigate} from "react-router-dom";
+import {AiOutlineEdit} from "react-icons/ai";
 import "../../PagesStyles/AdminEcommerce.css";
-import { GenerateLabel } from "../../../Other Functions/GenerateLabel";
+import {GenerateLabel} from "../../../Other Functions/GenerateLabel";
 
 export default function AdminInventory() {
   const [allProducts, setAllProducts] = useState([]);
@@ -71,10 +71,10 @@ export default function AdminInventory() {
       },
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllCategories(response);
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllCategories(response);
+        });
   };
 
   useEffect(() => {
@@ -91,10 +91,10 @@ export default function AdminInventory() {
       },
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllProductTypes(response);
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllProductTypes(response);
+        });
   };
 
   useEffect(() => {
@@ -111,10 +111,10 @@ export default function AdminInventory() {
       },
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllCollectionTypes(response);
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllCollectionTypes(response);
+        });
   };
 
   useEffect(() => {
@@ -213,8 +213,8 @@ export default function AdminInventory() {
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
+      indexOfFirstProduct,
+      indexOfLastProduct
   );
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -240,7 +240,7 @@ export default function AdminInventory() {
       // If the product is already selected, remove it from the list
       if (isSelected) {
         setSelectedProducts((prevSelected) =>
-          prevSelected.filter((Id) => Id !== productId)
+            prevSelected.filter((Id) => Id !== productId)
         );
       } else {
         // If the product is not selected, add it to the list
@@ -248,9 +248,10 @@ export default function AdminInventory() {
       }
     }
   };
+
   const printAll = () => {
     const selectedProductData = allProducts.filter((x) =>
-      selectedProducts.includes(x.Id)
+        selectedProducts.includes(x.Id)
     );
     printPDF(selectedProductData);
     console.log("button", selectedProductData);
@@ -635,11 +636,18 @@ export default function AdminInventory() {
   //   );
   // };
   const printList = () => {
-    const selectedProductData = allProducts.filter((x) =>
-      selectedProducts.includes(x.Id)
-    );
-    printListAll(filteredProducts);
+    let selectedProductData;
+    if (selectedProducts.length === 0) {
+      selectedProductData = allProducts;
+    } else {
+      selectedProductData = allProducts.filter((x) =>
+          selectedProducts.includes(x.Id)
+      );
+    }
+
+    printListAll(currentProducts);
   };
+
 
   const printListAll = async (data) => {
     const doc = new jsPDF();
@@ -651,7 +659,7 @@ export default function AdminInventory() {
     const margin = 5;
     const serialNumberWidth = 20; // Width for the serial number column
     const columnWidth =
-      (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
+        (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
     doc.setFont("helvetica", "normal");
     // doc.setFontSize(12);
@@ -659,39 +667,41 @@ export default function AdminInventory() {
 
     const generateHeader = () => {
       doc.text("S. No.", startX, startY); // Serial Number
-      doc.text("Collection", startX + columnWidth, startY);
-      doc.text("Gross Wt", startX + 3 * columnWidth, startY);
-      doc.text("Net Wt", startX + 4 * columnWidth, startY);
-      doc.text("Item Code", startX + 5 * columnWidth, startY);
-      doc.text("Barcode No", startX + 6.5 * columnWidth, startY);
+      doc.text("Design Name", startX + columnWidth, startY);
+      doc.text("SKU", startX + 3 * columnWidth, startY);
+      doc.text("Gross Wt", startX + 4.2 * columnWidth, startY);
+      doc.text("Net Wt", startX + 5.3 * columnWidth, startY);
+      doc.text("Item Code", startX + 6.5 * columnWidth, startY);
+      doc.text("Barcode No", startX + 8 * columnWidth, startY);
       // doc.text("M Fixed Amt", startX + 7 * columnWidth, startY);
       // doc.text("M Fix Wastage", startX + 8.5 * columnWidth, startY);
       // doc.text("M Percentage", startX + 10 * columnWidth, startY);
       // doc.text("M per_gram", startX + 11.5 * columnWidth, startY);
       // doc.text("stoneAmount", startX + 13 * columnWidth, startY);
-      doc.text("Tid", startX + 8.53 * columnWidth, startY);
+      doc.text("Tid", startX + 9.5 * columnWidth, startY);
     };
     const totalNetWt = data.reduce(
-      (total, item) => total + (parseFloat(item.netWt) || 0),
-      0
+        (total, item) => total + (parseFloat(item.netWt) || 0),
+        0
     );
     const totalGrossWt = data.reduce(
-      (total, item) => total + (parseFloat(item.grosswt) || 0),
-      0
+        (total, item) => total + (parseFloat(item.grosswt) || 0),
+        0
     );
     // Generate header on the first page
     generateHeader();
-    doc.text(
-      `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
-      startX + 5 * columnWidth,
-      startY - 10
-    );
-    doc.text(
-      `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
-      startX,
-      startY - 10
-    );
+    // doc.text(
+    //     `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
+    //     startX + 5 * columnWidth,
+    //     startY - 10
+    // );
+    // doc.text(
+    //     `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
+    //     startX,
+    //     startY - 10
+    // );
     // Generate data rows
+
 
     let y = startY + lineHeight + margin;
     data.forEach((item, index) => {
@@ -704,32 +714,34 @@ export default function AdminInventory() {
         y = startY + lineHeight + margin; // Update y position for the new page
       }
 
+      console.log(item, "itemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+
       const serialNumber = index + 1;
       doc.text(serialNumber.toString(), startX, y);
       doc.text(
-        item.collection ? item.collection.toString().substr(0, 8) : "N/A",
-        startX + columnWidth,
-        y
+          item.DesignName ? item.DesignName.toString().substr(0, 8) : "N/A",
+          startX + columnWidth,
+          y
       );
       doc.text(
-        item.grosswt ? item.grosswt.toString() : "N/A",
-        startX + 3 * columnWidth,
-        y
+          item.SKU ? item.SKU.toString() : "N/A",
+          startX + 3 * columnWidth,
+          y
       );
       doc.text(
-        item.netWt ? item.netWt.toString() : "N/A",
-        startX + 4 * columnWidth,
-        y
+          item.GrossWt ? item.GrossWt.toString() : "N/A",
+          startX + 4.2 * columnWidth,
+          y
       );
       doc.text(
-        item.itemCode ? item.itemCode.toString() : "N/A",
-        startX + 5 * columnWidth,
-        y
+          item.NetWt ? item.NetWt.toString() : "N/A",
+          startX + 5.3 * columnWidth,
+          y
       );
       doc.text(
-        item.barcodeNumber ? item.barcodeNumber.toString() : "N/A",
-        startX + 6.5 * columnWidth,
-        y
+          item.ItemCode ? item.ItemCode.toString() : "N/A",
+          startX + 6.5 * columnWidth,
+          y
       );
       // doc.text(
       //   item.making_Fixed_Amt ? item.making_Fixed_Amt.toString() : "N/A",
@@ -759,9 +771,14 @@ export default function AdminInventory() {
       //   y
       // );
       doc.text(
-        item.tid ? item.tid.toString() : "N/A",
-        startX + 8.5 * columnWidth,
-        y
+          item.BranchName ? item.BranchName.toString() : "N/A",
+          startX + 8 * columnWidth,
+          y
+      );
+      doc.text(
+          item.TIDNumber  ? item.TIDNumber.toString() : "N/A",
+          startX + 9.5 * columnWidth,
+          y
       );
       y += lineHeight + margin;
     });
@@ -777,7 +794,7 @@ export default function AdminInventory() {
     const pdfData = doc.output();
 
     // Create a new Blob from the PDF data
-    const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
+    const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
 
     // Create a URL from the Blob
     const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -791,20 +808,20 @@ export default function AdminInventory() {
 
     if (labelCode !== "") {
       filtered = filtered.filter(
-        (product) => product.ItemCode && product.ItemCode.includes(labelCode)
+          (product) => product.ItemCode && product.ItemCode.includes(labelCode)
       );
     }
     if (barCode !== "") {
       filtered = filtered.filter(
-        (product) => product.RFIDCode && product.RFIDCode.includes(barCode)
+          (product) => product.RFIDCode && product.RFIDCode.includes(barCode)
       );
     }
 
     if (categoryName == "") {
       // setCategoryName(""),
       setProductName(""),
-        setCollectionName(""),
-        setFilteredProducts(allProducts);
+          setCollectionName(""),
+          setFilteredProducts(allProducts);
       // console.log("categoryName", categoryName);
     }
     // if (productName == "") {
@@ -825,25 +842,25 @@ export default function AdminInventory() {
     // }
     if (categoryName !== "") {
       filtered = filtered.filter(
-        (product) =>
-          product.CategoryName &&
-          product.CategoryName.includes(categoryNameSelected)
+          (product) =>
+              product.CategoryName &&
+              product.CategoryName.includes(categoryNameSelected)
       );
     }
     if (productName !== "") {
       console.log("filteredProductsTypes1", filtered);
       filtered = filtered.filter(
-        (product) =>
-          // product.itemType && product.itemType.includes(productNameSelected)
-          product.ProductId && product.ProductId === productTypeIdSelected
+          (product) =>
+              // product.itemType && product.itemType.includes(productNameSelected)
+              product.ProductId && product.ProductId === productTypeIdSelected
       );
       console.log("filteredProductsTypes2", filtered);
     }
     if (collectionName !== "") {
       filtered = filtered.filter(
-        (product) =>
-          product.DesignName &&
-          product.DesignName.includes(collectionNameSelected)
+          (product) =>
+              product.DesignName &&
+              product.DesignName.includes(collectionNameSelected)
       );
     }
 
@@ -851,7 +868,7 @@ export default function AdminInventory() {
       filtered = filtered.filter((product) => {
         const createdDate = new Date(product.CreatedOn);
         return (
-          createdDate >= new Date(fromDate) && createdDate <= new Date(toDate)
+            createdDate >= new Date(fromDate) && createdDate <= new Date(toDate)
         );
       });
     }
@@ -878,13 +895,13 @@ export default function AdminInventory() {
   let categoryId = parseInt(categoryName.split(",")[0]);
   let categoryNameSelected = categoryName.split(",")[1];
   const filteredProductTypes = allProductTypes.filter(
-    (product) => product.CategoryId == categoryId
+      (product) => product.CategoryId == categoryId
   );
   let productNameSelected = productName.split(",")[1];
   let productTypeIdSelected = parseInt(productName.split(",")[0]);
   let collectionNameSelected = collectionName.split(",")[1];
   const filteredCollection = allCollectionTypes.filter(
-    (product) => product.ProductId == productTypeIdSelected
+      (product) => product.ProductId == productTypeIdSelected
   );
   console.log("current", currentProducts);
 
@@ -898,10 +915,10 @@ export default function AdminInventory() {
 
     if (updatedCheckedProducts.includes(productId)) {
       updatedCheckedProducts = updatedCheckedProducts.filter(
-        (id) => id !== productId
+          (id) => id !== productId
       );
       updatedSelectedItemCodes = updatedSelectedItemCodes.filter(
-        (code) => code !== itemCode
+          (code) => code !== itemCode
       );
     } else {
       updatedCheckedProducts.push(productId);
@@ -922,7 +939,7 @@ export default function AdminInventory() {
   }));
   const deleteAllProducts = async (itemsToDelete) => {
     const deletAllItemsList = itemsToDelete.map((x) => {
-      return { ...x, ClientCode: clientCode };
+      return {...x, ClientCode: clientCode};
     });
     try {
       const response = await fetch(a178, {
@@ -965,297 +982,297 @@ export default function AdminInventory() {
   console.log("productName", productName);
 
   return (
-    <div>
-      <AdminHeading />
-      <div style={{ paddingTop: "130px" }}>
-        <AdminBreadCrump
-          title={"Inventory"}
-          companyName={"Loyalstring"}
-          module={"E-commerce"}
-          page={"Inventory"}
-        />
-        <div className="adminAddCategoryMainBox">
-          <div className="adminAddCategoryInnerBox">
-            <div className={loading == true ? "loading" : "none"}>
-              {/* <h1>Loading...</h1> */}
-              {/* <InfinitySpin width="200" color="#4fa94d" /> */}
-              <MagnifyingGlass
-                visible={true}
-                height="80"
-                width="80"
-                ariaLabel="MagnifyingGlass-loading"
-                wrapperStyle={{}}
-                wrapperClass="MagnifyingGlass-wrapper"
-                glassColor="#c0efff"
-                color="#e15b64"
-              />
-            </div>
+      <div>
+        <AdminHeading/>
+        <div style={{paddingTop: "130px"}}>
+          <AdminBreadCrump
+              title={"Inventory"}
+              companyName={"Loyalstring"}
+              module={"E-commerce"}
+              page={"Inventory"}
+          />
+          <div className="adminAddCategoryMainBox">
+            <div className="adminAddCategoryInnerBox">
+              <div className={loading == true ? "loading" : "none"}>
+                {/* <h1>Loading...</h1> */}
+                {/* <InfinitySpin width="200" color="#4fa94d" /> */}
+                <MagnifyingGlass
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="MagnifyingGlass-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="MagnifyingGlass-wrapper"
+                    glassColor="#c0efff"
+                    color="#e15b64"
+                />
+              </div>
 
-            {!loading == true ? (
-              <div>
-                <div
-                  style={{
-                    width: "100%",
-                    justifyContent: "left",
-                    flexWrap: "wrap",
-                  }}
-                  className="adminAllProductsFilterBox"
-                >
-                  <div className="adminAllProductsFilterLabelBox">
-                    {/* <div className="adminAllOrderLeftBox"> */}
-                    <input
-                      type="text"
-                      placeholder="Label..."
-                      value={labelCode}
-                      onChange={(e) => {
-                        setLabelCode(e.target.value.toUpperCase());
-                        setCurrentPage(1);
-                        filterOrders();
-                      }}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Barcode..."
-                      value={barCode}
-                      onChange={(e) => {
-                        setBarCode(e.target.value.toUpperCase());
-                        setCurrentPage(1);
-                        filterOrders();
-                      }}
-                    />
-                  </div>
+              {!loading == true ? (
+                  <div>
+                    <div
+                        style={{
+                          width: "100%",
+                          justifyContent: "left",
+                          flexWrap: "wrap",
+                        }}
+                        className="adminAllProductsFilterBox"
+                    >
+                      <div className="adminAllProductsFilterLabelBox">
+                        {/* <div className="adminAllOrderLeftBox"> */}
+                        <input
+                            type="text"
+                            placeholder="Label..."
+                            value={labelCode}
+                            onChange={(e) => {
+                              setLabelCode(e.target.value.toUpperCase());
+                              setCurrentPage(1);
+                              filterOrders();
+                            }}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Barcode..."
+                            value={barCode}
+                            onChange={(e) => {
+                              setBarCode(e.target.value.toUpperCase());
+                              setCurrentPage(1);
+                              filterOrders();
+                            }}
+                        />
+                      </div>
 
-                  <div className="adminAllProductsFilterCategoryBox">
-                    <select
-                      value={categoryName}
-                      onChange={(e) => {
-                        setCategoryName(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <option value="">Select Category</option>
-                      {allCategories.map((x) => {
-                        return (
-                          <option value={`${x.Id},${x.CategoryName}`}>
-                            {x.CategoryName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <select
-                      value={productName}
-                      onChange={(e) => {
-                        setProductName(e.target.value);
-                        setCurrentPage(1);
-                        setCollectionName("");
-                      }}
-                    >
-                      <option value="">Select Product Type</option>
-                      {filteredProductTypes.map((x) => {
-                        return (
-                          <option value={`${parseInt(x.Id)},${x.ProductName}`}>
-                            {x.ProductName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <select
-                      value={collectionName}
-                      onChange={(e) => {
-                        setCollectionName(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <option value="">Select Design</option>
-                      {filteredCollection.map((x) => {
-                        return (
-                          <option value={`${parseInt(x.Id)},${x.DesignName}`}>
-                            {x.DesignName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                  <div className="adminAllProductsFilterDatesBox">
-                    {/* <div
+                      <div className="adminAllProductsFilterCategoryBox">
+                        <select
+                            value={categoryName}
+                            onChange={(e) => {
+                              setCategoryName(e.target.value);
+                              setCurrentPage(1);
+                            }}
+                        >
+                          <option value="">Select Category</option>
+                          {allCategories.map((x) => {
+                            return (
+                                <option value={`${x.Id},${x.CategoryName}`}>
+                                  {x.CategoryName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                        <select
+                            value={productName}
+                            onChange={(e) => {
+                              setProductName(e.target.value);
+                              setCurrentPage(1);
+                              setCollectionName("");
+                            }}
+                        >
+                          <option value="">Select Product Type</option>
+                          {filteredProductTypes.map((x) => {
+                            return (
+                                <option value={`${parseInt(x.Id)},${x.ProductName}`}>
+                                  {x.ProductName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                        <select
+                            value={collectionName}
+                            onChange={(e) => {
+                              setCollectionName(e.target.value);
+                              setCurrentPage(1);
+                            }}
+                        >
+                          <option value="">Select Design</option>
+                          {filteredCollection.map((x) => {
+                            return (
+                                <option value={`${parseInt(x.Id)},${x.DesignName}`}>
+                                  {x.DesignName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="adminAllProductsFilterDatesBox">
+                        {/* <div
                       style={{
                         display: "flex",
                         marginTop: "1rem",
                         alignItems: "center",
                       }}
                     > */}
-                    <input
-                      type="date"
-                      placeholder="From Date"
-                      value={fromDate}
-                      onChange={(e) => setFromDate(e.target.value)}
-                    />
+                        <input
+                            type="date"
+                            placeholder="From Date"
+                            value={fromDate}
+                            onChange={(e) => setFromDate(e.target.value)}
+                        />
 
-                    <input
-                      // style={{ margin: "1rem" }}
-                      type="date"
-                      placeholder="To Date"
-                      value={toDate}
-                      onChange={(e) => setToDate(e.target.value)}
-                    />
+                        <input
+                            // style={{ margin: "1rem" }}
+                            type="date"
+                            placeholder="To Date"
+                            value={toDate}
+                            onChange={(e) => setToDate(e.target.value)}
+                        />
 
-                    <AiOutlineEdit
-                      className="labelledListEditIcon"
-                      style={{ padding: "5px" }}
-                      size={"1.5rem"}
-                      onClick={() => {
-                        setDeleteSelected(!deleteSelected),
-                          setSelectedItemCodes([]),
-                          setCheckedProducts([]),
-                          setDeleteSelectedButton(false);
-                      }}
-                    />
-                  </div>
-                  <div className="adminAllLabelledListButtonBox">
-                    <button onClick={printAll}>Print1</button>
-                    <button onClick={printList}>Print List</button>
-
-                    <button
-                      onClick={() => {
-                        setSelectedProducts([]),
-                          setSelectAll(false),
-                          setCategoryName(""),
-                          setProductName(""),
-                          setCollectionName(""),
-                          setFromDate(""),
-                          setToDate(""),
-                          setFilteredProducts(allProducts);
-                      }}
-                    >
-                      Reset
-                    </button>
-                    {deleteSelectedButton ? (
-                      <button
-                        onClick={() => deleteAllProducts(selectedItems)}
-                        style={{ backgroundColor: "#c14456", color: "white" }}
-                      >
-                        Delete Selected
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table
-                    className="adminInventoryMainTable"
-                    style={{
-                      width: "100%",
-                      marginLeft: "1rem",
-                      boxSizing: "border-box",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <thead>
-                      <tr>
-                        {deleteSelected ? <th>Delete Item</th> : null}
-                        <th>S.No</th>
-                        <th>Design Name</th>
-                        <th>SKU</th>
-                        <th>Gross Wt</th>
-                        <th>Stone WT</th>
-                        <th>Clip WT</th>
-                        <th>Net Wt</th>
-                        <th>Tag Wt</th>
-                        <th>Lanyard Wt</th>
-                        <th>Total Wt</th>
-                        <th>Stone Amt</th>
-                        <th>Hallmark Amt</th>
-                        <th>Other Charges</th>
-                        <th>MRP</th>
-                        <th>Item Code</th>
-                        <th>Inward No</th>
-                        <th>Barcode Number</th>
-                        <th>Branch</th>
-                        <th>Tid</th>
-                        {/* <th>Tid</th> */}
-                        <th>Select</th>
-                      </tr>
-                    </thead>
-                    <tbody style={{ position: "relative" }}>
-                      {currentProducts.map((x, index) => (
-                        <tr key={x.Id}>
-                          {/* <td>{index}</td> */}
-                          {deleteSelected ? (
-                            <td>
-                              <input
-                                style={{
-                                  width: "15px",
-                                  height: "15px",
-                                  color: "red",
-                                }}
-                                type="checkbox"
-                                checked={checkedProducts.includes(x.Id)}
-                                onChange={() =>
-                                  handleDeleteCheckboxChange(x.Id, x.ItemCode)
-                                }
-                              />
-                            </td>
-                          ) : null}
-                          <td>{x.serialNumber}</td>
-                          {/* <td>{x.product_Name}</td> */}
-                          <td
+                        <AiOutlineEdit
+                            className="labelledListEditIcon"
+                            style={{padding: "5px"}}
+                            size={"1.5rem"}
                             onClick={() => {
-                              navigate(`/product_details?productId=${x.Id}`);
+                              setDeleteSelected(!deleteSelected),
+                                  setSelectedItemCodes([]),
+                                  setCheckedProducts([]),
+                                  setDeleteSelectedButton(false);
                             }}
-                            className="adminAllProductsTitle"
-                          >
-                            {x.DesignName}
-                          </td>
-                          <td>{x.SKU}</td>
-                          <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
-                          <td>{parseFloat(x.TotalStoneWeight).toFixed(3)}</td>
-                          <td>{parseFloat(x.ClipWeight).toFixed(3)}</td>
-                          <td>{parseFloat(x.NetWt).toFixed(3)}</td>
-                          <td>{parseFloat(x.TagWeight).toFixed(3)}</td>
-                          <td>{parseFloat(x.LanyardWeight).toFixed(3)}</td>
-                          <td>
-                            {parseFloat(
-                              parseFloat(x.GrossWt) +
-                                parseFloat(x.TagWeight) +
-                                parseFloat(x.LanyardWeight)
-                            ).toFixed(3)}
-                          </td>
-                          {/* <td>{x.stoneWeight}</td>
-                  <td>{x.netWt}</td> */}
-                          <td>
-                            ₹{" "}
-                            {x.Stones && x.Stones.length > 0
-                              ? x.Stones.reduce(
-                                  (a, b) =>
-                                    a + (parseFloat(b.StoneAmount) || 0),
-                                  0
-                                ).toFixed(3)
-                              : (0.0).toFixed(3)}
-                          </td>
+                        />
+                      </div>
+                      <div className="adminAllLabelledListButtonBox">
+                        <button onClick={printAll}>Print1</button>
+                        <button onClick={printList}>Print List</button>
 
-                          <td>₹ {x.HallmarkAmount}</td>
-                          <td>₹ {x.MRP}</td>
-                          <td>{x.ItemCode}</td>
-                          <td>{x.LotNumber}</td>
-                          <td>{x.RFIDCode}</td>
-                          <td>{x.BranchName}</td>
-                          {/* <td>{x.making_Percentage}</td> */}
-                          <td>{x.TIDNumber}</td>
-                          <td>
-                            <input
-                              style={{
-                                cursor: "pointer",
-                              }}
-                              onChange={() => handleCheckboxChange(x.Id)}
-                              type="checkbox"
-                              checked={
-                                selectAll || selectedProducts.includes(x.Id)
-                              }
-                            />
-                          </td>
+                        <button
+                            onClick={() => {
+                              setSelectedProducts([]),
+                                  setSelectAll(false),
+                                  setCategoryName(""),
+                                  setProductName(""),
+                                  setCollectionName(""),
+                                  setFromDate(""),
+                                  setToDate(""),
+                                  setFilteredProducts(allProducts);
+                            }}
+                        >
+                          Reset
+                        </button>
+                        {deleteSelectedButton ? (
+                            <button
+                                onClick={() => deleteAllProducts(selectedItems)}
+                                style={{backgroundColor: "#c14456", color: "white"}}
+                            >
+                              Delete Selected
+                            </button>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div style={{overflowX: "auto"}}>
+                      <table
+                          className="adminInventoryMainTable"
+                          style={{
+                            width: "100%",
+                            marginLeft: "1rem",
+                            boxSizing: "border-box",
+                            whiteSpace: "nowrap",
+                          }}
+                      >
+                        <thead>
+                        <tr>
+                          {deleteSelected ? <th>Delete Item</th> : null}
+                          <th>S.No</th>
+                          <th>Design Name</th>
+                          <th>SKU</th>
+                          <th>Gross Wt</th>
+                          <th>Stone WT</th>
+                          <th>Clip WT</th>
+                          <th>Net Wt</th>
+                          <th>Tag Wt</th>
+                          <th>Lanyard Wt</th>
+                          <th>Total Wt</th>
+                          <th>Stone Amt</th>
+                          <th>Hallmark Amt</th>
+                          <th>Other Charges</th>
+                          <th>MRP</th>
+                          <th>Item Code</th>
+                          <th>Inward No</th>
+                          <th>Barcode Number</th>
+                          <th>Branch</th>
+                          <th>Tid</th>
+                          {/* <th>Tid</th> */}
+                          <th>Select</th>
                         </tr>
-                      ))}
-                    </tbody>
-                    {/* <div className="adminAllLabelledListButtonBox">
+                        </thead>
+                        <tbody style={{position: "relative"}}>
+                        {currentProducts.map((x, index) => (
+                            <tr key={x.Id}>
+                              {/* <td>{index}</td> */}
+                              {deleteSelected ? (
+                                  <td>
+                                    <input
+                                        style={{
+                                          width: "15px",
+                                          height: "15px",
+                                          color: "red",
+                                        }}
+                                        type="checkbox"
+                                        checked={checkedProducts.includes(x.Id)}
+                                        onChange={() =>
+                                            handleDeleteCheckboxChange(x.Id, x.ItemCode)
+                                        }
+                                    />
+                                  </td>
+                              ) : null}
+                              <td>{x.serialNumber}</td>
+                              {/* <td>{x.product_Name}</td> */}
+                              <td
+                                  onClick={() => {
+                                    navigate(`/product_details?productId=${x.Id}`);
+                                  }}
+                                  className="adminAllProductsTitle"
+                              >
+                                {x.DesignName}
+                              </td>
+                              <td>{x.SKU}</td>
+                              <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
+                              <td>{parseFloat(x.TotalStoneWeight).toFixed(3)}</td>
+                              <td>{parseFloat(x.ClipWeight).toFixed(3)}</td>
+                              <td>{parseFloat(x.NetWt).toFixed(3)}</td>
+                              <td>{parseFloat(x.TagWeight).toFixed(3)}</td>
+                              <td>{parseFloat(x.LanyardWeight).toFixed(3)}</td>
+                              <td>
+                                {parseFloat(
+                                    parseFloat(x.GrossWt) +
+                                    parseFloat(x.TagWeight) +
+                                    parseFloat(x.LanyardWeight)
+                                ).toFixed(3)}
+                              </td>
+                              {/* <td>{x.stoneWeight}</td>
+                  <td>{x.netWt}</td> */}
+                              <td>
+                                ₹{" "}
+                                {x.Stones && x.Stones.length > 0
+                                    ? x.Stones.reduce(
+                                        (a, b) =>
+                                            a + (parseFloat(b.StoneAmount) || 0),
+                                        0
+                                    ).toFixed(3)
+                                    : (0.0).toFixed(3)}
+                              </td>
+
+                              <td>₹ {x.HallmarkAmount}</td>
+                              <td>₹ {x.MRP}</td>
+                              <td>{x.ItemCode}</td>
+                              <td>{x.LotNumber}</td>
+                              <td>{x.RFIDCode}</td>
+                              <td>{x.BranchName}</td>
+                              {/* <td>{x.making_Percentage}</td> */}
+                              <td>{x.TIDNumber}</td>
+                              <td>
+                                <input
+                                    style={{
+                                      cursor: "pointer",
+                                    }}
+                                    onChange={() => handleCheckboxChange(x.Id)}
+                                    type="checkbox"
+                                    checked={
+                                      selectAll || selectedProducts.includes(x.Id)
+                                    }
+                                />
+                              </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                        {/* <div className="adminAllLabelledListButtonBox">
                       <button onClick={printAll}>Print</button>
                       <button onClick={printList}>Print List</button>
 
@@ -1282,53 +1299,53 @@ export default function AdminInventory() {
                         </button>
                       ) : null}
                     </div> */}
-                  </table>
-                </div>
-              </div>
-            ) : null}
+                      </table>
+                    </div>
+                  </div>
+              ) : null}
 
-            {/* Pagination controls */}
-            <div className="bulkProductAddingTableMain">
-              <button onClick={goToPreviousPage} disabled={currentPage === 1}>
-                Previous
-              </button>
-              <button
-                onClick={goToNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
+              {/* Pagination controls */}
+              <div className="bulkProductAddingTableMain">
+                <button onClick={goToPreviousPage} disabled={currentPage === 1}>
+                  Previous
+                </button>
+                <button
+                    onClick={goToNextPage}
+                    disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="adminInventoryMobilePrintButtonsBox">
-        <button onClick={printAll}>Print</button>
-        <button onClick={printList}>Print List</button>
+        <div className="adminInventoryMobilePrintButtonsBox">
+          <button onClick={printAll}>Print</button>
+          <button onClick={printList}>Print List</button>
 
-        <button
-          onClick={() => {
-            setSelectedProducts([]),
-              setSelectAll(false),
-              setCategoryName(""),
-              setProductName(""),
-              setCollectionName(""),
-              setFromDate(""),
-              setToDate(""),
-              setFilteredProducts(allProducts);
-          }}
-        >
-          Reset
-        </button>
-        {deleteSelectedButton ? (
           <button
-            onClick={() => deleteAllProducts(selectedItems)}
-            style={{ backgroundColor: "#c14456", color: "white" }}
+              onClick={() => {
+                setSelectedProducts([]),
+                    setSelectAll(false),
+                    setCategoryName(""),
+                    setProductName(""),
+                    setCollectionName(""),
+                    setFromDate(""),
+                    setToDate(""),
+                    setFilteredProducts(allProducts);
+              }}
           >
-            Delete Selected
+            Reset
           </button>
-        ) : null}
+          {deleteSelectedButton ? (
+              <button
+                  onClick={() => deleteAllProducts(selectedItems)}
+                  style={{backgroundColor: "#c14456", color: "white"}}
+              >
+                Delete Selected
+              </button>
+          ) : null}
+        </div>
       </div>
-    </div>
   );
 }

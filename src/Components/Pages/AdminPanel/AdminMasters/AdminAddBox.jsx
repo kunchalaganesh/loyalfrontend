@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
-import { TbCircleNumber1 } from "react-icons/tb";
+import {TbCircleNumber1} from "react-icons/tb";
 import {
   a100,
   a104,
@@ -29,8 +29,8 @@ import {
   a133,
   a137,
   a138,
-  a139,
-  a18,
+  a139, a149,
+  a18, a226,
   a35,
   a7,
   a95,
@@ -39,8 +39,8 @@ import {
   a98,
   a99,
 } from "../../../Api/RootApiPath";
-import { useSelector } from "react-redux";
-import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
+import {useSelector} from "react-redux";
+import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 
 export default function AdminAddBox() {
@@ -74,6 +74,35 @@ export default function AdminAddBox() {
   //   let Entryby_Staff_id = parseInt(adminLoggedIn);
   const clientCode = adminLoggedIn.ClientCode;
   const employeeCode = adminLoggedIn.EmployeeCode;
+  const [selectedPacketMaster, setSelectedPacketMaster] = useState([]);
+  const [inputPacketMaster, setInputPacketMaster] = useState("");
+  const [PacketMasterData, setPacketMasterData] = useState([]);
+  const handleAddVendor = () => {
+    if (inputPacketMaster && !selectedPacketMaster.includes(inputPacketMaster)) {
+      setSelectedPacketMaster([...selectedPacketMaster, inputPacketMaster]);
+      setInputPacketMaster("");
+    }
+  };
+
+  useEffect(() => {
+    const formData = {
+      ClientCode: clientCode,
+    };
+    fetch(a226, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+        .then((res) => res.json())
+        .then((data) => setPacketMasterData(data));
+  }, []);
+
+  const handleRemoveVendor = (index) => {
+    const newVendors = selectedPacketMaster.filter((_, i) => i !== index);
+    setSelectedPacketMaster(newVendors);
+  };
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -97,11 +126,11 @@ export default function AdminAddBox() {
       } else {
         setActive("addNew");
         document
-          .getElementById("addCategoryListTitle")
-          .classList.add("activeCategoryTitle");
+            .getElementById("addCategoryListTitle")
+            .classList.add("activeCategoryTitle");
         document
-          .getElementById("addCategoryListLogo")
-          .classList.add("activeCategoryLogo");
+            .getElementById("addCategoryListLogo")
+            .classList.add("activeCategoryLogo");
         document.getElementById("addCategoryListTitle").click();
       }
     } catch (error) {
@@ -273,23 +302,18 @@ export default function AdminAddBox() {
     fetchAllProductsList();
   }, []);
 
-  console.log(allCategories, "allCategories");
-  console.log(allCompaniesList, "allCompaniesList");
-  console.log(allDepartmentsList, "allDepartmentsList");
-  console.log(allBranchesList, "allBranchesList");
-  console.log(allRolesList, "allRolesList");
-  console.log(allCategoriesList, "allCategoriesList");
 
   const handleNewCategoryChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     // Update the edited data in the state
-    setNewCategory({ ...newCategory, [name]: value });
+    setNewCategory({...newCategory, [name]: value});
   };
   console.log(newCategory, "newCategory");
   console.log(newCategory, "newCategory");
 
   const addNewCategory = async (e) => {
     e.preventDefault();
+    const trasformData = selectedPacketMaster.join(',');
     setLoading(true);
     const formData = {
       ClientCode: clientCode,
@@ -302,21 +326,20 @@ export default function AdminAddBox() {
       Description: newCategory.Description,
       Status: newCategory.Status,
       EmployeeCode: employeeCode,
-
-      ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
+      packet: trasformData,
+      ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
     };
-    console.log(formData, "formData to send");
     try {
       const response = await fetch(
-        !newCategory.OldEntry ? a139 : a138,
-        // a96,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
+          !newCategory.OldEntry ? a139 : a138,
+          // a96,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
       );
       const data = await response.json();
       fetchAllCategory();
@@ -359,78 +382,78 @@ export default function AdminAddBox() {
     console.log(data, "data");
     console.log(data, "data");
     console.log(data, "data");
-    setNewCategory({ ...data, OldEntry: true });
+    setNewCategory({...data, OldEntry: true});
     setActive("AddNew");
   };
   return (
-    <div>
-      <AdminHeading />
-      <div className="adminMainBodyBox">
-        {showError ? (
-          <AlertMessage message={messageToShow} type={messageType} />
-        ) : null}
-        <AdminBreadCrump
-          title={"Add Box"}
-          companyName={"Loyalstring"}
-          module={"Product Masters"}
-          page={"Box"}
-        />
-        <div className="adminAddCategoryMainBox">
-          <div className="adminAddCategoryInnerBox">
-            <div className="adminAddCategoryInnerBoxTitlesBox">
-              <div
-                onClick={() => {
-                  setActive("List");
-                }}
-                className={
-                  active === "List"
-                    ? "adminAddCategoryInnerBoxTitle"
-                    : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                }
-              >
+      <div>
+        <AdminHeading/>
+        <div className="adminMainBodyBox">
+          {showError ? (
+              <AlertMessage message={messageToShow} type={messageType}/>
+          ) : null}
+          <AdminBreadCrump
+              title={"Add Box"}
+              companyName={"Loyalstring"}
+              module={"Product Masters"}
+              page={"Box"}
+          />
+          <div className="adminAddCategoryMainBox">
+            <div className="adminAddCategoryInnerBox">
+              <div className="adminAddCategoryInnerBoxTitlesBox">
                 <div
-                  className={
-                    active === "List"
-                      ? "adminAddCategoryInnerBoxTitleLogo"
-                      : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                  }
+                    onClick={() => {
+                      setActive("List");
+                    }}
+                    className={
+                      active === "List"
+                          ? "adminAddCategoryInnerBoxTitle"
+                          : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                    }
                 >
-                  {/* 01 */}
-                  <RiListUnordered />
+                  <div
+                      className={
+                        active === "List"
+                            ? "adminAddCategoryInnerBoxTitleLogo"
+                            : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                      }
+                  >
+                    {/* 01 */}
+                    <RiListUnordered/>
+                  </div>
+                  <p>All Boxes</p>
                 </div>
-                <p>All Boxes</p>
-              </div>
 
-              <div
-                id="addCategoryListTitle"
-                onClick={() => setActive("AddNew")}
-                className={
-                  active === "AddNew"
-                    ? "adminAddCategoryInnerBoxTitle"
-                    : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                }
-              >
                 <div
-                  id="addCategoryListLogo"
-                  className={
-                    active === "AddNew"
-                      ? "adminAddCategoryInnerBoxTitleLogo"
-                      : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                  }
+                    id="addCategoryListTitle"
+                    onClick={() => setActive("AddNew")}
+                    className={
+                      active === "AddNew"
+                          ? "adminAddCategoryInnerBoxTitle"
+                          : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                    }
                 >
-                  {/* 02 */}
-                  <RiPlayListAddLine />
+                  <div
+                      id="addCategoryListLogo"
+                      className={
+                        active === "AddNew"
+                            ? "adminAddCategoryInnerBoxTitleLogo"
+                            : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                      }
+                  >
+                    {/* 02 */}
+                    <RiPlayListAddLine/>
+                  </div>
+                  <p>Add Box</p>
                 </div>
-                <p>Add Box</p>
               </div>
-            </div>
-            <div
-              className={
-                active === "List" ? "adminCategoryListMainBox" : "none"
-              }
-            >
-              <table>
-                <thead>
+              <div
+                  className={
+                    active === "List" ? "adminCategoryListMainBox" : "none"
+                  }
+              >
+                <table>
+                  <thead>
                   <tr>
                     <th>Edit</th>
                     <th>Sr.No</th>
@@ -443,170 +466,256 @@ export default function AdminAddBox() {
                     <th>Description</th>
                     {/* <th>Status</th> */}
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   {allCategories.map((x, index) => (
-                    <tr key={x.id}>
-                      <td>
-                        <button
-                          className="adminAddCategoryEditButton"
-                          // onClick={() => handleEditClick(x.id)}
-                          onClick={() => handleEditData(x)}
-                        >
-                          Edit
-                        </button>
-                      </td>
-                      <td>{index + 1}</td>
-                      {/* <td>{x.CategoryId}</td> */}
-                      <td>{x.BoxName}</td>
-                      <td>{x.EmptyWeight}</td>
-                      {/* <td>{x.ProductId}</td>
+                      <tr key={x.id}>
+                        <td>
+                          <button
+                              className="adminAddCategoryEditButton"
+                              // onClick={() => handleEditClick(x.id)}
+                              onClick={() => handleEditData(x)}
+                          >
+                            Edit
+                          </button>
+                        </td>
+                        <td>{index + 1}</td>
+                        {/* <td>{x.CategoryId}</td> */}
+                        <td>{x.BoxName}</td>
+                        <td>{x.EmptyWeight}</td>
+                        {/* <td>{x.ProductId}</td>
                       <td>{x.CompanyId}</td>
                       <td>{x.BranchId}</td> */}
-                      <td>{x.Description}</td>
-                      {/* <td>{x.Status}</td> */}
-                    </tr>
+                        <td>{x.Description}</td>
+                        {/* <td>{x.Status}</td> */}
+                      </tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-            <div
-              className={
-                active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
-              }
-            >
-              <p>Add New Box</p>
-              <form onSubmit={addNewCategory}>
-                <div
-                  style={{
-                    gridTemplateColumns: "repeat(4,1fr)",
-                    columnGap: "40px",
-                  }}
-                  className="adminCategoryAddCategoryInnerBox"
-                >
-                  <label>
-                    Company <sup>*</sup>
-                  </label>
-                  <select
-                    name="CompanyId"
-                    value={newCategory.CompanyId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
+                  </tbody>
+                </table>
+              </div>
+              <div
+                  className={
+                    active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
+                  }
+              >
+                <p>Add New Box</p>
+                <form onSubmit={addNewCategory}>
+                  <div
+                      style={{
+                        gridTemplateColumns: "repeat(4,1fr)",
+                        columnGap: "40px",
+                      }}
+                      className="adminCategoryAddCategoryInnerBox"
                   >
-                    <option value={""}>Select an option</option>;
-                    {allCompaniesList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.CompName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Branch <sup>*</sup>{" "}
-                  </label>
-                  <select
-                    name="BranchId"
-                    value={newCategory.BranchId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allBranchesList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.BranchName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Category <sup>*</sup>
-                  </label>
-                  <select
-                    name="CategoryId"
-                    value={newCategory.CategoryId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allCategoriesList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.CategoryName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Product<sup>*</sup>
-                  </label>
-                  <select
-                    name="ProductId"
-                    value={newCategory.ProductId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allProductsList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.ProductName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Box Name<sup>*</sup>
-                  </label>
-                  <input
-                    name="BoxName"
-                    value={newCategory.BoxName}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  />
-                  <label>
-                    Empty Weight<sup>*</sup>
-                  </label>
-                  <input
-                    name="EmptyWeight"
-                    value={newCategory.EmptyWeight}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  />
-                  <label>Description</label>
-                  <input
-                    name="Description"
-                    value={newCategory.Description}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                  />
-                  <label htmlFor="Status">
-                    Status <sup>*</sup>
-                  </label>
-                  <select
-                    name="Status"
-                    required="required"
-                    value={newCategory.Status}
-                    onChange={handleNewCategoryChange}
-                  >
-                    <option value={""}>Select Status</option>
-                    <option value={"Active"}>Active</option>
-                    <option value={"InActive"}>InActive</option>
-                  </select>
-                </div>
-                {!loading ? <button type="submit">Submit</button> : null}
-              </form>
+                    <label>
+                      Company <sup>*</sup>
+                    </label>
+                    <select
+                        name="CompanyId"
+                        value={newCategory.CompanyId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allCompaniesList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.CompName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                    <label>
+                      Branch <sup>*</sup>{" "}
+                    </label>
+                    <select
+                        name="BranchId"
+                        value={newCategory.BranchId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allBranchesList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.BranchName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                    <label>
+                      Category <sup>*</sup>
+                    </label>
+                    <select
+                        name="CategoryId"
+                        value={newCategory.CategoryId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allCategoriesList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.CategoryName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                    <label>
+                      Product<sup>*</sup>
+                    </label>
+                    <select
+                        name="ProductId"
+                        value={newCategory.ProductId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allProductsList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.ProductName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                    <label>
+                      Box Name<sup>*</sup>
+                    </label>
+                    <input
+                        name="BoxName"
+                        value={newCategory.BoxName}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    />
+                    <label>
+                      Empty Weight<sup>*</sup>
+                    </label>
+                    <input
+                        name="EmptyWeight"
+                        value={newCategory.EmptyWeight}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    />
+                    <label>Description</label>
+                    <input
+                        name="Description"
+                        value={newCategory.Description}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                    />
+                    <label htmlFor="Status">
+                      Status <sup>*</sup>
+                    </label>
+                    <select
+                        name="Status"
+                        required="required"
+                        value={newCategory.Status}
+                        onChange={handleNewCategoryChange}
+                    >
+                      <option value={""}>Select Status</option>
+                      <option value={"Active"}>Active</option>
+                      <option value={"InActive"}>InActive</option>
+                    </select>
+                    <div className="adminSkuAddSkuInnerItemsBox">
+                      <label htmlFor="netWt" style={{margin: "10px 0px"}}>Select Packet Master</label>
+
+                      <select
+                          type="number"
+                          // required="required"
+                          // name="VendorId"
+                          value={inputPacketMaster}
+                          onChange={(e) => setInputPacketMaster(e.target.value)}
+                      >
+                        <option value={0}>Select Packet</option>
+                        {PacketMasterData.map((x) => (
+                            <option value={`${x.PacketName} - ${x.Id}`}>
+                              {`${x.PacketName} - ${x.Id}`}
+                            </option>
+                        ))}
+                      </select>
+                      <button
+                          style={{marginBottom: "25px", margin: "0px 20px"}}
+                          type="button"
+                          onClick={handleAddVendor}
+                      >
+                        Add Packet
+                      </button>
+
+                    </div>
+                    <div
+                        style={{gridColumn: "span 2"}}
+                        className="adminSkuAddSkuInnerItemsBox"
+                        id="adminSkuAddSkuSelectVendor"
+                    >
+                      <label htmlFor="netWt">
+                        Total {selectedPacketMaster.length} Packets
+                      </label>
+                      <div
+                          style={{
+                            display: "flex",
+                            overflowX: "auto",
+                            gap: "10px",
+                            marginTop: "10px",
+                          }}
+                      >
+                        {selectedPacketMaster?.map((vendor, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                  padding: "5px 10px",
+                                  borderRadius: "5px",
+                                  backgroundColor: "#f0f0f0",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                  width: "auto",
+                                }}
+                            >
+                                                        <span style={{whiteSpace: "nowrap"}}>
+                                                            {vendor}
+                                                        </span>
+                              <button
+                                  type="button"
+                                  onClick={() => handleRemoveVendor(index)}
+                                  style={{
+                                    width: "25px",
+                                    height: "25px",
+                                    margin: "0px",
+                                    padding: "0px",
+                                    color: "red",
+                                    border: "none",
+                                    background: "transparent",
+                                  }}
+                              >
+                                &#10005; {/* Unicode cross symbol */}
+                              </button>
+                            </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+                  {!loading ? <button type="submit">Submit</button> : null}
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
