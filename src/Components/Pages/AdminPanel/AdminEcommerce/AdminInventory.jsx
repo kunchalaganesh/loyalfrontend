@@ -638,14 +638,14 @@ export default function AdminInventory() {
   const printList = () => {
     let selectedProductData;
     if (selectedProducts.length === 0) {
-      selectedProductData = allProducts;
+      selectedProductData = currentProducts;
     } else {
-      selectedProductData = allProducts.filter((x) =>
+      selectedProductData = currentProducts.filter((x) =>
           selectedProducts.includes(x.Id)
       );
     }
 
-    printListAll(currentProducts);
+    printListAll(selectedProductData);
   };
 
 
@@ -713,8 +713,6 @@ export default function AdminInventory() {
         generateHeader();
         y = startY + lineHeight + margin; // Update y position for the new page
       }
-
-      console.log(item, "itemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
 
       const serialNumber = index + 1;
       doc.text(serialNumber.toString(), startX, y);

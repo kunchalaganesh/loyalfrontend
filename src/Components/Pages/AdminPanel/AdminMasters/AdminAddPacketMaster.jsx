@@ -490,6 +490,7 @@ export default function AdminAddPacketMaster() {
                     <th>Sr.No</th>
                     {/* <th>Category Name</th> */}
                     <th>Packet Name</th>
+                    <th>Box</th>
                     <th>SKU</th>
                     <th>Category</th>
                     <th>Product</th>
@@ -515,6 +516,7 @@ export default function AdminAddPacketMaster() {
                       </td>
                       <td>{index + 1}</td>
                       {/* <td>{x.CategoryId}</td> */}
+                      <td>{x.PacketName}</td>
                       <td>{x.PacketName}</td>
                       <td>{x.StockKeepingUnit}</td>
                       <td>{x.CategoryName}</td>

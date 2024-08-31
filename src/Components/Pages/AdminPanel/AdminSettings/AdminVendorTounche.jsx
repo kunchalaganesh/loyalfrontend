@@ -429,7 +429,7 @@ export default function AdminVendorTounche() {
         const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
         try {
             const response = await fetch(
-                !newCategory.OldEntry ? a179 : a179,
+                !newCategory.OldEntry ? a179 : a180,
                 // a96,
                 {
                     method: "POST",
@@ -986,11 +986,12 @@ export default function AdminVendorTounche() {
                                                         <input
                                                             style={{ width: "20px", height: "20px" }}
                                                             type="checkbox"
-                                                            checked={allSelectedTounche.some(
+                                                            checked={!newCategory.OldEntry ? allSelectedTounche.some(
                                                                 (tounche) =>
                                                                     tounche.StockKeepingUnit ===
                                                                     x.StockKeepingUnit
-                                                            )}
+                                                            ) : newCategory?.StockKeepingUnit === x.StockKeepingUnit
+                                                            }
                                                             onChange={(e) =>
                                                                 handleIndividualCheckboxChange(e, x)
                                                             }
