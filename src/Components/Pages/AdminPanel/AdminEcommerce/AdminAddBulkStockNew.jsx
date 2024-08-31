@@ -3514,7 +3514,7 @@ export default function AdminAddBulkStockNew() {
                                                         onChange={(e) => {
                                                             setPartyTypeId(e.target.value)
                                                             const tempId = partyData.find((event, ind) => event.Id == e.target.value)
-                                                            setDiamondTemplateId(tempId.DiamondSizeWeightRateTemplateId)
+                                                            setDiamondTemplateId(tempId?.DiamondSizeWeightRateTemplateId)
                                                         }}
                                                     >
                                                         <option value="">
@@ -5604,7 +5604,7 @@ export default function AdminAddBulkStockNew() {
                                                                     {/*    }}*/}
                                                                     {/*    size={"18px"}*/}
                                                                     {/*/>*/}
-                                                                    DIAMOND-{x.Diamonds.length}
+                                                                    DIAMOND{x.Diamonds.length}
                                                                 </button>
                                                             </td>
                                                             {stockType === "Labelled" &&

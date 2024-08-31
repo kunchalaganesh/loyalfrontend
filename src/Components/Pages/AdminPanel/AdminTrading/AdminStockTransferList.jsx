@@ -303,6 +303,9 @@ function AdminStockTransferList() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">Transfer By</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Transfer To</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Received By</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Approved</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Rejected</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Pending</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Remark</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Download</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center"/>
@@ -312,6 +315,7 @@ function AdminStockTransferList() {
                                     {
                                         tableData && tableData.map((item, index) => (
                                             <TableRow key={item.id}>
+                                                {console.log("ITEMMMMMMMMM : ",item)}
                                                 <TableCell align="center">{index + 1}</TableCell>
                                                 <TableCell align="center">{item.StockType}</TableCell>
                                                 <TableCell
@@ -319,6 +323,7 @@ function AdminStockTransferList() {
                                                     backgroundColor: item.StockTransferTypeName === 'Branch To Branch' && '#f0f0f0',
                                                     color: item.StockTransferTypeName === 'Branch To Branch' && '#000',
                                                 }}>{item.StockTransferTypeName}</TableCell>
+
                                                 <TableCell
                                                     align="center">{item.SourceName ? item.SourceName : 'Display'}</TableCell>
                                                 <TableCell
@@ -326,6 +331,12 @@ function AdminStockTransferList() {
                                                 <TableCell align="center">{item.TransferByEmployee}</TableCell>
                                                 <TableCell align="center">{item.TransferedToBranch}</TableCell>
                                                 <TableCell align="center">{item.ReceivedByEmployee}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Approved}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Rejected}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Pending}</TableCell>
                                                 <TableCell
                                                     align="center">{item.Remarks ? item.Remarks : '-'}</TableCell>
                                                 <TableCell align="center">
