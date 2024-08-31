@@ -378,11 +378,11 @@ export default function AdminAddBox() {
         }, 2000);
     }, [showError]);
     const handleEditData = (data) => {
-        console.log(data.PacketIds.split(","), "data");
-        if (data.PacketIds) {
+        // console.log(data.PacketIds.split(","), "data");
+        setNewCategory({...data, OldEntry: true});
+        if (data.PacketIds && data.PacketIds.split(",").length > 0) {
             setSelectedPacketMaster(data.PacketIds.split(","))
         }
-        setNewCategory({...data, OldEntry: true});
         setActive("AddNew");
     };
     return (

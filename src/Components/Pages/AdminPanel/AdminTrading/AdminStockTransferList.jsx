@@ -315,7 +315,6 @@ function AdminStockTransferList() {
                                     {
                                         tableData && tableData.map((item, index) => (
                                             <TableRow key={item.id}>
-                                                {console.log("ITEMMMMMMMMM : ",item)}
                                                 <TableCell align="center">{index + 1}</TableCell>
                                                 <TableCell align="center">{item.StockType}</TableCell>
                                                 <TableCell
