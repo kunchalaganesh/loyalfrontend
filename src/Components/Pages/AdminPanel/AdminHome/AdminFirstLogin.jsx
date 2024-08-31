@@ -835,7 +835,7 @@ export default function AdminFirstLogin({
                 type="text"
                 required="required"
               >
-                <option value={""}>Select an option</option>;
+                <option value={""}>Select an option</option>
                 <option value={"Showroom"}>Showroom</option>
                 <option value={"Warehouse"}>Warehouse</option>
                 <option value={"Exhibition"}>Exhibition</option>
@@ -1068,7 +1068,7 @@ export default function AdminFirstLogin({
                 required="required"
               >
                 <option value={""}>Select Bank Name</option>
-                {allBanksList.map((x, index) => (
+                {popularBanksIndia.map((x, index) => (
                   <option key={index} value={x}>
                     {x}
                   </option>

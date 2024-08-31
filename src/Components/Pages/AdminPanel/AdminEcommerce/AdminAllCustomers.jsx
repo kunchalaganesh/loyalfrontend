@@ -992,7 +992,7 @@ export default function AdminAllCustomers() {
                     Billing Address (Country) <sup>*</sup>
                   </label>
                   <select
-                      name="Country"
+                      name="CurrAddCountry"
                       value={newCs.CurrAddCountry}
                       onChange={handleNewCsChange}
                       required="required"
@@ -1059,7 +1059,7 @@ export default function AdminAllCustomers() {
                     PerAdd (Country) <sup>*</sup>
                   </label>
                   <select
-                      name="Country"
+                      name="PerAddCountry"
                       value={newCs.PerAddCountry}
                       onChange={handleNewCsChange}
                       required="required"

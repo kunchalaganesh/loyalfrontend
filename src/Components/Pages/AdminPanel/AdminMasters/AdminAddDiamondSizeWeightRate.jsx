@@ -70,12 +70,12 @@ export default function AdminAddDiamondSizeWeightRate() {
 
     const [allCategories, setAllCategories] = useState([]);
     const [newCategory, setNewCategory] = useState({
-        DiamondSize: "0",
-        Sleve: "0",
-        DiamondWeight: "0",
-        DiamondPurchaseRate: "0",
-        DiamondSellRate: "0",
-        DiamondMargin: "0",
+        DiamondSize: "",
+        Sleve: "",
+        DiamondWeight: "",
+        DiamondPurchaseRate: "",
+        DiamondSellRate: "",
+        DiamondMargin: "",
         CompanyId: 0,
         BranchId: 0,
         DiamondShape: "",
@@ -553,12 +553,12 @@ export default function AdminAddDiamondSizeWeightRate() {
             fetchAllCategory();
             setActive("List");
             setNewCategory({
-                DiamondSize: "0",
-                Sleve: "0",
-                DiamondWeight: "0",
-                DiamondPurchaseRate: "0",
-                DiamondSellRate: "0",
-                DiamondMargin: "0",
+                DiamondSize: "",
+                Sleve: "",
+                DiamondWeight: "",
+                DiamondPurchaseRate: "",
+                DiamondSellRate: "",
+                DiamondMargin: "",
                 DiamondShape: "",
                 DiamondClarity: "",
                 DiamondColor: "",
@@ -1384,6 +1384,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                             {/*<td>{item.DiamondMargin}</td>*/}
                                             <td>{item.DiamondSellRate}</td>
                                             <td>
+                                                <div style={{display: "flex",justifyContent: "start",alignItems: "center",width: "180px"}}>
                                                 <button
                                                     className={"adminAddCategoryEditButton"}
                                                     style={{
@@ -1416,6 +1417,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                                 >
                                                     Delete
                                                 </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
