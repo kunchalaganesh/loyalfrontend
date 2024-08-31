@@ -2041,3 +2041,10 @@ export const a236 =
 //add Approve Stock Transfer
 export const a237 =
     "https://testing.loyalstring.co.in/api/ProductMaster/ApproveStockTransfer";
+//add Device
+export const a238 =
+    "https://testing.loyalstring.co.in/api/RFIDDevice/AddRFIDDevice";
+
+//Update Device
+export const a239 =
+    "https://testing.loyalstring.co.in/api/RFIDDevice/UpdateRFIDDevice";

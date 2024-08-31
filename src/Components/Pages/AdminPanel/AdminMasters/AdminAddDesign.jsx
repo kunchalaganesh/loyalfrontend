@@ -440,9 +440,11 @@ export default function AdminAddProduct() {
                     {/* <th>Category Name</th> */}
                     {/* <th>CategoryId</th>
                     <th>ProductId</th> */}
+                    <th>Category Name</th>
+                    <th>Product Name</th>
                     <th>Design Name</th>
-                    <th>Description</th>
-                    <th>Slug</th>
+                    {/*<th>Description</th>*/}
+                    {/*<th>Slug</th>*/}
                     <th>Label Code</th>
                     {/* <th>Status</th> */}
                     <th>Min Quantity</th>
@@ -464,9 +466,11 @@ export default function AdminAddProduct() {
                       <td>{index + 1}</td>
                       {/* <td>{x.CategoryId}</td> */}
                       {/* <td>{x.ProductId}</td> */}
+                      <td>{x.CategoryName}</td>
+                      <td>{x.ProductName}</td>
                       <td>{x.DesignName}</td>
-                      <td>{x.Description}</td>
-                      <td>{x.Slug}</td>
+                      {/*<td>{x.Description}</td>*/}
+                      {/*<td>{x.Slug}</td>*/}
                       <td>{x.LabelCode}</td>
                       {/* <td>{x.Status}</td> */}
                       <td>{x.MinQuantity}</td>

@@ -13,7 +13,7 @@ import {
   a111,
   a112,
   a18,
-  a227,
+  a227, a238, a239,
   a35,
   a7,
   a95,
@@ -235,7 +235,7 @@ export default function AdminAddDevices() {
     console.log(formData, "formData to send");
     try {
       const response = await fetch(
-        !newCategory.OldEntry ? a112 : a111,
+        !newCategory.OldEntry ? a238 : a239,
         // a96,
         {
           method: "POST",
@@ -362,16 +362,16 @@ export default function AdminAddDevices() {
                 <thead>
                   <tr>
                     <th>Edit</th>
-                    <th>Sr.No</th>
+                    <th>Sr.No.</th>
                     <th>Device Type</th>
                     <th>Device Code</th>
                     <th>Device Activation Date</th>
                     <th>Device Deactivation Date</th>
                     <th>Device Status</th>
-                    <th>Device Serial No</th>
-                    <th>Device Build No</th>
+                    <th>Device Serial No.</th>
+                    <th>Device Build No.</th>
                     <th>Device Model</th>
-                    <th>Mobile No</th>
+                    <th>Mobile No.</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -463,7 +463,7 @@ export default function AdminAddDevices() {
                     type="date"
                     required="required"
                   />
-                  <label>Device Serial No</label>
+                  <label>Device Serial No.</label>
                   <input
                     name="DeviceSerialNo"
                     value={newCategory.DeviceSerialNo}
@@ -471,7 +471,7 @@ export default function AdminAddDevices() {
                     type="text"
                     // required="required"
                   />
-                  <label>Device Build No</label>
+                  <label>Device Build No.</label>
                   <input
                     name="DeviceBuildNo"
                     value={newCategory.DeviceBuildNo}
@@ -487,7 +487,7 @@ export default function AdminAddDevices() {
                     type="text"
                     // required="required"
                   />
-                  <label>Mobile No</label>
+                  <label>Mobile No.</label>
                   <input
                     name="MobileNo"
                     value={newCategory.MobileNo}
