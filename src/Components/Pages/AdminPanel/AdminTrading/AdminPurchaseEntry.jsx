@@ -34,6 +34,7 @@ import StonePopup from '../../../support/purchasesupport/StonePopup.jsx';
 import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
 import GetApiService from "../../../Api/getapiService";
 import { createOrder } from '../../../Api/postapiservice';
+import { addPayment, deletePayment } from "../../../support/purchasesupport/usePayment";
 
 
 
@@ -2889,6 +2890,48 @@ console.log('checking parameter atchange', name);
     setIscal(true)
   };
 
+
+  const handleAddPayment = () => {
+    addPayment({
+      paymentOptions,
+      paymentAmount,
+      paymentGold,
+      paymentSilver,
+      deductGold,
+      deductSilver,
+      paymentType,
+      metalPaymentOption,
+      grandTotal,
+      selectedCustomer,
+      setPayments,
+      setGrandTotal,
+      setPaymentAmount,
+      setTotalPayableGold,
+      setTotalPayableSilver,
+      setMessageType,
+      setMessageToShow,
+      setShowError,
+      setPaymentDescription,
+      setMetalPaymentOption
+    });
+  };
+
+  const handleDeletePayment = (index) => {
+    deletePayment({
+      index,
+      payments,
+      setPayments,
+      grandTotal,
+      setGrandTotal,
+      setTotalPayableGold,
+      setTotalPayableSilver,
+      setPaymentAmount,
+      selectedCustomer
+    });
+  };
+
+
+
   const button1Ref = useRef(null);
   const button2Ref = useRef(null);
   const button3Ref = useRef(null);
@@ -4624,7 +4667,8 @@ console.log('checking parameter atchange', name);
                             ) {
                               alert("Could'nt Take more than 200000 in Cash");
                             } else {
-                              addPayment();
+                              handleAddPayment
+                              // addPayment();
                             }
                           }}
                         >
@@ -4719,7 +4763,10 @@ console.log('checking parameter atchange', name);
                       }}
                       className="adminInvoiceMainSaveButtonBox"
                     >
-                      <button onClick={addPayment}>Add</button>
+                      <button onClick={
+                        // addPayment
+                        handleAddPayment
+                        }>Add</button>
                     </div>
                   </div>
                 ) : paymentOptions === "Cash to Metal" ? (
@@ -4794,7 +4841,10 @@ console.log('checking parameter atchange', name);
                       }}
                       className="adminInvoiceMainSaveButtonBox"
                     >
-                      <button onClick={addPayment}>Add</button>
+                      <button onClick={
+                        // addPayment
+                        handleAddPayment
+                        }>Add</button>
                     </div>
                   </div>
                 ) : paymentOptions === "Metal" ? (
@@ -4869,7 +4919,10 @@ console.log('checking parameter atchange', name);
                       }}
                       className="adminInvoiceMainSaveButtonBox"
                     >
-                      <button onClick={addPayment}>Add</button>
+                      <button onClick={
+                        // addPayment
+                        handleAddPayment
+                        }>Add</button>
                     </div>
                   </div>
                 ) : null}
@@ -4969,7 +5022,8 @@ console.log('checking parameter atchange', name);
                               ) {
                                 alert("Could'nt Take more than 200000 in Cash");
                               } else {
-                                addPayment();
+                                // addPayment();
+                                handleAddPayment
                               }
                             }}
                           >
@@ -5078,7 +5132,8 @@ console.log('checking parameter atchange', name);
                               ) {
                                 alert("Could'nt Take more than 200000 in Cash");
                               } else {
-                                addPayment();
+                                // addPayment();
+                                handleAddPayment
                               }
                             }}
                           >
@@ -5122,7 +5177,10 @@ console.log('checking parameter atchange', name);
                           <td>{payment.fineGold}</td>
                           <td>{payment.fineSilver}</td>
                           {/* Button to delete the payment */}
-                          <td onClick={() => deletePayment(index)}>
+                          <td onClick={() => 
+                            // deletePayment(index)
+                            handleDeletePayment(index)
+                            }>
                             <button
                               tabIndex="7"
                               ref={button6Ref}
@@ -5132,7 +5190,10 @@ console.log('checking parameter atchange', name);
                                 }
                               }}
                               className="adminInviceAddedProductsTotalAmountDeleteOption"
-                              onClick={() => deletePayment(index)}
+                              onClick={() => 
+                                // deletePayment(index)
+                                handleDeletePayment(index)
+                              }
                             >
                               Delete
                             </button>
