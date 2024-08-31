@@ -8,7 +8,8 @@ class ProductCalculator {
       selectedSku,
       selectedSkuName,
       finePure,
-      convertAmount
+      convertAmount,
+      gstType
     ) {
       const updatedProduct = { ...purchaseProduct };
 
@@ -17,7 +18,7 @@ class ProductCalculator {
       this.calculatePurityAndVendorTounche(updatedProduct, allPurities, allVendorTounche, selectedCustomer);
 
       // Net Weight Calculations
-      this.calculateNetWeight(updatedProduct);
+      this.calculateNetWeight(updatedProduct, selectedSku);
 
 
       // Diamond Calculations
@@ -31,7 +32,7 @@ class ProductCalculator {
       this.calculateWastageAndFine(updatedProduct, finePure);
 
       // Total Price Calculations
-      this.calculateTotalPrice(updatedProduct, convertAmount);
+      this.calculateTotalPrice(updatedProduct, convertAmount, gstType);
 
       return updatedProduct;
     }
@@ -59,7 +60,7 @@ class ProductCalculator {
       }
     }
 
-    static calculateNetWeight(updatedProduct) {
+    static calculateNetWeight(updatedProduct, selectedSku) {
       if (updatedProduct.GrossWt || updatedProduct.StoneWt || updatedProduct.ClipWeight || updatedProduct.ClipQuantity) {
         
         const totalDiamondWeight = updatedProduct.Diamonds.reduce(
@@ -67,6 +68,34 @@ class ProductCalculator {
             0
           );
 
+
+          // Calculate totalStoneWeight considering null or empty values as 0
+    const totalStoneWeight = updatedProduct.Stones.reduce((acc, stone) => {
+      const stoneWeight = parseFloat(stone.TotalStoneWt) || 0;
+      return acc + stoneWeight;
+    }, 0);
+
+    const totalStonepieces = updatedProduct.Stones.reduce((acc, stone) => {
+      const stoneWeight = parseFloat(stone.TotalStonePcs) || 0;
+      return acc + stoneWeight;
+    }, 0);
+
+    const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+
+    // Calculate StoneWt
+    const tweight =  totalStoneWeight;
+
+    const tpieces = totalStonepieces;
+
+    let value = updatedProduct.StoneWt;
+    if(tweight > 0){
+      updatedProduct.StoneWt = tweight.toFixed(3)
+    }else{
+      updatedProduct.StoneWt = value
+    }
+
+    
+    updatedProduct.StonePieces = tpieces
         
         updatedProduct.NetWt = parseFloat(
           parseFloat(updatedProduct.GrossWt || 0) -
@@ -78,6 +107,9 @@ class ProductCalculator {
         ).toFixed(3);
       }
 
+      let fineWeight =
+      (parseFloat(updatedProduct.NetWt) * parseFloat(updatedProduct.FinePercent)) / 100;
+      updatedProduct.FineWt = fineWeight;
 
 
 
@@ -132,9 +164,7 @@ class ProductCalculator {
         //   updatedProduct.WastagePercent = WastagePercent;
         }
       }
-      let fineWeight =
-      (parseFloat(updatedProduct.NetWt) * parseFloat(updatedProduct.FinePercent)) / 100;
-      updatedProduct.FineWt = fineWeight;
+      
 
 
     }
@@ -166,7 +196,7 @@ class ProductCalculator {
     
       
 
-    static calculateTotalPrice(updatedProduct, convertAmount) {
+    static calculateTotalPrice(updatedProduct, convertAmount, gstType) {
         // Calculate total making charges
         let totalMakingCharges = this.calculateMakingCharges(updatedProduct);
         console.log('Total Making Charges:', totalMakingCharges);
@@ -179,7 +209,18 @@ class ProductCalculator {
 
 
         // Calculate the fine rate
-        let fineRate = (parseFloat(updatedProduct.FineWastageWt) * parseFloat(updatedProduct.MetalRate)) / 10;
+
+        let nnet = 0;
+        if(gstType){
+
+        nnet = updatedProduct.NetWt;
+        }else{
+nnet = updatedProduct.FineWastageWt;
+        }
+
+        console.log('checking gst  ', gstType, ' v', nnet)
+
+        let fineRate = (parseFloat(nnet) * parseFloat(updatedProduct.MetalRate)) / 10;
         let totalRate = parseFloat(fineRate) + parseFloat(totalMakingCharges);
       
         // Calculate GST on the total rate and on the making charges
@@ -194,15 +235,15 @@ class ProductCalculator {
         console.log("Other Rate:", totalRate,'  ', otherrate, '  ',stoneAmount, '  ',  totalDiamondPurchaseAmount, '  ',hallmarkAmt );
       
         // Calculate TotalItemAmt
-        updatedProduct.TotalItemAmt = convertAmount ? (totalRate + otherrate) : totalMakingCharges;
+        updatedProduct.TotalItemAmt = convertAmount ? (totalRate + otherrate) : totalMakingCharges+otherrate;
       
         // Set updated product values
         updatedProduct.Making = totalMakingCharges;
       
         updatedProduct.FinalPrice = convertAmount
           ? `${totalRate}`
-          : parseInt(totalMakingCharges) !== 0
-          ? `${parseFloat(totalMakingCharges).toFixed(3)}`
+          : parseInt(totalMakingCharges+otherrate) !== 0
+          ? `${parseFloat(totalMakingCharges+otherrate).toFixed(3)}`
           : `${0}`;
       
         updatedProduct.TotalGstAmount = convertAmount

@@ -62,6 +62,12 @@ import {BsImages} from "react-icons/bs";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
+import ProductCalculator from "../../../support/calculations/ProductCalculator.jsx"
+import StonePopup from '../../../support/purchasesupport/StonePopup.jsx';
+import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
+import GetApiService from "../../../Api/getapiService";
+import { createOrder } from '../../../Api/postapiservice';
 
 export default function AdminPurchaseEntryEdit() {
     const [allCsData, setAllCsData] = useState([]);
@@ -136,6 +142,7 @@ export default function AdminPurchaseEntryEdit() {
     const [diamondColors, setDiamondColors] = useState([]);
     const [diamondCuts, setDiamondCuts] = useState([]);
     const [settingTypes, setSettingTypes] = useState([]);
+    const [diamondtampletid, setDiamondtampletid] = useState(0);
 
     const [showError, setShowError] = useState(false);
     const [messageType, setMessageType] = useState("");
@@ -143,6 +150,7 @@ export default function AdminPurchaseEntryEdit() {
     const [savingInvoice, setSavingInvoice] = useState(false);
     const [allDiamondAttributes, setAllDiamondAttributes] = useState([]);
     const [allDiamondSizeWeightRate, setAllDiamondSizeWeightRate] = useState([]);
+    const [iscal, setIscal] = useState(false);
 
 
     const getTodaysDateInHTMLFormat = () => {
@@ -158,41 +166,7 @@ export default function AdminPurchaseEntryEdit() {
     const [gstType, setGstType] = useState(false);
     const [advanceType, setAdvanceType] = useState("Advance Received");
     const [advanceAmount, setAdvanceAmount] = useState(0);
-
-    const fetchAllDiamondAttributes = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a194, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllDiamondAttributes(data);
-            // console.log(data, "AllVendorTounche");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const fetchAllDiamondSizeWeightRate = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a191, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllDiamondSizeWeightRate(data);
-            // console.log(data, "AllVendorTounche");
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    
 
     const [metalPaymentOption, setMetalPaymentOption] = useState({
         optionSelected: "GOLD",
@@ -353,6 +327,93 @@ export default function AdminPurchaseEntryEdit() {
     const employeeCode = adminLoggedIn.EmployeeCode;
     const [searchParams] = useSearchParams();
 
+
+
+    const apiService = new GetApiService(clientCode);
+
+  const loadData = async () => {
+    try {
+      const apiCalls = [
+        apiService.fetchAllSalesTeam(),
+        apiService.fetchAllCustomers(),
+        apiService.fetchAllSkuList(),
+        apiService.fetchAllCategories(),
+        apiService.fetchAllProductType(),
+        apiService.fetchAllPurities(),
+        apiService.fetchAllStonesList(),
+        apiService.fetchAllDiamondsList(),
+        apiService.fetchAllVendorTounche(),
+        apiService.fetchAllDiamondSizeWeightRate(),
+        apiService.fetchAllDiamondAttributes(),
+        apiService.fetchAllRDPurchaseList(),
+      ];
+
+      const results = await Promise.allSettled(apiCalls);
+
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          // Handle successful response
+          switch (index) {
+            case 0:
+              setAllSalesTeam(result.value.data);
+              break;
+            case 1:
+              setAllCsData(result.value);
+              setProductsLoading(false);
+              break;
+            case 2:
+              setAllSkuList(result.value);
+              break;
+            case 3:
+              setAllCategories(result.value);
+              break;
+            case 4:
+              setAllProductTypes(result.value);
+              break;
+            case 5:
+              setAllPurities(result.value);
+              break;
+            case 6:
+              setAllStonesList(result.value);
+              break;
+            case 7:
+              setAllDiamondsList(result.value);
+              break;
+            case 8:
+              setAllVendorTounche(result.value);
+              break;
+            case 9:
+              setAllDiamondSizeWeightRate(result.value);
+              break;
+            case 10:
+              setAllDiamondAttributes(result.value);
+              break;
+            case 11:
+              setAllRDPurcaseMainBox(result.value);
+              break;
+            default:
+              break;
+          }
+        } else {
+          // Handle error
+          console.error(`Error loading data for API ${index + 1}:`, result.reason);
+        }
+      });
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [clientCode]);
+
+
+
+
+
+
+
     useEffect(() => {
         async function fetchData() {
             const entryNo = searchParams.get("purchaseEntryNo");
@@ -365,52 +426,8 @@ export default function AdminPurchaseEntryEdit() {
 
         fetchData();
     }, [searchParams, allCsData]);
-    const fetchAllCustomers = async () => {
-        const formData = {
-            ClientCode: clientCode,
-        };
-        try {
-            const response = await fetch(a149, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllCsData(data);
-            console.log(data, "allCSData");
-            setProductsLoading(false);
-            console.log(data, "allCSData");
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
-    async function fetchAllSkuList() {
-        const formData = {
-            ClientCode: clientCode,
-        };
-        try {
-            const response = await fetch(a163, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            // const response = await fetch(a56);
-            const data = await response.json();
-            setAllSkuList(data);
-            // setProductsLoading(false);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    useEffect(() => {
-        fetchAllSkuList();
-        fetchAllCustomers();
-    }, []);
+   
 
 
     const getRDPurchaseById = async (id) => {
@@ -431,6 +448,7 @@ export default function AdminPurchaseEntryEdit() {
 
             const selectedVendor = allCsData.find((x) => x.Id === data.VendorId);
             setSelectedCustomer(selectedVendor);
+            setDiamondtampletid(selectedVendor.DiamondSizeWeightRateTemplateId);
             if (data.GSTApplied == "true") {
                 setGstType(true);
             } else {
@@ -472,6 +490,7 @@ export default function AdminPurchaseEntryEdit() {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
+            console.log('checking itemdata  ', data)
             const modifiedData = data.map((item) => {
                 let newItem = {...item};
                 // if (item.Stones) {
@@ -511,12 +530,12 @@ export default function AdminPurchaseEntryEdit() {
                     parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
                         ? true
                         : false;
-                newItem.ConvertAmount =
-                    parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
-                    parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
-                    parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
-                        ? true
-                        : false;
+                newItem.ConvertAmount =newItem.ConvertAmount
+                    // parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
+                    // parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
+                    // parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
+                    //     ? true
+                    //     : false;
                 newItem.Making =
                     parseFloat(newItem.MakingFixedAmt) +
                     parseFloat(newItem.MakingFixedWastage) +
@@ -648,55 +667,44 @@ export default function AdminPurchaseEntryEdit() {
     // console.log(purchaseEntryNo, "purchaseEntryNo");
     console.log(purchaseMainBox, "purchaseMainBox");
     // console.log(selectedCustomer, "selectedCustomer");
-    const fetchAllSalesTeam = async () => {
-        const formData = {
-            ClientCode: clientCode,
-        };
-        try {
-            const response = await fetch(a59, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllSalesTeam(data.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    useEffect(() => {
-        fetchAllSalesTeam();
-    }, []);
+    
 
 
-    const fetchAllVendorTounche = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a174, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllVendorTounche(data);
-            // console.log(data, "AllVendorTounche");
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const [selectedSku, setSelectedSku] = useState([]);
     const [selectedSkuName, setSelectedSkuName] = useState("");
 
     useEffect(() => {
-        if (selectedSku) {
-            setAllStonesList(selectedSku?.SKUStoneMain)
-            console.log(selectedSku, "jdshdjshjdhjsdhjsdhjdhsjdhjshl̥")
+
+        if (selectedSku && selectedSku.length > 0) {
+            // setAllStonesList(selectedSku?.SKUStoneMain)
+
+            if (selectedSku.SKUStoneMain && Array.isArray(selectedSku.SKUStoneMain)) {
+                const normalizedStones = selectedSku.SKUStoneMain.map(stone => ({
+                  StoneName: stone.StoneMainName,
+                  StoneWeight: stone.StoneMainWeight,
+                  StonePieces: stone.StoneMainPieces,
+                  StoneRate: stone.StoneMainRate,
+                  StoneAmount: stone.StoneMainAmount,
+                  Description: stone.StoneMainDescription,
+                  ClientCode: stone.ClientCode,
+                  CompanyId: stone.CompanyId,
+                  CounterId: stone.CounterId,
+                  BranchId: stone.BranchId,
+                  EmployeeId: stone.EmployeeId,
+                  StoneLessPercent: stone.StoneLessPercent,
+                  Id: stone.Id,
+                  CreatedOn: stone.CreatedOn,
+                  LastUpdated: stone.LastUpdated,
+                  StatusType: stone.StatusType,
+                }));
+                setAllStonesList(normalizedStones);
+                console.log('checking pro filter3', allStonesList, '  g   ', normalizedStones);
+              } 
+
+            console.log(selectedSku, "sku found")
+
         } else {
-            console.log(allStonesList, "jdshdjshjdhjsdhjsdhjdhsjdhjshl̥")
+           
             setAllStonesList(allStonesList)
         }
     }, [selectedSku]);
@@ -719,29 +727,18 @@ export default function AdminPurchaseEntryEdit() {
     // useEffect(() => {
     //   fetchAllProducts();
     // }, []);
-    useEffect(() => {
-        fetchAllCategories();
-    }, []);
-    useEffect(() => {
-        fetchAllProductType();
-    }, []);
-    useEffect(() => {
-        fetchAllPurities();
-    }, []);
-
+    
+    
+    
 
     useEffect(() => {
         if(!selectedSkuName){
-        fetchAllStonesList();
+            apiService.fetchAllStonesList();
         }
     }, [selectedSkuName]);
 
-    useEffect(() => {
-        fetchAllDiamondsList();
-    }, []);
-    useEffect(() => {
-        fetchAllVendorTounche();
-    }, []);
+   
+    
     const navigate = useNavigate();
     console.log(selectedSku, "selectedSku");
     console.log(selectedSku, "selectedSku");
@@ -914,91 +911,11 @@ export default function AdminPurchaseEntryEdit() {
             // setDescription("");
         }
     }, [selectedSku]);
-    const fetchAllCategories = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a125, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllCategories(data);
-            // console.log(data, "allcategory");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const fetchAllProductType = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a128, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllProductTypes(data);
-            // console.log(data, "allProductTypes");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const fetchAllPurities = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a134, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllPurities(data);
-            console.log(data, "allPurities");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const fetchAllStonesList = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a152, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllStonesList(data);
-            console.log(data, "allPurities");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    const fetchAllDiamondsList = async () => {
-        const formData = {ClientCode: clientCode};
-        try {
-            const response = await fetch(a153, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            setAllDiamondsList(data);
-            console.log(data, "allPurities");
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    
+    
+    
+    
+    
     console.log(allPurities, "allPurities");
 
     // useEffect(() => {
@@ -1012,6 +929,7 @@ export default function AdminPurchaseEntryEdit() {
             setCustomerId(selectedCustomer.Id);
             setCustomerEmail(selectedCustomer.Email);
             setCustomerAddress(selectedCustomer.Address);
+            setDiamondtampletid(selectedCustomer.DiamondSizeWeightRateTemplateId);
             // handleToggleCustomTab();
         } else {
             setCustomerName("");
@@ -1042,6 +960,7 @@ export default function AdminPurchaseEntryEdit() {
         }
         setSelectedCustomerEdit(false);
         setSelectedCustomer(selected); // Update the selected customer based on name match
+        setDiamondtampletid(selected.DiamondSizeWeightRateTemplateId);
     };
 
     useEffect(() => {
@@ -1969,7 +1888,11 @@ export default function AdminPurchaseEntryEdit() {
         fetchDiamondAttributes();
     }, []);
 
-    function getShapeValue(id, shape) {
+
+
+
+
+    function getShapeValue1(id, shape) {
         if (id) {
             const shapeValue = diamondShapes?.find((item) => item.Id == id);
             return id ? shapeValue?.DiamondValue : "";
@@ -1981,6 +1904,22 @@ export default function AdminPurchaseEntryEdit() {
             return shapeValue ? String(shapeValue.Id) : "";
         }
     }
+
+    function getShapeValue(id, shape, parameter) {
+        console.log("check input values ", id, "  ", shape, "  ", parameter);
+        if (id) {
+          const shapeValue = allDiamondAttributes
+            .filter((x) => x.DiamondAttribute == parameter)
+            ?.find((item) => item.Id == id);
+          return id ? shapeValue?.DiamondValue : "";
+        }
+        if (shape) {
+          const shapeValue = allDiamondAttributes
+            .filter((x) => x.DiamondAttribute == parameter)
+            ?.find((item) => item.DiamondValue == shape);
+          return shape ? shapeValue?.Id : "";
+        }
+      }
 
     function getDiamondClarity(id, clarity) {
         if (id) {
@@ -2191,18 +2130,19 @@ export default function AdminPurchaseEntryEdit() {
                     DiamondCut: getDiamondCut(null, product.DiamondCut),
                     DiamondSettingType: getSettingType(null, product.DiamondSettingType),
                     DiamondCertificate: product.DiamondCertificate,
-                    DiamondPurchaseAmount: String(product.DiamondPurchaseAmount),
-                    DiamondSellAmount: product.DiamondSellAmount,
-                    DiamondDescription: product.DiamondDescription,
-                    DiamondWeight: String(product.DiamondWeight),
-                    DiamondPieces: String(product.DiamondPieces),
-                    DiamondAmount: String(product.DiamondAmount),
-                    DiamondSleve: product.DiamondSleve,
-                    DiamondTotalWeight: product.DiamondTotalWeight,
-                    DiamondTotalQuantity: product.DiamondTotalQuantity,
-                    TotalDiamondWeight: String(product.TotalDiamondWeight),
-                    TotalDiamondAmount: String(product.TotalDiamondAmount),
-                    TotalDiamondQty: String(product.TotalDiamondQty),
+DiamondPurchaseAmount: String(product.DiamondPurchaseAmount),
+DiamondSellAmount: product.DiamondSellAmount,
+DiamondDescription: product.DiamondDescription,
+DiamondWeight: String(product.DiamondWeight || 0),
+DiamondPieces: String(product.DiamondPieces || 0),
+DiamondAmount: String(product.DiamondAmount || 0),
+DiamondSleve: product.DiamondSleve,
+DiamondTotalWeight: String(product.DiamondTotalWeight || 0), // Add a fallback value of 0
+DiamondTotalQuantity: String(product.DiamondTotalQuantity || 0), // Add a fallback value of 0
+TotalDiamondWeight: String(product.TotalDiamondWeight || 0), // Add a fallback value of 0
+TotalDiamondAmount: String(product.TotalDiamondAmount || 0), // Add a fallback value of 0
+TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of 0
+
                 };
             });
             console.log(payload, "payload");
@@ -2698,7 +2638,7 @@ export default function AdminPurchaseEntryEdit() {
             // console.log(data, "selected Cs");
             //   alert("updated cs");
             setSelectedCustomer(data.data);
-            fetchAllCustomers();
+            apiService.fetchAllCustomers();
             setSelectedCustomerEdit(false);
             scrollToCenter("adminInvoiceAddCustomerTitle");
         } catch (error) {
@@ -3221,309 +3161,104 @@ export default function AdminPurchaseEntryEdit() {
         window.scrollTo(0, 0);
     };
 
-    const handleInputChangePurchase = (e) => {
-        const {name, value} = e.target;
 
-        console.log(name, "name");
-        console.log(value, "value");
-        const updatedProduct = purchaseProduct; // Create a copy of the purchaseProduct object
-        // Update the edited data in the updatedProduct object
-        if (name === "CategoryId") {
+    const handleInputChangePurchase = (e) => {
+        const { name, value } = e.target;
+        const updatedProduct = { ...purchaseProduct };
+    console.log('checking parameter atchange', name);
+        // Handle specific cases
+        switch (name) {
+          case "CategoryId":
             const [selectedCategoryId, selectedCategoryName] = value.split(",");
             updatedProduct.CategoryName = selectedCategoryName;
             updatedProduct.CategoryId = selectedCategoryId;
-
-            if (
-                selectedCategoryName &&
-                !selectedCategoryName.toLowerCase() == "diamonds"
-            ) {
-                updatedProduct.MetalId = selectedCategoryId;
-                updatedProduct.MetalName = selectedCategoryName;
-            } else {
-                updatedProduct.MetalId = selectedCategoryId;
-                updatedProduct.MetalName = selectedCategoryName;
-            }
-            // (updatedProduct.CategoryName = selectedCategoryName);
-        } else if (name === "MetalId") {
+            updatedProduct.MetalId = selectedCategoryId;
+            updatedProduct.MetalName = selectedCategoryName;
+            break;
+          case "MetalId":
             const [selectedMetalId, selectedMetalName] = value.split(",");
-            // setSelectedProductType(selectedProductName),
             updatedProduct.MetalId = selectedMetalId;
             updatedProduct.MetalName = selectedMetalName;
-        } else if (name === "DiamondPieces") {
-            // setSelectedProductType(selectedProductName),
-            const selectedDiamondSizeWeightRate = allDiamondSizeWeightRate.filter(
-                (x) => x.DiamondSize == purchaseProduct.DiamondSize
-            );
-            if (value !== "" && selectedDiamondSizeWeightRate.length > 0) {
-                updatedProduct.DiamondPieces = value;
-                updatedProduct.DiamondWeight = parseFloat(
-                    parseFloat(selectedDiamondSizeWeightRate[0].DiamondWeight) *
-                    parseInt(value)
-                ).toFixed(3);
-                updatedProduct.DiamondPurchaseAmount = parseFloat(
-                    parseFloat(selectedDiamondSizeWeightRate[0].DiamondPurchaseRate) *
-                    parseInt(value)
-                ).toFixed(2);
-                updatedProduct.DiamondSellAmount = parseFloat(
-                    parseFloat(selectedDiamondSizeWeightRate[0].DiamondSellRate) *
-                    parseInt(value)
-                ).toFixed(2);
-            } else {
-                updatedProduct.DiamondPieces = value;
-                updatedProduct.DiamondWeight = 0;
-                updatedProduct.DiamondPurchaseAmount = 0;
-                updatedProduct.DiamondSellAmount = 0;
-            }
-        } else if (name === "ProductName") {
+            break;
+          case "DiamondPieces":
+            updatedProduct.DiamondPieces = value;
+            break;
+          case "ProductName":
             const [selectedProductId, selectedProductName] = value.split(",");
-            // setSelectedProductType(selectedProductName),
-            (updatedProduct.ProductId = selectedProductId),
-                (updatedProduct.ProductName = selectedProductName);
-        } else if (name === "GrossWt") {
-            updatedProduct.NetWt = parseFloat(
-                parseFloat(value) -
-                parseFloat(updatedProduct.StoneWt) -
-                parseFloat(
-                    parseFloat(updatedProduct.ClipWeight) *
-                    parseFloat(updatedProduct.ClipQuantity)
-                )
-            ).toFixed(3);
+            updatedProduct.ProductId = selectedProductId;
+            updatedProduct.ProductName = selectedProductName;
+            break;
+          case "GrossWt":
             updatedProduct.GrossWt = value;
-        } else if (name === "StoneWt") {
-            updatedProduct.NetWt = parseFloat(
-                parseFloat(updatedProduct.GrossWt) -
-                parseFloat(value) -
-                parseFloat(
-                    parseFloat(updatedProduct.ClipWeight) *
-                    parseFloat(updatedProduct.ClipQuantity)
-                )
-            ).toFixed(3);
+            break; // Add missing break
+          case "StoneWt":
             updatedProduct.StoneWt = value;
-        } else if (name === "ClipWeight") {
-            updatedProduct.NetWt = parseFloat(
-                parseFloat(updatedProduct.GrossWt) -
-                parseFloat(updatedProduct.StoneWt) -
-                parseFloat(
-                    parseFloat(value) * parseFloat(updatedProduct.ClipQuantity)
-                )
-            ).toFixed(3);
-            // updatedProduct.StoneWt = value;
+            break; // Add missing break
+          case "ClipWeight":
             updatedProduct.ClipWeight = value;
-        } else if (name === "ClipQuantity") {
-            updatedProduct.NetWt = parseFloat(
-                parseFloat(updatedProduct.GrossWt) -
-                parseFloat(updatedProduct.StoneWt) -
-                parseFloat(parseFloat(updatedProduct.ClipWeight) * parseFloat(value))
-            ).toFixed(3);
-            // updatedProduct.StoneWt = value;
+            break; // Add missing break
+          case "ClipQuantity":
             updatedProduct.ClipQuantity = value;
-        } else if (name === "NetWt") {
-            updatedProduct.StoneWt = parseFloat(
-                parseFloat(updatedProduct.GrossWt) -
-                parseFloat(value) -
-                parseFloat(
-                    parseFloat(updatedProduct.ClipWeight) *
-                    parseFloat(updatedProduct.ClipQuantity)
-                )
-            ).toFixed(3);
+            updatedProduct.Quantity = value;
+            break; // Add missing break
+          case "Quantity":
+            updatedProduct.Quantity = value;
+            updatedProduct.ClipQuantity = value;
+            break; // Add missing break
+          case "NetWt":
             updatedProduct.NetWt = value;
-        } else if (name === "FinePercent") {
-            // let fineWeight =
-            //   (parseFloat(updatedProduct.NetWt) * parseFloat(value)) / 100;
-            // let wastageWeight =
-            //   (parseFloat(updatedProduct.WastageWt) *
-            //     parseFloat(updatedProduct.NetWt)) /
-            //   100;
-            // let totalFineWastageWt =
-            //   parseFloat(fineWeight) + parseFloat(wastageWeight);
-
-            // // updatedProduct.PurityId = value !== "" ? value : 0;
-            // updatedProduct.FinePercent = value !== "" ? value : 0;
-            // updatedProduct.FineWt = parseFloat(fineWeight);
-            // updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt);
-            // updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt);
-
-            if (value !== "") {
-                let matchingPurity = allPurities.find(
-                    (purity) =>
-                        Math.abs(parseFloat(purity.FinePercentage) - parseFloat(value)) <=
-                        0.5
-                );
-                console.log(matchingPurity, "matchingPurity");
-                updatedProduct.PurityId = matchingPurity ? matchingPurity.Id : 0;
-            } else {
-                updatedProduct.PurityId = 0;
-            }
-            // logic for vendor Tounche below
-            const mathchingVendorTounche = allVendorTounche.filter(
-                (tounches) =>
-                    tounches.CategoryId == purchaseProduct.CategoryId &&
-                    tounches.ProductId == purchaseProduct.ProductId &&
-                    selectedCustomer &&
-                    tounches.PurityId == purchaseProduct.PurityId &&
-                    tounches.VendorId == selectedCustomer.Id
-            );
-
-            if (selectedCustomer && mathchingVendorTounche.length > 0) {
-                updatedProduct.WastageWt = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].WastageWt
-                    : 0;
-                updatedProduct.WastagePercent = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].WastageWt
-                    : 0;
-                updatedProduct.MakingPercentage = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].MakingPercentage
-                    : 0;
-                updatedProduct.MakingFixedAmt = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].MakingFixedAmt
-                    : 0;
-                updatedProduct.MakingFixedWastage = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].MakingFixedWastage
-                    : 0;
-                updatedProduct.MakingPerGram = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].MakingPerGram
-                    : 9;
-                updatedProduct.FinePure = mathchingVendorTounche
-                    ? mathchingVendorTounche[0].FinePure
-                    : 0;
-                setFinePure(mathchingVendorTounche[0].FinePure);
-                console.log("TouncheMatched", mathchingVendorTounche);
-                console.log("TouncheMatched", mathchingVendorTounche);
-                console.log("TouncheMatched", mathchingVendorTounche);
-                console.log("TouncheMatched", mathchingVendorTounche);
-            } else {
-                console.log("TouncheNotMatched", mathchingVendorTounche);
-                updatedProduct.WastageWt = 0;
-                updatedProduct.MakingFixedAmt = 0;
-                updatedProduct.MakingPerGram = 0;
-                updatedProduct.MakingPercentage = 0;
-                updatedProduct.MakingFixedWastage = 0;
-                updatedProduct.WastagePercent = 0;
-            }
-            let fineWeight =
-                (parseFloat(updatedProduct.NetWt) * parseFloat(value)) / 100;
-            let wastageWeight =
-                (parseFloat(updatedProduct.WastageWt) *
-                    parseFloat(updatedProduct.NetWt)) /
-                100;
-            let totalFineWastageWt =
-                parseFloat(fineWeight) + parseFloat(wastageWeight);
-
-            // updatedProduct.PurityId = value !== "" ? value : 0;
-            updatedProduct.FinePercent = value !== "" ? value : 0;
-            updatedProduct.FineWt = parseFloat(fineWeight);
-            updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt);
-            updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt);
-            // calculatePurchasePrice(updatedProduct);
-            // logic for vendor Tounche above
-        } else if (name === "WastageWt") {
-            let fineWeight = parseFloat(updatedProduct.FineWt);
-            let wastageWeight = !finePure
-                ? (parseFloat(value) * parseFloat(updatedProduct.NetWt)) / 100
-                : (parseFloat(value) * parseFloat(fineWeight)) / 100;
-            let totalFineWastageWt =
-                parseFloat(fineWeight) + parseFloat(wastageWeight);
-            //   updatedProduct.Purity = parseFloat(value);
-            updatedProduct.WastageWt = value;
-            updatedProduct.FineWt = parseFloat(fineWeight).toFixed(3);
-            updatedProduct.FineWastageWt = parseFloat(totalFineWastageWt).toFixed(3);
-            updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt).toFixed(3);
-            updatedProduct.MakingFixedWastage =
-                selectedSkuName !== ""
-                    ? parseFloat(selectedSku.MakingFixedWastage).toFixed(3)
-                    : "0";
-        } else if (name === "MetalRate") {
-            let fineWeight = parseFloat(updatedProduct.FineWt);
-            let wastageWeight =
-                parseFloat(updatedProduct.WastageWt) / parseFloat(updatedProduct.NetWt);
-            let totalFineWastageWt =
-                parseFloat(fineWeight) + parseFloat(wastageWeight);
-            updatedProduct.MetalRate = parseFloat(value) !== 0 ? value : 0;
-            if (convertAmount) {
-                updatedProduct.TotalItemAmt = parseFloat(
-                    (parseFloat(updatedProduct.TotalItemAmt) * parseFloat(value)) / 10
-                ).toFixed(3);
-            } else {
-                updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt).toFixed(3);
-            }
-        } else if (name === "purityRate") {
+            break; // Add missing break
+          case "FinePercent":
+            updatedProduct.FinePercent = value;
+            break; // Add missing break
+          case "WastageWt":
+            updatedProduct[name] = value;
+            break;
+          case "MetalRate":
+            updatedProduct.MetalRate = parseFloat(value) || 0; // Ensure valid number
+            break;
+          case "purityRate":
             const [selectedPurityName, selectedPurityRate] = value.split(",");
-            setSelectedPurity(selectedPurityName);
             updatedProduct.Purity = selectedPurityName;
             updatedProduct.GoldRate = selectedPurityRate;
             updatedProduct.purityRate = selectedPurityRate;
-        } else if (name === "GoldRate") {
-            updatedProduct.GoldRate = parseFloat(value);
-            updatedProduct.purityRate = parseFloat(value);
-        } else if (name === "ProductName") {
-            updatedProduct.ProductName = value;
-        } else if (name == "DiamondSize") {
+            break;
+          case "GoldRate":
+            updatedProduct.GoldRate = parseFloat(value) || 0;
+            updatedProduct.purityRate = parseFloat(value) || 0;
+            break;
+          case "DiamondSize":
             updatedProduct[name] = value;
-            const selectedDiamondSizeWeightRate = allDiamondSizeWeightRate.filter(
-                (x) => x.DiamondSize == value
-            );
-            console.log(
-                selectedDiamondSizeWeightRate,
-                "selectedDiamondSizeWeightRate"
-            );
-            console.log(
-                selectedDiamondSizeWeightRate,
-                "selectedDiamondSizeWeightRate"
-            );
-            if (selectedDiamondSizeWeightRate.length > 0) {
-                updatedProduct.DiamondWeight =
-                    selectedDiamondSizeWeightRate[0].DiamondWeight;
-                updatedProduct.DiamondPurchaseRate =
-                    selectedDiamondSizeWeightRate[0].DiamondPurchaseRate;
-                updatedProduct.DiamondPurchaseAmount =
-                    selectedDiamondSizeWeightRate[0].DiamondPurchaseRate;
-                updatedProduct.DiamondSellRate =
-                    selectedDiamondSizeWeightRate[0].DiamondSellRate;
-                updatedProduct.DiamondPieces = "1";
-            } else {
-                updatedProduct.DiamondWeight = 0;
-                updatedProduct.DiamondSellRate = 0;
-                updatedProduct.DiamondPurchaseRate = 0;
-                updatedProduct.DiamondPurchaseAmount = 0;
-                updatedProduct.DiamondPieces = "0";
-            }
-        } else {
+            break;
+          default:
             updatedProduct[name] = value;
         }
-        if (
-            name === "NetWt" ||
-            name === "GrossWt" ||
-            name === "StoneWt" ||
-            name === "ClipWeight" ||
-            name === "ClipQuantity"
-        ) {
-            let fineWeight = parseFloat(updatedProduct.FineWt);
-            let wastageWeight = !finePure
-                ? (parseFloat(updatedProduct.WastageWt) *
-                parseFloat(updatedProduct.NetWt)) /
-                100
-                : (parseFloat(updatedProduct.WastageWt) * parseFloat(fineWeight)) / 100;
-            let totalFineWastageWt =
-                parseFloat(fineWeight) + parseFloat(wastageWeight);
-            //   updatedProduct.Purity = parseFloat(updatedProduct.WastageWt);
-            updatedProduct.WastageWt = 0;
-            updatedProduct.FineWt = 0;
-            updatedProduct.FinePercent = 0;
-            updatedProduct.FineWastageWt = 0;
-            updatedProduct.TotalItemAmt = 0;
-            updatedProduct.MakingFixedWastage =
-                selectedSkuName !== ""
-                    ? parseFloat(selectedSku.MakingFixedWastage).toFixed(3)
-                    : "0";
-        }
-        // Set the state of the purchaseProduct object with the updatedProduct object
+    
         setPurchaseProduct(updatedProduct);
-
-        // Calculate purchase price based on the updatedProduct object
-        calculatePurchasePrice(updatedProduct);
-
-        // Rest of the function logic...
+        setIscal(true); // Trigger calculation
     };
+    
+    
+      useEffect(() => {
+        if (iscal) {
+          console.log('checking calculationsss', iscal)
+          const updatedProduct = ProductCalculator.calculateAll(
+            purchaseProduct,
+            allDiamondSizeWeightRate,
+            allPurities,
+            allVendorTounche,
+            selectedCustomer,
+            selectedSku,
+            selectedSkuName,
+            finePure,
+            convertAmount,
+            gstType
+          );
+          setPurchaseProduct(updatedProduct);
+          setIscal(false);
+        }
+      }, [iscal, purchaseProduct]);
+    
 
     useEffect(() => {
         const updatedProduct = purchaseProduct;
@@ -4107,41 +3842,121 @@ export default function AdminPurchaseEntryEdit() {
     });
 
     const deleteStone = (index) => {
+        if (index < 0 || index >= purchaseProduct.Stones.length) {
+          console.warn('Index out of boundss');
+          return;
+      }
+    
+      const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+      const stoneToDelete = purchaseProduct.Stones[index];
+    
+      // Update StoneWt after deleting the stone
+      const updatedStoneWeight = 
+      purchaseProduct.StoneWt - (stoneToDelete.StoneWeight * stoneToDelete.StonePieces * skuPieces);
+      purchaseProduct.StoneWt = updatedStoneWeight;
+    
         const updatedStones = purchaseProduct.Stones.filter((_, i) => i !== index);
-        setPurchaseProduct({...purchaseProduct, Stones: updatedStones});
-    };
+        setPurchaseProduct({ ...purchaseProduct, Stones: updatedStones });
+        setIscal(true)
+      };
     const deleteStoneEdit = (index) => {
         const updatedStones = openEditProduct.Stones.filter((_, i) => i !== index);
         setOpenEditProduct({...openEditProduct, Stones: updatedStones});
     };
-    const handleStoneChange = (index, property, value) => {
+
+    const normalizeString = (str) => {
+        return str.replace(/\s+/g, " ").trim().toLowerCase();
+      };
+
+      const handleStoneChange = (index, property, value) => {
         const newStones = [...purchaseProduct.Stones];
-        const selectedStone = allStonesList?.find(
-            (stone) => (stone.StoneName ? stone.StoneName : stone.StoneMainName) === value
-        );
+        // const selectedStone = allStonesList.find(
+        //   (stone) => {
+        //     console.log('checking newstones', '  ',allStonesList, '  ', stone.StoneMainName, '  ', value )
+        //     stone.StoneMainName === value}
+    
+        // );
+    
+        const normalizedValue = normalizeString(value);
+        console.log("Normalized value:", normalizedValue);
+    
+        let selectedStone;
+        allStonesList.forEach((stone) => {
+          const normalizedStoneName = normalizeString(
+            stone.StoneName ? stone.StoneName : stone.StoneMainName
+          );
+          console.log(
+            `Comparing "${normalizedStoneName}" with "${normalizedValue}"`
+          );
+          if (normalizedStoneName === normalizedValue) {
+            selectedStone = stone;
+            console.log("Match found :", stone);
+          }
+        });
         if (selectedStone) {
-            newStones[index] = {
-                ...newStones[index],
-                StoneName: selectedStone.StoneName ? selectedStone.StoneName : selectedStone.StoneMainName,
-                StoneWeight: selectedStone.StoneWeight ? selectedStone.StoneWeight : selectedStone.StoneMainWeight,
-                StonePieces: selectedStone.StonePieces ? selectedStone.StonePieces : selectedStone.StoneMainPieces,
-                StoneRate: selectedStone.StoneRate ? selectedStone.StoneRate : selectedStone.StoneMainRate,
-                StoneAmount: selectedStone.StoneAmount ? selectedStone.StoneAmount : selectedStone.StoneMainAmount,
-                Description: selectedStone.Description ? selectedStone.Description : selectedStone.StoneMainDescription
-            };
+          newStones[index] = {
+            ...newStones[index],
+            StoneName: selectedStone.StoneName
+              ? selectedStone.StoneName
+              : selectedStone.StoneMainName,
+            StoneWeight: selectedStone.StoneWeight
+              ? selectedStone.StoneWeight
+              : selectedStone.StoneMainWeight,
+            StonePieces: selectedStone.StonePieces
+              ? selectedStone.StonePieces
+              : selectedStone.StoneMainPieces,
+            StoneRate: selectedStone.StoneRate
+              ? selectedStone.StoneRate
+              : selectedStone.StoneMainRate,
+            StoneAmount: selectedStone.StoneAmount
+              ? selectedStone.StoneAmount
+              : selectedStone.StoneMainAmount,
+            Description: selectedStone.Description
+              ? selectedStone.Description
+              : selectedStone.StoneMainDescription,
+          };
         } else {
-            newStones[index] = {
-                ...newStones[index],
-                [property]: value,
-            };
+          newStones[index] = {
+            ...newStones[index],
+            [property]: value,
+          };
         }
-        setPurchaseProduct({...purchaseProduct, Stones: newStones});
-    };
+    
+    
+        const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+    
+        let totalwt = newStones[index].StoneWeight * newStones[index].StonePieces * skuPieces;
+        let totalpcs = newStones[index].StonePieces * skuPieces;
+    
+        // Correct the assignment
+        newStones[index].TotalStoneWt = totalwt;
+        newStones[index].TotalStonePcs = totalpcs;
+    
+        console.log('check updated stones', newStones)
+    
+        setPurchaseProduct({ ...purchaseProduct, Stones: newStones });
+        setIscal(true)
+      };
+      
+    
+
+    
+    
+
+
+
+
+
+
+    
+
     const deleteDiamond = (x, index) => {
         const updatedDiamonds = purchaseProduct.Diamonds.filter(
             (_, i) => i !== index
         );
-        setPurchaseProduct({...purchaseProduct, Diamonds: updatedDiamonds});
+        setPurchaseProduct({...purchaseProduct, Diamonds: updatedDiamonds,DiamondWeight: 0,
+            DiamondAmount: 0,
+            Diamondpurchseamount: 0});
         setPurchaseProduct((list) => ({
             ...list,
             TotalDiamondAmount: list.TotalDiamondAmount - x.DiamondPurchaseAmt,
@@ -4149,64 +3964,315 @@ export default function AdminPurchaseEntryEdit() {
             TotalDiamondWeight: list.TotalDiamondWeight - x.DiamondWeight
         }));
     };
+    
     const handleDiamondChange = (index, property, value) => {
         const newDiamond = [...purchaseProduct.Diamonds];
+    
+        const oldproduct = { ...purchaseProduct };
+    
         const selectedDiamond = allDiamondsList.find(
-            (diamond) => diamond.DiamondName === value
+          (diamond) => diamond.DiamondName === value
         );
-
+        let totalDiamondAmount = 0;
+        let truncatedweight = 0;
+    
         if (selectedDiamond) {
-            newDiamond[index] = {
-                ...newDiamond[index],
-                DiamondName: selectedDiamond.DiamondName,
-                DiamondWeight: selectedDiamond.DiamondWeight,
-                DiamondRate: selectedDiamond.DiamondRate,
-                DiamondPieces: selectedDiamond.DiamondPieces,
-                DiamondClarity: selectedDiamond.DiamondClarity,
-                DiamondColour: selectedDiamond.DiamondColour,
-                DiamondCut: selectedDiamond.DiamondCut,
-                DiamondShape: selectedDiamond.DiamondShape,
-                DiamondSize: selectedDiamond.DiamondSize,
-                Certificate: selectedDiamond.Certificate,
-                SettingType: selectedDiamond.SettingType,
-                DiamondAmount: selectedDiamond.DiamondAmount,
-                DiamondPurchaseAmt: selectedDiamond.DiamondPurchaseAmt,
-                Description: selectedDiamond.Description, // Assuming a description field exists
-            };
+          newDiamond[index] = {
+            ...newDiamond[index],
+            DiamondName: selectedDiamond.DiamondName,
+            DiamondWeight: selectedDiamond.DiamondWeight,
+            DiamondRate: selectedDiamond.DiamondRate,
+            DiamondPieces: selectedDiamond.DiamondPieces,
+            DiamondClarity: selectedDiamond.DiamondClarity,
+            DiamondColour: selectedDiamond.DiamondColour,
+            DiamondCut: selectedDiamond.DiamondCut,
+            DiamondShape: selectedDiamond.DiamondShape,
+            DiamondSize: selectedDiamond.DiamondSize,
+            Certificate: selectedDiamond.Certificate,
+            SettingType: selectedDiamond.SettingType,
+            DiamondAmount: selectedDiamond.DiamondAmount,
+            // DiamondPurchaseAmt: selectedDiamond.DiamondPurchaseAmt,
+            Description: selectedDiamond.Description, // Assuming a description field exists
+          };
         } else {
+          newDiamond[index] = {
+            ...newDiamond[index],
+            [property]: value,
+          };
+    
+          if (
+            property == "DiamondWeight" ||
+            property == "DiamondShape" ||
+            property == "DiamondClarity" ||
+            property == "DiamondCut" ||
+            property == "DiamondColour"
+          ) {
+            const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
+              return template.Id === diamondtampletid;
+            });
+            if (diamondTemplate) {
+              // const shape = newDiamond[index].DiamondShape ? getShapeValue(null, newDiamond[index].DiamondShape) : null;
+              // const clarity = newDiamond[index].DiamondClarity ? getDiamondClarity(null, newDiamond[index].DiamondClarity) : null;
+              const shape = newDiamond[index].DiamondShape
+                ? getShapeValue(
+                  null,
+                  newDiamond[index].DiamondShape,
+                  "DiamondShape"
+                )
+                : null;
+              const clarity = newDiamond[index].DiamondClarity
+                ? getShapeValue(
+                  null,
+                  newDiamond[index].DiamondClarity,
+                  "DiamondClarity"
+                )
+                : null;
+              const color = newDiamond[index].DiamondColour
+                ? getShapeValue(
+                  null,
+                  newDiamond[index].DiamondColour,
+                  "DiamondColour"
+                )
+                : null;
+              const size = newDiamond[index].DiamondSize
+                ? getShapeValue(null, newDiamond[index].DiamondSize, "DiamondSize")
+                : null;
+              const cut = newDiamond[index].DiamondCut
+                ? getShapeValue(null, newDiamond[index].DiamondCut, "DiamondCut")
+                : null;
+              if (
+                newDiamond[index].DiamondWeight &&
+                newDiamond[index].DiamondWeight > 0
+              ) {
+                const foundData = findClosestHigherDiamondWeight(
+                  diamondTemplate.DiamondSizeWeightRates,
+                  newDiamond[index].DiamondWeight,
+                  shape,
+                  clarity,
+                  color,
+                  size,
+                  cut
+                );
+
+                console.log('checking edit diamond ', foundData)
+    
+                if (foundData) {
+                  newDiamond[index] = {
+                    ...newDiamond[index],
+                    DiamondRate: foundData.DiamondPurchaseRate,
+                  };
+                }
+              } else {
+                newDiamond[index] = {
+                  ...newDiamond[index],
+                  DiamondRate: "0",
+                };
+              }
+            }
+          }
+    
+          if (property == "DiamondPurchaseAmt") {
+            const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
+              return template.Id === diamondtampletid;
+            });
+            console.log(
+              "Found diamond template:",
+              diamondTemplate,
+              "for ID:",
+              diamondtampletid
+            );
+            if (diamondTemplate) {
+              const rates = diamondTemplate.DiamondSizeWeightRates;
+              console.log("Available rates:", rates);
+    
+              const matchingRate = rates.find((rate) => {
+                console.log("Checking rate:", rate);
+                console.log("Comparing with:", {
+                  DiamondShape: newDiamond[index].DiamondShape,
+                  DiamondWeight: newDiamond[index].DiamondWeight,
+                  [property]: value,
+                });
+    
+                const isMatch =
+                  rate.DiamondShape === newDiamond[index].DiamondShape &&
+                  // rate.DiamondWeight === newDiamond[index].DiamondWeight
+                  //  rate.DiamondCut === newDiamond[index].DiamondCut;
+    
+                  console.log("Rate match result:", isMatch);
+                return isMatch;
+              });
+    
+              if (matchingRate) {
+                newDiamond[index].DiamondRate =
+                  matchingRate.DiamondRate;
+                console.log("Found matching rate:", matchingRate);
+              } else {
+                newDiamond[index].DiamondRate = 0; // Default value if no match found
+                console.log("No matching rate found.");
+              }
+            } else {
+              console.log("No diamond template found for ID:", diamondtampletid);
+            }
+          }
+          if (property == "DiamondRate") {
             newDiamond[index] = {
-                ...newDiamond[index],
-                [property]: value,
+              ...newDiamond[index],
+              DiamondRate: value,
             };
+          }
+          const tweight = newDiamond[index].DiamondWeight * newDiamond[index].DiamondPieces;
+    
+          const totalDiamondPurchaseAmount =
+            tweight *
+            newDiamond[index].DiamondRate;
+    
+          const truncatedAmount = Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
+          truncatedweight = Math.floor(tweight * 1000) / 1000;
+    
+          newDiamond[index] = {
+            ...newDiamond[index],
+            DiamondPurchaseAmt: truncatedAmount,
+            DiamondTotalWeight: truncatedweight
+          };
+    
         }
-
-        let totalDiamondPurchaseAmt = newDiamond.reduce(
-            (total, diamond) => {
-                return total + Number(diamond.DiamondPurchaseAmt);
-            },
-            0
+    
+        totalDiamondAmount = newDiamond.reduce(
+          (acc, diamond) => acc + (parseFloat(diamond.DiamondRate) || 0),
+          0
         );
-        let totalDiamondWeight = newDiamond.reduce(
-            (total, diamond) => {
-                return total + Number(diamond.DiamondWeight);
-            },
-            0
+    
+        const totalDiamondpurchaseAmount = newDiamond.reduce(
+          (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
+          0
         );
-        let totalDiamondPieces = newDiamond.reduce(
-            (total, diamond) => {
-                return total + Number(diamond.DiamondPieces);
-            },
-            0
+    
+        const totalDiamondWeight = newDiamond.reduce(
+          (acc, diamond) => acc + (parseFloat(diamond.DiamondTotalWeight) || 0),
+          0
         );
-
+    
+        // Calculate total DiamondPieces
+        const totalDiamondPieces = newDiamond.reduce(
+          (acc, diamond) => acc + (parseInt(diamond.DiamondPieces, 10) || 0),
+          0
+        );
+    
+        // Calculate total DiamondAmount
+    
+    
+        // Calculate total StoneWeight
+        const totalStoneWeight = newDiamond.reduce(
+          (acc, diamond) => acc + (parseFloat(diamond.StoneWeight) || 0),
+          0
+        );
+    
+        console.log("Total diamond weight: ", totalDiamondWeight);
+        console.log("Total diamond pieces: ", totalDiamondPieces);
+        console.log("Total diamond amount: ", totalDiamondpurchaseAmount);
+        console.log("Total stone weight: ", totalStoneWeight);
+    
+    
+    
+        // updatedProduct.NetWt = parseFloat(
+        //   parseFloat(updatedProduct.GrossWt) -
+        //     parseFloat(updatedProduct.StoneWt) -
+        //     parseFloat(parseFloat(updatedProduct.ClipWeight) * parseFloat(value))
+        // ).toFixed(3);
+    
+        const netwt = parseFloat(
+          parseFloat(oldproduct.GrossWt) -
+          parseFloat(oldproduct.StoneWt) -
+          parseFloat(parseFloat(oldproduct.ClipWeight) * parseFloat(oldproduct.ClipQuantity)) -
+          parseFloat(totalDiamondWeight / 5)
+        ).toFixed(3);
+    
         setPurchaseProduct({
-            ...purchaseProduct,
-            Diamonds: newDiamond,
-            TotalDiamondAmount: totalDiamondPurchaseAmt,
-            TotalDiamondQty: totalDiamondPieces,
-            TotalDiamondWeight: totalDiamondWeight
+          ...purchaseProduct,
+          Diamonds: newDiamond,
+          DiamondWeight: totalDiamondWeight,
+          DiamondAmount: totalDiamondAmount,
+          Diamondpurchseamount: totalDiamondpurchaseAmount,
+          NetWt: netwt
         });
-    };
+    
+        // setIscal(true)
+      };
+
+
+      function findClosestHigherDiamondWeight(
+        data,
+        inputWeight,
+        inputShape,
+        inputClarity,
+        color,
+        size,
+        cut
+      ) {
+        // Convert inputWeight to a number
+        const positiveInputWeight = parseFloat(inputWeight);
+        console.log(
+          "checking diamond inputes  ",
+          inputWeight,
+          inputShape,
+          inputClarity,
+          color,
+          size,
+          cut
+        );
+    
+        if (!inputWeight || parseFloat(inputWeight) === 0) {
+          return null;
+        }
+    
+        // Filter and sort the weights
+        const higherWeights = data
+          .map((item) => {
+            // Convert DiamondWeight to a positive number
+            const positiveWeight = Math.abs(parseFloat(item.DiamondWeight));
+            return {
+              ...item,
+              DiamondWeight: positiveWeight,
+            };
+          })
+          // Filter weights greater than input weight
+          .filter((item) => item.DiamondShape === inputShape)
+          .filter((item) => item.DiamondClarity === inputClarity)
+          .filter((item) => item.DiamondColor === color)
+          .filter((item) => item.DiamondCut === cut);
+        // .filter(item => item.DiamondWeight == positiveInputWeight)
+    
+        // .filter(item => item.DiamondWeight >= positiveInputWeight)  // Filter weights greater than or equal to input weight
+    
+        const sortedDiamonds = higherWeights.sort(
+          (a, b) => a.DiamondWeight - b.DiamondWeight
+        );
+    
+        // Initialize variable to hold the closest diamond found
+        let closestDiamond = null;
+    
+        // Iterate through the sorted diamonds to find the exact match or the next higher weight
+        for (let i = 0; i < sortedDiamonds.length; i++) {
+          if (sortedDiamonds[i].DiamondWeight === positiveInputWeight) {
+            // Exact match found
+            closestDiamond = sortedDiamonds[i];
+            break;
+          } else if (sortedDiamonds[i].DiamondWeight > positiveInputWeight) {
+            // Next higher weight found
+            closestDiamond = sortedDiamonds[i];
+            break;
+          }
+        }
+    
+        // If no exact or higher weight was found, return the closest diamond found or null
+        return closestDiamond || null;
+        // Sort in ascending order
+        //     .sort((a, b) => a.DiamondWeight - b.DiamondWeight);
+        // // Get the closest higher weight
+        // return higherWeights.length > 0 ? higherWeights[0] : null;
+      }
+
+
 
     const button1Ref = useRef(null);
     const button2Ref = useRef(null);
@@ -5796,7 +5862,16 @@ export default function AdminPurchaseEntryEdit() {
                                                             }}
                                                             value={"Add"}
                                                             type="button"
-                                                            onClick={() => setShowAddStoneBox(true)}
+                                                            onClick={() => {
+                                                                setShowAddStoneBox(true)
+                                                                if (!purchaseProduct.Stones.length > 0) {
+                                                                  setPurchaseProduct((previousState) => ({
+                                                                    ...previousState,
+                                                                    Stones: [...previousState.Stones, addStone],
+                                                                  }))
+                                                                }
+                              
+                                                              }}
                                                         />
                                                         {/* <button>Add</button> */}
                                                     </div>
@@ -5835,148 +5910,21 @@ export default function AdminPurchaseEntryEdit() {
                                         </thead>
                                     </table>
                                 </div>
-                                {showAddStoneBox ? (
-                                    <div className="popup">
-                                        <div
-                                            style={{maxHeight: "250px", overflowY: "auto"}}
-                                            className="popup-inner"
-                                        >
-                                            <div className="adminAddProductsPopupInnerBox">
-                                                {purchaseProduct.Stones.map((x, index) => (
-                                                    <div className="adminPurchaseEntryAddStonesMainBox">
-                                                        <div style={{gridColumn: "span 6"}}>
-                                                            <h4 style={{margin: "5px"}}>
-                                                                Stone {index + 1}
-                                                            </h4>
-                                                        </div>
-                                                        <label>Stone Name</label>
-                                                        <input
-                                                            value={x.StoneMainName ? x.StoneMainName : x.StoneName}
-                                                            onChange={(e) =>
-                                                                handleStoneChange(
-                                                                    index,
-                                                                    "StoneName",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="allStonesList"
-                                                        />
-                                                        <datalist id="allStonesList">
-                                                            {allStonesList?.map((stone) => {
-                                                                return (
-                                                                    <option>
-                                                                        {stone.StoneMainName ? stone.StoneMainName : stone.StoneName}
-                                                                    </option>
-                                                                );
-                                                            })}
-                                                        </datalist>
-                                                        <label>Stone Weight</label>
-                                                        <input
-                                                            value={x.StoneWeight}
-                                                            onChange={(e) =>
-                                                                handleStoneChange(
-                                                                    index,
-                                                                    "StoneWeight",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Stone Pieces</label>
-                                                        <input
-                                                            value={x.StonePieces}
-                                                            onChange={(e) =>
-                                                                handleStoneChange(
-                                                                    index,
-                                                                    "StonePieces",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Stone Rate</label>
-                                                        <input
-                                                            value={x.StoneRate}
-                                                            onChange={(e) =>
-                                                                handleStoneChange(
-                                                                    index,
-                                                                    "StoneRate",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Stone Amount</label>
-                                                        <input
-                                                            value={x.StoneAmount}
-                                                            onChange={(e) =>
-                                                                handleStoneChange(
-                                                                    index,
-                                                                    "StoneAmount",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Stone Description</label>
-                                                        <input
-                                                            value={x.Description}
-                                                            onChange={(e) =>
-                                                                handleStoneChange(
-                                                                    index,
-                                                                    "Description",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        {/* <label>Stone Weight</label> */}
-                                                        <button
-                                                            className="bulkProductAddDeleteButton close-btn"
-                                                            onClick={() => deleteStone(index)}
-                                                        >
-                                                            Delete Stone
-                                                        </button>
-                                                        <button
-                                                            id="bulkStockAddProductImportButton"
-                                                            onClick={() =>
-                                                                setPurchaseProduct((previousState) => ({
-                                                                    ...previousState,
-                                                                    Stones: [...previousState.Stones, addStone],
-                                                                }))
-                                                            }
-                                                            className="close-btn"
-                                                        >
-                                                            Add Stone
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                                {!purchaseProduct.Stones.length > 0 ? (
-                                                    <button
-                                                        id="bulkStockAddProductImportButton"
-                                                        onClick={() =>
-                                                            setPurchaseProduct((previousState) => ({
-                                                                ...previousState,
-                                                                Stones: [...previousState.Stones, addStone],
-                                                            }))
-                                                        }
-                                                        className="close-btn"
-                                                    >
-                                                        Add Stone
-                                                    </button>
-                                                ) : null}
-                                                <button
-                                                    onClick={() => setShowAddStoneBox(false)}
-                                                    className="bulkProductAddDeleteButton close-btn"
-                                                >
-                                                    Close
-                                                </button>
-                                            </div>
-                                            {/* <p>This is a popup screen!</p> */}
-                                        </div>
-                                    </div>
-                                ) : null}
+                                {showAddStoneBox && (
+                  <div className="popup">
+                    <div style={{ maxHeight: "250px", overflowY: "auto" }} className="popup-inner">
+                      <StonePopup
+                        purchaseProduct={purchaseProduct}
+                        handleStoneChange={handleStoneChange}
+                        deleteStone={deleteStone}
+                        addStone={addStone}
+                        setPurchaseProduct={setPurchaseProduct}
+                        closePopup={() => setShowAddStoneBox(false)} // Close function
+                        allStonesList={allStonesList}
+                      />
+                    </div>
+                  </div>
+                )}
 
                                 {showAddDiamondBox ? (
                                     <div className="popup">
@@ -5987,299 +5935,49 @@ export default function AdminPurchaseEntryEdit() {
                                             <div className="adminAddProductsPopupInnerBox">
                                                 {purchaseProduct.Diamonds.map((x, index) => (
                                                     <div className="adminPurchaseEntryAddStonesMainBox">
-                                                        <div style={{gridColumn: "span 6"}}>
-                                                            <h4 style={{margin: "5px"}}>
-                                                                Diamond {index + 1}
-                                                            </h4>
-                                                        </div>
-                                                        {/* <label>Diamond Name</label>
-                            <input
-                              value={x.DiamondName}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondName",
-                                  e.target.value
-                                )
+                                                        
+                                                        
+                                                        <DiamondEntryComponent
+                              key={index}
+                              index={index}
+                              diamond={x}
+                              allDiamondAttributes={allDiamondAttributes}
+                              allDiamondSizeWeightRate={
+                                allDiamondSizeWeightRate
                               }
-                              list="allDiamondsList"
+                              handleDiamondChange={handleDiamondChange}
+                              deleteDiamond={deleteDiamond}
+                              addDiamond={() =>
+                                setPurchaseProduct((prevState) => ({
+                                  ...prevState,
+                                  Diamonds: [...prevState.Diamonds, addDiamond],
+                                }))
+                              }
+                              from={"purchase"}
                             />
-                            <datalist id="allDiamondsList">
-                              {allDiamondsList.map((x) => {
-                                return <option>{x.DiamondName}</option>;
-                              })}
-                            </datalist> */}
-                                                        <label>Diamond Size</label>
-                                                        <input
-                                                            value={x.DiamondSize}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondSize",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="diamondSizeList"
-                                                        />
-                                                        <datalist id="diamondSizeList">
-                                                            {allDiamondSizeWeightRate.map((x, index) => (
-                                                                <option key={index}>{x.DiamondSize}</option>
-                                                            ))}
-                                                        </datalist>
-                                                        <label>Diamond Weight</label>
-                                                        <input
-                                                            value={x.DiamondWeight}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondWeight",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Diamond Rate</label>
-                                                        <input
-                                                            value={x.DiamondRate}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondRate",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Diamond Clarity</label>
-                                                        <input
-                                                            value={x.DiamondClarity}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondClarity",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="diamondAttributesClarityList"
-                                                        />
-                                                        <datalist id="diamondAttributesClarityList">
-                                                            {allDiamondAttributes
-                                                                .filter(
-                                                                    (x) => x.DiamondAttribute == "DiamondClarity"
-                                                                )
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                        <label>Diamond Colour</label>
-                                                        <input
-                                                            value={x.DiamondColour}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondColour",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="diamondAttributesColourList"
-                                                        />
-                                                        <datalist id="diamondAttributesColourList">
-                                                            {allDiamondAttributes
-                                                                .filter(
-                                                                    (x) => x.DiamondAttribute == "DiamondColour"
-                                                                )
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                        <label>Diamond Shape</label>
-                                                        <input
-                                                            value={x.DiamondShape}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondShape",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="diamondAttributesShapeList"
-                                                        />
-                                                        <datalist id="diamondAttributesShapeList">
-                                                            {allDiamondAttributes
-                                                                .filter(
-                                                                    (x) => x.DiamondAttribute == "DiamondShape"
-                                                                )
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                        <label>Diamond Cut</label>
-                                                        <input
-                                                            value={x.DiamondCut}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondCut",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="diamondAttributesCutList"
-                                                        />
-                                                        <datalist id="diamondAttributesCutList">
-                                                            {allDiamondAttributes
-                                                                .filter(
-                                                                    (x) => x.DiamondAttribute == "DiamondCut"
-                                                                )
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                        <label>SettingType</label>
-                                                        <input
-                                                            value={x.SettingType}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "SettingType",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                            list="diamondAttributesSettingTypeList"
-                                                        />
-                                                        <datalist id="diamondAttributesSettingTypeList">
-                                                            {allDiamondAttributes
-                                                                .filter(
-                                                                    (x) =>
-                                                                        x.DiamondAttribute == "DiamondSettingType"
-                                                                )
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                        <label>Certificate</label>
-                                                        <input
-                                                            value={x.Certificate}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "Certificate",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Diamond Pieces</label>
-                                                        <input
-                                                            value={x.DiamondPieces}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondPieces",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
-                                                        <label>Diamond PurchaseAmt</label>
-                                                        <input
-                                                            value={x.DiamondPurchaseAmt}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "DiamondPurchaseAmt",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
 
-                                                        <label>Description</label>
-                                                        <input
-                                                            value={x.Description}
-                                                            onChange={(e) =>
-                                                                handleDiamondChange(
-                                                                    index,
-                                                                    "Description",
-                                                                    e.target.value
-                                                                )
-                                                            }
-                                                            type="text"
-                                                        />
 
-                                                        {/* <label>Diamond Amount</label>
-                            <input
-                              value={x.DiamondAmount}
-                              onChange={(e) =>
-                                handleDiamondChange(
-                                  index,
-                                  "DiamondAmount",
-                                  e.target.value
-                                )
-                              }
-                              type="text"
-                            /> */}
 
-                                                        <button
-                                                            className="bulkProductAddDeleteButton close-btn"
-                                                            onClick={() => {
-                                                                deleteDiamond(x, index)
-                                                                if (purchaseProduct.Diamonds.length === 1) {
-                                                                    setShowAddDiamondBox(false)
-                                                                }
-                                                            }}
-                                                        >
-                                                            Delete Diamond
-                                                        </button>
-                                                        <button
-                                                            id="bulkStockAddProductImportButton"
-                                                            onClick={() =>
-                                                                setPurchaseProduct((previousState) => ({
-                                                                    ...previousState,
-                                                                    Diamonds: [
-                                                                        ...previousState.Diamonds,
-                                                                        addDiamond,
-                                                                    ],
-                                                                }))
-                                                            }
-                                                            className="close-btn"
-                                                        >
-                                                            Add Diamond
-                                                        </button>
+                                                        
                                                     </div>
                                                 ))}
-                                                {/*{!purchaseProduct.Diamonds.length > 0 ? (*/}
-                                                {/*    <button*/}
-                                                {/*        id="bulkStockAddProductImportButton"*/}
-                                                {/*        onClick={() =>*/}
-                                                {/*            setPurchaseProduct((previousState) => ({*/}
-                                                {/*                ...previousState,*/}
-                                                {/*                Diamonds: [*/}
-                                                {/*                    ...previousState.Diamonds,*/}
-                                                {/*                    addDiamond,*/}
-                                                {/*                ],*/}
-                                                {/*            }))*/}
-                                                {/*        }*/}
-                                                {/*        className="close-btn"*/}
-                                                {/*    >*/}
-                                                {/*        Add Diamond*/}
-                                                {/*    </button>*/}
-                                                {/*) : null}*/}
+                                                 {!purchaseProduct.Diamonds.length > 0 ? (
+                                                    <button
+                                                        id="bulkStockAddProductImportButton"
+                                                        onClick={() =>
+                                                            setPurchaseProduct((previousState) => ({
+                                                                ...previousState,
+                                                                Diamonds: [
+                                                                    ...previousState.Diamonds,
+                                                                    addDiamond,
+                                                                ],
+                                                            }))
+                                                        }
+                                                        className="close-btn"
+                                                    >
+                                                        Add Diamond
+                                                    </button>
+                                                ) : null} 
                                                 <button
                                                     onClick={() => setShowAddDiamondBox(false)}
                                                     className="bulkProductAddDeleteButton close-btn"
@@ -6355,7 +6053,7 @@ export default function AdminPurchaseEntryEdit() {
                                     }}
                                     className="adminInviceAddedProductsTotalItemBox"
                                 >
-                                    <label>Payment Mode</label>
+                                    <label>Payment Modee</label>
                                     <select
                                         tabIndex="3"
                                         ref={button2Ref}

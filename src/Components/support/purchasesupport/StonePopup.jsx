@@ -6,7 +6,6 @@ const StonePopup = ({
   deleteStone,
   addStone,
   setPurchaseProduct,
-  updatestonewt,
   closePopup,
   allStonesList,
 }) => {
@@ -19,7 +18,7 @@ const StonePopup = ({
           </div>
           <label>Stone Name</label>
           <input
-            value={x.StoneMainName || x.StoneName}
+            value={x.StoneName}
             onChange={(e) => handleStoneChange(index, 'StoneName', e.target.value)}
             type="text"
             list="allStonesList"
@@ -27,7 +26,7 @@ const StonePopup = ({
           <datalist id="allStonesList">
             {allStonesList?.map((stone, i) => (
               <option key={i}>
-                {stone.StoneMainName || stone.StoneName}
+                {stone.StoneName}
               </option>
             ))}
           </datalist>

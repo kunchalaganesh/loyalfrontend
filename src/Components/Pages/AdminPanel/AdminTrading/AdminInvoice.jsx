@@ -754,7 +754,9 @@ export default function AdminInvoice() {
   const handleProductLabelChange = (e) => {
     const {value} = e.target;
     const singleProduct = allProducts.find((item, ind) => item.ItemCode == value);
-    setRate(singleProduct.TodaysRate)
+    console.log('checking itemschange ', singleProduct)
+    // setRate(singleProduct.TodaysRate?singleProduct.TodaysRate:0)
+    setRate(singleProduct?.TodaysRate ? singleProduct.TodaysRate : 0);
     setLabelName(value.toUpperCase());
     setSelectedProduct([]);
     setCategoryName("");
@@ -5744,6 +5746,7 @@ export default function AdminInvoice() {
                                               alert("Space");
                                             } else if (e.key === "Enter") {
                                               // Call your function here
+                                              console.log('checknig added products ',selectedProduct )
                                               if (selectedProduct.length !== 0) {
                                                 calculateFinalPrice(
                                                     selectedProduct,

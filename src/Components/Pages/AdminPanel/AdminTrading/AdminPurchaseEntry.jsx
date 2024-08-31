@@ -115,6 +115,7 @@ export default function AdminPurchaseEntry() {
 
   const [savingInvoice, setSavingInvoice] = useState(false);
   const [iscal, setIscal] = useState(false);
+  const [issubmit, setIssubmit] = useState(false);
 
   const getTodaysDateInHTMLFormat = () => {
     const today = new Date();
@@ -357,6 +358,8 @@ export default function AdminPurchaseEntry() {
     loadData();
   }, [clientCode]);
 
+
+
   const [selectedSku, setSelectedSku] = useState([]);
   const [selectedSkuName, setSelectedSkuName] = useState("");
   const handleSkuInputChange = (e) => {
@@ -385,7 +388,32 @@ export default function AdminPurchaseEntry() {
   useEffect(() => {
     if (selectedSku) {
       console.log(selectedSku, " sdjsdbn jkds jhd jkds ddjsd ");
-      setAllStonesList(selectedSku.SKUStoneMain);
+      // setAllStonesList(selectedSku.SKUStoneMain);
+
+      if (selectedSku.SKUStoneMain && Array.isArray(selectedSku.SKUStoneMain)) {
+        const normalizedStones = selectedSku.SKUStoneMain.map(stone => ({
+          StoneName: stone.StoneMainName,
+          StoneWeight: stone.StoneMainWeight,
+          StonePieces: stone.StoneMainPieces,
+          StoneRate: stone.StoneMainRate,
+          StoneAmount: stone.StoneMainAmount,
+          Description: stone.StoneMainDescription,
+          ClientCode: stone.ClientCode,
+          CompanyId: stone.CompanyId,
+          CounterId: stone.CounterId,
+          BranchId: stone.BranchId,
+          EmployeeId: stone.EmployeeId,
+          StoneLessPercent: stone.StoneLessPercent,
+          Id: stone.Id,
+          CreatedOn: stone.CreatedOn,
+          LastUpdated: stone.LastUpdated,
+          StatusType: stone.StatusType,
+        }));
+        setAllStonesList(normalizedStones);
+        console.log('checking pro filter3', allStonesList, '  g   ', normalizedStones);
+      } 
+
+
       console.log("checking stoness", selectedSku.SKUStoneMain);
 
       setSelectedCategory(
@@ -792,7 +820,7 @@ export default function AdminPurchaseEntry() {
   console.log(allSelectedProducts, "allSelectedProducts ");
   useEffect(() => {
     if (selectedProduct.length > 0) {
-
+      console.log('checking 795 finalprice', FinalPrice);
       const FinalPrice = calculateFinalPrice(
         selectedProduct.NetWt,
         selectedProduct.MakingPerGram,
@@ -1022,10 +1050,11 @@ export default function AdminPurchaseEntry() {
       console.log('Order response:', orderResponse);
 
       sendProductData(orderResponse.Id);
-
+      // setIssubmit(false)
       // const productResponse = await sendProductData(allSelectedProducts);
       console.log('Product response:', orderResponse);
     } catch (error) {
+      setIssubmit(false)
       console.error('Error in submission:', error);
     }
   };
@@ -1213,11 +1242,13 @@ export default function AdminPurchaseEntry() {
       });
 
       if (!response.ok) {
+        setIssubmit(false)
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log("Success:", data);
+      setIssubmit(false)
       if (payments.length > 0) {
         addAllSelectedPayments(rcvdId);
       } else {
@@ -1229,6 +1260,7 @@ export default function AdminPurchaseEntry() {
         resetAllFields();
       }
     } catch (error) {
+      setIssubmit(false)
       console.error("Error:", error);
     }
   };
@@ -1850,7 +1882,7 @@ export default function AdminPurchaseEntry() {
           parseFloat(makingCharges3) +
           parseFloat(makingCharges4);
 
-        console.log("checking making  ", totalMakingCharges);
+        console.log("checking making1  ", totalMakingCharges);
         if (updatedProduct.MRP == 0 || updatedProduct.MRP == "") {
           updatedProduct.FinalPrice = parseFloat(grossTotalRate).toFixed(3);
           updatedProduct.Making = totalMakingCharges;
@@ -1894,328 +1926,7 @@ export default function AdminPurchaseEntry() {
     }
   };
 
-  const addPayment = () => {
-    // Check if both payment mode and amount are provided
-    if (
-      (paymentOptions !== "Cash to Metal" &&
-        paymentOptions !== "Metal" &&
-        paymentAmount !== "" &&
-        parseInt(paymentAmount) !== 0) ||
-      ((paymentOptions === "Cash to Metal" || paymentOptions === "Metal") &&
-        (parseFloat(paymentGold) !== 0.0 || parseFloat(paymentSilver) !== 0.0))
-    ) {
-      if (paymentOptions && paymentAmount >= 0 && paymentType === "Paid") {
-        // Update the payments array with new payment mode and amount
-        if (
-          paymentOptions === "Metal to Cash" ||
-          paymentOptions === "Cash to Metal" ||
-          paymentOptions === "Metal"
-        ) {
-          setPayments([
-            ...payments,
-            {
-              mode: paymentOptions,
-              amount: paymentAmount,
-              fineGold: parseFloat(paymentGold),
-              fineSilver: parseFloat(paymentSilver),
-              deductGold: deductGold,
-              deductSilver: deductSilver,
-              paymentType: paymentType,
-              goldRate: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.fineRate
-                : 0,
-              silverRate: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.fineRate
-                : 0,
-              goldAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.totalAmount
-                : 0,
-              silverAmount: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? metalPaymentOption.totalAmount
-                : 0,
-              paymentDescription: paymentDescription,
-            },
-          ]);
-        } else {
-          setPayments([
-            ...payments,
-            {
-              mode: !paymentOptions.toLowerCase().includes("advance")
-                ? paymentOptions
-                : advanceType,
-              amount: !paymentOptions.toLowerCase().includes("advance")
-                ? paymentAmount
-                : advanceAmount,
-              fineGold: 0,
-              fineSilver: 0,
-              finePurity: 0,
-              totalWt: 0,
-              deductGold: 0,
-              deductSilver: 0,
-              paymentType: paymentType,
-              goldRate: 0,
-              silverRate: 0,
-              goldAmount: 0,
-              silverAmount: 0,
-              paymentDescription: paymentDescription,
-            },
-          ]);
-        }
-        if (!paymentOptions.toLowerCase().includes("advance")) {
-          setGrandTotal(parseInt(grandTotal) - parseInt(paymentAmount));
-          setPaymentAmount(parseInt(grandTotal) - parseInt(paymentAmount));
-        } else if (
-          paymentOptions.toLowerCase().includes("advance") &&
-          advanceType === "Deduct Advance"
-        ) {
-          setSelectedCustomer({
-            ...selectedCustomer,
-            advanceAmt:
-              parseFloat(selectedCustomer.advanceAmt) -
-              parseFloat(advanceAmount),
-          });
-          setGrandTotal(parseInt(grandTotal) - parseInt(advanceAmount));
-          setPaymentAmount(parseInt(grandTotal) - parseInt(advanceAmount));
-          setAdvanceAmount(0);
-        } else {
-          setGrandTotal(parseInt(grandTotal));
-          setPaymentAmount(parseInt(grandTotal));
-          setAdvanceAmount(0);
-        }
-        // Clear the input fields
-        // setPaymentOptions("Cash");
-      } else if (
-        paymentOptions &&
-        paymentAmount > 0 &&
-        paymentType === "Receive"
-      ) {
-        // Update the payments array with new payment mode and amount
-        if (
-          paymentOptions === "Metal to Cash" ||
-          paymentOptions === "Cash to Metal" ||
-          paymentOptions === "Metal"
-        ) {
-          setPayments([
-            ...payments,
-            {
-              mode: paymentOptions,
-              amount: -paymentAmount,
-              fineGold: parseFloat(-paymentGold),
-              totalWt: 0,
-              fineSilver: parseFloat(-paymentSilver),
-              deductGold: parseFloat(-deductGold),
-              deductSilver: parseFloat(-deductSilver),
-              paymentType: paymentType,
-              goldRate: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
-              silverRate: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
-              goldAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
-              silverAmount: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
-              paymentDescription: paymentDescription,
-            },
-          ]);
-        } else {
-          setPayments([
-            ...payments,
-            {
-              mode: paymentOptions,
-              amount: -paymentAmount,
-              fineGold: 0,
-              fineSilver: 0,
-              finePurity: 0,
-              totalWt: 0,
-              deductGold: 0,
-              deductSilver: 0,
-              paymentType: paymentType,
-              goldRate: 0,
-              silverRate: 0,
-              goldAmount: 0,
-              silverAmount: 0,
-              paymentDescription: paymentDescription,
-            },
-          ]);
-        }
-        setGrandTotal(parseInt(grandTotal) - parseInt(-paymentAmount));
-        // Clear the input fields
-        // setPaymentOptions("Cash");
-        setPaymentAmount(
-          Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
-        );
-      } else if (
-        paymentOptions &&
-        paymentAmount < 0 &&
-        paymentType === "Receive"
-      ) {
-        // Update the payments array with new payment mode and amount
-        if (
-          paymentOptions === "Cash to Metal" ||
-          paymentOptions === "Metal to Cash" ||
-          paymentOptions === "Metal"
-        ) {
-          setPayments([
-            ...payments,
-            {
-              mode: paymentOptions,
-              amount: -paymentAmount,
-              fineGold: parseFloat(-paymentGold),
-              fineSilver: parseFloat(-paymentSilver),
-              totalWt: 0,
-              deductGold: parseFloat(-deductGold),
-              deductSilver: parseFloat(-deductSilver),
-              paymentType: paymentType,
-              goldRate: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
-              silverRate: !metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.fineRate
-                : 0,
-              goldAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
-              silverAmount: metalPaymentOption.optionSelected
-                .toLowerCase()
-                .includes("gold")
-                ? -metalPaymentOption.totalAmount
-                : 0,
-              paymentDescription: paymentDescription,
-            },
-          ]);
-        } else {
-          setPayments([
-            ...payments,
-            {
-              mode: paymentOptions,
-              amount: -paymentAmount,
-              fineGold: 0,
-              fineSilver: 0,
-              finePurity: 0,
-              totalWt: 0,
-              deductGold: 0,
-              deductSilver: 0,
-              paymentType: paymentType,
-              goldRate: 0,
-              silverRate: 0,
-              goldAmount: 0,
-              silverAmount: 0,
-              paymentDescription: paymentDescription,
-            },
-          ]);
-        }
-        setGrandTotal(parseInt(grandTotal) - parseInt(paymentAmount));
-        // Clear the input fields
-        // setPaymentOptions("Cash");
-        setPaymentAmount(parseInt(grandTotal) - parseInt(paymentAmount));
-      }
-      setTotalPayableGold(totalPayableGold - deductGold);
-      setTotalPayableSilver(totalPayableSilver - deductSilver);
-      setPaymentDescription("");
-      // setMetalPaymentOption({
-      //   optionSelected: "Gold",
-      //   fineRate: 0,
-      //   fineWt: 0,
-      //   totalAmount: 0,
-      //   deductGold: 0,
-      //   deductSilver: 0,
-      //   goldRate: 0,
-      //   silverRate: 0,
-      //   goldAmount: 0,
-      //   silverAmount: 0,
-      // });
-      // setPaymentOptions("Cash");
-      setMetalPaymentOption({
-        optionSelected: "GOLD",
-        fineRate: 0,
-        fineWt: 0,
-        finePurity: 0,
-        totalAmount: 0,
-        totalWt: 0,
-        deductGold: 0,
-        deductSilver: 0,
-        goldRate: 0,
-        silverRate: 0,
-        goldAmount: 0,
-        silverAmount: 0,
-      });
-      setPaymentGold(0);
-      setPaymentSilver(0);
-      setDeductGold(0);
-      setDeductSilver(0);
-    } else {
-      setMessageType("error");
-      setMessageToShow("Payment Amount and Metal Both could not be zero");
-      setShowError(true);
-    }
-  };
-  console.log(payments, "payments");
-  console.log(payments, "payments");
-  console.log(payments, "payments");
-  console.log(metalPaymentOption, "metalPaymentOption");
-  console.log(metalPaymentOption, "metalPaymentOption");
-  const deletePayment = (index) => {
-    // Get the amount of the payment to be deleted
-    setPaymentOptions(payments[index].mode);
-    const deletedAmount = parseFloat(payments[index].amount);
-    const deletedGoldWeight = parseFloat(payments[index].deductGold);
-    const deletedSilverWeight = parseFloat(payments[index].deductSilver);
-
-    const updatedPayments = [...payments];
-    updatedPayments.splice(index, 1);
-    setPayments(updatedPayments);
-    const newGrandTotal = grandTotal + deletedAmount;
-    if (payments[index].mode === "Advance Received") {
-      null;
-    } else if (payments[index].mode === "Deduct Advance") {
-      setSelectedCustomer({
-        ...selectedCustomer,
-        advanceAmt:
-          parseFloat(selectedCustomer.advanceAmt) +
-          parseFloat(payments[index].amount),
-      });
-      setGrandTotal(newGrandTotal);
-      const remainingGoldWeight = totalPayableGold + deletedGoldWeight;
-      const remainingSilverWeight = totalPayableSilver + deletedSilverWeight;
-      setTotalPayableGold(remainingGoldWeight);
-      setTotalPayableSilver(remainingSilverWeight);
-      setPaymentAmount(Math.abs(parseInt(newGrandTotal)));
-    } else {
-      setGrandTotal(newGrandTotal);
-      const remainingGoldWeight = totalPayableGold + deletedGoldWeight;
-      const remainingSilverWeight = totalPayableSilver + deletedSilverWeight;
-      setTotalPayableGold(remainingGoldWeight);
-      setTotalPayableSilver(remainingSilverWeight);
-      setPaymentAmount(Math.abs(parseInt(newGrandTotal)));
-    }
-  };
-
+  
   // Convert payments array to a comma-separated string whenever you need it
   const paymentsString = payments
     .map((payment) => `${payment.mode}:${payment.amount}`)
@@ -2325,7 +2036,7 @@ console.log('checking parameter atchange', name);
 
   useEffect(() => {
     if (iscal) {
-      console.log('checking calculationss', iscal)
+      console.log('checking calculationsss', iscal)
       const updatedProduct = ProductCalculator.calculateAll(
         purchaseProduct,
         allDiamondSizeWeightRate,
@@ -2335,7 +2046,8 @@ console.log('checking parameter atchange', name);
         selectedSku,
         selectedSkuName,
         finePure,
-        convertAmount
+        convertAmount,
+        gstType
       );
       setPurchaseProduct(updatedProduct);
       setIscal(false);
@@ -2794,9 +2506,26 @@ console.log('checking parameter atchange', name);
   });
 
   const deleteStone = (index) => {
+    if (index < 0 || index >= purchaseProduct.Stones.length) {
+      console.warn('Index out of boundss');
+      return;
+  }
+
+  const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+  const stoneToDelete = purchaseProduct.Stones[index];
+
+  // Update StoneWt after deleting the stone
+  const updatedStoneWeight = 
+  purchaseProduct.StoneWt - (stoneToDelete.StoneWeight * stoneToDelete.StonePieces * skuPieces);
+  purchaseProduct.StoneWt = updatedStoneWeight;
+
     const updatedStones = purchaseProduct.Stones.filter((_, i) => i !== index);
     setPurchaseProduct({ ...purchaseProduct, Stones: updatedStones });
+    setIscal(true)
   };
+
+
+
   const deleteStoneEdit = (index) => {
     const updatedStones = openEditProduct.Stones.filter((_, i) => i !== index);
     setOpenEditProduct({ ...openEditProduct, Stones: updatedStones });
@@ -2828,7 +2557,7 @@ console.log('checking parameter atchange', name);
       );
       if (normalizedStoneName === normalizedValue) {
         selectedStone = stone;
-        console.log("Match found:", stone);
+        console.log("Match found :", stone);
       }
     });
     if (selectedStone) {
@@ -2860,59 +2589,25 @@ console.log('checking parameter atchange', name);
       };
     }
 
+
+    const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+
+    let totalwt = newStones[index].StoneWeight * newStones[index].StonePieces * skuPieces;
+    let totalpcs = newStones[index].StonePieces * skuPieces;
+
+    // Correct the assignment
+    newStones[index].TotalStoneWt = totalwt;
+    newStones[index].TotalStonePcs = totalpcs;
+
+    console.log('check updated stones', newStones)
+
     setPurchaseProduct({ ...purchaseProduct, Stones: newStones });
+    setIscal(true)
   };
-  const updatestonewt = () => {
-    // ClipQuantity ClipWeight StoneWt
-    console.log("checking updatestone", purchaseProduct.Stones);
 
-    const clipQuantity = parseFloat(purchaseProduct.ClipQuantity) || 0;
-
-    // Calculate totalStoneWeight considering null or empty values as 0
-    const totalStoneWeight = purchaseProduct.Stones.reduce((acc, stone) => {
-      const stoneWeight = parseFloat(stone.StoneWeight) || 0;
-      return acc + stoneWeight;
-    }, 0);
-
-    const totalStonepieces = purchaseProduct.Stones.reduce((acc, stone) => {
-      const stoneWeight = parseFloat(stone.StonePieces) || 0;
-      return acc + stoneWeight;
-    }, 0);
-
-    const skuPieces = parseFloat(selectedSku.Pieces) || 0;
-
-    // Calculate StoneWt
-    const tweight = clipQuantity * totalStoneWeight * skuPieces;
-
-    const tpieces = clipQuantity * skuPieces * totalStonepieces;
-
-    // Update StoneWt
-    const updatedProduct = {
-      ...purchaseProduct,
-      StoneWt: tweight.toFixed(3),
-      StonePieces: tpieces,
-    };
-
-    // Calculate and update NetWt
-    updatedProduct.NetWt = parseFloat(
-      parseFloat(updatedProduct.GrossWt || 0) -
-      parseFloat(updatedProduct.WastageWt || 0) -
-      parseFloat(updatedProduct.ClipWeight || 0) * clipQuantity -
-      parseFloat(updatedProduct.StoneWt || 0)
-    ).toFixed(3);
-
-    // Update purchaseProduct state
-    setPurchaseProduct(updatedProduct);
-
-    console.log("checking updatestonewt", tpieces);
-    console.log("checking updatestonewt1", purchaseProduct);
-
-    // Hide the add stone box
-    setShowAddStoneBox(false);
-  };
 
   function getShapeValue(id, shape, parameter) {
-    console.log("check input values ", id, "  ", shape, "  ", parameter);
+    console.log("check input values  ", id, "  ", shape, "  ", parameter);
     if (id) {
       const shapeValue = allDiamondAttributes
         .filter((x) => x.DiamondAttribute == parameter)
@@ -2955,6 +2650,13 @@ console.log('checking parameter atchange', name);
 
       setIscal(true)
   };
+
+ 
+  
+
+
+
+
   const handleDiamondChange = (index, property, value) => {
     const newDiamond = [...purchaseProduct.Diamonds];
 
@@ -3332,9 +3034,13 @@ console.log('checking parameter atchange', name);
                     if (e.target.value !== "") {
                       setInvoiceNumber(e.target.value);
                       setGstType(true);
+                      setConvertAmount(true)
+                      setIscal(true)
                     } else {
                       setInvoiceNumber(e.target.value);
                       setGstType(false);
+                      setConvertAmount(false)
+                      setIscal(true);
                     }
                   }}
                 />
@@ -4216,6 +3922,7 @@ console.log('checking parameter atchange', name);
                                 onChange={handleInputChangePurchase}
                                 type="text"
                                 value={purchaseProduct.StoneWt}
+                                disabled={purchaseProduct.Stones.length > 0}
                               />
                             </div>
                             <div>
@@ -4682,7 +4389,6 @@ console.log('checking parameter atchange', name);
                         deleteStone={deleteStone}
                         addStone={addStone}
                         setPurchaseProduct={setPurchaseProduct}
-                        updatestonewt={updatestonewt}
                         closePopup={() => setShowAddStoneBox(false)} // Close function
                         allStonesList={allStonesList}
                       />
@@ -5450,6 +5156,7 @@ console.log('checking parameter atchange', name);
                   value={parseFloat(totalPayableSilver).toFixed(3)}
                   readOnly
                 />
+                
                 <label>Taxable Amount</label>
                 <input
                   type="text"
@@ -5470,7 +5177,7 @@ console.log('checking parameter atchange', name);
                     type="checkbox"
                     checked={gstType}
                     onChange={() => {
-                      setGstType(!gstType), setDiscountAmount(0);
+                      setGstType(!gstType), setConvertAmount(!convertAmount), setIscal(true), setDiscountAmount(0);
                     }}
                   />
                 </div>
@@ -5560,9 +5267,12 @@ console.log('checking parameter atchange', name);
                   tabIndex="10"
                   ref={button9Ref}
                   style={{ marginInline: "10px" }}
+                  disabled={issubmit}
                   onClick={() => {
                     if (selectedCustomer && allSelectedProducts.length > 0) {
+                      console.log('clicked')
                       // createOrder();
+                      setIssubmit(true)
                       handleSubmit();
                     } else {
                       alert("Please add all details");
