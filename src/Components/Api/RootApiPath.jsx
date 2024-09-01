@@ -2048,3 +2048,6 @@ export const a238 =
 //Update Device
 export const a239 =
     "https://testing.loyalstring.co.in/api/RFIDDevice/UpdateRFIDDevice";
+//Update todays rates
+export const a240 =
+    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDailyRates";

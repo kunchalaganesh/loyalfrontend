@@ -491,27 +491,27 @@ export default function AdminAddVendor() {
                   <tr>
                     <th>Edit</th>
                     <th>Sr.No</th>
-                    <th>VendorCode</th>
-                    <th>VendorName</th>
-                    <th>VendorPanNo</th>
-                    <th>ContactNo</th>
+                    <th>Vendor Code</th>
+                    <th>Vendor Name</th>
+                    <th>Firm Name</th>
+                    <th>Firm Details</th>
+                    <th>Contact No.</th>
                     <th>Email</th>
                     <th>Address</th>
                     <th>State</th>
                     <th>City</th>
                     <th>Country</th>
-                    <th>FirmName</th>
-                    <th>FirmDetails</th>
-                    <th>GSTNo</th>
-                    <th>VendorType</th>
-                    <th>OnlineStatus</th>
-                    <th>BalanceAmt</th>
-                    <th>FineSilver</th>
-                    <th>FineGold</th>
-                    <th>InwardNo</th>
-                    <th>AdvanceAmt</th>
-                    <th>InwardGold</th>
-                    <th>InwardSilver</th>
+                    <th>Vendor Pan No.</th>
+                    <th>GST No.</th>
+                    <th>Vendor Type</th>
+                    <th>Online Status</th>
+                    <th>Balance Amt</th>
+                    <th>Advance Amt.</th>
+                    <th>Fine Silver</th>
+                    <th>Fine Gold</th>
+                    {/*<th>Inward No.</th>*/}
+                    {/*<th>Inward Gold</th>*/}
+                    {/*<th>Inward Silver</th>*/}
                   </tr>
                 </thead>
                 <tbody>
@@ -529,25 +529,25 @@ export default function AdminAddVendor() {
                       <td>{index + 1}</td>
                       <td>{x.VendorCode}</td>
                       <td>{x.VendorName}</td>
-                      <td>{x.VendorPanNo}</td>
+                      <td>{x.FirmName}</td>
+                      <td>{x.FirmDetails}</td>
                       <td>{x.ContactNo}</td>
                       <td>{x.Email}</td>
                       <td>{x.Address}</td>
                       <td>{x.State}</td>
                       <td>{x.City}</td>
                       <td>{x.Country}</td>
-                      <td>{x.FirmName}</td>
-                      <td>{x.FirmDetails}</td>
+                      <td>{x.VendorPanNo}</td>
                       <td>{x.GSTNo}</td>
                       <td>{x.VendorType}</td>
                       <td>{x.OnlineStatus}</td>
                       <td>{x.BalanceAmt}</td>
+                      <td>{x.AdvanceAmt}</td>
                       <td>{x.FineSilver}</td>
                       <td>{x.FineGold}</td>
-                      <td>{x.InwardNo}</td>
-                      <td>{x.AdvanceAmt}</td>
-                      <td>{x.InwardGold}</td>
-                      <td>{x.InwardSilver}</td>
+                      {/*<td>{x.InwardNo}</td>*/}
+                      {/*<td>{x.InwardGold}</td>*/}
+                      {/*<td>{x.InwardSilver}</td>*/}
                     </tr>
                   ))}
                 </tbody>
@@ -558,7 +558,13 @@ export default function AdminAddVendor() {
                 active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
               }
             >
-              <p>Add New Vendor</p>
+              <h4
+                  style={{ marginTop: "20px", marginBottom: "20px" }}
+                  id="adminInvoiceAddedCustomerEdit"
+                  className="adminInvoiceAddTitles"
+              >
+                Vendor Details
+              </h4>
               <form onSubmit={addNewCategory}>
                 <div
                   style={{
@@ -567,7 +573,7 @@ export default function AdminAddVendor() {
                   }}
                   className="adminCategoryAddCategoryInnerBox"
                 >
-                  <label>VendorCode</label>
+                  <label>Vendor Code</label>
                   <input
                     name="VendorCode"
                     // value={
@@ -583,7 +589,7 @@ export default function AdminAddVendor() {
                   />
 
                   <label>
-                    VendorName<sup>*</sup>
+                    Vendor Name<sup>*</sup>
                   </label>
                   <input
                     name="VendorName"
@@ -592,18 +598,27 @@ export default function AdminAddVendor() {
                     type="text"
                     required="required"
                   />
-
-                  <label>VendorPanNo</label>
+                  <label>
+                    Firm Name<sup>*</sup>
+                  </label>
                   <input
-                    name="VendorPanNo"
-                    value={newCategory.VendorPanNo}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
+                      name="FirmName"
+                      value={newCategory.FirmName}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                      required="required"
+                  />
+                  <label>Firm Details</label>
+                  <input
+                      name="FirmDetails"
+                      value={newCategory.FirmDetails}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                      // required="required"
                   />
 
                   <label>
-                    ContactNo<sup>*</sup>
+                    Contact No.<sup>*</sup>
                   </label>
                   <input
                     name="ContactNo"
@@ -662,27 +677,18 @@ export default function AdminAddVendor() {
                     // required="required"
                   />
 
-                  <label>
-                    FirmName<sup>*</sup>
-                  </label>
+
+                  <label>Vendor Pan No.</label>
                   <input
-                    name="FirmName"
-                    value={newCategory.FirmName}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
+                      name="VendorPanNo"
+                      value={newCategory.VendorPanNo}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                      // required="required"
                   />
 
-                  <label>FirmDetails</label>
-                  <input
-                    name="FirmDetails"
-                    value={newCategory.FirmDetails}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
-                  />
 
-                  <label>GSTNo</label>
+                  <label>GST No.</label>
                   <input
                     name="GSTNo"
                     value={newCategory.GSTNo}
@@ -690,9 +696,25 @@ export default function AdminAddVendor() {
                     type="text"
                     // required="required"
                   />
+                </div>
+                <h4
+                    style={{ marginTop: "20px", marginBottom: "20px" }}
+                    id="adminInvoiceAddedCustomerEdit"
+                    className="adminInvoiceAddTitles"
+                >
+                  Additional Details
+                </h4>
+                <div
+                    style={{
+                      gridTemplateColumns: "repeat(4,1fr)",
+                      columnGap: "40px",
+                    }}
+                    className="adminCategoryAddCategoryInnerBox"
+                    >
+
 
                   <label>
-                    VendorType<sup>*</sup>
+                    Vendor Type<sup>*</sup>
                   </label>
                   <select
                     name="VendorType"
@@ -706,7 +728,7 @@ export default function AdminAddVendor() {
                     <option value={"Karigar"}>Karigar</option>;
                   </select>
 
-                  <label>OnlineStatus</label>
+                  <label>Online Status</label>
                   <input
                     name="OnlineStatus"
                     value={newCategory.OnlineStatus}
@@ -715,7 +737,7 @@ export default function AdminAddVendor() {
                     // required="required"
                   />
 
-                  <label>BalanceAmt</label>
+                  <label>Balance Amt.</label>
                   <input
                     name="BalanceAmt"
                     value={newCategory.BalanceAmt}
@@ -723,8 +745,23 @@ export default function AdminAddVendor() {
                     type="text"
                     // required="required"
                   />
-
-                  <label>FineSilver</label>
+                  <label>Advance Amt.</label>
+                  <input
+                      name="AdvanceAmt"
+                      value={newCategory.AdvanceAmt}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                      // required="required"
+                  />
+                  <label>Fine Gold</label>
+                  <input
+                      name="FineGold"
+                      value={newCategory.FineGold}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                      // required="required"
+                  />
+                  <label>Fine Silver</label>
                   <input
                     name="FineSilver"
                     value={newCategory.FineSilver}
@@ -733,50 +770,36 @@ export default function AdminAddVendor() {
                     // required="required"
                   />
 
-                  <label>FineGold</label>
-                  <input
-                    name="FineGold"
-                    value={newCategory.FineGold}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
-                  />
 
-                  <label>InwardNo</label>
-                  <input
-                    name="InwardNo"
-                    value={newCategory.InwardNo}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
-                  />
 
-                  <label>AdvanceAmt</label>
-                  <input
-                    name="AdvanceAmt"
-                    value={newCategory.AdvanceAmt}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
-                  />
+                  {/*<label>Inward No.</label>*/}
+                  {/*<input*/}
+                  {/*  name="InwardNo"*/}
+                  {/*  value={newCategory.InwardNo}*/}
+                  {/*  onChange={handleNewCategoryChange}*/}
+                  {/*  type="text"*/}
+                  {/*  // required="required"*/}
+                  {/*/>*/}
 
-                  <label>InwardGold</label>
-                  <input
-                    name="InwardGold"
-                    value={newCategory.InwardGold}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
-                  />
 
-                  <label>InwardSilver</label>
-                  <input
-                    name="InwardSilver"
-                    value={newCategory.InwardSilver}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    // required="required"
-                  />
+
+                  {/*<label>Inward Gold</label>*/}
+                  {/*<input*/}
+                  {/*  name="InwardGold"*/}
+                  {/*  value={newCategory.InwardGold}*/}
+                  {/*  onChange={handleNewCategoryChange}*/}
+                  {/*  type="text"*/}
+                  {/*  // required="required"*/}
+                  {/*/>*/}
+
+                  {/*<label>Inward Silver</label>*/}
+                  {/*<input*/}
+                  {/*  name="InwardSilver"*/}
+                  {/*  value={newCategory.InwardSilver}*/}
+                  {/*  onChange={handleNewCategoryChange}*/}
+                  {/*  type="text"*/}
+                  {/*  // required="required"*/}
+                  {/*/>*/}
                   <label>Add To Customer</label>
                   <select
                     name="AddToCustomer"

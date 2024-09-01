@@ -15,6 +15,9 @@
   justify-content: center;
   align-items: center;
 }
+.rateTableBox{
+  width: 100%;
+}
 .dailyRateAddTableBox table {
   border-collapse: collapse;
   width: 550px;

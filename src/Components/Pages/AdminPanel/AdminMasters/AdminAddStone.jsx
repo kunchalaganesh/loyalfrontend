@@ -306,12 +306,14 @@ export default function AdminAddStone() {
             (category) => category.StoneName.toLowerCase() === newCategory.StoneName.toLowerCase()
         );
 
-        if (nameExists) {
-            setMessageType("error");
-            setMessageToShow("Stone name already exists.");
-            setShowError(true);
-            setLoading(false);
-            return;
+        if (!newCategory.OldEntry) {
+            if (nameExists) {
+                setMessageType("error");
+                setMessageToShow("Stone name already exists.");
+                setShowError(true);
+                setLoading(false);
+                return;
+            }
         }
 
         setLoading(true);

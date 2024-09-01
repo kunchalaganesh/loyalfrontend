@@ -386,10 +386,10 @@ export default function AdminAddPacketMaster() {
         Status: "",
         OldEntry: false,
       });
-      if (data.message) {
+      if (data.Message) {
         // alert(data.message);
         setMessageType("error");
-        setMessageToShow(data.message);
+        setMessageToShow(data.Message);
         setShowError(true);
         setActive("AddNew");
       } else {

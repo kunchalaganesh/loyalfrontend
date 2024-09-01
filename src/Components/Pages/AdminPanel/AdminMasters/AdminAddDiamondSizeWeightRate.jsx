@@ -728,7 +728,7 @@ export default function AdminAddDiamondSizeWeightRate() {
 
     function handleAdd(e) {
         e.preventDefault()
-        if (newCategory.DiamondSize !== "0" && newCategory.DiamondWeight !== "0" && newCategory.DiamondShape) {
+        if (newCategory.DiamondSize !== "" && newCategory.DiamondWeight !== "" && newCategory.DiamondShape) {
             const stepFormData = {
                 ClientCode: clientCode,
                 DiamondSize: newCategory.DiamondSize,
@@ -757,12 +757,12 @@ export default function AdminAddDiamondSizeWeightRate() {
                 {...stepFormData, TemplateName: newCategory.TemplateName},
             ]);
             setNewCategory({
-                DiamondSize: "0",
-                Sleve: "0",
-                DiamondWeight: "0",
-                DiamondPurchaseRate: "0",
-                DiamondSellRate: "0",
-                DiamondMargin: "0",
+                DiamondSize: "",
+                Sleve: "",
+                DiamondWeight: "",
+                DiamondPurchaseRate: "",
+                DiamondSellRate: "",
+                DiamondMargin: "",
                 DiamondShape: "",
                 DiamondClarity: "",
                 DiamondColor: "",
@@ -805,9 +805,9 @@ export default function AdminAddDiamondSizeWeightRate() {
             // const updatedCategories = allCategories.filter((_, i) => i !== index);
             // setAllCategories(updatedCategories);
             fetchAllCategory();
-            if (result.message) {
+            if (result.Message) {
                 setMessageType("error");
-                setMessageToShow(result.message);
+                setMessageToShow(result.Message);
                 setShowError(true);
             } else {
                 setMessageType("success");
@@ -1027,12 +1027,12 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     setActive("AddNew");
                                     setAllTableData([]);
                                     setNewCategory({
-                                        DiamondSize: "0",
-                                        Sleve: "0",
-                                        DiamondWeight: "0",
-                                        DiamondPurchaseRate: "0",
-                                        DiamondSellRate: "0",
-                                        DiamondMargin: "0",
+                                        DiamondSize: "",
+                                        Sleve: "",
+                                        DiamondWeight: "",
+                                        DiamondPurchaseRate: "",
+                                        DiamondSellRate: "",
+                                        DiamondMargin: "",
                                         DiamondShape: "",
                                         DiamondClarity: "",
                                         DiamondColor: "",
@@ -1260,7 +1260,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         value={newCategory.DiamondSize}
                                         onChange={handleNewCategoryChange}
                                         type="text"
-                                        required={true}
+                                        required={"required"}
                                     />
 
                                     <label>Sieve</label>
@@ -1278,7 +1278,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         value={newCategory.DiamondWeight}
                                         onChange={handleNewCategoryChange}
                                         type="text"
-                                        required={true}
+                                        required={"required"}
                                     />
                                     <label>
                                         Diamond Purchase Rate

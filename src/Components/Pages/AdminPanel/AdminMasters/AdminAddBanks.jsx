@@ -322,7 +322,7 @@ export default function AdminAddBanks() {
                   {/* 01 */}
                   <RiListUnordered />
                 </div>
-                <p>All Banks Account</p>
+                <p>All Bank Accounts</p>
               </div>
 
               <div

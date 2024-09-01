@@ -149,7 +149,7 @@ export default function AdminAddRoles() {
         setLoading(true);
         const formData = {
             ClientCode: clientCode,
-            Department: newCategory.Department,
+            DepartmentId: newCategory.Department,
             Role: newCategory.Role,
             Description: newCategory.Description,
             ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
@@ -200,10 +200,7 @@ export default function AdminAddRoles() {
         }, 2000);
     }, [showError]);
     const handleEditData = (data) => {
-        console.log(data, "data");
-        console.log(data, "data");
-        console.log(data, "data");
-        setNewCategory({...data, OldEntry: true});
+        setNewCategory({...data,Department: data.DepartmentId, OldEntry: true});
         setActive("AddNew");
     };
     return (

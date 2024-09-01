@@ -523,7 +523,7 @@ export default function AdminTopNavbar() {
                     </li>
                     <li onClick={() => navigate("/add_vendor")}>
                       <MdOutlinePersonAddAlt size={"17px"}/>
-                      <p>Supplier</p>
+                      <p>Vendor</p>
                     </li>
                     {/* <li onClick={() => navigate("/add_employee")}> */}
                     <li onClick={() => navigate("/add_employees")}>
@@ -804,7 +804,7 @@ export default function AdminTopNavbar() {
                       src={userProfile.profilePic}
                       alt="selectedProfile"
                   />
-                  <p style={{whiteSpace: "nowrap"}}>{userProfile.name}</p>
+                  <p style={{whiteSpace: "nowrap",minWidth: "120px"}}>{userProfile.name}</p>
                   <AiOutlineDown style={{padding: "10px 5px"}} size={"12px"}/>
                 </div>
 

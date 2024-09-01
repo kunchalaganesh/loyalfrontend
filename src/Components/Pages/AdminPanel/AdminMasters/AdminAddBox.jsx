@@ -83,8 +83,8 @@ export default function AdminAddBox() {
             setInputPacketMaster("");
         }
     };
+    function getAllPacket() {
 
-    useEffect(() => {
         const formData = {
             ClientCode: clientCode,
         };
@@ -97,6 +97,10 @@ export default function AdminAddBox() {
         })
             .then((res) => res.json())
             .then((data) => setPacketMasterData(data));
+    }
+    useEffect(() => {
+
+        getAllPacket();
     }, []);
 
     const handleRemoveVendor = (index) => {
@@ -309,10 +313,11 @@ export default function AdminAddBox() {
         setNewCategory({...newCategory, [name]: value});
     };
 
+        const trasformData = selectedPacketMaster.map((item) => item.split("-")[newCategory.OldEntry ? 0 : 1]).join(',');
+        // const trasformData = selectedPacketMaster.join(',');
         console.log("selectedPacketMasterselectedPacketMaster : ",selectedPacketMaster)
     const addNewCategory = async (e) => {
         e.preventDefault();
-        const trasformData = selectedPacketMaster.map((item) => item.split(" - ")[1]).join(',');
         setLoading(true);
         const formData = {
             ClientCode: clientCode,
@@ -354,16 +359,17 @@ export default function AdminAddBox() {
                 Status: "",
                 OldEntry: false,
             });
-            if (data.message) {
+            if (data.Message) {
                 // alert(data.message);
                 setMessageType("error");
-                setMessageToShow(data.message);
+                setMessageToShow(data.Message);
                 setShowError(true);
                 setActive("AddNew");
             } else {
                 setMessageType("success");
                 setMessageToShow("Box Added Successfully");
                 setShowError(true);
+                getAllPacket()
             }
             setLoading(false);
             setSelectedPacketMaster([]);
@@ -378,7 +384,8 @@ export default function AdminAddBox() {
         }, 2000);
     }, [showError]);
     const handleEditData = (data) => {
-        // console.log(data.PacketIds.split(","), "data");
+        console.log(data.PacketIds.split(","), "data");
+
         setNewCategory({...data, OldEntry: true});
         if (data.PacketIds && data.PacketIds.split(",").length > 0) {
             setSelectedPacketMaster(data.PacketIds.split(","))
@@ -655,8 +662,8 @@ export default function AdminAddBox() {
                                             onChange={(e) => setInputPacketMaster(e.target.value)}
                                         >
                                             <option value={0}>Select Packet</option>
-                                            {PacketMasterData.map((x) => (
-                                                <option value={`${x.PacketName} - ${x.Id}`}>
+                                            {PacketMasterData.filter((item) => item.BoxName == "" || item.BoxName == null).map((x) => (
+                                                <option value={`${x.PacketName}-${x.Id}`}>
                                                     {`${x.PacketName} - ${x.Id}`}
                                                 </option>
                                             ))}

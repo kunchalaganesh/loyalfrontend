@@ -69,8 +69,8 @@ export default function AdminAllCustomers() {
     CurrAddState: "",
     PerAddTown: "",
     PerAddState: "",
-    CurrAddCountry: "",
-    PerAddCountry: "",
+    CurrAddCountry: "India",
+    PerAddCountry: "India",
     GstNo: "",
     PanNo: "",
     AadharNo: "",
@@ -390,7 +390,7 @@ export default function AdminAllCustomers() {
         const data = await response.json();
         if (data.Message === "email already exist") {
           setMessageType("error");
-          setMessageToShow(data.message);
+          setMessageToShow(data.Message);
           setShowError(true);
         } else {
           setMessageType("success");
@@ -667,8 +667,8 @@ export default function AdminAllCustomers() {
                         )}
                       </td>
                       <td>{x.Email}</td>
-                      <td>{x.CustomerSlabId}</td>
-                      <td>{x.RateOfInterestId}</td>
+                      <td>{x.CustomerSlab}</td>
+                      <td>{x.RateOfInterest}</td>
                       <td>{x.CreditPeriodId}</td>
                     </tr>
                   ))}
@@ -680,7 +680,13 @@ export default function AdminAllCustomers() {
                   active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
                 }
             >
-              <p>Customer profile</p>
+              <h4
+                  style={{ marginTop: "20px", marginBottom: "20px" }}
+                  id="adminInvoiceAddedCustomerEdit"
+                  className="adminInvoiceAddTitles"
+              >
+                Customer profile
+              </h4>
               <form onSubmit={addnewCs}>
                 <div
                     style={{
@@ -823,7 +829,13 @@ export default function AdminAllCustomers() {
                       type="text"
                   />
                 </div>
-                <p>Additional details</p>
+                <h4
+                    style={{ marginTop: "20px", marginBottom: "20px" }}
+                    id="adminInvoiceAddedCustomerEdit"
+                    className="adminInvoiceAddTitles"
+                >
+                  Additional details
+                </h4>
                 <div
                     style={{
                       gridTemplateColumns: "repeat(4,1fr)",
@@ -834,7 +846,7 @@ export default function AdminAllCustomers() {
 
                 >
                   <label>
-                    Customer Slab <sup> *</sup>
+                    Customer Slab
                   </label>
                   <select
                       // required="required"
@@ -851,7 +863,7 @@ export default function AdminAllCustomers() {
                     ))}
                   </select>
                   <label>
-                    Customer Rate Of Interest <sup> *</sup>
+                    Customer Rate Of Interest
                   </label>
                   <select
                       // required="required"
@@ -868,7 +880,7 @@ export default function AdminAllCustomers() {
                     ))}
                   </select>
                   <label>
-                    Customer Credit Period <sup> *</sup>
+                    Customer Credit Period
                   </label>
                   <select
                       // required="required"
@@ -938,7 +950,13 @@ export default function AdminAllCustomers() {
                     <option value={true}>YES</option>
                   </select>
                 </div>
-                <p>Billing Address details</p>
+                <h4
+                    style={{ marginTop: "20px", marginBottom: "20px" }}
+                    id="adminInvoiceAddedCustomerEdit"
+                    className="adminInvoiceAddTitles"
+                >
+                  Billing Address details
+                </h4>
                 <div
                     style={{
                       gridTemplateColumns: "repeat(4,1fr)",
@@ -964,10 +982,25 @@ export default function AdminAllCustomers() {
                       type="text"
                   />
                   <label>
+                    Billing Address (Country) <sup>*</sup>
+                  </label>
+                  <select
+                      name="CurrAddCountry"
+                      value={newCs.CurrAddCountry}
+                      onChange={handleNewCsChange}
+                      required="required"
+                  >
+                    {allCountriesList.map((x, y) => (
+                        <option key={y} value={x}>
+                          {x}
+                        </option>
+                    ))}
+                  </select>
+                  <label>
                     Billing Address (State) <sup> *</sup>
                   </label>
                   <select
-                      // required="required"
+                      required="required"
                       type="text"
                       name="CurrAddState"
                       required="required"
@@ -988,23 +1021,13 @@ export default function AdminAllCustomers() {
                       onChange={handleNewCsChange}
                       type="text"
                   />
-                  <label>
-                    Billing Address (Country) <sup>*</sup>
-                  </label>
-                  <select
-                      name="CurrAddCountry"
-                      value={newCs.CurrAddCountry}
-                      onChange={handleNewCsChange}
-                      required="required"
-                  >
-                    {allCountriesList.map((x, y) => (
-                        <option key={y} value={x}>
-                          {x}
-                        </option>
-                    ))}
-                  </select>
                 </div>
-                <p>permanent Address details</p>
+                <h4
+                    style={{marginTop: "20px", marginBottom: "20px"}}
+                    id="adminInvoiceAddedCustomerEdit"
+                    className="adminInvoiceAddTitles"
+                >
+                  Permanent Address details </h4>
                 <div
                     style={{
                       gridTemplateColumns: "repeat(4,1fr)",
@@ -1017,14 +1040,14 @@ export default function AdminAllCustomers() {
                     className="adminCategoryAddCategoryInnerBox"
 
                 >
-                  <label>PerAdd (Street)</label>
+                  <label>Permanent Address (Street)</label>
                   <input
                       name="PerAddStreet"
                       value={newCs.PerAddStreet}
                       onChange={handleNewCsChange}
                       type="text"
                   />
-                  <label>PerAdd (Town)</label>
+                  <label>Permanent Address (Town)</label>
                   <input
                       name="PerAddTown"
                       value={newCs.PerAddTown}
@@ -1032,7 +1055,22 @@ export default function AdminAllCustomers() {
                       type="text"
                   />
                   <label>
-                    PerAdd (State) <sup> *</sup>
+                    Permanent Address (Country) <sup>*</sup>
+                  </label>
+                  <select
+                      name="PerAddCountry"
+                      value={newCs.PerAddCountry}
+                      onChange={handleNewCsChange}
+                      required="required"
+                  >
+                    {allCountriesList.map((x, y) => (
+                        <option key={y} value={x}>
+                          {x}
+                        </option>
+                    ))}
+                  </select>
+                  <label>
+                    Permanent Address (State) <sup> *</sup>
                   </label>
                   <select
                       // required="required"
@@ -1048,28 +1086,13 @@ export default function AdminAllCustomers() {
                         </option>
                     ))}
                   </select>
-                  <label>PerAdd (Pincode)</label>
+                  <label>Permanent Address (Pincode)</label>
                   <input
                       name="PerAddPincode"
                       value={newCs.PerAddPincode}
                       onChange={handleNewCsChange}
                       type="text"
                   />
-                  <label>
-                    PerAdd (Country) <sup>*</sup>
-                  </label>
-                  <select
-                      name="PerAddCountry"
-                      value={newCs.PerAddCountry}
-                      onChange={handleNewCsChange}
-                      required="required"
-                  >
-                    {allCountriesList.map((x, y) => (
-                        <option key={y} value={x}>
-                          {x}
-                        </option>
-                    ))}
-                  </select>
                 </div>
                 {!loading ? <button type="submit">Submit</button> : null}
               </form>
