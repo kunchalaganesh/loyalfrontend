@@ -169,8 +169,7 @@ export default function AdminAddDiamondSizeWeightRate() {
         try {
             if (data) {
                 setAllCategories(data);
-            }
-            else{
+            } else {
                 setActive("addNew");
             }
             // else {
@@ -1384,39 +1383,44 @@ export default function AdminAddDiamondSizeWeightRate() {
                                             {/*<td>{item.DiamondMargin}</td>*/}
                                             <td>{item.DiamondSellRate}</td>
                                             <td>
-                                                <div style={{display: "flex",justifyContent: "start",alignItems: "center",width: "180px"}}>
-                                                <button
-                                                    className={"adminAddCategoryEditButton"}
-                                                    style={{
-                                                        margin: 0,
-                                                        padding: "3px 10px",
-                                                        // marginRight: "6px",
-                                                        backgroundColor: "rgba(2, 168, 181,0.3)",
-                                                        border: "1px solid #02A8B5",
-                                                        color: "#02A8B5",
-                                                        borderRadius: "2px",
-                                                        cursor: "pointer",
-                                                    }}
-                                                    onClick={() => handleEditData(item, index)}
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    className="adminAddCategoryEditButton"
-                                                    style={{
-                                                        margin: 0,
-                                                        padding: "3px 10px",
-                                                        backgroundColor: "rgba(255, 0, 0, 0.3)",
-                                                        marginLeft: "10px",
-                                                        border: "1px solid red",
-                                                        color: "red",
-                                                        borderRadius: "2px",
-                                                        cursor: "pointer",
-                                                    }}
-                                                    onClick={() => handleDeleteData(index)}
-                                                >
-                                                    Delete
-                                                </button>
+                                                <div style={{
+                                                    display: "flex",
+                                                    justifyContent: "start",
+                                                    alignItems: "center",
+                                                    width: "180px"
+                                                }}>
+                                                    <button
+                                                        className={"adminAddCategoryEditButton"}
+                                                        style={{
+                                                            margin: 0,
+                                                            padding: "3px 10px",
+                                                            // marginRight: "6px",
+                                                            backgroundColor: "rgba(2, 168, 181,0.3)",
+                                                            border: "1px solid #02A8B5",
+                                                            color: "#02A8B5",
+                                                            borderRadius: "2px",
+                                                            cursor: "pointer",
+                                                        }}
+                                                        onClick={() => handleEditData(item, index)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="adminAddCategoryEditButton"
+                                                        style={{
+                                                            margin: 0,
+                                                            padding: "3px 10px",
+                                                            backgroundColor: "rgba(255, 0, 0, 0.3)",
+                                                            marginLeft: "10px",
+                                                            border: "1px solid red",
+                                                            color: "red",
+                                                            borderRadius: "2px",
+                                                            cursor: "pointer",
+                                                        }}
+                                                        onClick={() => handleDeleteData(index)}
+                                                    >
+                                                        Delete
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
