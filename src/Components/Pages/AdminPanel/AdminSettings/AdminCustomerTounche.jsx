@@ -421,7 +421,9 @@ export default function AdminCustomerTounche() {
                 ),
             };
         });
-        const newArrayData = [...newArray, formData];
+        // const newArrayData = [...newArray, formData];
+        const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
+        console.log(newArrayData, "rkjhjigh hemnfadjkfyhadi mafbahidgfhe f")
         try {
             const response = await fetch(
                 !newCategory.OldEntry ? a205 : a206,
@@ -431,7 +433,7 @@ export default function AdminCustomerTounche() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(!newCategory.OldEntry ? newArray : newArrayData),
+                    body: JSON.stringify(newArrayData),
                 }
             );
             const data = await response.json();
@@ -747,11 +749,11 @@ export default function AdminCustomerTounche() {
                                     <th>Purity</th>
                                     <th>SKU</th>
                                     <th>Stone Less</th>
-                                    <th>MakingFixedAmt</th>
-                                    <th>MakingPercentage</th>
-                                    <th>MakingPerGram</th>
-                                    <th>MakingFixedWastage</th>
-                                    <th>TemplateName</th>
+                                    <th>Making FixedAmt</th>
+                                    <th>Making Percentage</th>
+                                    <th>Making PerGram</th>
+                                    <th>Making Fixed Wastage</th>
+                                    <th>Template Name</th>
                                     <th>action</th>
                                 </tr>
                                 </thead>
@@ -821,6 +823,7 @@ export default function AdminCustomerTounche() {
                                         name="CustomerId"
                                         value={newCategory?.CustomerId}
                                         onChange={handleNewCategoryChange}
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {allCustomers?.map((x) => {
@@ -858,7 +861,7 @@ export default function AdminCustomerTounche() {
                                         name="CategoryId"
                                         value={newCategory.CategoryId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {categoriesData?.map((x) => {
@@ -872,7 +875,7 @@ export default function AdminCustomerTounche() {
                                         name="ProductId"
                                         value={newCategory.ProductId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {productsData
@@ -896,7 +899,7 @@ export default function AdminCustomerTounche() {
                                         name="DesignId"
                                         value={newCategory.DesignId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {designData
@@ -920,7 +923,7 @@ export default function AdminCustomerTounche() {
                                         name="PurityId"
                                         value={newCategory.PurityId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {purityData?.map((x) => {
@@ -963,13 +966,12 @@ export default function AdminCustomerTounche() {
                                         type="text"
                                     />
                                     <label>
-                                        Select Template<sup>*</sup>
+                                        Select Template
                                     </label>
                                     <select
                                         name="DiamondSizeWeightRateTemplateId"
                                         value={newCategory.DiamondSizeWeightRateTemplateId}
                                         onChange={handleNewCategoryChange}
-                                        required="required"
                                     >
                                         <option value={""}>Select an Template</option>
                                         {templateData?.map((x) => {

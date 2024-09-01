@@ -523,7 +523,7 @@ export default function AdminTopNavbar() {
                     </li>
                     <li onClick={() => navigate("/add_vendor")}>
                       <MdOutlinePersonAddAlt size={"17px"}/>
-                      <p>Supplier</p>
+                      <p>Vendor</p>
                     </li>
                     {/* <li onClick={() => navigate("/add_employee")}> */}
                     <li onClick={() => navigate("/add_employees")}>

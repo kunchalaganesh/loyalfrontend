@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
@@ -18,8 +18,8 @@ import {
     a95,
     a98,
 } from "../../../Api/RootApiPath";
-import { useSelector } from "react-redux";
-import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
+import {useSelector} from "react-redux";
+import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 
 export default function AdminVendorTounche() {
@@ -199,7 +199,7 @@ export default function AdminVendorTounche() {
             });
     }, []);
 
-    useEffect( () => {
+    useEffect(() => {
         const formData = {
             ClientCode: clientCode,
         };
@@ -357,7 +357,7 @@ export default function AdminVendorTounche() {
     }, []);
 
     const handleNewCategoryChange = (e) => {
-        const { name, value, key } = e.target;
+        const {name, value, key} = e.target;
         let actualValue = value;
         if (name === "FinePure") {
             actualValue = value === "true";
@@ -368,10 +368,10 @@ export default function AdminVendorTounche() {
             if (selectedSku) {
                 handleAllSelectedTounche(e, selectedSku);
             } else {
-                setNewCategory({ ...newCategory, [name]: actualValue });
+                setNewCategory({...newCategory, [name]: actualValue});
             }
         }
-        setNewCategory({ ...newCategory, [name]: actualValue });
+        setNewCategory({...newCategory, [name]: actualValue});
     };
 
     const addNewCategory = async (e) => {
@@ -397,7 +397,7 @@ export default function AdminVendorTounche() {
             DiamondSizeWeightRateTemplateId: parseInt(
                 newCategory.DiamondSizeWeightRateTemplateId
             ),
-            ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
+            ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
         };
         let newArray = allSelectedTounche
             .filter((x) => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
@@ -489,12 +489,12 @@ export default function AdminVendorTounche() {
 
     const handleEditData = (data) => {
         console.log(data, "editData");
-        setNewCategory({ ...data, OldEntry: true });
+        setNewCategory({...data, OldEntry: true});
         setActive("AddNew");
     };
 
     const handleAllSelectedTounche = (e, x) => {
-        const { value, checked } = e.target;
+        const {value, checked} = e.target;
         if (checked) {
             const newTounche = {
                 VendorId: parseInt(newCategory.VendorId),
@@ -608,10 +608,10 @@ export default function AdminVendorTounche() {
 
     return (
         <div>
-            <AdminHeading />
+            <AdminHeading/>
             <div className="adminMainBodyBox">
                 {showError ? (
-                    <AlertMessage message={messageToShow} type={messageType} />
+                    <AlertMessage message={messageToShow} type={messageType}/>
                 ) : null}
                 <AdminBreadCrump
                     title={"Add Vendor Tounche"}
@@ -640,7 +640,7 @@ export default function AdminVendorTounche() {
                                     }
                                 >
                                     {/* 01 */}
-                                    <RiListUnordered />
+                                    <RiListUnordered/>
                                 </div>
                                 <p>All Vendor Tounche</p>
                             </div>
@@ -662,7 +662,7 @@ export default function AdminVendorTounche() {
                                             : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
                                     }
                                 >
-                                    <RiPlayListAddLine />
+                                    <RiPlayListAddLine/>
                                 </div>
                                 <p>Add Vendor Tounche</p>
                             </div>
@@ -683,10 +683,10 @@ export default function AdminVendorTounche() {
                                     <th>Purity</th>
                                     <th>SKU</th>
                                     <th>Wastage</th>
-                                    <th>MakingFixedAmt</th>
-                                    <th>MakingPercentage</th>
-                                    <th>MakingPerGram</th>
-                                    <th>MakingFixedWastage</th>
+                                    <th>Making FixedAmt</th>
+                                    <th>Making Percentage</th>
+                                    <th>Making PerGram</th>
+                                    <th>Making Fixed Wastage</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -694,7 +694,7 @@ export default function AdminVendorTounche() {
                                 {allCategories.map((x, index) => (
                                     <tr key={x.Id}>
                                         <td>{index + 1}</td>
-                                        <td style={{ whiteSpace: "nowrap" }}>{x.VendorName}</td>
+                                        <td style={{whiteSpace: "nowrap"}}>{x.VendorName}</td>
                                         <td>
                                             {getNameFunction(x.DiamondSizeWeightRateTemplateId)}
                                         </td>
@@ -754,6 +754,7 @@ export default function AdminVendorTounche() {
                                         name="VendorId"
                                         value={newCategory.VendorId}
                                         onChange={handleNewCategoryChange}
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {allVendors.map((x) => {
@@ -772,6 +773,7 @@ export default function AdminVendorTounche() {
                                         name="CategoryId"
                                         value={newCategory.CategoryId}
                                         onChange={handleNewCategoryChange}
+                                        required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {categoriesData?.map((x) => {
@@ -786,6 +788,7 @@ export default function AdminVendorTounche() {
                                         Select Product<sup>*</sup>
                                     </label>
                                     <select
+                                        required={"required"}
                                         name="ProductId"
                                         value={newCategory.ProductId}
                                         onChange={handleNewCategoryChange}
@@ -811,6 +814,7 @@ export default function AdminVendorTounche() {
                                         Select Purity<sup>*</sup>
                                     </label>
                                     <select
+                                        required={"required"}
                                         name="PurityId"
                                         value={newCategory.PurityId}
                                         onChange={handleNewCategoryChange}
@@ -939,7 +943,7 @@ export default function AdminVendorTounche() {
                                             <th>Weight Categories</th>
                                         </tr>
                                         </thead>
-                                        <tbody style={{ position: "relative" }}>
+                                        <tbody style={{position: "relative"}}>
                                         {skuData
                                             .filter((sku) => {
                                                 const parsedVendorId = parseInt(newCategory.VendorId);
@@ -984,7 +988,7 @@ export default function AdminVendorTounche() {
                                                     <td>{index + 1}</td>
                                                     <td>
                                                         <input
-                                                            style={{ width: "20px", height: "20px" }}
+                                                            style={{width: "20px", height: "20px"}}
                                                             type="checkbox"
                                                             checked={!newCategory.OldEntry ? allSelectedTounche.some(
                                                                 (tounche) =>
@@ -999,7 +1003,7 @@ export default function AdminVendorTounche() {
                                                         />
                                                     </td>
 
-                                                    <td style={{ whiteSpace: "nowrap" }}>
+                                                    <td style={{whiteSpace: "nowrap"}}>
                                                         {x.StockKeepingUnit}
                                                     </td>
                                                     <td>{x.CategoryName}</td>
