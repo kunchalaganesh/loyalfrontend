@@ -493,8 +493,8 @@ export default function AdminAddPacketMaster() {
                     <th>Packet Name</th>
                     <th>Box</th>
                     <th>SKU</th>
-                    <th>Category</th>
-                    <th>Product</th>
+                    {/*<th>Category</th>*/}
+                    {/*<th>Product</th>*/}
                     <th>Empty Weight</th>
                     {/* <th>Product Id</th>
                       <th>Company Id</th>
@@ -521,8 +521,8 @@ export default function AdminAddPacketMaster() {
                       <td>{x.PacketName}</td>
                       <td>{x.BoxName ? x.BoxName : "-"}</td>
                       <td>{x.StockKeepingUnit}</td>
-                      <td>{x.CategoryName}</td>
-                      <td>{x.ProductName}</td>
+                      {/*<td>{x.CategoryName}</td>*/}
+                      {/*<td>{x.ProductName}</td>*/}
                       <td>{x.EmptyWeight}</td>
                       {/* <td>{x.ProductId}</td>
                         <td>{x.CompanyId}</td>

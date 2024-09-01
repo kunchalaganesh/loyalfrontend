@@ -524,11 +524,6 @@ export default function AdminAddSku() {
             setMessageToShow("Please Select Atleast One Vendor");
             setShowError(true);
             scrollToCenter("adminSkuAddSkuSelectVendor");
-        } else if (!weights.length > 0) {
-            setMessageType("error");
-            setMessageToShow("Please Select Atleast One Weight Category");
-            setShowError(true);
-            scrollToCenter("adminSkuAddSkuSelectWeights");
         } else {
             const selectedVendorsIdsList =
                 selectedVendors.length > 0
@@ -2072,7 +2067,7 @@ export default function AdminAddSku() {
                                         </div>
                                         <div className="adminSkuAddSkuInnerItemsBox">
                                             <label htmlFor="grosswt">
-                                                G.Wt <sup> *</sup>
+                                                G.Wt
                                             </label>
                                             <input
                                                 // min="0"
@@ -2100,7 +2095,7 @@ export default function AdminAddSku() {
                                         </div>
                                         <div className="adminSkuAddSkuInnerItemsBox">
                                             <label htmlFor="stoneWeight">
-                                                Total St.Wt <sup> *</sup>
+                                                Total St.Wt
                                             </label>
 
                                             <input
@@ -2155,7 +2150,6 @@ export default function AdminAddSku() {
                                                 type="number"
                                                 name="MinQuantity"
                                                 value={newSku.MinQuantity}
-                                                required="required"
                                                 onChange={handleNewSkuChange}
                                                 min="1"
                                             />
@@ -2663,6 +2657,7 @@ export default function AdminAddSku() {
                                                     <label>Diamond Shape</label>
                                                     <select
                                                         name="DiamondShape"
+                                                        style={{width: '100%'}}
                                                         value={diamond.DiamondShape}
                                                         onChange={(e) =>
                                                             updateDiamond(
@@ -2683,6 +2678,7 @@ export default function AdminAddSku() {
                                                     <label>Diamond Clarity</label>
                                                     <select
                                                         name="DiamondClarity"
+                                                        style={{width: '100%'}}
                                                         value={diamond.DiamondClarity}
                                                         onChange={(e) =>
                                                             updateDiamond(
@@ -2703,6 +2699,7 @@ export default function AdminAddSku() {
                                                     <label>Diamond Colour</label>
                                                     <select
                                                         name="DiamondColour"
+                                                        style={{width: '100%'}}
                                                         value={diamond.DiamondColour}
                                                         onChange={(e) =>
                                                             updateDiamond(
@@ -2829,6 +2826,7 @@ export default function AdminAddSku() {
                                                     <label>Diamond Cut</label>
                                                     <select
                                                         name="DiamondCut"
+                                                        style={{width: '100%'}}
                                                         value={diamond.DiamondCut}
                                                         onChange={(e) =>
                                                             updateDiamond(
@@ -2849,6 +2847,7 @@ export default function AdminAddSku() {
                                                     <label>Setting Type</label>
                                                     <select
                                                         name="SettingType"
+                                                        style={{width: '100%'}}
                                                         value={diamond.SettingType}
                                                         onChange={(e) =>
                                                             updateDiamond(

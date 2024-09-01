@@ -561,17 +561,6 @@ export default function AdminAddVendor() {
                 >
                   <label>Vendor Code</label>
                   <input
-                    name="VendorCode"
-                    // value={
-                    //   newCategory.VendorCode
-                    //     ? newCategory.VendorCode
-                    //     : allCategories.pop()[0].Id + 1
-                    // }
-                    // onChange={handleNewCategoryChange}
-                    readOnly
-                    type="text"
-                    />
-                  <input
                       name="VendorCode"
                       // value={
                       //   newCategory.VendorCode
@@ -618,7 +607,7 @@ export default function AdminAddVendor() {
                   />
 
                   <label>
-                    ContactNo<sup>*</sup>
+                    Contact No.<sup>*</sup>
                   </label>
                   <input
                     name="ContactNo"

@@ -69,6 +69,7 @@ export default function AdminAddBox() {
     const [allRolesList, setAllRolesList] = useState([]);
     const [allCategoriesList, setAllCategoriesList] = useState([]);
     const [allProductsList, setAllProductsList] = useState([]);
+    const [editId, setEditId] = useState('');
     const allStates = useSelector((state) => state);
     const adminLoggedIn = allStates.reducer1;
     //   let Entryby_Staff_id = parseInt(adminLoggedIn);
@@ -313,13 +314,27 @@ export default function AdminAddBox() {
         setNewCategory({...newCategory, [name]: value});
     };
 
-        const trasformData = selectedPacketMaster.map((item) => item.split("-")[newCategory.OldEntry ? 0 : 1]).join(',');
+        const trasformData = selectedPacketMaster.map((item) => item.split("-")[0]).join(',');
         // const trasformData = selectedPacketMaster.join(',');
-        console.log("selectedPacketMasterselectedPacketMaster : ",selectedPacketMaster)
+
     const addNewCategory = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = {
+        const formData  = editId ? {
+            Id: editId,
+            ClientCode: clientCode,
+            CategoryId: newCategory.CategoryId,
+            BoxName: newCategory.BoxName,
+            EmptyWeight: newCategory.EmptyWeight,
+            ProductId: newCategory.ProductId,
+            CompanyId: newCategory.CompanyId,
+            BranchId: newCategory.BranchId,
+            Description: newCategory.Description,
+            Status: newCategory.Status,
+            EmployeeCode: employeeCode,
+            PacketIds: trasformData,
+            ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
+        } : {
             ClientCode: clientCode,
             CategoryId: newCategory.CategoryId,
             BoxName: newCategory.BoxName,
@@ -369,6 +384,7 @@ export default function AdminAddBox() {
                 setMessageType("success");
                 setMessageToShow("Box Added Successfully");
                 setShowError(true);
+                setEditId('');
                 getAllPacket()
             }
             setLoading(false);
@@ -384,12 +400,13 @@ export default function AdminAddBox() {
         }, 2000);
     }, [showError]);
     const handleEditData = (data) => {
-        console.log(data.PacketIds.split(","), "data");
-
+        console.log(data, "data");
+        setEditId(data.Id);
         setNewCategory({...data, OldEntry: true});
         if (data.PacketIds && data.PacketIds.split(",").length > 0) {
             setSelectedPacketMaster(data.PacketIds.split(","))
         }
+
         setActive("AddNew");
     };
     return (
@@ -651,9 +668,8 @@ export default function AdminAddBox() {
                                         <option value={"Active"}>Active</option>
                                         <option value={"InActive"}>InActive</option>
                                     </select>
-                                    <div className="adminSkuAddSkuInnerItemsBox">
+                                    {/*<div className="adminSkuAddSkuInnerItemsBox">*/}
                                         <label htmlFor="netWt" style={{margin: "10px 0px"}}>Select Packet Master</label>
-
                                         <select
                                             type="number"
                                             // required="required"
@@ -663,20 +679,20 @@ export default function AdminAddBox() {
                                         >
                                             <option value={0}>Select Packet</option>
                                             {PacketMasterData.filter((item) => item.BoxName == "" || item.BoxName == null).map((x) => (
-                                                <option value={`${x.PacketName}-${x.Id}`}>
+                                                <option value={`${x.Id}-${x.PacketName}`}>
                                                     {`${x.PacketName} - ${x.Id}`}
                                                 </option>
                                             ))}
                                         </select>
                                         <button
-                                            style={{marginBottom: "25px", margin: "0px 20px"}}
+                                            style={{marginBottom: "25px", margin: "0px 20px",width: "180px"}}
                                             type="button"
                                             onClick={handleAddVendor}
                                         >
                                             Add Packet
                                         </button>
 
-                                    </div>
+                                    {/*</div>*/}
                                     <div
                                         style={{gridColumn: "span 2"}}
                                         className="adminSkuAddSkuInnerItemsBox"

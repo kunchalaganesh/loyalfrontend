@@ -667,9 +667,9 @@ export default function AdminAllCustomers() {
                                             )}
                                         </td>
                                         <td>{x.Email}</td>
-                                        <td>{x.CustomerSlabId}</td>
-                                        <td>{x.RateOfInterestId}</td>
-                                        <td>{x.CreditPeriodId}</td>
+                                        <td>{x.CustomerSlab}</td>
+                                        <td>{x.RateOfInterest}</td>
+                                        <td>{x.CreditPeriod}</td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -982,6 +982,21 @@ export default function AdminAllCustomers() {
                                         type="text"
                                     />
                                     <label>
+                                        Billing Address (Country) <sup>*</sup>
+                                    </label>
+                                    <select
+                                        name="CurrAddCountry"
+                                        value={newCs.CurrAddCountry}
+                                        onChange={handleNewCsChange}
+                                        required="required"
+                                    >
+                                        {allCountriesList.map((x, y) => (
+                                            <option key={y} value={x}>
+                                                {x}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label>
                                         Billing Address (State) <sup> *</sup>
                                     </label>
                                     <select
@@ -1006,21 +1021,7 @@ export default function AdminAllCustomers() {
                                         onChange={handleNewCsChange}
                                         type="text"
                                     />
-                                    <label>
-                                        Billing Address (Country) <sup>*</sup>
-                                    </label>
-                                    <select
-                                        name="CurrAddCountry"
-                                        value={newCs.CurrAddCountry}
-                                        onChange={handleNewCsChange}
-                                        required="required"
-                                    >
-                                        {allCountriesList.map((x, y) => (
-                                            <option key={y} value={x}>
-                                                {x}
-                                            </option>
-                                        ))}
-                                    </select>
+
                                 </div>
                                 <h4
                                     style={{marginTop: "20px", marginBottom: "20px"}}
@@ -1055,13 +1056,12 @@ export default function AdminAllCustomers() {
                       type="text"
                   />
                   <label>
-                    Permanent Address (Country) <sup>*</sup>
+                    Permanent Address (Country)
                   </label>
                   <select
                       name="PerAddCountry"
                       value={newCs.PerAddCountry}
                       onChange={handleNewCsChange}
-                      required="required"
                   >
                     {allCountriesList.map((x, y) => (
                         <option key={y} value={x}>
@@ -1070,10 +1070,9 @@ export default function AdminAllCustomers() {
                     ))}
                   </select>
                   <label>
-                    Permanent Address (State) <sup> *</sup>
+                    Permanent Address (State)
                   </label>
                   <select
-                      // required="required"
                       type="text"
                       name="PerAddState"
                       value={newCs.PerAddState}

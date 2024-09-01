@@ -227,6 +227,7 @@ export default function AdminAddTax() {
       StateId: newCategory.StateId,
       Rate: newCategory.Rate,
       TaxType: newCategory.TaxType,
+      TaxName: newCategory.TaxName,
       Description: newCategory.Description,
       FinancialYearFormat: newCategory.FinancialYearFormat,
 
