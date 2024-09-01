@@ -378,15 +378,15 @@ export default function AdminAddEmployees() {
         FinancialYear: "",
         OldEntry: false,
       });
-      if (data.message) {
+      if (data.Message) {
         // alert(data.message);
         setMessageType("error");
-        setMessageToShow(data.message);
+        setMessageToShow(data.Message);
         setShowError(true);
         setActive("AddNew");
       } else {
         setMessageType("success");
-        setMessageToShow("Employee Added Successfully");
+        setMessageToShow("Employee Add Successfully");
         setShowError(true);
       }
       setLoading(false);
@@ -684,6 +684,13 @@ export default function AdminAddEmployees() {
                     onChange={handleNewCategoryChange}
                     type="text"
                   />
+                  <label>Joining Date</label>
+                  <input
+                      name="JoiningDate"
+                      value={newCategory.JoiningDate}
+                      onChange={handleNewCategoryChange}
+                      type="date"
+                  />
                   <label>Date Of Birth</label>
                   <input
                     name="DateOfBirth"
@@ -691,7 +698,7 @@ export default function AdminAddEmployees() {
                     onChange={handleNewCategoryChange}
                     type="date"
                   />
-                  <label>Gender</label>
+                  <label>Gender <sup>*</sup></label>
                   <select
                     name="Gender"
                     value={newCategory.Gender}
@@ -762,7 +769,7 @@ export default function AdminAddEmployees() {
                       );
                     })}
                   </select>
-                  <label>Department</label>
+                  <label>Department <sup>*</sup></label>
                   <select
                     name="Department"
                     value={newCategory.Department}
@@ -779,7 +786,7 @@ export default function AdminAddEmployees() {
                       );
                     })}
                   </select>
-                  <label>Counter</label>
+                  <label>Counter <sup>*</sup></label>
                   {/* <input
                     name="SeatingLocation"
                     value={newCategory.SeatingLocation}
@@ -813,16 +820,16 @@ export default function AdminAddEmployees() {
                     required="required"
                   >
                     <option value={""}>Select an option</option>;
-                    <option value={"Director"}>Director</option>;
-                    <option value={"Company Head"}>Company Head</option>;
-                    <option value={"Branch Head"}>Branch Head</option>;
-                    <option value={"Manager"}>Manager</option>;
-                    <option value={"Accountant"}>Accountant</option>;
-                    <option value={"Floor Manager"}>Floor Manager</option>
-                    <option value={"Team Lead"}>Team Lead</option>;
-                    <option value={"Salesman"}>Salesman</option>;
-                    <option value={"Cashier"}>Cashier</option>;
-                    <option value={"Other User"}>Other User</option>;
+                    {/*<option value={"Director"}>Director</option>;*/}
+                    {/*<option value={"Company Head"}>Company Head</option>;*/}
+                    {/*<option value={"Branch Head"}>Branch Head</option>;*/}
+                    {/*<option value={"Manager"}>Manager</option>;*/}
+                    {/*<option value={"Accountant"}>Accountant</option>;*/}
+                    {/*<option value={"Floor Manager"}>Floor Manager</option>*/}
+                    {/*<option value={"Team Lead"}>Team Lead</option>;*/}
+                    {/*<option value={"Salesman"}>Salesman</option>;*/}
+                    {/*<option value={"Cashier"}>Cashier</option>;*/}
+                    {/*<option value={"Other User"}>Other User</option>;*/}
                     {allRolesList.map((x) => {
                       return (
                         <>
@@ -831,7 +838,7 @@ export default function AdminAddEmployees() {
                       );
                     })}
                   </select>
-                  <label>Reporting To</label>
+                  <label>Reporting To <sup>*</sup></label>
                   {/* <input
                     name="ReportingTo"
                     value={newCategory.ReportingTo}
@@ -919,19 +926,13 @@ export default function AdminAddEmployees() {
                     onChange={handleNewCategoryChange}
                     type="text"
                   />
-                  <label>Ifsc Code</label>
+                  <label>Ifsc Code <sup>*</sup></label>
                   <input
                     name="IfscCode"
                     value={newCategory.IfscCode}
                     onChange={handleNewCategoryChange}
+                    required={true}
                     type="text"
-                  />
-                  <label>Joining Date</label>
-                  <input
-                    name="JoiningDate"
-                    value={newCategory.JoiningDate}
-                    onChange={handleNewCategoryChange}
-                    type="date"
                   />
                   <label>Salary</label>
                   <input
@@ -941,16 +942,16 @@ export default function AdminAddEmployees() {
                     type="text"
                   />
 
-                  <label>Financial Year</label>
-                  <input
-                    style={{ cursor: "not-allowed" }}
-                    name="FinancialYear"
-                    placeholder={newCategory.FinancialYear}
-                    // value={newCategory.FinancialYear}
-                    // onChange={handleNewCategoryChange}
-                    readOnly
-                    type="text"
-                  />
+                  {/*<label>Financial Year</label>*/}
+                  {/*<input*/}
+                  {/*  style={{ cursor: "not-allowed" }}*/}
+                  {/*  name="FinancialYear"*/}
+                  {/*  placeholder={newCategory.FinancialYear}*/}
+                  {/*  // value={newCategory.FinancialYear}*/}
+                  {/*  // onChange={handleNewCategoryChange}*/}
+                  {/*  readOnly*/}
+                  {/*  type="text"*/}
+                  {/*/>*/}
                 </div>
                 {!loading ? <button type="submit">Submit</button> : null}
               </form>

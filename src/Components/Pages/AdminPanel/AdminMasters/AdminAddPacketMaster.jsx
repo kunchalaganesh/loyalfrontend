@@ -302,12 +302,12 @@ export default function AdminAddPacketMaster() {
     fetchAllSkuList();
   }, []);
 
-  console.log(allCategories, "allCategories");
-  console.log(allCompaniesList, "allCompaniesList");
-  console.log(allDepartmentsList, "allDepartmentsList");
-  console.log(allBranchesList, "allBranchesList");
-  console.log(allRolesList, "allRolesList");
-  console.log(allCategoriesList, "allCategoriesList");
+  // console.log(allCategories, "allCategories");
+  // console.log(allCompaniesList, "allCompaniesList");
+  // console.log(allDepartmentsList, "allDepartmentsList");
+  // console.log(allBranchesList, "allBranchesList");
+  // console.log(allRolesList, "allRolesList");
+  // console.log(allCategoriesList, "allCategoriesList");
 
   const handleNewCategoryChange = (e) => {
     const { name, value } = e.target;
@@ -351,7 +351,7 @@ export default function AdminAddPacketMaster() {
       CompanyId: parseInt(newCategory.CompanyId),
       BranchId: parseInt(newCategory.BranchId),
       Status: newCategory.Status,
-      BoxId: newCategory.BoxId,
+      BoxId: newCategory.BoxId ? newCategory.BoxId : null,
       EmployeeId: employeeId || 0,
 
       ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
@@ -386,15 +386,15 @@ export default function AdminAddPacketMaster() {
         Status: "",
         OldEntry: false,
       });
-      if (data.Message) {
+      if (data.message) {
         // alert(data.message);
         setMessageType("error");
-        setMessageToShow(data.Message);
+        setMessageToShow(data.message);
         setShowError(true);
         setActive("AddNew");
       } else {
         setMessageType("success");
-        setMessageToShow("Box Added Successfully");
+        setMessageToShow("Packet Added Successfully");
         setShowError(true);
       }
       setLoading(false);
@@ -488,7 +488,8 @@ export default function AdminAddPacketMaster() {
                   <tr>
                     <th>Edit</th>
                     <th>Sr.No</th>
-                    {/* <th>Category Name</th> */}
+                     <th>Category Name</th>
+                     <th>Product Name</th>
                     <th>Packet Name</th>
                     <th>Box</th>
                     <th>SKU</th>
@@ -499,7 +500,7 @@ export default function AdminAddPacketMaster() {
                       <th>Company Id</th>
                       <th>Branch Id</th> */}
                     <th>Description</th>
-                    {/* <th>Status</th> */}
+                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -515,9 +516,10 @@ export default function AdminAddPacketMaster() {
                         </button>
                       </td>
                       <td>{index + 1}</td>
-                      {/* <td>{x.CategoryId}</td> */}
+                       <td>{x.CategoryName}</td>
+                       <td>{x.ProductName}</td>
                       <td>{x.PacketName}</td>
-                      <td>{x.PacketName}</td>
+                      <td>{x.BoxName ? x.BoxName : "-"}</td>
                       <td>{x.StockKeepingUnit}</td>
                       <td>{x.CategoryName}</td>
                       <td>{x.ProductName}</td>
@@ -526,7 +528,7 @@ export default function AdminAddPacketMaster() {
                         <td>{x.CompanyId}</td>
                         <td>{x.BranchId}</td> */}
                       <td>{x.Description}</td>
-                      {/* <td>{x.Status}</td> */}
+                       <td>{x.Status}</td>
                     </tr>
                   ))}
                 </tbody>

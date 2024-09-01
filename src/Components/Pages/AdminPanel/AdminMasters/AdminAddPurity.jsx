@@ -431,6 +431,7 @@ export default function AdminAddPurity() {
                   <tr>
                     <th>Edit</th>
                     <th>Sr.No</th>
+                    <th>Category Name</th>
                     <th>Purity Name</th>
                     {/* <th>CategoryId</th> */}
                     <th>Short Name</th>
@@ -453,6 +454,7 @@ export default function AdminAddPurity() {
                         </button>
                       </td>
                       <td>{index + 1}</td>
+                      <td>{x.CategoryName}</td>
                       <td>{x.PurityName}</td>
                       {/* <td>{x.CategoryId}</td> */}
                       <td>{x.ShortName}</td>

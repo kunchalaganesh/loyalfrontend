@@ -30,6 +30,7 @@ import { allStateList } from "../../../Api/StateList";
 import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
 import { useLocation } from "react-router-dom";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+import {allCountriesList} from "../../../Api/CountriesAllList";
 
 export default function AdminAllCustomers() {
   const [active, setActive] = useState("List");
@@ -68,6 +69,8 @@ export default function AdminAllCustomers() {
     CurrAddState: "",
     PerAddTown: "",
     PerAddState: "",
+    CurrAddCountry: "",
+    PerAddCountry: "",
     GstNo: "",
     PanNo: "",
     AadharNo: "",
@@ -280,6 +283,8 @@ export default function AdminAllCustomers() {
         CurrAddState: "",
         PerAddTown: "",
         PerAddState: "",
+        CurrAddCountry: "",
+        PerAddCountry: "",
         GstNo: "",
         PanNo: "",
         AadharNo: "",
@@ -354,6 +359,8 @@ export default function AdminAllCustomers() {
       PerAddTown: newCs.PerAddTown,
       PerAddState: newCs.PerAddState,
       PerAddPincode: newCs.PerAddPincode,
+      CurrAddCountry: "",
+      PerAddCountry: "",
       AadharNo: newCs.AadharNo,
       Discount: newCs.Discount,
       CreditPeriod: newCs.CreditPeriod,
@@ -414,6 +421,8 @@ export default function AdminAllCustomers() {
             CurrAddState: "",
             PerAddTown: "",
             PerAddState: "",
+            CurrAddCountry: "",
+            PerAddCountry: "",
             GstNo: "",
             PanNo: "",
             AadharNo: "",
@@ -667,28 +676,30 @@ export default function AdminAllCustomers() {
               </table>
             </div>
             <div
-              className={
-                active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
-              }
+                className={
+                  active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
+                }
             >
-              <p>Add New Customer</p>
+              <p>Customer profile</p>
               <form onSubmit={addnewCs}>
                 <div
-                  style={{
-                    gridTemplateColumns: "repeat(4,1fr)",
-                    columnGap: "40px",
-                  }}
-                  className="adminCategoryAddCategoryInnerBox"
+                    style={{
+                      gridTemplateColumns: "repeat(4,1fr)",
+                      columnGap: "40px",
+                      margin: "0px 0px"
+                    }}
+                    className="adminCategoryAddCategoryInnerBox"
+
                 >
                   <label>Customer Code</label>
                   {/* {allCustomersData ? ( */}
                   <input
-                    name="supplier_code"
-                    value={
-                      newCs.oldEntry ? newCs.Id : allCustomersData.length + 1
-                    }
-                    readOnly
-                    type="text"
+                      name="supplier_code"
+                      value={
+                        newCs.oldEntry ? newCs.Id : allCustomersData.length + 1
+                      }
+                      readOnly
+                      type="text"
                   />
                   {/* ) : ( */}
                   {/* <input name="supplier_code" value={1} readOnly type="text" /> */}
@@ -709,20 +720,20 @@ export default function AdminAllCustomers() {
                     First Name <sup> *</sup>
                   </label>
                   <input
-                    // style={{ width: "20vw" }}
-                    type="text"
-                    name="FirstName"
-                    required="required"
-                    value={newCs.FirstName}
-                    onChange={handleNewCsChange}
-                    list="customerNamesList"
+                      // style={{ width: "20vw" }}
+                      type="text"
+                      name="FirstName"
+                      required="required"
+                      value={newCs.FirstName}
+                      onChange={handleNewCsChange}
+                      list="customerNamesList"
                   />
                   <datalist id="customerNamesList">
                     {allCustomersData.map((customer) => (
-                      <option
-                        key={customer.Id}
-                        value={`${customer.FirstName} ${customer.LastName}`}
-                      />
+                        <option
+                            key={customer.Id}
+                            value={`${customer.FirstName} ${customer.LastName}`}
+                        />
                     ))}
                   </datalist>
                   {/* <label>First Name</label>
@@ -735,19 +746,19 @@ export default function AdminAllCustomers() {
                   /> */}
                   <label>Last Name</label>
                   <input
-                    // style={{ width: "20vw" }}
-                    type="text"
-                    name="LastName"
-                    value={newCs.LastName}
-                    onChange={handleNewCsChange}
-                    list="customerNamesList"
+                      // style={{ width: "20vw" }}
+                      type="text"
+                      name="LastName"
+                      value={newCs.LastName}
+                      onChange={handleNewCsChange}
+                      list="customerNamesList"
                   />
                   <datalist id="customerNamesList">
                     {allCustomersData.map((customer) => (
-                      <option
-                        key={customer.Id}
-                        value={`${customer.FirstName} ${customer.LastName}`}
-                      />
+                        <option
+                            key={customer.Id}
+                            value={`${customer.FirstName} ${customer.LastName}`}
+                        />
                     ))}
                   </datalist>
                   {/* <label>Last Name</label>
@@ -760,27 +771,27 @@ export default function AdminAllCustomers() {
                   /> */}
                   <label>Email</label>
                   <input
-                    name="Email"
-                    value={newCs.Email}
-                    // required="required"
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="Email"
+                      value={newCs.Email}
+                      // required="required"
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>
                     Mobile <sup> *</sup>
                   </label>
                   <input
-                    // style={{ width: "20vw" }}
-                    type="text"
-                    required="required"
-                    name="Mobile"
-                    value={newCs.Mobile}
-                    onChange={handleNewCsChange}
-                    list="customerMobilesList"
+                      // style={{ width: "20vw" }}
+                      type="text"
+                      required="required"
+                      name="Mobile"
+                      value={newCs.Mobile}
+                      onChange={handleNewCsChange}
+                      list="customerMobilesList"
                   />
                   <datalist id="customerMobilesList">
                     {allCustomersData.map((customer) => (
-                      <option key={customer.Id} value={`${customer.Mobile}`} />
+                        <option key={customer.Id} value={`${customer.Mobile}`}/>
                     ))}
                   </datalist>
                   {/* <label>Mobile</label>
@@ -792,178 +803,107 @@ export default function AdminAllCustomers() {
                   /> */}
                   <label>Aadhar Number</label>
                   <input
-                    name="AadharNo"
-                    value={newCs.AadharNo}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="AadharNo"
+                      value={newCs.AadharNo}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>Pan Number</label>
                   <input
-                    name="PanNo"
-                    value={newCs.PanNo}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="PanNo"
+                      value={newCs.PanNo}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>GST Number</label>
                   <input
-                    name="GstNo"
-                    value={newCs.GstNo}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="GstNo"
+                      value={newCs.GstNo}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
+                </div>
+                <p>Additional details</p>
+                <div
+                    style={{
+                      gridTemplateColumns: "repeat(4,1fr)",
+                      columnGap: "40px",
+                      margin: "15px 0px"
+                    }}
+                    className="adminCategoryAddCategoryInnerBox"
+
+                >
                   <label>
                     Customer Slab <sup> *</sup>
                   </label>
                   <select
-                    // required="required"
-                    type="text"
-                    name="CustomerSlabId"
-                    required="required"
-                    value={newCs.CustomerSlabId}
-                    onChange={handleNewCsChange}
+                      // required="required"
+                      type="text"
+                      name="CustomerSlabId"
+                      value={newCs.CustomerSlabId}
+                      onChange={handleNewCsChange}
                   >
                     <option value="">Select Customer Slab</option>
                     {customerSlabList.map((slab, index) => (
-                      <option key={index} value={slab.Id}>
-                        {slab.CustomerSlabName}
-                      </option>
+                        <option key={index} value={slab.Id}>
+                          {slab.CustomerSlabName}
+                        </option>
                     ))}
                   </select>
                   <label>
                     Customer Rate Of Interest <sup> *</sup>
                   </label>
                   <select
-                    // required="required"
-                    type="text"
-                    name="RateOfInterestId"
-                    required="required"
-                    value={newCs.RateOfInterestId}
-                    onChange={handleNewCsChange}
+                      // required="required"
+                      type="text"
+                      name="RateOfInterestId"
+                      value={newCs.RateOfInterestId}
+                      onChange={handleNewCsChange}
                   >
                     <option value="">Select Customer Rate Of Interest</option>
                     {customerRateOfInterestList.map((slab, index) => (
-                      <option key={index} value={slab.Id}>
-                        {slab.RateOfInterest}
-                      </option>
+                        <option key={index} value={slab.Id}>
+                          {slab.RateOfInterest}
+                        </option>
                     ))}
                   </select>
                   <label>
                     Customer Credit Period <sup> *</sup>
                   </label>
                   <select
-                    // required="required"
-                    type="text"
-                    name="CreditPeriodId"
-                    required="required"
-                    value={newCs.CreditPeriodId}
-                    onChange={handleNewCsChange}
+                      // required="required"
+                      type="text"
+                      name="CreditPeriodId"
+                      value={newCs.CreditPeriodId}
+                      onChange={handleNewCsChange}
                   >
                     <option value="">Select Customer Credit Period</option>
                     {customerCreditPeriodList.map((credit, index) => (
-                      <option key={index} value={credit.Id}>
-                        {credit.CreditPeriod}
-                      </option>
+                        <option key={index} value={credit.Id}>
+                          {credit.CreditPeriod}
+                        </option>
                     ))}
                   </select>
-
-                  <label>Billing Address (Street)</label>
-                  <input
-                    name="CurrAddStreet"
-                    value={newCs.CurrAddStreet}
-                    onChange={handleNewCsChange}
-                    type="text"
-                  />
-                  <label>Billing Address (Town)</label>
-                  <input
-                    name="CurrAddTown"
-                    value={newCs.CurrAddTown}
-                    onChange={handleNewCsChange}
-                    type="text"
-                  />
-                  <label>
-                    Billing Address (State) <sup> *</sup>
-                  </label>
-                  <select
-                    // required="required"
-                    type="text"
-                    name="CurrAddState"
-                    required="required"
-                    value={newCs.CurrAddState}
-                    onChange={handleNewCsChange}
-                  >
-                    <option value="">Select a state</option>
-                    {allStateList.map((state) => (
-                      <option key={state} value={state}>
-                        {state}
-                      </option>
-                    ))}
-                  </select>
-                  <label>Billing Address (Pincode)</label>
-                  <input
-                    name="CurrAddPincode"
-                    value={newCs.CurrAddPincode}
-                    onChange={handleNewCsChange}
-                    type="text"
-                  />
-                  <label>PerAdd (Street)</label>
-                  <input
-                    name="PerAddStreet"
-                    value={newCs.PerAddStreet}
-                    onChange={handleNewCsChange}
-                    type="text"
-                  />
-                  <label>PerAdd (Town)</label>
-                  <input
-                    name="PerAddTown"
-                    value={newCs.PerAddTown}
-                    onChange={handleNewCsChange}
-                    type="text"
-                  />
-                  <label>
-                    PerAdd (State) <sup> *</sup>
-                  </label>
-                  <select
-                    // required="required"
-                    type="text"
-                    required="required"
-                    name="PerAddState"
-                    value={newCs.PerAddState}
-                    onChange={handleNewCsChange}
-                  >
-                    <option value="">Select a state</option>
-                    {allStateList.map((state) => (
-                      <option key={state} value={state}>
-                        {state}
-                      </option>
-                    ))}
-                  </select>
-                  <label>PerAdd (Pincode)</label>
-                  <input
-                    name="PerAddPincode"
-                    value={newCs.PerAddPincode}
-                    onChange={handleNewCsChange}
-                    type="text"
-                  />
                   <label>Balance Amount</label>
                   <input
-                    name="BalanceAmount"
-                    value={newCs.BalanceAmount}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="BalanceAmount"
+                      value={newCs.BalanceAmount}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>Advance Amount</label>
                   <input
-                    name="AdvanceAmount"
-                    value={newCs.AdvanceAmount}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="AdvanceAmount"
+                      value={newCs.AdvanceAmount}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>Discount (Percentage)</label>
                   <input
-                    name="Discount"
-                    value={newCs.Discount}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="Discount"
+                      value={newCs.Discount}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   {/* <label>Credit Period (Days)</label>
                   <input
@@ -974,28 +914,161 @@ export default function AdminAllCustomers() {
                   /> */}
                   <label>Fine Gold</label>
                   <input
-                    name="FineGold"
-                    value={newCs.FineGold}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="FineGold"
+                      value={newCs.FineGold}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>Fine Silver</label>
                   <input
-                    name="FineSilver"
-                    value={newCs.FineSilver}
-                    onChange={handleNewCsChange}
-                    type="text"
+                      name="FineSilver"
+                      value={newCs.FineSilver}
+                      onChange={handleNewCsChange}
+                      type="text"
                   />
                   <label>Add To Vendor</label>
                   <select
-                    name="AddToVendor"
-                    value={newCs.AddToVendor}
-                    onChange={handleNewCsChange}
-                    type="text"
-                    required="required"
+                      name="AddToVendor"
+                      value={newCs.AddToVendor}
+                      onChange={handleNewCsChange}
+                      type="text"
+                      required="required"
                   >
                     <option value={false}>NO</option>
                     <option value={true}>YES</option>
+                  </select>
+                </div>
+                <p>Billing Address details</p>
+                <div
+                    style={{
+                      gridTemplateColumns: "repeat(4,1fr)",
+                      columnGap: "40px",
+                      margin: "15px 0px",
+                      minHeight: "0px"
+                    }}
+                    className="adminCategoryAddCategoryInnerBox"
+
+                >
+                  <label>Billing Address (Street)</label>
+                  <input
+                      name="CurrAddStreet"
+                      value={newCs.CurrAddStreet}
+                      onChange={handleNewCsChange}
+                      type="text"
+                  />
+                  <label>Billing Address (Town)</label>
+                  <input
+                      name="CurrAddTown"
+                      value={newCs.CurrAddTown}
+                      onChange={handleNewCsChange}
+                      type="text"
+                  />
+                  <label>
+                    Billing Address (State) <sup> *</sup>
+                  </label>
+                  <select
+                      // required="required"
+                      type="text"
+                      name="CurrAddState"
+                      required="required"
+                      value={newCs.CurrAddState}
+                      onChange={handleNewCsChange}
+                  >
+                    <option value="">Select a state</option>
+                    {allStateList.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                    ))}
+                  </select>
+                  <label>Billing Address (Pincode)</label>
+                  <input
+                      name="CurrAddPincode"
+                      value={newCs.CurrAddPincode}
+                      onChange={handleNewCsChange}
+                      type="text"
+                  />
+                  <label>
+                    Billing Address (Country) <sup>*</sup>
+                  </label>
+                  <select
+                      name="CurrAddCountry"
+                      value={newCs.CurrAddCountry}
+                      onChange={handleNewCsChange}
+                      required="required"
+                  >
+                    {allCountriesList.map((x, y) => (
+                        <option key={y} value={x}>
+                          {x}
+                        </option>
+                    ))}
+                  </select>
+                </div>
+                <p>permanent Address details</p>
+                <div
+                    style={{
+                      gridTemplateColumns: "repeat(4,1fr)",
+                      columnGap: "40px",
+                      margin: "15px 0px",
+                      minHeight: "0px",
+                      marginTop: "0px"
+
+                    }}
+                    className="adminCategoryAddCategoryInnerBox"
+
+                >
+                  <label>PerAdd (Street)</label>
+                  <input
+                      name="PerAddStreet"
+                      value={newCs.PerAddStreet}
+                      onChange={handleNewCsChange}
+                      type="text"
+                  />
+                  <label>PerAdd (Town)</label>
+                  <input
+                      name="PerAddTown"
+                      value={newCs.PerAddTown}
+                      onChange={handleNewCsChange}
+                      type="text"
+                  />
+                  <label>
+                    PerAdd (State) <sup> *</sup>
+                  </label>
+                  <select
+                      // required="required"
+                      type="text"
+                      name="PerAddState"
+                      value={newCs.PerAddState}
+                      onChange={handleNewCsChange}
+                  >
+                    <option value="">Select a state</option>
+                    {allStateList.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                    ))}
+                  </select>
+                  <label>PerAdd (Pincode)</label>
+                  <input
+                      name="PerAddPincode"
+                      value={newCs.PerAddPincode}
+                      onChange={handleNewCsChange}
+                      type="text"
+                  />
+                  <label>
+                    PerAdd (Country) <sup>*</sup>
+                  </label>
+                  <select
+                      name="PerAddCountry"
+                      value={newCs.PerAddCountry}
+                      onChange={handleNewCsChange}
+                      required="required"
+                  >
+                    {allCountriesList.map((x, y) => (
+                        <option key={y} value={x}>
+                          {x}
+                        </option>
+                    ))}
                   </select>
                 </div>
                 {!loading ? <button type="submit">Submit</button> : null}

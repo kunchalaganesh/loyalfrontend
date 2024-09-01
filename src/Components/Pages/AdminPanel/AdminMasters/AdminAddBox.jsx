@@ -457,7 +457,8 @@ export default function AdminAddBox() {
                                 <tr>
                                     <th>Edit</th>
                                     <th>Sr.No</th>
-                                    {/* <th>Category Name</th> */}
+                                     <th>Category Name</th>
+                                     <th>Product Name</th>
                                     <th>Box Name</th>
                                     <th>Packets</th>
                                     <th>Empty Weight</th>
@@ -465,6 +466,7 @@ export default function AdminAddBox() {
                     <th>Company Id</th>
                     <th>Branch Id</th> */}
                                     <th>Description</th>
+                                    <th>Status</th>
                                     {/* <th>Status</th> */}
                                 </tr>
                                 </thead>
@@ -481,7 +483,8 @@ export default function AdminAddBox() {
                                             </button>
                                         </td>
                                         <td>{index + 1}</td>
-                                        {/* <td>{x.CategoryId}</td> */}
+                                         <td>{x.CategoryName}</td>
+                                         <td>{x.ProductName}</td>
                                         <td>{x.BoxName}</td>
                                         <td>
                                             {x.PacketIds && x.PacketIds.split(',').length > 0 ? (
@@ -497,7 +500,7 @@ export default function AdminAddBox() {
                       <td>{x.CompanyId}</td>
                       <td>{x.BranchId}</td> */}
                                         <td>{x.Description}</td>
-                                        {/* <td>{x.Status}</td> */}
+                                         <td>{x.Status}</td>
                                     </tr>
                                 ))}
                                 </tbody>

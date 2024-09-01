@@ -126,14 +126,13 @@ export default function AdminAddEmployee() {
           body: JSON.stringify(formData),
         });
         const data = await response.json();
-        if (data.message) {
-          // alert(data.message);
+        if (data.Message) {
           setMessageType("error");
-          setMessageToShow(data.message);
+          setMessageToShow(data.Message);
           setShowError(true);
-          setActive("AddNew");
-          console.log(data.message);
+          // alert(data.message);
         } else {
+          setActive("AddNew");
           setMessageType("success");
           setMessageToShow("Employee Added Successfully");
           setShowError(true);

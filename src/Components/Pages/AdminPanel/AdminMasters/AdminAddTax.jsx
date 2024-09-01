@@ -28,6 +28,8 @@ import { useSelector } from "react-redux";
 import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import { financialYearsList } from "../../../Api/FinancialYearsList";
+import {allCountriesList} from "../../../Api/CountriesAllList";
+import {allStateList} from "../../../Api/StateList";
 
 export default function AdminAddTax() {
   const [active, setActive] = useState("List");
@@ -52,8 +54,8 @@ export default function AdminAddTax() {
   const [allBranchesList, setAllBranchesList] = useState([]);
   const [allDepartmentsList, setAllDepartmentsList] = useState([]);
   const [allRolesList, setAllRolesList] = useState([]);
-  const [allCountriesList, setAllCountriesList] = useState([]);
-  const [allStatesList, setAllStatesList] = useState([]);
+  // const [allCountriesList, setAllCountriesList] = useState([]);
+  // const [allStatesList, setAllStatesList] = useState([]);
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
   //   let Entryby_Staff_id = parseInt(adminLoggedIn);
@@ -363,7 +365,7 @@ export default function AdminAddTax() {
                     <th>TaxName</th>
                     <th>Percent</th>
                     <th>TaxType</th>
-                    <th>FinancialYear</th>
+                    <th>Financial Year</th>
                     <th>Description</th>
                   </tr>
                 </thead>
@@ -417,23 +419,39 @@ export default function AdminAddTax() {
                   >
                     <option value={""}>Select Country</option>
                     {allCountriesList.map((x) => (
-                      <option value={x.Id}>{x.CountryName}</option>
+                      <option value={x}>{x}</option>
                     ))}
                   </select>
                   <label>
                     State <sup>*</sup>
                   </label>
-                  <select
-                    name="StateId"
-                    required
-                    value={newCategory.StateId}
-                    onChange={handleNewCategoryChange}
-                  >
-                    <option value={""}>Select State</option>
-                    {allStatesList.map((x) => (
-                      <option value={x.Id}>{x.StateName}</option>
+                  {/*<select*/}
+                  {/*  name="StateId"*/}
+                  {/*  required*/}
+                  {/*  value={newCategory.StateId}*/}
+                  {/*  onChange={handleNewCategoryChange}*/}
+                  {/*>*/}
+                  {/*  <option value={""}>Select State</option>*/}
+                  {/*  {allStatesList.map((x) => (*/}
+                  {/*    <option value={x.Id}>{x.StateName}</option>*/}
+                  {/*  ))}*/}
+                  {/*</select>*/}
+                  <input
+                      // style={{ width: "30vw" }}
+                      type="text"
+                      name="StateId"
+                      value={newCategory.StateId}
+                      onInput={handleNewCategoryChange}
+                      list="supplierNamesList"
+                  />
+                  <datalist id="supplierNamesList">
+                    {allStateList.map((item, index) => (
+                        <option
+                            key={index}
+                            value={item}
+                        />
                     ))}
-                  </select>
+                  </datalist>
                   <label>
                     Tax Name <sup>*</sup>
                   </label>
@@ -459,6 +477,10 @@ export default function AdminAddTax() {
                     <option value={"VAT"}>VAT</option>
                     <option value={"EXCISE"}>EXCISE</option>
                     <option value={"INCOME TAX"}>INCOME TAX</option>
+                    <option value={"TCS"}>TCS</option>
+                    <option value={"TDS"}>TDS</option>
+                    <option value={"GST ON REPAIR"}>GST ON REPAIR</option>
+                    <option value={"GST ON ORDER"}>GST ON ORDER</option>
                   </select>
                   <label>
                     Percentage % <sup>*</sup>

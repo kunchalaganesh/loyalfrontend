@@ -70,12 +70,12 @@ export default function AdminAddDiamondSizeWeightRate() {
 
     const [allCategories, setAllCategories] = useState([]);
     const [newCategory, setNewCategory] = useState({
-        DiamondSize: "0",
-        Sieve: "0",
-        DiamondWeight: "0",
-        DiamondPurchaseRate: "0",
-        DiamondSellRate: "0",
-        DiamondMargin: "0",
+        DiamondSize: "",
+        Sleve: "",
+        DiamondWeight: "",
+        DiamondPurchaseRate: "",
+        DiamondSellRate: "",
+        DiamondMargin: "",
         CompanyId: 0,
         BranchId: 0,
         DiamondShape: "",
@@ -167,18 +167,22 @@ export default function AdminAddDiamondSizeWeightRate() {
         });
         const data = await response.json();
         try {
-            if (data.length > 0) {
+            if (data) {
                 setAllCategories(data);
-            } else {
-                setActive("addNew");
-                document
-                    .getElementById("addCategoryListTitle")
-                    .classList.add("activeCategoryTitle");
-                document
-                    .getElementById("addCategoryListLogo")
-                    .classList.add("activeCategoryLogo");
-                document.getElementById("addCategoryListTitle").click();
             }
+            else{
+                setActive("addNew");
+            }
+            // else {
+            //     setActive("addNew");
+            //     document
+            //         .getElementById("addCategoryListTitle")
+            //         .classList.add("activeCategoryTitle");
+            //     document
+            //         .getElementById("addCategoryListLogo")
+            //         .classList.add("activeCategoryLogo");
+            //     document.getElementById("addCategoryListTitle").click();
+            // }
         } catch (error) {
             console.log(error);
         }
@@ -470,7 +474,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                 DiamondColor: getDiamondColor(null, item.DiamondColor),
                 DiamondCut: getDiamondCut(null, item.DiamondCut),
                 SettingType: getSettingType(null, item.SettingType),
-                Sleve: item.Sieve,
+                Sleve: item.Sleve,
                 DiamondWeight: item.DiamondWeight,
                 DiamondPurchaseRate: item.DiamondPurchaseRate,
                 DiamondSellRate: item.DiamondSellRate,
@@ -549,12 +553,12 @@ export default function AdminAddDiamondSizeWeightRate() {
             fetchAllCategory();
             setActive("List");
             setNewCategory({
-                DiamondSize: "0",
-                Sieve: "0",
-                DiamondWeight: "0",
-                DiamondPurchaseRate: "0",
-                DiamondSellRate: "0",
-                DiamondMargin: "0",
+                DiamondSize: "",
+                Sleve: "",
+                DiamondWeight: "",
+                DiamondPurchaseRate: "",
+                DiamondSellRate: "",
+                DiamondMargin: "",
                 DiamondShape: "",
                 DiamondClarity: "",
                 DiamondColor: "",
@@ -567,10 +571,10 @@ export default function AdminAddDiamondSizeWeightRate() {
                 TemplateName: "",
                 OldEntry: false,
             });
-            if (resData.Message) {
+            if (resData.message) {
                 // alert(data.message);
                 setMessageType("error");
-                setMessageToShow(resData.Message);
+                setMessageToShow(resData.message);
                 setShowError(true);
                 setActive("AddNew");
             } else {
@@ -722,53 +726,56 @@ export default function AdminAddDiamondSizeWeightRate() {
         }
     };
 
-    function handleAdd() {
-        const stepFormData = {
-            ClientCode: clientCode,
-            DiamondSize: newCategory.DiamondSize,
-            DiamondShape: getShapeValue(newCategory.DiamondShape),
-            DiamondClarity: getDiamondClarity(newCategory.DiamondClarity),
-            DiamondColor: getDiamondColor(newCategory.DiamondColor),
-            DiamondCut: getDiamondCut(newCategory.DiamondCut),
-            SettingType: getSettingType(newCategory.SettingType),
-            TemplateName: newCategory.TemplateName,
-            Sieve: newCategory.Sieve,
-            DiamondWeight: newCategory.DiamondWeight,
-            DiamondPurchaseRate: newCategory.DiamondPurchaseRate,
-            DiamondSellRate: newCategory.DiamondSellRate,
-            DiamondMargin: newCategory.DiamondMargin,
-            CompanyId: companyId ? companyId : 0,
-            BranchId: branchId ? branchId : 0,
-            CounterId: counterId ? counterId : 0,
-            EmployeeId: employeeId ? employeeId : 0,
+    function handleAdd(e) {
+        e.preventDefault()
+        if (newCategory.DiamondSize !== "0" && newCategory.DiamondWeight !== "0" && newCategory.DiamondShape) {
+            const stepFormData = {
+                ClientCode: clientCode,
+                DiamondSize: newCategory.DiamondSize,
+                DiamondShape: getShapeValue(newCategory.DiamondShape),
+                DiamondClarity: getDiamondClarity(newCategory.DiamondClarity),
+                DiamondColor: getDiamondColor(newCategory.DiamondColor),
+                DiamondCut: getDiamondCut(newCategory.DiamondCut),
+                SettingType: getSettingType(newCategory.SettingType),
+                TemplateName: newCategory.TemplateName,
+                Sleve: newCategory.Sleve,
+                DiamondWeight: newCategory.DiamondWeight,
+                DiamondPurchaseRate: newCategory.DiamondPurchaseRate,
+                DiamondSellRate: newCategory.DiamondSellRate,
+                DiamondMargin: newCategory.DiamondMargin,
+                CompanyId: companyId ? companyId : 0,
+                BranchId: branchId ? branchId : 0,
+                CounterId: counterId ? counterId : 0,
+                EmployeeId: employeeId ? employeeId : 0,
 
-            OldEntry: false,
+                OldEntry: false,
 
-            ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
-        };
-        setAllTableData((list) => [
-            ...list,
-            {...stepFormData, TemplateName: newCategory.TemplateName},
-        ]);
-        setNewCategory({
-            DiamondSize: "0",
-            Sieve: "0",
-            DiamondWeight: "0",
-            DiamondPurchaseRate: "0",
-            DiamondSellRate: "0",
-            DiamondMargin: "0",
-            DiamondShape: "",
-            DiamondClarity: "",
-            DiamondColor: "",
-            DiamondCut: "",
-            SettingType: "",
-            CompanyId: 0,
-            BranchId: 0,
-            CounterId: 0,
-            EmployeeId: 0,
-            TemplateName: newCategory.TemplateName,
-            OldEntry: false,
-        });
+                ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
+            };
+            setAllTableData((list) => [
+                ...list,
+                {...stepFormData, TemplateName: newCategory.TemplateName},
+            ]);
+            setNewCategory({
+                DiamondSize: "0",
+                Sleve: "0",
+                DiamondWeight: "0",
+                DiamondPurchaseRate: "0",
+                DiamondSellRate: "0",
+                DiamondMargin: "0",
+                DiamondShape: "",
+                DiamondClarity: "",
+                DiamondColor: "",
+                DiamondCut: "",
+                SettingType: "",
+                CompanyId: 0,
+                BranchId: 0,
+                CounterId: 0,
+                EmployeeId: 0,
+                TemplateName: newCategory.TemplateName,
+                OldEntry: false,
+            });
+        }
     }
 
     function handleDeleteData(index) {
@@ -798,6 +805,15 @@ export default function AdminAddDiamondSizeWeightRate() {
             // const updatedCategories = allCategories.filter((_, i) => i !== index);
             // setAllCategories(updatedCategories);
             fetchAllCategory();
+            if (result.message) {
+                setMessageType("error");
+                setMessageToShow(result.message);
+                setShowError(true);
+            } else {
+                setMessageType("success");
+                setMessageToShow("Diamond Size/Weight/Rate Deleted Successfully");
+                setShowError(true);
+            }
         } catch (err) {
             console.log(err.message);
         } finally {
@@ -814,7 +830,7 @@ export default function AdminAddDiamondSizeWeightRate() {
         Setting: "SettingType",
         Shape: "DiamondShape",
         Size: "DiamondSize",
-        Sleve: "Sieve",
+        Sleve: "Sleve",
         Weight: "DiamondWeight",
     };
     const handleFileUpload = async (e) => {
@@ -899,7 +915,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                         }
                     }
                     if (
-                        newKey === "Sieve" ||
+                        newKey === "Sleve" ||
                         newKey === "DiamondSellRate" ||
                         newKey === "DiamondPurchaseRate" ||
                         newKey === "DiamondWeight" ||
@@ -949,7 +965,7 @@ export default function AdminAddDiamondSizeWeightRate() {
             {
                 Shape: "Round",
                 Clarity: "VVS1",
-                Color: "Red",
+                Color: "E",
                 Cut: "",
                 Setting: "",
                 Size: "",
@@ -1012,7 +1028,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     setAllTableData([]);
                                     setNewCategory({
                                         DiamondSize: "0",
-                                        Sieve: "0",
+                                        Sleve: "0",
                                         DiamondWeight: "0",
                                         DiamondPurchaseRate: "0",
                                         DiamondSellRate: "0",
@@ -1155,178 +1171,178 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     />
                                 </div>
                             </div>
-                            <div
-                                style={{
-                                    display: "grid",
-                                    // gridTemplateColumns: "repeat(5, 1fr)",
-                                    columnGap: "40px",
-                                    minHeight: "50px",
-                                    gridTemplateColumns: window.innerWidth >= 968 ? "repeat(5, 1fr)" : "repeat(2, 1fr)",
-                                }}
-                                className="adminCategoryAddCategoryInnerBox"
-                            >
-                                <select
-                                    name="DiamondShape"
-                                    value={newCategory.DiamondShape}
-                                    onChange={handleNewCategoryChange}
+                            <form onSubmit={handleAdd}>
+                                <div
+                                    style={{
+                                        display: "grid",
+                                        // gridTemplateColumns: "repeat(5, 1fr)",
+                                        columnGap: "40px",
+                                        minHeight: "50px",
+                                        gridTemplateColumns: window.innerWidth >= 968 ? "repeat(5, 1fr)" : "repeat(2, 1fr)",
+                                    }}
+                                    className="adminCategoryAddCategoryInnerBox"
                                 >
-                                    <option value={""}>Select Diamond Shape</option>
-                                    {diamondShapes.map((shape) => (
-                                        <option key={shape.Id} value={shape.Id}>
-                                            {shape.DiamondValue}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select
-                                    name="DiamondClarity"
-                                    value={newCategory.DiamondClarity}
-                                    onChange={handleNewCategoryChange}
-                                >
-                                    <option value={""}>Select Diamond Clarity</option>
-                                    {diamondClarities.map((clarity) => (
-                                        <option key={clarity.Id} value={clarity.Id}>
-                                            {clarity.DiamondValue}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select
-                                    name="DiamondColor"
-                                    value={newCategory.DiamondColor}
-                                    onChange={handleNewCategoryChange}
-                                >
-                                    <option value={""}>Select Diamond Color</option>
-                                    {diamondColors.map((colour) => (
-                                        <option key={colour.Id} value={colour.Id}>
-                                            {colour.DiamondValue}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select
-                                    name="DiamondCut"
-                                    value={newCategory.DiamondCut}
-                                    onChange={handleNewCategoryChange}
-                                >
-                                    <option value={""}>Select Diamond Cut</option>
-
-                                    {diamondCuts.map((cut) => (
-                                        <option key={cut.Id} value={cut.Id}>
-                                            {cut.DiamondValue}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select
-                                    name="SettingType"
-                                    value={newCategory.SettingType}
-                                    onChange={handleNewCategoryChange}
-                                >
-                                    <option value={""}>Select Setting Type</option>
-                                    {settingTypes.map((setting) => (
-                                        <option key={setting.Id} value={setting.Id}>
-                                            {setting.DiamondValue}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div
-                                style={{
-                                    gridTemplateColumns: "repeat(4,1fr)",
-                                    columnGap: "40px",
-                                }}
-                                className="adminCategoryAddCategoryInnerBox"
-                            >
-                                <label>
-                                    Diamond Size <sup>*</sup>
-                                </label>
-                                <input
-                                    name="DiamondSize"
-                                    value={newCategory.DiamondSize}
-                                    onChange={handleNewCategoryChange}
-                                    type="text"
-                                    required="required"
-                                />
-
-                                <label>Sieve</label>
-                                <input
-                                    name="Sieve"
-                                    value={newCategory.Sieve}
-                                    onChange={handleNewCategoryChange}
-                                    type="text"
-                                    required="required"
-                                />
-                                <label>
-                                    Diamond Weight <sup>*</sup>
-                                </label>
-                                <input
-                                    name="DiamondWeight"
-                                    value={newCategory.DiamondWeight}
-                                    onChange={handleNewCategoryChange}
-                                    type="text"
-                                    required="required"
-                                />
-                                <label>
-                                    Diamond Purchase Rate <sup>*</sup>
-                                </label>
-                                <input
-                                    name="DiamondPurchaseRate"
-                                    value={newCategory.DiamondPurchaseRate}
-                                    onChange={handleNewCategoryChange}
-                                    type="text"
-                                    required="required"
-                                />
-                                <label>
-                                    Diamond Margin <sup>*</sup>
-                                </label>
-                                <input
-                                    name="DiamondMargin"
-                                    value={newCategory.DiamondMargin}
-                                    onChange={handleNewCategoryChange}
-                                    type="text"
-                                    required="required"
-                                />
-                                <label>
-                                    Diamond Sell Rate <sup>*</sup>
-                                </label>
-                                <input
-                                    name="DiamondSellRate"
-                                    value={newCategory.DiamondSellRate}
-                                    onChange={handleNewCategoryChange}
-                                    type="text"
-                                    required="required"
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <div>
-                                    <button onClick={() => handleAdd()}>Add</button>
-                                    <button
-                                        onClick={() => addNewCategory()}
-                                        style={{marginLeft: "10px"}}
+                                    <select
+                                        name="DiamondShape"
+                                        value={newCategory.DiamondShape}
+                                        onChange={handleNewCategoryChange}
+                                        required={true}
                                     >
-                                        Submit
-                                    </button>
+                                        <option value={""}>Select Diamond Shape</option>
+                                        {diamondShapes.map((shape) => (
+                                            <option key={shape.Id} value={shape.Id}>
+                                                {shape.DiamondValue}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        name="DiamondClarity"
+                                        value={newCategory.DiamondClarity}
+                                        onChange={handleNewCategoryChange}
+                                    >
+                                        <option value={""}>Select Diamond Clarity</option>
+                                        {diamondClarities.map((clarity) => (
+                                            <option key={clarity.Id} value={clarity.Id}>
+                                                {clarity.DiamondValue}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        name="DiamondColor"
+                                        value={newCategory.DiamondColor}
+                                        onChange={handleNewCategoryChange}
+                                    >
+                                        <option value={""}>Select Diamond Color</option>
+                                        {diamondColors.map((colour) => (
+                                            <option key={colour.Id} value={colour.Id}>
+                                                {colour.DiamondValue}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        name="DiamondCut"
+                                        value={newCategory.DiamondCut}
+                                        onChange={handleNewCategoryChange}
+                                    >
+                                        <option value={""}>Select Diamond Cut</option>
+
+                                        {diamondCuts.map((cut) => (
+                                            <option key={cut.Id} value={cut.Id}>
+                                                {cut.DiamondValue}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        name="SettingType"
+                                        value={newCategory.SettingType}
+                                        onChange={handleNewCategoryChange}
+                                    >
+                                        <option value={""}>Select Setting Type</option>
+                                        {settingTypes.map((setting) => (
+                                            <option key={setting.Id} value={setting.Id}>
+                                                {setting.DiamondValue}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <div>
+                                <div
+                                    style={{
+                                        gridTemplateColumns: "repeat(4,1fr)",
+                                        columnGap: "40px",
+                                    }}
+                                    className="adminCategoryAddCategoryInnerBox"
+                                >
+                                    <label>
+                                        Diamond Size <sup>*</sup>
+                                    </label>
                                     <input
-                                        type="file"
-                                        accept=".xlsx, .xls, .csv"
-                                        ref={fileInputRef}
-                                        onChange={handleFileUpload}
-                                        style={{display: "none"}}
+                                        name="DiamondSize"
+                                        value={newCategory.DiamondSize}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                        required={true}
                                     />
-                                    <button onClick={handleImportClick}>Import</button>
-                                    <button
-                                        onClick={handleDownload}
-                                        style={{marginLeft: "10px"}}
-                                    >
-                                        Download Sample
-                                    </button>
+
+                                    <label>Sieve</label>
+                                    <input
+                                        name="Sleve"
+                                        value={newCategory.Sleve}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                    />
+                                    <label>
+                                        Diamond Weight <sup>*</sup>
+                                    </label>
+                                    <input
+                                        name="DiamondWeight"
+                                        value={newCategory.DiamondWeight}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                        required={true}
+                                    />
+                                    <label>
+                                        Diamond Purchase Rate
+                                    </label>
+                                    <input
+                                        name="DiamondPurchaseRate"
+                                        value={newCategory.DiamondPurchaseRate}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                    />
+                                    <label>
+                                        Diamond Margin
+                                    </label>
+                                    <input
+                                        name="DiamondMargin"
+                                        value={newCategory.DiamondMargin}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                    />
+                                    <label>
+                                        Diamond Sell Rate
+                                    </label>
+                                    <input
+                                        name="DiamondSellRate"
+                                        value={newCategory.DiamondSellRate}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                    />
                                 </div>
-                            </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <div>
+                                        <button type={"submit"}>Add</button>
+                                        <button
+                                            onClick={addNewCategory}
+                                            style={{marginLeft: "10px"}}
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
+
+                                    <div>
+                                        <input
+                                            type="file"
+                                            accept=".xlsx, .xls, .csv"
+                                            ref={fileInputRef}
+                                            onChange={handleFileUpload}
+                                            style={{display: "none"}}
+                                        />
+                                        <button onClick={handleImportClick}>Import</button>
+                                        <button
+                                            onClick={handleDownload}
+                                            style={{marginLeft: "10px"}}
+                                        >
+                                            Download Sample
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                             <div className={"adminCategoryListMainBox"}>
                                 <table
                                     className={
@@ -1338,6 +1354,8 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         <th>Sr.No</th>
                                         <th>Template Name</th>
                                         <th>Dia. Shape</th>
+                                        <th>Dia. Clarity</th>
+                                        <th>Dia. Color</th>
                                         <th>Dia. Size</th>
                                         <th>Sieve</th>
                                         <th>Dia. Weight</th>
@@ -1357,13 +1375,16 @@ export default function AdminAddDiamondSizeWeightRate() {
                                                     : item.TemplateName}
                                             </td>
                                             <td>{item.DiamondShape}</td>
+                                            <td>{item.DiamondClarity}</td>
+                                            <td>{item.DiamondColor}</td>
                                             <td>{item.DiamondSize}</td>
-                                            <td>{item.Sieve}</td>
+                                            <td>{item.Sleve}</td>
                                             <td>{item.DiamondWeight}</td>
                                             <td>{item.DiamondPurchaseRate}</td>
                                             {/*<td>{item.DiamondMargin}</td>*/}
                                             <td>{item.DiamondSellRate}</td>
-                                            <td >
+                                            <td>
+                                                <div style={{display: "flex",justifyContent: "start",alignItems: "center",width: "180px"}}>
                                                 <button
                                                     className={"adminAddCategoryEditButton"}
                                                     style={{
@@ -1396,6 +1417,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                                 >
                                                     Delete
                                                 </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
