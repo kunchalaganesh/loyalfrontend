@@ -35,6 +35,7 @@ import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
 import GetApiService from "../../../Api/getapiService";
 import { createOrder } from '../../../Api/postapiservice';
 import { addPayment, deletePayment } from "../../../support/purchasesupport/usePayment";
+import ErrorModal from '../../../Other Functions/popup';
 
 
 
@@ -117,6 +118,7 @@ export default function AdminPurchaseEntry() {
   const [savingInvoice, setSavingInvoice] = useState(false);
   const [iscal, setIscal] = useState(false);
   const [issubmit, setIssubmit] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
 
   const getTodaysDateInHTMLFormat = () => {
     const today = new Date();
@@ -136,6 +138,7 @@ export default function AdminPurchaseEntry() {
   const [allDiamondAttributes, setAllDiamondAttributes] = useState([]);
   const [purchaseEntryOrder, setPurchaseEntryOrder] = useState({});
   const [diamondtampletid, setDiamondtampletid] = useState(0);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const [metalPaymentOption, setMetalPaymentOption] = useState({
     optionSelected: "GOLD",
@@ -298,9 +301,9 @@ export default function AdminPurchaseEntry() {
         apiService.fetchAllDiamondAttributes(),
         apiService.fetchAllRDPurchaseList(),
       ];
-
+  
       const results = await Promise.allSettled(apiCalls);
-
+  
       results.forEach((result, index) => {
         if (result.status === 'fulfilled') {
           // Handle successful response
@@ -313,10 +316,18 @@ export default function AdminPurchaseEntry() {
               setProductsLoading(false);
               break;
             case 2:
-              setAllSkuList(result.value);
+              if (Array.isArray(result.value)) {
+                setAllSkuList(result.value.reverse()); // Ensure it's an array
+              } else {
+                setErrorMessage('Error: Unexpected response format for SKU List.');
+              }
               break;
             case 3:
-              setAllCategories(result.value);
+              if (Array.isArray(result.value)) {
+                setAllCategories(result.value.reverse()); // Ensure it's an array
+              } else {
+                setErrorMessage('Error: Unexpected response format for Categories.');
+              }
               break;
             case 4:
               setAllProductTypes(result.value);
@@ -346,12 +357,15 @@ export default function AdminPurchaseEntry() {
               break;
           }
         } else {
-          // Handle error
+          if(index + 1 > 1){
           console.error(`Error loading data for API ${index + 1}:`, result.reason);
+          handleError(`Failed to load data for API ${index + 1}: ${result.reason}`);
+          }
         }
       });
     } catch (error) {
       console.error("Error loading data:", error);
+      handleError("Error loading data. Please try again later.");
     }
   };
 
@@ -359,6 +373,16 @@ export default function AdminPurchaseEntry() {
     loadData();
   }, [clientCode]);
 
+
+  const handleError = (message) => {
+    setErrorMessage(message);
+    setShowModal(true); // Open the modal
+  };
+
+  const reloadData = () => {
+    setShowModal(false); // Close the modal
+    loadData(); // Reload data
+  };
 
 
   const [selectedSku, setSelectedSku] = useState([]);
@@ -883,8 +907,8 @@ export default function AdminPurchaseEntry() {
         gstType ? parseFloat(totalGstAmount).toFixed(3) : 0
       );
       setTotalPayableAmount(parseFloat(totalAmountPaying).toFixed(3));
-      setGrandTotal(Math.ceil(parseFloat(totalAmountPaying)).toFixed(3));
-      setPaymentAmount(Math.ceil(parseFloat(totalAmountPaying)).toFixed(3));
+      setGrandTotal(parseFloat(totalAmountPaying).toFixed(3));
+      setPaymentAmount(parseFloat(totalAmountPaying).toFixed(3));
     } else {
       setAllProdctsNetAmount(0); // Reset the total to 0 when there are no selected products
       setAllProdctsGstAmount(0); // Reset the total to 0 when there are no selected products
@@ -1129,14 +1153,14 @@ export default function AdminPurchaseEntry() {
         return {
           StockKeepingUnit: product.StockKeepingUnit,
           ItemCode: product.ItemCode,
-          MakingFixedAmt: `${product.MakingFixedAmt}`,
-          MakingPercentage: `${product.MakingPercentage}`,
-          MakingPerGram: `${product.MakingPerGram}`,
-          MakingFixedWastage: `${product.MakingFixedWastage}`,
-          MetalRate: `${product.MetalRate}`,
-          FinePercent: `${product.FinePercent}`,
-          WastageWt: `${product.WastageWt ?? 0}`,
-          WastagePercent: `${product.WastagePercent ?? 0}`,
+          MakingFixedAmt: `${product.MakingFixedAmt || 0}`,
+          MakingPercentage: `${product.MakingPercentage || 0}`,
+          MakingPerGram: `${product.MakingPerGram || 0}`,
+          MakingFixedWastage: `${product.MakingFixedWastage || 0}`,
+          MetalRate: `${product.MetalRate|| 0}`,
+          FinePercent: `${product.FinePercent|| 0}`,
+          WastageWt: `${product.WastageWt || 0}`,
+          WastagePercent: `${product.WastagePercent || 0}`,
           Quantity: `${product.Quantity}`,
           CategoryId: parseInt(product.CategoryId),
           ProductId: parseInt(product.ProductId),
@@ -1161,17 +1185,17 @@ export default function AdminPurchaseEntry() {
           StoneWt: `${product.StoneWt}`,
           Stones: stoneDetails, // Modified to include converted stone details
           Diamonds: diamondDetails, // Modified to include converted diamond details
-          DiamondWeight: `${totalDiamondWeight}`,
-          DiamondPieces: `${totalDiamondPieces}`,
-          DiamondAmount: `${totalDiamondAmount}`,
-          StoneWeight: `${totalStoneWeight}`,
-          StonePieces: `${totalStonePieces}`,
-          StoneAmount: `${totalStoneAmount}`,
+          DiamondWeight: `${totalDiamondWeight || 0}`,
+          DiamondPieces: `${totalDiamondPieces || 0}`,
+          DiamondAmount: `${totalDiamondAmount || 0}`,
+          StoneWeight: `${totalStoneWeight || 0}`,
+          StonePieces: `${totalStonePieces || 0}`,
+          StoneAmount: `${totalStoneAmount || 0}`,
           MetalId: parseInt(product.CategoryId),
-          HallmarkAmt: `${product.HallmarkAmt}`,
-          TagWeight: `${product.TagWeight}`,
-          FindingWeight: `${product.FindingWeight}`,
-          LanyardWeight: `${product.LanyardWeight}`,
+          HallmarkAmt: `${product.HallmarkAmt || 0}`,
+          TagWeight: `${product.TagWeight || 0}`,
+          FindingWeight: `${product.FindingWeight || 0}`,
+          LanyardWeight: `${product.LanyardWeight || 0}`,
 
           // AssignedDiamondWeight: "0",
           // AssignedGoldWeight: "0",
@@ -2647,7 +2671,7 @@ console.log('checking parameter atchange', name);
 
     setPurchaseProduct({ ...purchaseProduct, Diamonds: updatedDiamonds,DiamondWeight: 0,
       DiamondAmount: 0,
-      Diamondpurchseamount: 0 });
+      DiamondPurchaseAmount: 0 });
 
       setIscal(true)
   };
@@ -2883,7 +2907,7 @@ console.log('checking parameter atchange', name);
       Diamonds: newDiamond,
       DiamondWeight: totalDiamondWeight,
       DiamondAmount: totalDiamondAmount,
-      Diamondpurchseamount: totalDiamondpurchaseAmount,
+      DiamondPurchaseAmount: totalDiamondpurchaseAmount,
       NetWt: netwt
     });
 
@@ -2892,6 +2916,7 @@ console.log('checking parameter atchange', name);
 
 
   const handleAddPayment = () => {
+    console.log('trigged payment ', );
     addPayment({
       paymentOptions,
       paymentAmount,
@@ -2912,7 +2937,8 @@ console.log('checking parameter atchange', name);
       setMessageToShow,
       setShowError,
       setPaymentDescription,
-      setMetalPaymentOption
+      setMetalPaymentOption,
+      paymentDescription
     });
   };
 
@@ -2956,6 +2982,15 @@ console.log('checking parameter atchange', name);
   return (
     <div>
       <AdminHeading />
+      <ErrorModal 
+          isOpen={showModal} 
+          onRequestClose={() => {
+            setShowModal(false); // Close the modal
+            navigate("/adminhome"); // Redirect to /adminhome
+          }} 
+          onReload={reloadData} // Pass reload function
+          message={errorMessage} 
+        />
 
       <div className="adminMainBodyBox">
         {/* <AdminBreadCrump
@@ -4667,7 +4702,7 @@ console.log('checking parameter atchange', name);
                             ) {
                               alert("Could'nt Take more than 200000 in Cash");
                             } else {
-                              handleAddPayment
+                              handleAddPayment()
                               // addPayment();
                             }
                           }}
@@ -4765,7 +4800,7 @@ console.log('checking parameter atchange', name);
                     >
                       <button onClick={
                         // addPayment
-                        handleAddPayment
+                        handleAddPayment()
                         }>Add</button>
                     </div>
                   </div>
@@ -4843,7 +4878,7 @@ console.log('checking parameter atchange', name);
                     >
                       <button onClick={
                         // addPayment
-                        handleAddPayment
+                        handleAddPayment()
                         }>Add</button>
                     </div>
                   </div>
@@ -4921,7 +4956,7 @@ console.log('checking parameter atchange', name);
                     >
                       <button onClick={
                         // addPayment
-                        handleAddPayment
+                        handleAddPayment()
                         }>Add</button>
                     </div>
                   </div>
@@ -5023,7 +5058,7 @@ console.log('checking parameter atchange', name);
                                 alert("Could'nt Take more than 200000 in Cash");
                               } else {
                                 // addPayment();
-                                handleAddPayment
+                                handleAddPayment()
                               }
                             }}
                           >
@@ -5133,7 +5168,7 @@ console.log('checking parameter atchange', name);
                                 alert("Could'nt Take more than 200000 in Cash");
                               } else {
                                 // addPayment();
-                                handleAddPayment
+                                handleAddPayment();
                               }
                             }}
                           >
@@ -5261,7 +5296,7 @@ console.log('checking parameter atchange', name);
                   }}
                   type="text"
                   style={{ backgroundColor: "wheat" }}
-                  value={Math.ceil(totalPayableAmount)}
+                  value={totalPayableAmount}
                   onChange={(e) => {
                     const newTotalPayableAmount = parseFloat(e.target.value);
                     if (!isNaN(newTotalPayableAmount)) {
@@ -5312,11 +5347,11 @@ console.log('checking parameter atchange', name);
                   }}
                 /> */}
                 <label>Paid Amount</label>
-                <input type="text" value={parseInt(totalPaidAmount)} readOnly />
+                <input type="text" value={totalPaidAmount} readOnly />
                 <label>Balance Amount</label>
                 <input
                   type="text"
-                  value={parseInt(grandTotal).toLocaleString("en-IN")}
+                  value={grandTotal}
                   readOnly
                 />
               </div>
@@ -5362,6 +5397,7 @@ console.log('checking parameter atchange', name);
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   );

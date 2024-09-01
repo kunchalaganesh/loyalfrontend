@@ -79,35 +79,51 @@ import AdminStockTransferList from "./Components/Pages/AdminPanel/AdminTrading/A
 import AdminApprovalStockTransfer from "./Components/Pages/AdminPanel/AdminTrading/AdminApprovalStockTransfer";
 
 function App() {
-  const allStates = useSelector((state) => state);
-  const adminLoggedIn = allStates.reducer1;
-  console.log(adminLoggedIn, "adminLoggedIn");
-  let isAuthenticated = "";
-  if (adminLoggedIn.Clients) {
-    isAuthenticated = true;
-    // if (adminLoggedIn.toString() === "1") {
-    //   isAuthenticated = true;
-  } else if (adminLoggedIn.toString() === "2") {
-    isAuthenticated = true;
-  } else if (adminLoggedIn.toString() === "3") {
-    isAuthenticated = true;
-  } else if (adminLoggedIn.toString() === "4") {
-    isAuthenticated = true;
-  } else if (adminLoggedIn.StatusType === true) {
-    isAuthenticated = true;
-  } else isAuthenticated = false;
+//   const allStates = useSelector((state) => state);
+//   const adminLoggedIn = allStates.reducer1;
+//   console.log(adminLoggedIn, "adminLoggedIn");
+//   let isAuthenticated = "";
+//   if (adminLoggedIn.Clients) {
+//     isAuthenticated = true;
+//     // if (adminLoggedIn.toString() === "1") {
+//     //   isAuthenticated = true;
+//   } else if (adminLoggedIn.toString() === "2") {
+//     isAuthenticated = true;
+//   } else if (adminLoggedIn.toString() === "3") {
+//     isAuthenticated = true;
+//   } else if (adminLoggedIn.toString() === "4") {
+//     isAuthenticated = true;
+//   } else if (adminLoggedIn.StatusType === true) {
+//     isAuthenticated = true;
+//   } else isAuthenticated = false;
 
-  console.log(isAuthenticated, "isAuthenticated");
-  console.log(isAuthenticated, "isAuthenticated");
-  const userDetails = allStates.reducer1;
+//   console.log(isAuthenticated, "isAuthenticated");
+//   console.log(isAuthenticated, "isAuthenticated");
+//   const userDetails = allStates.reducer1;
 
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
 
   // Use useEffect to navigate to the '/' route when the component mounts
   // useEffect(() => {
   //   // navigate("/adminpanellogin");
   //   navigate("/gshome");
   // }, []);
+
+
+  const allStates = useSelector((state) => state);
+  const adminLoggedIn = allStates.reducer1;
+  const isAuthenticated = !!adminLoggedIn.Clients;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/adminpanellogin");
+    }
+  }, [isAuthenticated, navigate]);
+
+
+
 
   return (
       <div className="App">

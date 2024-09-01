@@ -37,6 +37,7 @@ class ProductCalculator {
       return updatedProduct;
     }
 
+    
     static calculateDiamonds(updatedProduct, allDiamondSizeWeightRate) {
       if (updatedProduct.DiamondPieces) {
         const selectedDiamondSizeWeightRate = allDiamondSizeWeightRate.filter(
@@ -221,34 +222,41 @@ nnet = updatedProduct.FineWastageWt;
         console.log('checking gst  ', gstType, ' v', nnet)
 
         let fineRate = (parseFloat(nnet) * parseFloat(updatedProduct.MetalRate)) / 10;
-        let totalRate = parseFloat(fineRate) + parseFloat(totalMakingCharges);
-      
-        // Calculate GST on the total rate and on the making charges
-        let allItemGstRate = totalRate * 0.03;
-        let gstRateOnMaking = parseFloat(totalMakingCharges) * 0.03;
+        
+        
       
         // Calculate other rates (stone amount, diamond purchase amount, hallmark amount)
         let stoneAmount = parseFloat(updatedProduct.StoneAmount || 0);
-        let totalDiamondPurchaseAmount = parseFloat(updatedProduct.Diamondpurchseamount || 0);
+        let totalDiamondPurchaseAmount = parseFloat(updatedProduct.DiamondPurchaseAmount || 0);
         let hallmarkAmt = parseFloat(updatedProduct.HallmarkAmt || 0);
         let otherrate = stoneAmount + totalDiamondPurchaseAmount + hallmarkAmt;
-        console.log("Other Rate:", totalRate,'  ', otherrate, '  ',stoneAmount, '  ',  totalDiamondPurchaseAmount, '  ',hallmarkAmt );
+        
+        let totalRate = parseFloat(fineRate||0) + parseFloat(totalMakingCharges||0)+parseFloat(otherrate||0);
       
+        // Calculate GST on the total rate and on the making charges
+        let allItemGstRate = totalRate * 0.03;
+        let gstRateOnMaking = parseFloat(otherrate+parseFloat(totalMakingCharges||0)) * 0.03;
+        console.log("Other Rate:", totalRate,'  ', otherrate, '  ',stoneAmount, '  ',  totalDiamondPurchaseAmount, '  ',hallmarkAmt );
+        
         // Calculate TotalItemAmt
         updatedProduct.TotalItemAmt = convertAmount ? (totalRate + otherrate) : totalMakingCharges+otherrate;
       
         // Set updated product values
         updatedProduct.Making = totalMakingCharges;
       
+
+        console.log("checking rates :",parseFloat(totalMakingCharges+otherrate), '  ',convertAmount)
         updatedProduct.FinalPrice = convertAmount
           ? `${totalRate}`
           : parseInt(totalMakingCharges+otherrate) !== 0
           ? `${parseFloat(totalMakingCharges+otherrate).toFixed(3)}`
           : `${0}`;
+
+          console.log("checking rates 1:", updatedProduct.FinalPrice)
       
         updatedProduct.TotalGstAmount = convertAmount
           ? `${allItemGstRate}`
-          : parseInt(totalMakingCharges) !== 0
+          : parseInt(totalMakingCharges+otherrate) !== 0
           ? `${parseFloat(gstRateOnMaking).toFixed(3)}`
           : `${0}`;
 

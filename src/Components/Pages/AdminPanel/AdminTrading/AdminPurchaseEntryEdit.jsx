@@ -68,6 +68,8 @@ import StonePopup from '../../../support/purchasesupport/StonePopup.jsx';
 import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
 import GetApiService from "../../../Api/getapiService";
 import { createOrder } from '../../../Api/postapiservice';
+import { addPayment, deletePayment, handlePaymentOption } from "../../../support/purchasesupport/usePayment";
+import {handleallitemscal} from "../../../support/purchasesupport/Calculations"
 
 export default function AdminPurchaseEntryEdit() {
     const [allCsData, setAllCsData] = useState([]);
@@ -151,6 +153,7 @@ export default function AdminPurchaseEntryEdit() {
     const [allDiamondAttributes, setAllDiamondAttributes] = useState([]);
     const [allDiamondSizeWeightRate, setAllDiamondSizeWeightRate] = useState([]);
     const [iscal, setIscal] = useState(false);
+    const [allcal, setAllcall] = useState(false);
 
 
     const getTodaysDateInHTMLFormat = () => {
@@ -490,7 +493,7 @@ export default function AdminPurchaseEntryEdit() {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-            console.log('checking itemdata  ', data)
+            
             const modifiedData = data.map((item) => {
                 let newItem = {...item};
                 // if (item.Stones) {
@@ -507,17 +510,44 @@ export default function AdminPurchaseEntryEdit() {
                 //   newItem = { ...newItem, FinePure: true };
                 // }
 
+                let tdiaamount = newItem.Diamonds.reduce(
+                    (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
+                    0
+                  );
+
+                  let tstone = newItem.Stones.reduce(
+                    (acc, stone) => acc + (parseFloat(stone.StoneAmount) || 0),
+                    0
+                  );
+
+
+                  let tmaking = parseFloat(newItem.MakingFixedAmt) +
+                  parseFloat(newItem.MakingFixedWastage) +
+                  parseFloat(newItem.MakingPerGram) +
+                  parseFloat(newItem.MakingPercentage)+
+                  parseFloat(newItem.HallmarkAmt);
+
+                  let metalrate = 0
+                  let nnet = 0;
+                  if(data.GSTApplied){
+                    // need to multiply with netwt
+                    nnet = newItem.NetWt;
+                }else{
+        nnet = newItem.FineWastageWt;
+
+                  }
+                  let fineRate = (parseFloat(nnet) * parseFloat(newItem.MetalRate)) / 10;
+
                 newItem.TotalGstAmount =
                     parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
                     parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
                     parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
                         ? parseFloat(
-                        ((parseFloat(newItem.FineWastageWt) *
-                            parseFloat(newItem.MetalRate)) /
-                            10) *
+                            fineRate *
                         0.03
                         ).toFixed(2)
                         : 0;
+
                 newItem.BalanceGold = newItem.FineGoldWt
                     ? parseFloat(newItem.FineGoldWt)
                     : 0;
@@ -531,35 +561,32 @@ export default function AdminPurchaseEntryEdit() {
                         ? true
                         : false;
                 newItem.ConvertAmount =newItem.ConvertAmount
-                    // parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
-                    // parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
-                    // parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
-                    //     ? true
-                    //     : false;
+                    parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
+                    parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
+                    parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
+                        ? true
+                        : false;
                 newItem.Making =
                     parseFloat(newItem.MakingFixedAmt) +
                     parseFloat(newItem.MakingFixedWastage) +
                     parseFloat(newItem.MakingPerGram) +
-                    parseFloat(newItem.MakingPercentage) +
-                    parseFloat(newItem.StoneAmount) +
-                    parseFloat(newItem.DiamondPurchaseAmount || 0) +
-                    parseFloat(newItem.HallmarkAmt);
+                    parseFloat(newItem.MakingPercentage);
 
-                newItem.FinalPrice =
+                    newItem.FinalPrice = 
                     newItem.MRP && newItem.MRP !== "" && newItem.MRP !== "0"
-                        ? newItem.MRP
-                        : parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
-                        parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
-                        parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
-                        ? parseFloat(
-                            (parseFloat(newItem.FineWastageWt) *
-                                parseFloat(newItem.MetalRate)) /
-                            10
-                        ).toFixed(2)
-                        : 0;
+                      ? newItem.MRP
+                      : parseFloat(newItem.FineGoldWt).toFixed(3) === "0.00" &&
+                        parseFloat(newItem.FineSilverWt).toFixed(3) === "0.00" &&
+                        parseFloat(newItem.FineOtherMetalWt).toFixed(3) === "0.00"
+                        ? (parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3)
+                        : (parseFloat(fineRate) + parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3);
+                  
 
+                        console.log('checking newitemdata  ', tmaking, '  ' ,tdiaamount, ' ', tstone, ' ', fineRate)
                 return newItem;
             });
+
+            
 
             // Set state with the modified data
             setAllSelectedProducts(modifiedData);
@@ -567,6 +594,8 @@ export default function AdminPurchaseEntryEdit() {
 
             getAllPaymentsById(id, mainBoxData);
             console.log(data, "PurchaseItems at");
+
+            setIscal(true)
         } catch (error) {
             console.error("Failed to fetch purchase data:", error);
         }
@@ -645,17 +674,10 @@ export default function AdminPurchaseEntryEdit() {
             setGrandTotal(mainBoxData.BalanceAmount);
             setPaymentAmount(mainBoxData.BalanceAmount);
             setDiscountAmount(mainBoxData.Discount);
-
-            // console.log(grandTotal, "grandTotal");
-            // console.log(grandTotal, "grandTotal");
-            // console.log(grandTotal, "grandTotal");
-            // console.log(totalPaidAmount, "totalPaidAmount");
-            // console.log(totalPaidAmount, "totalPaidAmount");
-            // Update the state with the new data UNCOMMENT BELOW LINE FOR ISSUE WITH CALCULATION
             // calculateTotalAmount();
             setPayments(modifiedData);
 
-            console.log(data, "allPaymentsList");
+            console.log( "selectedpayments  ", payments);
             console.log(data, "allPaymentsList");
         } catch (error) {
             console.error("Failed to fetch purchase data:", error);
@@ -1148,6 +1170,7 @@ export default function AdminPurchaseEntryEdit() {
     }, [selectedProduct, gstType]);
 
     const calculateNetAmount = () => {
+        console.log('checking allproducts ',allSelectedProducts)
         if (allSelectedProducts.length > 0) {
             let totalNetAmount = allSelectedProducts.reduce(
                 (total, product) => total + parseFloat(product.FinalPrice),
@@ -1194,9 +1217,9 @@ export default function AdminPurchaseEntryEdit() {
             setTotalPayableGstAmount(
                 gstType ? parseFloat(totalGstAmount).toFixed(3) : 0
             );
-            setGrandTotal(Math.ceil(parseFloat(totalAmountPaying)).toFixed(3));
+            setGrandTotal(parseFloat(totalAmountPaying).toFixed(3));
             setTotalPayableAmount(parseFloat(totalAmountPaying).toFixed(3));
-            setPaymentAmount(Math.ceil(parseFloat(totalAmountPaying)).toFixed(3));
+            setPaymentAmount(parseFloat(totalAmountPaying).toFixed(3));
 
         } else {
             setAllProdctsNetAmount(0); // Reset the total to 0 when there are no selected products
@@ -1351,7 +1374,7 @@ export default function AdminPurchaseEntryEdit() {
 
     const createOrder = async () => {
 
-        console.log(allSelectedProducts, "allSelectttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt")
+        console.log(allSelectedProducts, "allSelect")
 
         let totalGold = allSelectedProducts.reduce(
             (total, product) => total + parseFloat(product.BalanceGold),
@@ -1607,6 +1630,54 @@ export default function AdminPurchaseEntryEdit() {
         }
     };
     const updateOrder = async () => {
+
+        const modifiedData = allPaymentsList.map((item) => {
+            const {
+                Amount,
+                FineGold,
+                FineSilver,
+                GoldAmount,
+                GoldRate,
+                Description,
+                TransactionType,
+                SilverAmount,
+                SilverRate,
+                PaymentModeType,
+                Id,
+                CreatedOn,
+            } = item;
+        
+            let newItem = {
+                amount: Amount,
+                deductGold: PaymentModeType === "Cash to Metal" ? FineGold : 0,
+                deductSilver: PaymentModeType === "Cash to Metal" ? FineSilver : 0,
+                fineGold: FineGold,
+                fineSilver: FineSilver,
+                goldAmount: GoldAmount,
+                goldRate: GoldRate,
+                paymentDescription: Description,
+                paymentType: TransactionType,
+                silverAmount: SilverAmount,
+                silverRate: SilverRate,
+                mode: PaymentModeType,
+                Id: Id,
+                CreatedOn: CreatedOn,
+            };
+        
+            return newItem;
+        });
+        
+        // Adjust modifiedData to match the length of payments
+        let adjustedModifiedData = payments.map((payment, index) => {
+            if (index < modifiedData.length) {
+                return { ...modifiedData[index], Id: payment.Id };
+            } else {
+                return { ...modifiedData[index], Id: 0 };
+            }
+        });
+        setPayments(adjustedModifiedData)
+
+
 
 
         let totalGold = allSelectedProducts.reduce(
@@ -1885,7 +1956,7 @@ export default function AdminPurchaseEntryEdit() {
             setDiamondCuts(cuts);
             setSettingTypes(settings);
         };
-        fetchDiamondAttributes();
+        // fetchDiamondAttributes();
     }, []);
 
 
@@ -2207,7 +2278,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
         }, 0);
     };
     const addOrderItemAPI = async (product, rcvdId) => {
-        console.log(product, "productttttttttttttttttttttttttttttttttttttttttttttttttttttttttt")
+        console.log(product, "productt")
         try {
             let totalStoneWeight = allSelectedProducts.reduce(
                 (totalProductWeight, product) => {
@@ -2813,323 +2884,48 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
         }
     };
 
-    const addPayment = () => {
-        // Check if both payment mode and amount are provided
-        if (
-            (paymentOptions !== "Cash to Metal" &&
-                paymentOptions !== "Metal" &&
-                paymentAmount !== "" &&
-                parseInt(paymentAmount) !== 0) ||
-            ((paymentOptions === "Cash to Metal" || paymentOptions === "Metal") &&
-                (parseFloat(paymentGold) !== 0.0 || parseFloat(paymentSilver) !== 0.0))
-        ) {
-            if (paymentOptions && paymentAmount >= 0 && paymentType === "Paid") {
-                // Update the payments array with new payment mode and amount
-                if (
-                    paymentOptions === "Metal to Cash" ||
-                    paymentOptions === "Cash to Metal" ||
-                    paymentOptions === "Metal"
-                ) {
-                    setPayments([
-                        ...payments,
-                        {
-                            mode: paymentOptions,
-                            amount: paymentAmount,
-                            fineGold: parseFloat(paymentGold),
-                            fineSilver: parseFloat(paymentSilver),
-                            deductGold: deductGold,
-                            deductSilver: deductSilver,
-                            paymentType: paymentType,
-                            goldRate: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? metalPaymentOption.fineRate
-                                : 0,
-                            silverRate: !metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? metalPaymentOption.fineRate
-                                : 0,
-                            goldAmount: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? metalPaymentOption.totalAmount
-                                : 0,
-                            silverAmount: !metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? metalPaymentOption.totalAmount
-                                : 0,
-                            paymentDescription: paymentDescription,
-                        },
-                    ]);
-                } else {
-                    setPayments([
-                        ...payments,
-                        {
-                            mode: !paymentOptions.toLowerCase().includes("advance")
-                                ? paymentOptions
-                                : advanceType,
-                            amount: !paymentOptions.toLowerCase().includes("advance")
-                                ? paymentAmount
-                                : advanceAmount,
-                            fineGold: 0,
-                            fineSilver: 0,
-                            finePurity: 0,
-                            totalWt: 0,
-                            deductGold: 0,
-                            deductSilver: 0,
-                            paymentType: paymentType,
-                            goldRate: 0,
-                            silverRate: 0,
-                            goldAmount: 0,
-                            silverAmount: 0,
-                            paymentDescription: paymentDescription,
-                        },
-                    ]);
-                }
-                if (!paymentOptions.toLowerCase().includes("advance")) {
-                    setGrandTotal(parseInt(grandTotal) - parseInt(paymentAmount));
-                    setPaymentAmount(parseInt(grandTotal) - parseInt(paymentAmount));
-                } else if (
-                    paymentOptions.toLowerCase().includes("advance") &&
-                    advanceType === "Deduct Advance"
-                ) {
-                    setSelectedCustomer({
-                        ...selectedCustomer,
-                        advanceAmt:
-                            parseFloat(selectedCustomer.advanceAmt) -
-                            parseFloat(advanceAmount),
-                    });
-                    setGrandTotal(parseInt(grandTotal) - parseInt(advanceAmount));
-                    setPaymentAmount(parseInt(grandTotal) - parseInt(advanceAmount));
-                    setAdvanceAmount(0);
-                } else {
-                    setGrandTotal(parseInt(grandTotal));
-                    setPaymentAmount(parseInt(grandTotal));
-                    setAdvanceAmount(0);
-                }
-                // Clear the input fields
-                // setPaymentOptions("Cash");
-            } else if (
-                paymentOptions &&
-                paymentAmount > 0 &&
-                paymentType === "Receive"
-            ) {
-                // Update the payments array with new payment mode and amount
-                if (
-                    paymentOptions === "Metal to Cash" ||
-                    paymentOptions === "Cash to Metal" ||
-                    paymentOptions === "Metal"
-                ) {
-                    setPayments([
-                        ...payments,
-                        {
-                            mode: paymentOptions,
-                            amount: -paymentAmount,
-                            fineGold: parseFloat(-paymentGold),
-                            totalWt: 0,
-                            fineSilver: parseFloat(-paymentSilver),
-                            deductGold: parseFloat(-deductGold),
-                            deductSilver: parseFloat(-deductSilver),
-                            paymentType: paymentType,
-                            goldRate: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.fineRate
-                                : 0,
-                            silverRate: !metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.fineRate
-                                : 0,
-                            goldAmount: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.totalAmount
-                                : 0,
-                            silverAmount: !metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.totalAmount
-                                : 0,
-                            paymentDescription: paymentDescription,
-                        },
-                    ]);
-                } else {
-                    setPayments([
-                        ...payments,
-                        {
-                            mode: paymentOptions,
-                            amount: -paymentAmount,
-                            fineGold: 0,
-                            fineSilver: 0,
-                            finePurity: 0,
-                            totalWt: 0,
-                            deductGold: 0,
-                            deductSilver: 0,
-                            paymentType: paymentType,
-                            goldRate: 0,
-                            silverRate: 0,
-                            goldAmount: 0,
-                            silverAmount: 0,
-                            paymentDescription: paymentDescription,
-                        },
-                    ]);
-                }
-                setGrandTotal(parseInt(grandTotal) - parseInt(-paymentAmount));
-                // Clear the input fields
-                // setPaymentOptions("Cash");
-                setPaymentAmount(
-                    Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
-                );
-            } else if (
-                paymentOptions &&
-                paymentAmount < 0 &&
-                paymentType === "Receive"
-            ) {
-                // Update the payments array with new payment mode and amount
-                if (
-                    paymentOptions === "Cash to Metal" ||
-                    paymentOptions === "Metal to Cash" ||
-                    paymentOptions === "Metal"
-                ) {
-                    setPayments([
-                        ...payments,
-                        {
-                            mode: paymentOptions,
-                            amount: -paymentAmount,
-                            fineGold: parseFloat(-paymentGold),
-                            fineSilver: parseFloat(-paymentSilver),
-                            totalWt: 0,
-                            deductGold: parseFloat(-deductGold),
-                            deductSilver: parseFloat(-deductSilver),
-                            paymentType: paymentType,
-                            goldRate: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.fineRate
-                                : 0,
-                            silverRate: !metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.fineRate
-                                : 0,
-                            goldAmount: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.totalAmount
-                                : 0,
-                            silverAmount: metalPaymentOption.optionSelected
-                                .toLowerCase()
-                                .includes("gold")
-                                ? -metalPaymentOption.totalAmount
-                                : 0,
-                            paymentDescription: paymentDescription,
-                        },
-                    ]);
-                } else {
-                    setPayments([
-                        ...payments,
-                        {
-                            mode: paymentOptions,
-                            amount: -paymentAmount,
-                            fineGold: 0,
-                            fineSilver: 0,
-                            finePurity: 0,
-                            totalWt: 0,
-                            deductGold: 0,
-                            deductSilver: 0,
-                            paymentType: paymentType,
-                            goldRate: 0,
-                            silverRate: 0,
-                            goldAmount: 0,
-                            silverAmount: 0,
-                            paymentDescription: paymentDescription,
-                        },
-                    ]);
-                }
-                setGrandTotal(parseInt(grandTotal) - parseInt(paymentAmount));
-                // Clear the input fields
-                // setPaymentOptions("Cash");
-                setPaymentAmount(parseInt(grandTotal) - parseInt(paymentAmount));
-            }
-            setTotalPayableGold(totalPayableGold - deductGold);
-            setTotalPayableSilver(totalPayableSilver - deductSilver);
-            setPaymentDescription("");
-            // setMetalPaymentOption({
-            //   optionSelected: "Gold",
-            //   fineRate: 0,
-            //   fineWt: 0,
-            //   totalAmount: 0,
-            //   deductGold: 0,
-            //   deductSilver: 0,
-            //   goldRate: 0,
-            //   silverRate: 0,
-            //   goldAmount: 0,
-            //   silverAmount: 0,
-            // });
-            // setPaymentOptions("Cash");
-            setMetalPaymentOption({
-                optionSelected: "GOLD",
-                fineRate: 0,
-                fineWt: 0,
-                finePurity: 0,
-                totalAmount: 0,
-                totalWt: 0,
-                deductGold: 0,
-                deductSilver: 0,
-                goldRate: 0,
-                silverRate: 0,
-                goldAmount: 0,
-                silverAmount: 0,
-            });
-            setPaymentGold(0);
-            setPaymentSilver(0);
-            setDeductGold(0);
-            setDeductSilver(0);
-        } else {
-            setMessageType("error");
-            setMessageToShow("Payment Amount and Metal Both could not be zero");
-            setShowError(true);
-        }
-    };
+    const handleAddPayment = () => {
+        console.log('trigged payment ', );
+        addPayment({
+          paymentOptions,
+          paymentAmount,
+          paymentGold,
+          paymentSilver,
+          deductGold,
+          deductSilver,
+          paymentType,
+          metalPaymentOption,
+          grandTotal,
+          selectedCustomer,
+          setPayments,
+          setGrandTotal,
+          setPaymentAmount,
+          setTotalPayableGold,
+          setTotalPayableSilver,
+          setMessageType,
+          setMessageToShow,
+          setShowError,
+          setPaymentDescription,
+          setMetalPaymentOption,
+          paymentDescription
+        });
+      };
+    
+      const handleDeletePayment = (index) => {
+        deletePayment({
+          index,
+          payments,
+          setPayments,
+          grandTotal,
+          setGrandTotal,
+          setTotalPayableGold,
+          setTotalPayableSilver,
+          setPaymentAmount,
+          selectedCustomer
+        });
+      };
 
-    const deletePayment = (index) => {
-        // Get the amount of the payment to be deleted
-        setPaymentOptions(payments[index].mode);
-        const deletedAmount = parseFloat(payments[index].amount);
-        const deletedGoldWeight = parseFloat(payments[index].deductGold);
-        const deletedSilverWeight = parseFloat(payments[index].deductSilver);
 
-        const updatedPayments = [...payments];
-        updatedPayments.splice(index, 1);
-        setPayments(updatedPayments);
-        const newGrandTotal = grandTotal + deletedAmount;
-        if (payments[index].mode === "Advance Received") {
-            null;
-        } else if (payments[index].mode === "Deduct Advance") {
-            setSelectedCustomer({
-                ...selectedCustomer,
-                advanceAmt:
-                    parseFloat(selectedCustomer.advanceAmt) +
-                    parseFloat(payments[index].amount),
-            });
-            setGrandTotal(newGrandTotal);
-            const remainingGoldWeight = totalPayableGold + deletedGoldWeight;
-            const remainingSilverWeight = totalPayableSilver + deletedSilverWeight;
-            setTotalPayableGold(remainingGoldWeight);
-            setTotalPayableSilver(remainingSilverWeight);
-            setPaymentAmount(Math.abs(parseInt(newGrandTotal)));
-        } else {
-            setGrandTotal(newGrandTotal);
-            const remainingGoldWeight = totalPayableGold + deletedGoldWeight;
-            const remainingSilverWeight = totalPayableSilver + deletedSilverWeight;
-            setTotalPayableGold(remainingGoldWeight);
-            setTotalPayableSilver(remainingSilverWeight);
-            setPaymentAmount(Math.abs(parseInt(newGrandTotal)));
-        }
-    };
 
     // Convert payments array to a comma-separated string whenever you need it
     const paymentsString = payments
@@ -3628,7 +3424,36 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
     };
     // console.log(payments, "payments");
     // console.log(payments, "payments");
+
+
     const handleMetalPaymentOption = (a, b) => {
+        const { value } = b.target;
+    
+        const updatedMetalPaymentOption = handlePaymentOption(a, value, metalPaymentOption, paymentOptions);
+    
+        setMetalPaymentOption(updatedMetalPaymentOption);
+    
+        // Additional state updates can be done based on the logic you need
+        if (paymentOptions === "Metal to Cash" || paymentOptions === "Metal") {
+            if (updatedMetalPaymentOption.deductGold) {
+                setPaymentGold(updatedMetalPaymentOption.deductGold);
+            }
+            if (updatedMetalPaymentOption.deductSilver) {
+                setPaymentSilver(updatedMetalPaymentOption.deductSilver);
+            }
+            setPaymentAmount(updatedMetalPaymentOption.totalAmount);
+        } else if (paymentOptions === "Cash to Metal") {
+            // Similar handling as above based on your requirements
+            if (updatedMetalPaymentOption.deductGold) {
+                setDeductGold(updatedMetalPaymentOption.deductGold);
+            }
+            if (updatedMetalPaymentOption.deductSilver) {
+                setDeductSilver(updatedMetalPaymentOption.deductSilver);
+            }
+        }
+    };
+
+    const handleMetalPaymentOption1 = (a, b) => {
         const {value} = b.target;
         if (paymentOptions === "Metal to Cash") {
             let totalAmount = 0;
@@ -6138,7 +5963,8 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                         ) {
                                                             alert("Could'nt Take more than 200000 in Cash");
                                                         } else {
-                                                            addPayment();
+                                                            // addPayment();
+                                                            handleAddPayment();
                                                         }
                                                     }}
                                                 >
@@ -6162,6 +5988,10 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         </>
                                     ) : null}
                                 </div>
+                                
+                                
+                                
+                                
                                 {paymentOptions === "Metal to Cash" ? (
                                     <div className="adminInviceAddedProductsMetaltoCashMainBox">
                                         <div>
@@ -6233,7 +6063,10 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                             }}
                                             className="adminInvoiceMainSaveButtonBox"
                                         >
-                                            <button onClick={addPayment}>Add</button>
+                                            <button onClick={() =>
+                                                // addPayment
+                                                handleAddPayment()
+                                                }>Add</button>
                                         </div>
                                     </div>
                                 ) : paymentOptions === "Cash to Metal" ? (
@@ -6308,7 +6141,10 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                             }}
                                             className="adminInvoiceMainSaveButtonBox"
                                         >
-                                            <button onClick={addPayment}>Add</button>
+                                            <button onClick={() =>
+                                                // addPayment
+                                                handleAddPayment()
+                                                }>Add</button>
                                         </div>
                                     </div>
                                 ) : paymentOptions === "Metal" ? (
@@ -6383,7 +6219,10 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                             }}
                                             className="adminInvoiceMainSaveButtonBox"
                                         >
-                                            <button onClick={addPayment}>Add</button>
+                                            <button onClick={() =>
+                                                // addPayment
+                                                handleAddPayment()
+                                                }>Add</button>
                                         </div>
                                     </div>
                                 ) : null}
@@ -6483,7 +6322,8 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                             ) {
                                                                 alert("Could'nt Take more than 200000 in Cash");
                                                             } else {
-                                                                addPayment();
+                                                                // addPayment();
+                                                                handleAddPayment()
                                                             }
                                                         }}
                                                     >
@@ -6592,7 +6432,8 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                             ) {
                                                                 alert("Could'nt Take more than 200000 in Cash");
                                                             } else {
-                                                                addPayment();
+                                                                // addPayment();
+                                                                handleAddPayment()
                                                             }
                                                         }}
                                                     >
@@ -6660,7 +6501,10 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                         <button
                                                             tabIndex="7"
                                                             className="adminInviceAddedProductsTotalAmountDeleteOption"
-                                                            onClick={() => deletePayment(index)}
+                                                            onClick={() => 
+                                                                // deletePayment(index)
+                                                                handleDeletePayment(index)
+                                                            }
                                                             onKeyPress={(e) => {
                                                                 if (e.key === "Enter" && button7Ref.current) {
                                                                     button7Ref.current.focus();
@@ -6701,13 +6545,13 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                 <label>Taxable Amount</label>
                                 <input
                                     type="text"
-                                    value={parseInt(allProdctsNetAmount).toLocaleString("en-IN")}
+                                    value={allProdctsNetAmount}
                                     readOnly
                                 />
                                 <label>R.O./Discount(-)</label>
                                 <input
                                     type="text"
-                                    value={parseInt(discountAmount).toLocaleString("en-IN")}
+                                    value={discountAmount}
                                     readOnly
                                 />
                                 <div className="invoiceGstCheckBox1">
@@ -6718,15 +6562,15 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         type="checkbox"
                                         checked={gstType}
                                         onChange={() => {
-                                            setGstType(!gstType), setDiscountAmount(0);
+                                            
+                                            setGstType(!gstType), setConvertAmount(!convertAmount), setIscal(true), setDiscountAmount(0);
+                                            // setGstType(!gstType), setDiscountAmount(0);
                                         }}
                                     />
                                 </div>
                                 <input
                                     type="text"
-                                    value={parseInt(totalPayableGstAmount).toLocaleString(
-                                        "en-IN"
-                                    )}
+                                    value={totalPayableGstAmount}
                                     readOnly
                                 />
 
@@ -6741,7 +6585,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                     }}
                                     type="text"
                                     style={{backgroundColor: "wheat"}}
-                                    value={Math.ceil(totalPayableAmount)}
+                                    value={totalPayableAmount}
                                     onChange={(e) => {
                                         const newTotalPayableAmount = parseFloat(e.target.value);
                                         if (!isNaN(newTotalPayableAmount)) {
@@ -6792,11 +6636,11 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                     }}
                   /> */}
                                 <label>Paid Amount</label>
-                                <input type="text" value={parseInt(totalPaidAmount)} readOnly/>
+                                <input type="text" value={totalPaidAmount} readOnly/>
                                 <label>Balance Amount</label>
                                 <input
                                     type="text"
-                                    value={parseInt(grandTotal).toLocaleString("en-IN")}
+                                    value={grandTotal}
                                     readOnly
                                 />
                             </div>
