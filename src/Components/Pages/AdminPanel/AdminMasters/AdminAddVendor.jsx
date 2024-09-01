@@ -570,6 +570,7 @@ export default function AdminAddVendor() {
                     // onChange={handleNewCategoryChange}
                     readOnly
                     type="text"
+                    />
                   <input
                       name="VendorCode"
                       // value={
@@ -673,7 +674,7 @@ export default function AdminAddVendor() {
                     value={newCategory.Country}
                     onChange={handleNewCategoryChange}
                     type="text"
-                    // required="required"
+                    required="required"
                   />
 
 
@@ -722,9 +723,9 @@ export default function AdminAddVendor() {
                     type="text"
                     required="required"
                   >
-                    <option value={""}>Select an option</option>;
-                    <option value={"Party"}>Party</option>;
-                    <option value={"Karigar"}>Karigar</option>;
+                    <option value={""}>Select an option</option>
+                    <option value={"Party"}>Party</option>
+                    <option value={"Karigar"}>Karigar</option>
                   </select>
 
                   <label>Online Status</label>
