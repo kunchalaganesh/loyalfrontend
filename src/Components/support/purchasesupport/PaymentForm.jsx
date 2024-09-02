@@ -2,6 +2,10 @@ import React from 'react';
 import { FaRegDotCircle, FaRegCircle } from 'react-icons/fa';
 import { GiCheckMark } from 'react-icons/gi';
 import { RxCross2 } from 'react-icons/rx';
+import MetalToCashForm from '../Paymentmodes/MetalToCashForm';
+import CashToMetalForm from '../Paymentmodes/CashToMetalForm';
+import MetalPaymentForm from '../Paymentmodes/MetalForm';
+import AdvanceAmountPayment from '../Paymentmodes/AdvanceForm';
 
 const PaymentForm = ({
   paymentType,
@@ -149,38 +153,51 @@ const PaymentForm = ({
 
       {paymentOptions === "Metal to Cash" && (
         <MetalToCashForm
-          metalPaymentOption={metalPaymentOption}
-          setMetalPaymentOption={setMetalPaymentOption}
-          handleMetalPaymentOption={handleMetalPaymentOption}
-          handleAddPayment={handleAddPayment}
-        />
+        metalPaymentOption={metalPaymentOption}
+        setMetalPaymentOption={setMetalPaymentOption}
+        handleMetalPaymentOption={handleMetalPaymentOption}
+        handleAddPayment={handleAddPayment}
+      />
       )}
 
       {paymentOptions === "Cash to Metal" && (
         <CashToMetalForm
-          metalPaymentOption={metalPaymentOption}
-          setMetalPaymentOption={setMetalPaymentOption}
-          handleMetalPaymentOption={handleMetalPaymentOption}
-          handleAddPayment={handleAddPayment}
-        />
+        metalPaymentOption={metalPaymentOption}
+        setMetalPaymentOption={setMetalPaymentOption}
+        handleMetalPaymentOption={handleMetalPaymentOption}
+        handleAddPayment={handleAddPayment}
+      />
       )}
 
       {paymentOptions === "Metal" && (
-        <MetalForm
-          metalPaymentOption={metalPaymentOption}
-          setMetalPaymentOption={setMetalPaymentOption}
-          handleMetalPaymentOption={handleMetalPaymentOption}
-          handleAddPayment={handleAddPayment}
-        />
+         <MetalPaymentForm
+         metalPaymentOption={metalPaymentOption}
+         setMetalPaymentOption={setMetalPaymentOption}
+         handleMetalPaymentOption={handleMetalPaymentOption}
+         handleAddPayment={handleAddPayment}
+       />
       )}
 
       {paymentOptions === "Advance Amount" && (
-        <AdvanceForm
-          advanceType={advanceType}
-          setAdvanceType={setAdvanceType}
-          paymentAmount={paymentAmount}
-          setPaymentAmount={setPaymentAmount}
-        />
+        <AdvanceAmountPayment
+        paymentOptions={paymentOptions}
+        paymentAmount={paymentAmount}
+        setPaymentAmount={setPaymentAmount}
+        advanceType={advanceType}
+        setAdvanceType={setAdvanceType}
+        paymentDescription={paymentDescription}
+        setPaymentDescription={setPaymentDescription}
+        advanceAmount={advanceAmount}
+        setAdvanceAmount={setAdvanceAmount}
+        handleAddPayment={handleAddPayment}
+        selectedCustomer={selectedCustomer}
+        paymentType={paymentType}
+        totalPaidCashAmount={totalPaidCashAmount}
+        button3Ref={button3Ref}
+        button4Ref={button4Ref}
+        button5Ref={button5Ref}
+        button6Ref={button6Ref}
+      />
       )}
     </>
   );

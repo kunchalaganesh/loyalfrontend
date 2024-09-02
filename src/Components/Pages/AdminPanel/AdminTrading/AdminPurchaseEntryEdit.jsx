@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminTrading.css";
@@ -43,24 +43,24 @@ import {
     a71,
     a74,
 } from "../../../Api/RootApiPath";
-import {AiOutlineEdit, AiOutlinePlusSquare} from "react-icons/ai";
-import {RxCross2} from "react-icons/rx";
-import {RiDeleteBin2Line} from "react-icons/ri";
-import {BsCardImage} from "react-icons/bs";
+import { AiOutlineEdit, AiOutlinePlusSquare } from "react-icons/ai";
+import { RxCross2 } from "react-icons/rx";
+import { RiDeleteBin2Line } from "react-icons/ri";
+import { BsCardImage } from "react-icons/bs";
 import jsPDF from "jspdf";
 import logoImage from "../../../Images/soniJewellersBillTitle.jpg";
-import {GiCheckMark} from "react-icons/gi";
-import {AiOutlineSend} from "react-icons/ai";
-import {LiaCartPlusSolid} from "react-icons/lia";
-import {MdOutlineLabelOff} from "react-icons/md";
-import {numberToIndianWords} from "../../../Other Functions/numberToIndianWords";
+import { GiCheckMark } from "react-icons/gi";
+import { AiOutlineSend } from "react-icons/ai";
+import { LiaCartPlusSolid } from "react-icons/lia";
+import { MdOutlineLabelOff } from "react-icons/md";
+import { numberToIndianWords } from "../../../Other Functions/numberToIndianWords";
 import DateTime from "../../../Other Functions/DateTime";
-import {FaDollarSign} from "react-icons/fa";
-import {MdChangeCircle} from "react-icons/md";
-import {FaRegCircle, FaRegDotCircle} from "react-icons/fa";
-import {BsImages} from "react-icons/bs";
-import {useNavigate, useSearchParams} from "react-router-dom";
-import {useSelector} from "react-redux";
+import { FaDollarSign } from "react-icons/fa";
+import { MdChangeCircle } from "react-icons/md";
+import { FaRegCircle, FaRegDotCircle } from "react-icons/fa";
+import { BsImages } from "react-icons/bs";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import DiamondEntryComponent from "../../../support/purchasesupport/Diamondpopup";
 import ProductCalculator from "../../../support/calculations/ProductCalculator.jsx"
@@ -69,7 +69,9 @@ import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
 import GetApiService from "../../../Api/getapiService";
 import { createOrder } from '../../../Api/postapiservice';
 import { addPayment, deletePayment, handlePaymentOption } from "../../../support/purchasesupport/usePayment";
-import {handleallitemscal} from "../../../support/purchasesupport/Calculations"
+import { handleallitemscal } from "../../../support/purchasesupport/Calculations"
+import PaymentForm from "../../../support/purchasesupport/PaymentForm"
+
 
 
 export default function AdminPurchaseEntryEdit() {
@@ -157,6 +159,8 @@ export default function AdminPurchaseEntryEdit() {
     const [iscal, setIscal] = useState(false);
     const [allcal, setAllcall] = useState(false);
 
+    
+
 
     const getTodaysDateInHTMLFormat = () => {
         const today = new Date();
@@ -171,7 +175,7 @@ export default function AdminPurchaseEntryEdit() {
     const [gstType, setGstType] = useState(false);
     const [advanceType, setAdvanceType] = useState("Advance Received");
     const [advanceAmount, setAdvanceAmount] = useState(0);
-    
+
 
     const [metalPaymentOption, setMetalPaymentOption] = useState({
         optionSelected: "GOLD",
@@ -336,82 +340,82 @@ export default function AdminPurchaseEntryEdit() {
 
     const apiService = new GetApiService(clientCode);
 
-  const loadData = async () => {
-    try {
-      const apiCalls = [
-        apiService.fetchAllSalesTeam(),
-        apiService.fetchAllCustomers(),
-        apiService.fetchAllSkuList(),
-        apiService.fetchAllCategories(),
-        apiService.fetchAllProductType(),
-        apiService.fetchAllPurities(),
-        apiService.fetchAllStonesList(),
-        apiService.fetchAllDiamondsList(),
-        apiService.fetchAllVendorTounche(),
-        apiService.fetchAllDiamondSizeWeightRate(),
-        apiService.fetchAllDiamondAttributes(),
-        apiService.fetchAllRDPurchaseList(),
-      ];
+    const loadData = async () => {
+        try {
+            const apiCalls = [
+                apiService.fetchAllSalesTeam(),
+                apiService.fetchAllCustomers(),
+                apiService.fetchAllSkuList(),
+                apiService.fetchAllCategories(),
+                apiService.fetchAllProductType(),
+                apiService.fetchAllPurities(),
+                apiService.fetchAllStonesList(),
+                apiService.fetchAllDiamondsList(),
+                apiService.fetchAllVendorTounche(),
+                apiService.fetchAllDiamondSizeWeightRate(),
+                apiService.fetchAllDiamondAttributes(),
+                apiService.fetchAllRDPurchaseList(),
+            ];
 
-      const results = await Promise.allSettled(apiCalls);
+            const results = await Promise.allSettled(apiCalls);
 
-      results.forEach((result, index) => {
-        if (result.status === 'fulfilled') {
-          // Handle successful response
-          switch (index) {
-            case 0:
-              setAllSalesTeam(result.value.data);
-              break;
-            case 1:
-              setAllCsData(result.value);
-              setProductsLoading(false);
-              break;
-            case 2:
-              setAllSkuList(result.value);
-              break;
-            case 3:
-              setAllCategories(result.value);
-              break;
-            case 4:
-              setAllProductTypes(result.value);
-              break;
-            case 5:
-              setAllPurities(result.value);
-              break;
-            case 6:
-              setAllStonesList(result.value);
-              break;
-            case 7:
-              setAllDiamondsList(result.value);
-              break;
-            case 8:
-              setAllVendorTounche(result.value);
-              break;
-            case 9:
-              setAllDiamondSizeWeightRate(result.value);
-              break;
-            case 10:
-              setAllDiamondAttributes(result.value);
-              break;
-            case 11:
-              setAllRDPurcaseMainBox(result.value);
-              break;
-            default:
-              break;
-          }
-        } else {
-          // Handle error
-          console.error(`Error loading data for API ${index + 1}:`, result.reason);
+            results.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    // Handle successful response
+                    switch (index) {
+                        case 0:
+                            setAllSalesTeam(result.value.data);
+                            break;
+                        case 1:
+                            setAllCsData(result.value);
+                            setProductsLoading(false);
+                            break;
+                        case 2:
+                            setAllSkuList(result.value);
+                            break;
+                        case 3:
+                            setAllCategories(result.value);
+                            break;
+                        case 4:
+                            setAllProductTypes(result.value);
+                            break;
+                        case 5:
+                            setAllPurities(result.value);
+                            break;
+                        case 6:
+                            setAllStonesList(result.value);
+                            break;
+                        case 7:
+                            setAllDiamondsList(result.value);
+                            break;
+                        case 8:
+                            setAllVendorTounche(result.value);
+                            break;
+                        case 9:
+                            setAllDiamondSizeWeightRate(result.value);
+                            break;
+                        case 10:
+                            setAllDiamondAttributes(result.value);
+                            break;
+                        case 11:
+                            setAllRDPurcaseMainBox(result.value);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    // Handle error
+                    console.error(`Error loading data for API ${index + 1}:`, result.reason);
+                }
+            });
+        } catch (error) {
+            console.error("Error loading data:", error);
         }
-      });
-    } catch (error) {
-      console.error("Error loading data:", error);
-    }
-  };
+    };
 
-  useEffect(() => {
-    loadData();
-  }, [clientCode]);
+    useEffect(() => {
+        loadData();
+    }, [clientCode]);
 
 
 
@@ -432,7 +436,7 @@ export default function AdminPurchaseEntryEdit() {
         fetchData();
     }, [searchParams, allCsData]);
 
-   
+
 
 
     const getRDPurchaseById = async (id) => {
@@ -495,7 +499,7 @@ export default function AdminPurchaseEntryEdit() {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-            
+
             // setGrandTotal();//balance amount
             // setTotalPayableAmount();//total amount
 
@@ -503,7 +507,7 @@ export default function AdminPurchaseEntryEdit() {
 
 
             const modifiedData = data.map((item) => {
-                let newItem = {...item};
+                let newItem = { ...item };
 
                 // let tdiaamount = newItem.Diamonds.reduce(
                 //     (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
@@ -516,28 +520,28 @@ export default function AdminPurchaseEntryEdit() {
                 //   );
 
 
-        //           let tmaking = parseFloat(newItem.MakingFixedAmt) +
-        //           parseFloat(newItem.MakingFixedWastage) +
-        //           parseFloat(newItem.MakingPerGram) +
-        //           parseFloat(newItem.MakingPercentage)+
-        //           parseFloat(newItem.HallmarkAmt);
+                //           let tmaking = parseFloat(newItem.MakingFixedAmt) +
+                //           parseFloat(newItem.MakingFixedWastage) +
+                //           parseFloat(newItem.MakingPerGram) +
+                //           parseFloat(newItem.MakingPercentage)+
+                //           parseFloat(newItem.HallmarkAmt);
 
-        //           let metalrate = 0
-        //           let nnet = 0;
-        //           if(data.GSTApplied){
-        //             // need to multiply with netwt
-        //             nnet = newItem.NetWt;
-        //         }else{
-        // nnet = newItem.FineWastageWt;
+                //           let metalrate = 0
+                //           let nnet = 0;
+                //           if(data.GSTApplied){
+                //             // need to multiply with netwt
+                //             nnet = newItem.NetWt;
+                //         }else{
+                // nnet = newItem.FineWastageWt;
 
-        //           }
-        //           let fineRate = (parseFloat(nnet) * parseFloat(newItem.MetalRate)) / 10;
+                //           }
+                //           let fineRate = (parseFloat(nnet) * parseFloat(newItem.MetalRate)) / 10;
 
 
 
-        
-        
-        let tgst =  newItem.TotalItemAmt * 0.03;
+
+
+                let tgst = newItem.TotalItemAmt * 0.03;
 
                 newItem.TotalGstAmount = tgst
 
@@ -548,7 +552,7 @@ export default function AdminPurchaseEntryEdit() {
                 //     parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
                 //         ? 
                 //         ((parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3)*0.03).toFixed(2)
-                        
+
                 //         // parseFloat(
                 //         //     fineRate *
                 //         // 0.03
@@ -563,33 +567,33 @@ export default function AdminPurchaseEntryEdit() {
                     : 0;
                 newItem.toAmount =
                     parseFloat(newItem.FineGoldWt).toFixed(2) == 0.0 &&
-                    parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
-                    parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
+                        parseFloat(newItem.FineSilverWt).toFixed(2) == 0.0 &&
+                        parseFloat(newItem.FineOtherMetalWt).toFixed(2) == 0.0
                         ? true
                         : false;
-                
+
                 newItem.Making =
-                    parseFloat(newItem.MakingFixedAmt ||0) +
-                    parseFloat(newItem.MakingFixedWastage||0) +
-                    parseFloat(newItem.MakingPerGram||0) +
-                    parseFloat(newItem.MakingPercentage||0);
+                    parseFloat(newItem.MakingFixedAmt || 0) +
+                    parseFloat(newItem.MakingFixedWastage || 0) +
+                    parseFloat(newItem.MakingPerGram || 0) +
+                    parseFloat(newItem.MakingPercentage || 0);
 
-                    // newItem.FinalPrice = 
-                    // newItem.MRP && newItem.MRP !== "" && newItem.MRP !== "0"
-                    //   ? newItem.MRP
-                    //   : parseFloat(newItem.FineGoldWt).toFixed(3) === "0.00" &&
-                    //     parseFloat(newItem.FineSilverWt).toFixed(3) === "0.00" &&
-                    //     parseFloat(newItem.FineOtherMetalWt).toFixed(3) === "0.00"
-                    //     ? (parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3)
-                    //     : (parseFloat(fineRate) + parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3);
-                  
-                       
+                // newItem.FinalPrice = 
+                // newItem.MRP && newItem.MRP !== "" && newItem.MRP !== "0"
+                //   ? newItem.MRP
+                //   : parseFloat(newItem.FineGoldWt).toFixed(3) === "0.00" &&
+                //     parseFloat(newItem.FineSilverWt).toFixed(3) === "0.00" &&
+                //     parseFloat(newItem.FineOtherMetalWt).toFixed(3) === "0.00"
+                //     ? (parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3)
+                //     : (parseFloat(fineRate) + parseFloat(tmaking) + parseFloat(tdiaamount) + parseFloat(tstone)).toFixed(3);
 
-                        console.log('checking newitemdata  ', newItem)
+
+
+                console.log('checking newitemdata  ', newItem)
                 return newItem;
             });
 
-            
+
 
             // Set state with the modified data
             setAllSelectedProducts(modifiedData);
@@ -681,7 +685,7 @@ export default function AdminPurchaseEntryEdit() {
             setPayments(modifiedData);
             setOPayments(modifiedData);
 
-            console.log( "selectedpayments  ", payments);
+            console.log("selectedpayments  ", payments);
             console.log(data, "allPaymentsList");
         } catch (error) {
             console.error("Failed to fetch purchase data:", error);
@@ -693,7 +697,7 @@ export default function AdminPurchaseEntryEdit() {
     // console.log(purchaseEntryNo, "purchaseEntryNo");
     console.log(purchaseMainBox, "purchaseMainBox");
     // console.log(selectedCustomer, "selectedCustomer");
-    
+
 
 
     const [selectedSku, setSelectedSku] = useState([]);
@@ -706,38 +710,38 @@ export default function AdminPurchaseEntryEdit() {
 
             if (selectedSku.SKUStoneMain && Array.isArray(selectedSku.SKUStoneMain)) {
                 const normalizedStones = selectedSku.SKUStoneMain.map(stone => ({
-                  StoneName: stone.StoneMainName,
-                  StoneWeight: stone.StoneMainWeight,
-                  StonePieces: stone.StoneMainPieces,
-                  StoneRate: stone.StoneMainRate,
-                  StoneAmount: stone.StoneMainAmount,
-                  Description: stone.StoneMainDescription,
-                  ClientCode: stone.ClientCode,
-                  CompanyId: stone.CompanyId,
-                  CounterId: stone.CounterId,
-                  BranchId: stone.BranchId,
-                  EmployeeId: stone.EmployeeId,
-                  StoneLessPercent: stone.StoneLessPercent,
-                  Id: stone.Id,
-                  CreatedOn: stone.CreatedOn,
-                  LastUpdated: stone.LastUpdated,
-                  StatusType: stone.StatusType,
+                    StoneName: stone.StoneMainName,
+                    StoneWeight: stone.StoneMainWeight,
+                    StonePieces: stone.StoneMainPieces,
+                    StoneRate: stone.StoneMainRate,
+                    StoneAmount: stone.StoneMainAmount,
+                    Description: stone.StoneMainDescription,
+                    ClientCode: stone.ClientCode,
+                    CompanyId: stone.CompanyId,
+                    CounterId: stone.CounterId,
+                    BranchId: stone.BranchId,
+                    EmployeeId: stone.EmployeeId,
+                    StoneLessPercent: stone.StoneLessPercent,
+                    Id: stone.Id,
+                    CreatedOn: stone.CreatedOn,
+                    LastUpdated: stone.LastUpdated,
+                    StatusType: stone.StatusType,
                 }));
                 setAllStonesList(normalizedStones);
                 console.log('checking pro filter3', allStonesList, '  g   ', normalizedStones);
-              } 
+            }
 
             console.log(selectedSku, "sku found")
 
         } else {
-           
+
             setAllStonesList(allStonesList)
         }
     }, [selectedSku]);
 
     const handleSkuInputChange = (e) => {
         e.preventDefault();
-        const {value} = e.target;
+        const { value } = e.target;
         setSelectedSkuName(value);
         let selectedSkuItem = [];
         selectedSkuItem = allSkuList.find((x) => x.StockKeepingUnit == value);
@@ -753,18 +757,18 @@ export default function AdminPurchaseEntryEdit() {
     // useEffect(() => {
     //   fetchAllProducts();
     // }, []);
-    
-    
-    
+
+
+
 
     useEffect(() => {
-        if(!selectedSkuName){
+        if (!selectedSkuName) {
             apiService.fetchAllStonesList();
         }
     }, [selectedSkuName]);
 
-   
-    
+
+
     const navigate = useNavigate();
     console.log(selectedSku, "selectedSku");
     console.log(selectedSku, "selectedSku");
@@ -937,11 +941,11 @@ export default function AdminPurchaseEntryEdit() {
             // setDescription("");
         }
     }, [selectedSku]);
-    
-    
-    
-    
-    
+
+
+
+
+
     console.log(allPurities, "allPurities");
 
     // useEffect(() => {
@@ -972,7 +976,7 @@ export default function AdminPurchaseEntryEdit() {
     // });
 
     const handleNameInputChange = (e) => {
-        const {value} = e.target;
+        const { value } = e.target;
         setCustomerName(value); // Update the name input value
 
         const selected = allCsData.find((customer) => {
@@ -1005,7 +1009,7 @@ export default function AdminPurchaseEntryEdit() {
     }, [selectedProduct]);
 
     const handleProductLabelChange = (e) => {
-        const {value} = e.target;
+        const { value } = e.target;
         setLabelName(value.toUpperCase());
         setSelectedProduct([]);
         setCategoryName("");
@@ -1174,7 +1178,7 @@ export default function AdminPurchaseEntryEdit() {
     }, [selectedProduct, gstType]);
 
     const calculateNetAmount = () => {
-        console.log('checking allproducts ',allSelectedProducts)
+        console.log('checking allproducts ', allSelectedProducts)
         if (allSelectedProducts.length > 0) {
             let totalNetAmount = allSelectedProducts.reduce(
                 (total, product) => total + parseFloat(product.FinalPrice),
@@ -1253,7 +1257,7 @@ export default function AdminPurchaseEntryEdit() {
         if (!isNaN(newTotalPayableAmount)) {
             // Calculate remaining balance after deducting paid amount
             const remainingAmount = newTotalPayableAmount - totalPaidAmount;
-    
+
             if (gstType) {
                 // Calculate the new taxable and GST amounts based on the remaining balance
                 const perRemainingAmount = remainingAmount / 103;
@@ -1265,17 +1269,17 @@ export default function AdminPurchaseEntryEdit() {
                 setTotalPayableGstAmount(0);
                 setAllProdctsNetAmount(remainingAmount.toFixed(2));
             }
-    
+
             setTotalPayableAmount(newTotalPayableAmount.toFixed(2));
             setPaymentAmount(remainingAmount.toFixed(2));
             setGrandTotal(newTotalPayableAmount.toFixed(2));
-    
+
             let totalAmountPaying = allSelectedProducts.reduce(
                 (total, product) =>
                     total + parseFloat(product.FinalPrice) + (gstType ? parseFloat(product.TotalGstAmount) : 0),
                 0
             );
-    
+
             setDiscountAmount((totalAmountPaying - newTotalPayableAmount).toFixed(2));
             setDeductGold(0);
             setDeductSilver(0);
@@ -1283,7 +1287,7 @@ export default function AdminPurchaseEntryEdit() {
             setTotalPayableAmount(0);
         }
     }
-    
+
 
     const changeTotalPrice = (e) => {
         const totalPaymentAmount =
@@ -1554,12 +1558,12 @@ export default function AdminPurchaseEntryEdit() {
             formData.append(
                 "PurchaseStatus",
                 parseFloat(grandTotal).toFixed(2) === "0.00" &&
-                parseFloat(totalPayableGold).toFixed(3) === "0.000" &&
-                parseFloat(totalPayableSilver).toFixed(3) === "0.000"
+                    parseFloat(totalPayableGold).toFixed(3) === "0.000" &&
+                    parseFloat(totalPayableSilver).toFixed(3) === "0.000"
                     ? "Paid"
                     : payments.length > 0
-                    ? "Partial"
-                    : "None"
+                        ? "Partial"
+                        : "None"
             );
 
             formData.append("Quantity", totalQuantity);
@@ -1689,7 +1693,7 @@ export default function AdminPurchaseEntryEdit() {
                 Id,
                 CreatedOn,
             } = item;
-        
+
             let newItem = {
                 amount: Amount,
                 deductGold: PaymentModeType === "Cash to Metal" ? FineGold : 0,
@@ -1706,10 +1710,10 @@ export default function AdminPurchaseEntryEdit() {
                 Id: Id,
                 CreatedOn: CreatedOn,
             };
-        
+
             return newItem;
         });
-        
+
         // Adjust modifiedData to match the length of payments
         let adjustedModifiedData = payments.map((payment, index) => {
             if (index < modifiedData.length) {
@@ -1854,12 +1858,12 @@ export default function AdminPurchaseEntryEdit() {
             formData.append(
                 "PurchaseStatus",
                 parseFloat(grandTotal).toFixed(2) === "0.00" &&
-                parseFloat(totalPayableGold).toFixed(3) === "0.000" &&
-                parseFloat(totalPayableSilver).toFixed(3) === "0.000"
+                    parseFloat(totalPayableGold).toFixed(3) === "0.000" &&
+                    parseFloat(totalPayableSilver).toFixed(3) === "0.000"
                     ? "Paid"
                     : payments.length > 0
-                    ? "Partial"
-                    : "None"
+                        ? "Partial"
+                        : "None"
             );
 
             formData.append("Quantity", totalQuantity);
@@ -2006,23 +2010,23 @@ export default function AdminPurchaseEntryEdit() {
 
 
 
-  
+
 
     function getShapeValue(id, shape, parameter) {
         console.log("check input values ", id, "  ", shape, "  ", parameter);
         if (id) {
-          const shapeValue = allDiamondAttributes
-            .filter((x) => x.DiamondAttribute == parameter)
-            ?.find((item) => item.Id == id);
-          return id ? shapeValue?.DiamondValue : "";
+            const shapeValue = allDiamondAttributes
+                .filter((x) => x.DiamondAttribute == parameter)
+                ?.find((item) => item.Id == id);
+            return id ? shapeValue?.DiamondValue : "";
         }
         if (shape) {
-          const shapeValue = allDiamondAttributes
-            .filter((x) => x.DiamondAttribute == parameter)
-            ?.find((item) => item.DiamondValue == shape);
-          return shape ? shapeValue?.Id : "";
+            const shapeValue = allDiamondAttributes
+                .filter((x) => x.DiamondAttribute == parameter)
+                ?.find((item) => item.DiamondValue == shape);
+            return shape ? shapeValue?.Id : "";
         }
-      }
+    }
 
     function getDiamondClarity(id, clarity) {
         if (id) {
@@ -2179,22 +2183,22 @@ export default function AdminPurchaseEntryEdit() {
                     AssignedSilverWeight: "0",
                     UnlabelledGoldWeight:
                         !product.AddToUnlabelled &&
-                        product.CategoryName.toLowerCase().includes("gold")
+                            product.CategoryName.toLowerCase().includes("gold")
                             ? `${product.GrossWt}`
                             : // ? `${product.FineWastageWt}`
                             "0",
                     UnlabelledOtherMetalWeight:
                         !product.AddToUnlabelled &&
-                        !(
-                            product.CategoryName.toLowerCase().includes("gold") &&
-                            !product.CategoryName.toLowerCase().includes("silver")
-                        )
+                            !(
+                                product.CategoryName.toLowerCase().includes("gold") &&
+                                !product.CategoryName.toLowerCase().includes("silver")
+                            )
                             ? // ? `${product.FineWastageWt}`
                             `${product.GrossWt}`
                             : "0",
                     UnlabelledSilverWeight:
                         !product.AddToUnlabelled &&
-                        product.CategoryName.toLowerCase().includes("silver")
+                            product.CategoryName.toLowerCase().includes("silver")
                             ? // ? `${product.FineWastageWt}`
                             `${product.GrossWt}`
                             : "0",
@@ -2208,20 +2212,20 @@ export default function AdminPurchaseEntryEdit() {
                     ClientCode: clientCode,
                     AvailableGrossWeight: !product.AddToUnlabelled
                         ? // &&
-                          // product.CategoryName.toLowerCase().includes("gold")
+                        // product.CategoryName.toLowerCase().includes("gold")
                         `${product.GrossWt}`
                         : "0",
                     AvailableNetWeight: !product.AddToUnlabelled
                         ? // &&
-                          // !(
-                          //   product.CategoryName.toLowerCase().includes("gold") &&
-                          //   !product.CategoryName.toLowerCase().includes("silver")
-                          // )
+                        // !(
+                        //   product.CategoryName.toLowerCase().includes("gold") &&
+                        //   !product.CategoryName.toLowerCase().includes("silver")
+                        // )
                         `${product.NetWt}`
                         : "0",
                     AvailableStoneWeight: !product.AddToUnlabelled
                         ? // &&
-                          // product.CategoryName.toLowerCase().includes("silver")
+                        // product.CategoryName.toLowerCase().includes("silver")
                         `${product.StoneWt}`
                         : "0",
                     DiamondSize: product.DiamondSize,
@@ -2233,18 +2237,18 @@ export default function AdminPurchaseEntryEdit() {
                     DiamondCut: getDiamondCut(null, product.DiamondCut),
                     DiamondSettingType: getSettingType(null, product.DiamondSettingType),
                     DiamondCertificate: product.DiamondCertificate,
-DiamondPurchaseAmount: String(product.DiamondPurchaseAmount),
-DiamondSellAmount: product.DiamondSellAmount,
-DiamondDescription: product.DiamondDescription,
-DiamondWeight: String(product.DiamondWeight || 0),
-DiamondPieces: String(product.DiamondPieces || 0),
-DiamondAmount: String(product.DiamondAmount || 0),
-DiamondSleve: product.DiamondSleve,
-DiamondTotalWeight: String(product.DiamondTotalWeight || 0), // Add a fallback value of 0
-DiamondTotalQuantity: String(product.DiamondTotalQuantity || 0), // Add a fallback value of 0
-TotalDiamondWeight: String(product.TotalDiamondWeight || 0), // Add a fallback value of 0
-TotalDiamondAmount: String(product.TotalDiamondAmount || 0), // Add a fallback value of 0
-TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of 0
+                    DiamondPurchaseAmount: String(product.DiamondPurchaseAmount),
+                    DiamondSellAmount: product.DiamondSellAmount,
+                    DiamondDescription: product.DiamondDescription,
+                    DiamondWeight: String(product.DiamondWeight || 0),
+                    DiamondPieces: String(product.DiamondPieces || 0),
+                    DiamondAmount: String(product.DiamondAmount || 0),
+                    DiamondSleve: product.DiamondSleve,
+                    DiamondTotalWeight: String(product.DiamondTotalWeight || 0), // Add a fallback value of 0
+                    DiamondTotalQuantity: String(product.DiamondTotalQuantity || 0), // Add a fallback value of 0
+                    TotalDiamondWeight: String(product.TotalDiamondWeight || 0), // Add a fallback value of 0
+                    TotalDiamondAmount: String(product.TotalDiamondAmount || 0), // Add a fallback value of 0
+                    TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of 0
 
                 };
             });
@@ -2799,7 +2803,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
         setOpenEditBox(false);
     };
     const handleInputChange2 = (e, property) => {
-        const {value} = e.target;
+        const { value } = e.target;
         if (selectedProduct) {
             const updatedProduct = {
                 ...openEditProduct,
@@ -2917,45 +2921,45 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
     };
 
     const handleAddPayment = () => {
-        console.log('trigged payment ', );
+        console.log('trigged payment ',);
         addPayment({
-          paymentOptions,
-          paymentAmount,
-          paymentGold,
-          paymentSilver,
-          deductGold,
-          deductSilver,
-          paymentType,
-          metalPaymentOption,
-          grandTotal,
-          selectedCustomer,
-          setPayments,
-          setGrandTotal,
-          setPaymentAmount,
-          setTotalPayableGold,
-          setTotalPayableSilver,
-          setMessageType,
-          setMessageToShow,
-          setShowError,
-          setPaymentDescription,
-          setMetalPaymentOption,
-          paymentDescription
+            paymentOptions,
+            paymentAmount,
+            paymentGold,
+            paymentSilver,
+            deductGold,
+            deductSilver,
+            paymentType,
+            metalPaymentOption,
+            grandTotal,
+            selectedCustomer,
+            setPayments,
+            setGrandTotal,
+            setPaymentAmount,
+            setTotalPayableGold,
+            setTotalPayableSilver,
+            setMessageType,
+            setMessageToShow,
+            setShowError,
+            setPaymentDescription,
+            setMetalPaymentOption,
+            paymentDescription
         });
-      };
-    
-      const handleDeletePayment = (index) => {
+    };
+
+    const handleDeletePayment = (index) => {
         deletePayment({
-          index,
-          payments,
-          setPayments,
-          grandTotal,
-          setGrandTotal,
-          setTotalPayableGold,
-          setTotalPayableSilver,
-          setPaymentAmount,
-          selectedCustomer
+            index,
+            payments,
+            setPayments,
+            grandTotal,
+            setGrandTotal,
+            setTotalPayableGold,
+            setTotalPayableSilver,
+            setPaymentAmount,
+            selectedCustomer
         });
-      };
+    };
 
 
 
@@ -2993,115 +2997,115 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
     const handleInputChangePurchase = (e) => {
         const { name, value } = e.target;
         const updatedProduct = { ...purchaseProduct };
-    console.log('checking parameter atchange', name);
+        console.log('checking parameter atchange', name);
         // Handle specific cases
         switch (name) {
-          case "CategoryId":
-            const [selectedCategoryId, selectedCategoryName] = value.split(",");
-            updatedProduct.CategoryName = selectedCategoryName;
-            updatedProduct.CategoryId = selectedCategoryId;
-            updatedProduct.MetalId = selectedCategoryId;
-            updatedProduct.MetalName = selectedCategoryName;
-            break;
-          case "MetalId":
-            const [selectedMetalId, selectedMetalName] = value.split(",");
-            updatedProduct.MetalId = selectedMetalId;
-            updatedProduct.MetalName = selectedMetalName;
-            break;
-          case "DiamondPieces":
-            updatedProduct.DiamondPieces = value;
-            break;
-          case "ProductName":
-            const [selectedProductId, selectedProductName] = value.split(",");
-            updatedProduct.ProductId = selectedProductId;
-            updatedProduct.ProductName = selectedProductName;
-            break;
-          case "GrossWt":
-            updatedProduct.GrossWt = value;
-            break; // Add missing break
-          case "StoneWt":
-            updatedProduct.StoneWt = value;
-            break; // Add missing break
-          case "ClipWeight":
-            updatedProduct.ClipWeight = value;
-            break; // Add missing break
-          case "ClipQuantity":
-            updatedProduct.ClipQuantity = value;
-            updatedProduct.Quantity = value;
-            break; // Add missing break
-          case "Quantity":
-            updatedProduct.Quantity = value;
-            updatedProduct.ClipQuantity = value;
-            break; // Add missing break
-          case "NetWt":
-            updatedProduct.NetWt = value;
-            break; // Add missing break
-          case "FinePercent":
-            updatedProduct.FinePercent = value;
-            break; // Add missing break
-          case "WastageWt":
-            updatedProduct[name] = value;
-            break;
-          case "MetalRate":
-            updatedProduct.MetalRate = parseFloat(value) || 0; // Ensure valid number
-            break;
-          case "purityRate":
-            const [selectedPurityName, selectedPurityRate] = value.split(",");
-            updatedProduct.Purity = selectedPurityName;
-            updatedProduct.GoldRate = selectedPurityRate;
-            updatedProduct.purityRate = selectedPurityRate;
-            break;
-          case "GoldRate":
-            updatedProduct.GoldRate = parseFloat(value) || 0;
-            updatedProduct.purityRate = parseFloat(value) || 0;
-            break;
-          case "DiamondSize":
-            updatedProduct[name] = value;
-            break;
-          default:
-            updatedProduct[name] = value;
+            case "CategoryId":
+                const [selectedCategoryId, selectedCategoryName] = value.split(",");
+                updatedProduct.CategoryName = selectedCategoryName;
+                updatedProduct.CategoryId = selectedCategoryId;
+                updatedProduct.MetalId = selectedCategoryId;
+                updatedProduct.MetalName = selectedCategoryName;
+                break;
+            case "MetalId":
+                const [selectedMetalId, selectedMetalName] = value.split(",");
+                updatedProduct.MetalId = selectedMetalId;
+                updatedProduct.MetalName = selectedMetalName;
+                break;
+            case "DiamondPieces":
+                updatedProduct.DiamondPieces = value;
+                break;
+            case "ProductName":
+                const [selectedProductId, selectedProductName] = value.split(",");
+                updatedProduct.ProductId = selectedProductId;
+                updatedProduct.ProductName = selectedProductName;
+                break;
+            case "GrossWt":
+                updatedProduct.GrossWt = value;
+                break; // Add missing break
+            case "StoneWt":
+                updatedProduct.StoneWt = value;
+                break; // Add missing break
+            case "ClipWeight":
+                updatedProduct.ClipWeight = value;
+                break; // Add missing break
+            case "ClipQuantity":
+                updatedProduct.ClipQuantity = value;
+                updatedProduct.Quantity = value;
+                break; // Add missing break
+            case "Quantity":
+                updatedProduct.Quantity = value;
+                updatedProduct.ClipQuantity = value;
+                break; // Add missing break
+            case "NetWt":
+                updatedProduct.NetWt = value;
+                break; // Add missing break
+            case "FinePercent":
+                updatedProduct.FinePercent = value;
+                break; // Add missing break
+            case "WastageWt":
+                updatedProduct[name] = value;
+                break;
+            case "MetalRate":
+                updatedProduct.MetalRate = parseFloat(value) || 0; // Ensure valid number
+                break;
+            case "purityRate":
+                const [selectedPurityName, selectedPurityRate] = value.split(",");
+                updatedProduct.Purity = selectedPurityName;
+                updatedProduct.GoldRate = selectedPurityRate;
+                updatedProduct.purityRate = selectedPurityRate;
+                break;
+            case "GoldRate":
+                updatedProduct.GoldRate = parseFloat(value) || 0;
+                updatedProduct.purityRate = parseFloat(value) || 0;
+                break;
+            case "DiamondSize":
+                updatedProduct[name] = value;
+                break;
+            default:
+                updatedProduct[name] = value;
         }
-    
+
         setPurchaseProduct(updatedProduct);
         setIscal(true); // Trigger calculation
     };
-    
-    
-      useEffect(() => {
+
+
+    useEffect(() => {
         if (iscal) {
-          console.log('checking calculationsss', iscal)
-        //   const updatedProduct = ProductCalculator.calculateAll(
-        //     purchaseProduct,
-        //     allDiamondSizeWeightRate,
-        //     allPurities,
-        //     allVendorTounche,
-        //     selectedCustomer,
-        //     selectedSku,
-        //     selectedSkuName,
-        //     finePure,
-        //     convertAmount,
-        //     gstType
-        //   );
-        //   setPurchaseProduct(updatedProduct);
+            console.log('checking calculationsss', iscal)
+            //   const updatedProduct = ProductCalculator.calculateAll(
+            //     purchaseProduct,
+            //     allDiamondSizeWeightRate,
+            //     allPurities,
+            //     allVendorTounche,
+            //     selectedCustomer,
+            //     selectedSku,
+            //     selectedSkuName,
+            //     finePure,
+            //     convertAmount,
+            //     gstType
+            //   );
+            //   setPurchaseProduct(updatedProduct);
 
-        let updatedProduct = { ...purchaseProduct };
+            let updatedProduct = { ...purchaseProduct };
 
-        // Conditionally call the calculatePurityAndVendorTounche function
-       
-
-        // Always call these
-        ProductCalculator.calculateNetWeight(updatedProduct, selectedSku);
-        ProductCalculator.calculateDiamonds(updatedProduct, allDiamondSizeWeightRate);
-        ProductCalculator.calculateWastageAndFine(updatedProduct, finePure);
-        ProductCalculator.calculateTotalPrice(updatedProduct, convertAmount, gstType);
-
-        setPurchaseProduct(updatedProduct);
+            // Conditionally call the calculatePurityAndVendorTounche function
 
 
-          setIscal(false);
+            // Always call these
+            ProductCalculator.calculateNetWeight(updatedProduct, selectedSku);
+            ProductCalculator.calculateDiamonds(updatedProduct, allDiamondSizeWeightRate);
+            ProductCalculator.calculateWastageAndFine(updatedProduct, finePure);
+            ProductCalculator.calculateTotalPrice(updatedProduct, convertAmount, gstType);
+
+            setPurchaseProduct(updatedProduct);
+
+
+            setIscal(false);
         }
-      }, [iscal, purchaseProduct]);
-    
+    }, [iscal, purchaseProduct]);
+
 
     useEffect(() => {
         const updatedProduct = purchaseProduct;
@@ -3109,7 +3113,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
         let fineWeight = parseFloat(purchaseProduct.FineWt);
         let wastageWeight = !finePure
             ? (parseFloat(purchaseProduct.WastageWt) *
-            parseFloat(purchaseProduct.NetWt)) /
+                parseFloat(purchaseProduct.NetWt)) /
             100
             : (parseFloat(purchaseProduct.WastageWt) * parseFloat(fineWeight)) / 100;
         let totalFineWastageWt = parseFloat(fineWeight) + parseFloat(wastageWeight);
@@ -3231,14 +3235,14 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                 // totalGstAmount: `${0}`,
                 BalanceGold:
                     !convertAmount &&
-                    purchaseProduct.MetalId &&
-                    purchaseProduct.MetalId == 1
+                        purchaseProduct.MetalId &&
+                        purchaseProduct.MetalId == 1
                         ? purchaseProduct.FineWastageWt
                         : 0,
                 BalanceSilver:
                     !convertAmount &&
-                    purchaseProduct.MetalId &&
-                    purchaseProduct.MetalId == 2
+                        purchaseProduct.MetalId &&
+                        purchaseProduct.MetalId == 2
                         ? purchaseProduct.FineWastageWt
                         : 0,
                 FineGold:
@@ -3475,11 +3479,11 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
 
     const handleMetalPaymentOption = (a, b) => {
         const { value } = b.target;
-    
+
         const updatedMetalPaymentOption = handlePaymentOption(a, value, metalPaymentOption, paymentOptions);
-    
+
         setMetalPaymentOption(updatedMetalPaymentOption);
-    
+
         // Additional state updates can be done based on the logic you need
         if (paymentOptions === "Metal to Cash" || paymentOptions === "Metal") {
             if (updatedMetalPaymentOption.deductGold) {
@@ -3501,7 +3505,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
     };
 
     const handleMetalPaymentOption1 = (a, b) => {
-        const {value} = b.target;
+        const { value } = b.target;
         if (paymentOptions === "Metal to Cash") {
             let totalAmount = 0;
             if (
@@ -3715,114 +3719,114 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
 
     const deleteStone = (index) => {
         if (index < 0 || index >= purchaseProduct.Stones.length) {
-          console.warn('Index out of boundss');
-          return;
-      }
-    
-      const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
-      const stoneToDelete = purchaseProduct.Stones[index];
-    
-      // Update StoneWt after deleting the stone
-      const updatedStoneWeight = 
-      purchaseProduct.StoneWt - (stoneToDelete.StoneWeight * stoneToDelete.StonePieces * skuPieces);
-      purchaseProduct.StoneWt = updatedStoneWeight;
-    
+            console.warn('Index out of boundss');
+            return;
+        }
+
+        const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+        const stoneToDelete = purchaseProduct.Stones[index];
+
+        // Update StoneWt after deleting the stone
+        const updatedStoneWeight =
+            purchaseProduct.StoneWt - (stoneToDelete.StoneWeight * stoneToDelete.StonePieces * skuPieces);
+        purchaseProduct.StoneWt = updatedStoneWeight;
+
         const updatedStones = purchaseProduct.Stones.filter((_, i) => i !== index);
         setPurchaseProduct({ ...purchaseProduct, Stones: updatedStones });
         setIscal(true)
-      };
+    };
     const deleteStoneEdit = (index) => {
         const updatedStones = openEditProduct.Stones.filter((_, i) => i !== index);
-        setOpenEditProduct({...openEditProduct, Stones: updatedStones});
+        setOpenEditProduct({ ...openEditProduct, Stones: updatedStones });
     };
 
     const normalizeString = (str) => {
         return str.replace(/\s+/g, " ").trim().toLowerCase();
-      };
+    };
 
-      const handleStoneChange = (index, property, value) => {
+    const handleStoneChange = (index, property, value) => {
         const newStones = [...purchaseProduct.Stones];
         // const selectedStone = allStonesList.find(
         //   (stone) => {
         //     console.log('checking newstones', '  ',allStonesList, '  ', stone.StoneMainName, '  ', value )
         //     stone.StoneMainName === value}
-    
+
         // );
-    
+
         const normalizedValue = normalizeString(value);
         console.log("Normalized value:", normalizedValue);
-    
+
         let selectedStone;
         allStonesList.forEach((stone) => {
-          const normalizedStoneName = normalizeString(
-            stone.StoneName ? stone.StoneName : stone.StoneMainName
-          );
-          console.log(
-            `Comparing "${normalizedStoneName}" with "${normalizedValue}"`
-          );
-          if (normalizedStoneName === normalizedValue) {
-            selectedStone = stone;
-            console.log("Match found :", stone);
-          }
+            const normalizedStoneName = normalizeString(
+                stone.StoneName ? stone.StoneName : stone.StoneMainName
+            );
+            console.log(
+                `Comparing "${normalizedStoneName}" with "${normalizedValue}"`
+            );
+            if (normalizedStoneName === normalizedValue) {
+                selectedStone = stone;
+                console.log("Match found :", stone);
+            }
         });
         if (selectedStone) {
-          newStones[index] = {
-            ...newStones[index],
-            StoneName: selectedStone.StoneName
-              ? selectedStone.StoneName
-              : selectedStone.StoneMainName,
-            StoneWeight: selectedStone.StoneWeight
-              ? selectedStone.StoneWeight
-              : selectedStone.StoneMainWeight,
-            StonePieces: selectedStone.StonePieces
-              ? selectedStone.StonePieces
-              : selectedStone.StoneMainPieces,
-            StoneRate: selectedStone.StoneRate
-              ? selectedStone.StoneRate
-              : selectedStone.StoneMainRate,
-            StoneAmount: selectedStone.StoneAmount
-              ? selectedStone.StoneAmount
-              : selectedStone.StoneMainAmount,
-            Description: selectedStone.Description
-              ? selectedStone.Description
-              : selectedStone.StoneMainDescription,
-          };
+            newStones[index] = {
+                ...newStones[index],
+                StoneName: selectedStone.StoneName
+                    ? selectedStone.StoneName
+                    : selectedStone.StoneMainName,
+                StoneWeight: selectedStone.StoneWeight
+                    ? selectedStone.StoneWeight
+                    : selectedStone.StoneMainWeight,
+                StonePieces: selectedStone.StonePieces
+                    ? selectedStone.StonePieces
+                    : selectedStone.StoneMainPieces,
+                StoneRate: selectedStone.StoneRate
+                    ? selectedStone.StoneRate
+                    : selectedStone.StoneMainRate,
+                StoneAmount: selectedStone.StoneAmount
+                    ? selectedStone.StoneAmount
+                    : selectedStone.StoneMainAmount,
+                Description: selectedStone.Description
+                    ? selectedStone.Description
+                    : selectedStone.StoneMainDescription,
+            };
         } else {
-          newStones[index] = {
-            ...newStones[index],
-            [property]: value,
-          };
+            newStones[index] = {
+                ...newStones[index],
+                [property]: value,
+            };
         }
-    
-    
+
+
         const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
-    
+
         let totalwt = newStones[index].StoneWeight * newStones[index].StonePieces * skuPieces;
         let totalpcs = newStones[index].StonePieces * skuPieces;
-    
+
         // Correct the assignment
         newStones[index].TotalStoneWt = totalwt;
         newStones[index].TotalStonePcs = totalpcs;
-    
+
         console.log('check updated stones', newStones)
-    
+
         setPurchaseProduct({ ...purchaseProduct, Stones: newStones });
         setIscal(true)
-      };
-      
-    
-
-    
-    
+    };
 
 
 
 
 
 
-    
 
-    const deleteDiamond = ( index) => {
+
+
+
+
+
+
+    const deleteDiamond = (index) => {
         // const updatedDiamonds = purchaseProduct.Diamonds.filter(
         //     (_, i) => i !== index
         // );
@@ -3839,7 +3843,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
 
         // Filter out the diamond from the list
         const updatedDiamonds = purchaseProduct.Diamonds.filter((_, i) => i !== index);
-    
+
         // Update the purchase product with new diamond list and adjust totals
         setPurchaseProduct((prevState) => ({
             ...prevState,
@@ -3848,195 +3852,195 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
             TotalDiamondQty: prevState.TotalDiamondQty - parseInt(diamondToRemove.DiamondPieces || 0, 10),
             TotalDiamondWeight: prevState.TotalDiamondWeight - parseFloat(diamondToRemove.DiamondTotalWeight || 0),
         }));
-    
-    
-          setIscal(true)
+
+
+        setIscal(true)
 
 
     };
-    
+
     const handleDiamondChange = (index, property, value) => {
         const newDiamond = [...purchaseProduct.Diamonds];
-    
+
         const oldproduct = { ...purchaseProduct };
-    
+
         const selectedDiamond = allDiamondsList.find(
-          (diamond) => diamond.DiamondName === value
+            (diamond) => diamond.DiamondName === value
         );
         let totalDiamondAmount = 0;
         let truncatedweight = 0;
-    
-        if (selectedDiamond) {
-          newDiamond[index] = {
-            ...newDiamond[index],
-            DiamondName: selectedDiamond.DiamondName,
-            DiamondWeight: selectedDiamond.DiamondWeight,
-            DiamondRate: selectedDiamond.DiamondRate,
-            DiamondPieces: selectedDiamond.DiamondPieces,
-            DiamondClarity: selectedDiamond.DiamondClarity,
-            DiamondColour: selectedDiamond.DiamondColour,
-            DiamondCut: selectedDiamond.DiamondCut,
-            DiamondShape: selectedDiamond.DiamondShape,
-            DiamondSize: selectedDiamond.DiamondSize,
-            Certificate: selectedDiamond.Certificate,
-            SettingType: selectedDiamond.SettingType,
-            DiamondAmount: selectedDiamond.DiamondAmount,
-            // DiamondPurchaseAmt: selectedDiamond.DiamondPurchaseAmt,
-            Description: selectedDiamond.Description, // Assuming a description field exists
-          };
-        } else {
-          newDiamond[index] = {
-            ...newDiamond[index],
-            [property]: value,
-          };
-    
-          if (
-            property == "DiamondWeight" ||
-            property == "DiamondShape" ||
-            property == "DiamondClarity" ||
-            property == "DiamondCut" ||
-            property == "DiamondColour"
-          ) {
-            const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
-              return template.Id === diamondtampletid;
-            });
-            if (diamondTemplate) {
-              // const shape = newDiamond[index].DiamondShape ? getShapeValue(null, newDiamond[index].DiamondShape) : null;
-              // const clarity = newDiamond[index].DiamondClarity ? getDiamondClarity(null, newDiamond[index].DiamondClarity) : null;
-              const shape = newDiamond[index].DiamondShape
-                ? getShapeValue(
-                  null,
-                  newDiamond[index].DiamondShape,
-                  "DiamondShape"
-                )
-                : null;
-              const clarity = newDiamond[index].DiamondClarity
-                ? getShapeValue(
-                  null,
-                  newDiamond[index].DiamondClarity,
-                  "DiamondClarity"
-                )
-                : null;
-              const color = newDiamond[index].DiamondColour
-                ? getShapeValue(
-                  null,
-                  newDiamond[index].DiamondColour,
-                  "DiamondColour"
-                )
-                : null;
-              const size = newDiamond[index].DiamondSize
-                ? getShapeValue(null, newDiamond[index].DiamondSize, "DiamondSize")
-                : null;
-              const cut = newDiamond[index].DiamondCut
-                ? getShapeValue(null, newDiamond[index].DiamondCut, "DiamondCut")
-                : null;
-              if (
-                newDiamond[index].DiamondWeight &&
-                newDiamond[index].DiamondWeight > 0
-              ) {
-                const foundData = findClosestHigherDiamondWeight(
-                  diamondTemplate.DiamondSizeWeightRates,
-                  newDiamond[index].DiamondWeight,
-                  shape,
-                  clarity,
-                  color,
-                  size,
-                  cut
-                );
 
-                console.log('checking edit diamond ', foundData)
-    
-                if (foundData) {
-                  newDiamond[index] = {
-                    ...newDiamond[index],
-                    DiamondRate: foundData.DiamondPurchaseRate,
-                  };
-                }
-              } else {
-                newDiamond[index] = {
-                  ...newDiamond[index],
-                  DiamondRate: "0",
-                };
-              }
-            }
-          }
-    
-          if (property == "DiamondPurchaseAmt") {
-            const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
-              return template.Id === diamondtampletid;
-            });
-            console.log(
-              "Found diamond template:",
-              diamondTemplate,
-              "for ID:",
-              diamondtampletid
-            );
-            if (diamondTemplate) {
-              const rates = diamondTemplate.DiamondSizeWeightRates;
-              console.log("Available rates:", rates);
-    
-              const matchingRate = rates.find((rate) => {
-                console.log("Checking rate:", rate);
-                console.log("Comparing with:", {
-                  DiamondShape: newDiamond[index].DiamondShape,
-                  DiamondWeight: newDiamond[index].DiamondWeight,
-                  [property]: value,
-                });
-    
-                const isMatch =
-                  rate.DiamondShape === newDiamond[index].DiamondShape &&
-                  // rate.DiamondWeight === newDiamond[index].DiamondWeight
-                  //  rate.DiamondCut === newDiamond[index].DiamondCut;
-    
-                  console.log("Rate match result:", isMatch);
-                return isMatch;
-              });
-    
-              if (matchingRate) {
-                newDiamond[index].DiamondRate =
-                  matchingRate.DiamondRate;
-                console.log("Found matching rate:", matchingRate);
-              } else {
-                newDiamond[index].DiamondRate = 0; // Default value if no match found
-                console.log("No matching rate found.");
-              }
-            } else {
-              console.log("No diamond template found for ID:", diamondtampletid);
-            }
-          }
-          if (property == "DiamondRate") {
+        if (selectedDiamond) {
             newDiamond[index] = {
-              ...newDiamond[index],
-              DiamondRate: value,
+                ...newDiamond[index],
+                DiamondName: selectedDiamond.DiamondName,
+                DiamondWeight: selectedDiamond.DiamondWeight,
+                DiamondRate: selectedDiamond.DiamondRate,
+                DiamondPieces: selectedDiamond.DiamondPieces,
+                DiamondClarity: selectedDiamond.DiamondClarity,
+                DiamondColour: selectedDiamond.DiamondColour,
+                DiamondCut: selectedDiamond.DiamondCut,
+                DiamondShape: selectedDiamond.DiamondShape,
+                DiamondSize: selectedDiamond.DiamondSize,
+                Certificate: selectedDiamond.Certificate,
+                SettingType: selectedDiamond.SettingType,
+                DiamondAmount: selectedDiamond.DiamondAmount,
+                // DiamondPurchaseAmt: selectedDiamond.DiamondPurchaseAmt,
+                Description: selectedDiamond.Description, // Assuming a description field exists
             };
-          }
-          const tweight = newDiamond[index].DiamondWeight * newDiamond[index].DiamondPieces;
-    
-          const totalDiamondPurchaseAmount =
-            tweight *
-            newDiamond[index].DiamondRate;
-    
-          const truncatedAmount = Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
-          truncatedweight = Math.floor(tweight * 1000) / 1000;
-    
-          newDiamond[index] = {
-            ...newDiamond[index],
-            DiamondPurchaseAmt: truncatedAmount,
-            DiamondTotalWeight: truncatedweight
-          };
-    
+        } else {
+            newDiamond[index] = {
+                ...newDiamond[index],
+                [property]: value,
+            };
+
+            if (
+                property == "DiamondWeight" ||
+                property == "DiamondShape" ||
+                property == "DiamondClarity" ||
+                property == "DiamondCut" ||
+                property == "DiamondColour"
+            ) {
+                const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
+                    return template.Id === diamondtampletid;
+                });
+                if (diamondTemplate) {
+                    // const shape = newDiamond[index].DiamondShape ? getShapeValue(null, newDiamond[index].DiamondShape) : null;
+                    // const clarity = newDiamond[index].DiamondClarity ? getDiamondClarity(null, newDiamond[index].DiamondClarity) : null;
+                    const shape = newDiamond[index].DiamondShape
+                        ? getShapeValue(
+                            null,
+                            newDiamond[index].DiamondShape,
+                            "DiamondShape"
+                        )
+                        : null;
+                    const clarity = newDiamond[index].DiamondClarity
+                        ? getShapeValue(
+                            null,
+                            newDiamond[index].DiamondClarity,
+                            "DiamondClarity"
+                        )
+                        : null;
+                    const color = newDiamond[index].DiamondColour
+                        ? getShapeValue(
+                            null,
+                            newDiamond[index].DiamondColour,
+                            "DiamondColour"
+                        )
+                        : null;
+                    const size = newDiamond[index].DiamondSize
+                        ? getShapeValue(null, newDiamond[index].DiamondSize, "DiamondSize")
+                        : null;
+                    const cut = newDiamond[index].DiamondCut
+                        ? getShapeValue(null, newDiamond[index].DiamondCut, "DiamondCut")
+                        : null;
+                    if (
+                        newDiamond[index].DiamondWeight &&
+                        newDiamond[index].DiamondWeight > 0
+                    ) {
+                        const foundData = findClosestHigherDiamondWeight(
+                            diamondTemplate.DiamondSizeWeightRates,
+                            newDiamond[index].DiamondWeight,
+                            shape,
+                            clarity,
+                            color,
+                            size,
+                            cut
+                        );
+
+                        console.log('checking edit diamond ', foundData)
+
+                        if (foundData) {
+                            newDiamond[index] = {
+                                ...newDiamond[index],
+                                DiamondRate: foundData.DiamondPurchaseRate,
+                            };
+                        }
+                    } else {
+                        newDiamond[index] = {
+                            ...newDiamond[index],
+                            DiamondRate: "0",
+                        };
+                    }
+                }
+            }
+
+            if (property == "DiamondPurchaseAmt") {
+                const diamondTemplate = allDiamondSizeWeightRate.find((template) => {
+                    return template.Id === diamondtampletid;
+                });
+                console.log(
+                    "Found diamond template:",
+                    diamondTemplate,
+                    "for ID:",
+                    diamondtampletid
+                );
+                if (diamondTemplate) {
+                    const rates = diamondTemplate.DiamondSizeWeightRates;
+                    console.log("Available rates:", rates);
+
+                    const matchingRate = rates.find((rate) => {
+                        console.log("Checking rate:", rate);
+                        console.log("Comparing with:", {
+                            DiamondShape: newDiamond[index].DiamondShape,
+                            DiamondWeight: newDiamond[index].DiamondWeight,
+                            [property]: value,
+                        });
+
+                        const isMatch =
+                            rate.DiamondShape === newDiamond[index].DiamondShape &&
+                            // rate.DiamondWeight === newDiamond[index].DiamondWeight
+                            //  rate.DiamondCut === newDiamond[index].DiamondCut;
+
+                            console.log("Rate match result:", isMatch);
+                        return isMatch;
+                    });
+
+                    if (matchingRate) {
+                        newDiamond[index].DiamondRate =
+                            matchingRate.DiamondRate;
+                        console.log("Found matching rate:", matchingRate);
+                    } else {
+                        newDiamond[index].DiamondRate = 0; // Default value if no match found
+                        console.log("No matching rate found.");
+                    }
+                } else {
+                    console.log("No diamond template found for ID:", diamondtampletid);
+                }
+            }
+            if (property == "DiamondRate") {
+                newDiamond[index] = {
+                    ...newDiamond[index],
+                    DiamondRate: value,
+                };
+            }
+            const tweight = newDiamond[index].DiamondWeight * newDiamond[index].DiamondPieces;
+
+            const totalDiamondPurchaseAmount =
+                tweight *
+                newDiamond[index].DiamondRate;
+
+            const truncatedAmount = Math.floor(totalDiamondPurchaseAmount * 1000) / 1000;
+            truncatedweight = Math.floor(tweight * 1000) / 1000;
+
+            newDiamond[index] = {
+                ...newDiamond[index],
+                DiamondPurchaseAmt: truncatedAmount,
+                DiamondTotalWeight: truncatedweight
+            };
+
         }
 
         purchaseProduct.Diamonds = newDiamond;
-    console.log('checkpost ', purchaseProduct.Diamonds )
+        console.log('checkpost ', purchaseProduct.Diamonds)
 
-    setIscal(true)
-    
-
-      };
+        setIscal(true)
 
 
-      function findClosestHigherDiamondWeight(
+    };
+
+
+    function findClosestHigherDiamondWeight(
         data,
         inputWeight,
         inputShape,
@@ -4044,69 +4048,69 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
         color,
         size,
         cut
-      ) {
+    ) {
         // Convert inputWeight to a number
         const positiveInputWeight = parseFloat(inputWeight);
         console.log(
-          "checking diamond inputes  ",
-          inputWeight,
-          inputShape,
-          inputClarity,
-          color,
-          size,
-          cut
+            "checking diamond inputes  ",
+            inputWeight,
+            inputShape,
+            inputClarity,
+            color,
+            size,
+            cut
         );
-    
+
         if (!inputWeight || parseFloat(inputWeight) === 0) {
-          return null;
+            return null;
         }
-    
+
         // Filter and sort the weights
         const higherWeights = data
-          .map((item) => {
-            // Convert DiamondWeight to a positive number
-            const positiveWeight = Math.abs(parseFloat(item.DiamondWeight));
-            return {
-              ...item,
-              DiamondWeight: positiveWeight,
-            };
-          })
-          // Filter weights greater than input weight
-          .filter((item) => item.DiamondShape === inputShape)
-          .filter((item) => item.DiamondClarity === inputClarity)
-          .filter((item) => item.DiamondColor === color)
-          .filter((item) => item.DiamondCut === cut);
+            .map((item) => {
+                // Convert DiamondWeight to a positive number
+                const positiveWeight = Math.abs(parseFloat(item.DiamondWeight));
+                return {
+                    ...item,
+                    DiamondWeight: positiveWeight,
+                };
+            })
+            // Filter weights greater than input weight
+            .filter((item) => item.DiamondShape === inputShape)
+            .filter((item) => item.DiamondClarity === inputClarity)
+            .filter((item) => item.DiamondColor === color)
+            .filter((item) => item.DiamondCut === cut);
         // .filter(item => item.DiamondWeight == positiveInputWeight)
-    
+
         // .filter(item => item.DiamondWeight >= positiveInputWeight)  // Filter weights greater than or equal to input weight
-    
+
         const sortedDiamonds = higherWeights.sort(
-          (a, b) => a.DiamondWeight - b.DiamondWeight
+            (a, b) => a.DiamondWeight - b.DiamondWeight
         );
-    
+
         // Initialize variable to hold the closest diamond found
         let closestDiamond = null;
-    
+
         // Iterate through the sorted diamonds to find the exact match or the next higher weight
         for (let i = 0; i < sortedDiamonds.length; i++) {
-          if (sortedDiamonds[i].DiamondWeight === positiveInputWeight) {
-            // Exact match found
-            closestDiamond = sortedDiamonds[i];
-            break;
-          } else if (sortedDiamonds[i].DiamondWeight > positiveInputWeight) {
-            // Next higher weight found
-            closestDiamond = sortedDiamonds[i];
-            break;
-          }
+            if (sortedDiamonds[i].DiamondWeight === positiveInputWeight) {
+                // Exact match found
+                closestDiamond = sortedDiamonds[i];
+                break;
+            } else if (sortedDiamonds[i].DiamondWeight > positiveInputWeight) {
+                // Next higher weight found
+                closestDiamond = sortedDiamonds[i];
+                break;
+            }
         }
-    
+
         // If no exact or higher weight was found, return the closest diamond found or null
         return closestDiamond || null;
         // Sort in ascending order
         //     .sort((a, b) => a.DiamondWeight - b.DiamondWeight);
         // // Get the closest higher weight
         // return higherWeights.length > 0 ? higherWeights[0] : null;
-      }
+    }
 
 
 
@@ -4122,6 +4126,22 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
     const button10Ref = useRef(null);
     const button11Ref = useRef(null);
     const button12Ref = useRef(null);
+
+    const buttonRefs = [
+        button1Ref,
+        button2Ref,
+        button3Ref,
+        button4Ref,
+        button5Ref,
+        button6Ref,
+        button7Ref,
+        button8Ref,
+        button9Ref,
+        button10Ref,
+        button11Ref,
+        button12Ref,
+      ];
+      
     let totalPaidCashAmount = 0;
     useEffect(() => {
         totalPaidCashAmount = payments
@@ -4147,7 +4167,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
     };
     return (
         <div>
-            <AdminHeading/>
+            <AdminHeading />
 
             <div className="adminMainBodyBox">
                 {/* <AdminBreadCrump
@@ -4157,18 +4177,18 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
               page={"Invoice"}
             /> */}
                 {showError ? (
-                    <AlertMessage message={messageToShow} type={messageType}/>
+                    <AlertMessage message={messageToShow} type={messageType} />
                 ) : null}
                 <div className="adminAddCategoryMainBox">
                     <div
-                        style={{marginBottom: "50px", paddingTop: "0px"}}
+                        style={{ marginBottom: "50px", paddingTop: "0px" }}
                         className="adminAddCategoryInnerBox"
                     >
                         <div className="invoiceFormDateTimeBox">
                             <DateTime
                                 dateRcvd={selectedDate ? selectedDate : null}
-                                // showInv={true}
-                                // gstType={gstType}
+                            // showInv={true}
+                            // gstType={gstType}
                             />
                             <div className="invoiceFormDateTimeSelectDateBox">
                                 <input
@@ -4180,7 +4200,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                         </div>
                         {/* <h4 className="adminInvoiceAddTitles">Add Customer</h4> */}
                         <div
-                            style={{marginBottom: "0px"}}
+                            style={{ marginBottom: "0px" }}
                             id="adminInvoiceAddCustomerTitle"
                             className="adminInvoiceSelectLabelBox"
                         >
@@ -4188,7 +4208,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                 {/* <button >Check</button> */}
                                 <label>Firm Name</label>
                                 <input
-                                    style={{width: "20vw"}}
+                                    style={{ width: "20vw" }}
                                     type="text"
                                     name="customerName"
                                     value={customerName}
@@ -4197,7 +4217,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                 />
                                 <datalist id="customerNamesList">
                                     {allCsData.map((customer, index) => (
-                                        <option key={index} value={`${customer.FirmName}`}/>
+                                        <option key={index} value={`${customer.FirmName}`} />
                                     ))}
                                 </datalist>
                                 <button
@@ -4210,7 +4230,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                     }}
                                     className="adminInvoiceAddCustomerOption"
                                 >
-                                    <AiOutlinePlusSquare size={"20px"}/>
+                                    <AiOutlinePlusSquare size={"20px"} />
                                 </button>
                                 {selectedCustomer ? (
                                     <div className="adminInvoiceAddedCustomerEditIconBox">
@@ -4223,7 +4243,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                     );
                                             }}
                                         >
-                                            <AiOutlineEdit size={"20px"}/>
+                                            <AiOutlineEdit size={"20px"} />
                                         </button>
                                         <button
                                             onClick={() => {
@@ -4233,7 +4253,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                             }}
                                             id="adminInvoiceAddedCustomerRemoveIcon"
                                         >
-                                            <RiDeleteBin2Line size={"20px"}/>
+                                            <RiDeleteBin2Line size={"20px"} />
                                         </button>
                                     </div>
                                 ) : null}
@@ -4247,8 +4267,8 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         purchaseMainBox
                                             ? purchaseMainBox.InwardNo
                                             : selectedCustomer
-                                            ? parseInt(selectedCustomer.InwardNo) + 1
-                                            : 0
+                                                ? parseInt(selectedCustomer.InwardNo) + 1
+                                                : 0
                                     }
                                 />
                             </div>
@@ -4270,7 +4290,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             </div>
                         </div>
                         <div
-                            style={{marginTop: "0px"}}
+                            style={{ marginTop: "0px" }}
                             className="adminInvoiceSelectLabelBox"
                         >
                             <div className="adminInvoiceSelectItem">
@@ -4316,8 +4336,8 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                         </div>
 
                         {selectedCustomer &&
-                        !selectedCustomerEdit ? null : selectedCustomer &&
-                        selectedCustomerEdit ? (
+                            !selectedCustomerEdit ? null : selectedCustomer &&
+                                selectedCustomerEdit ? (
                             <div className="adminInvoiceAddedCustomerEditMainBox">
                                 <p>Personal Details</p>
                                 <div className="adminInvoiceAddedCustomerEditBox">
@@ -4474,7 +4494,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             <div className="adminAddCategoryInnerBoxTitlesBox">
                                 <button
                                     onClick={() => setActive("Purchase")}
-                                    style={{height: "40px"}}
+                                    style={{ height: "40px" }}
                                     className={
                                         active === "Purchase"
                                             ? "adminAddCategoryInnerBoxTitle"
@@ -4496,13 +4516,13 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                     >
                                         {/* 02 */}
 
-                                        <LiaCartPlusSolid size={"30px"}/>
+                                        <LiaCartPlusSolid size={"30px"} />
                                     </div>
-                                    <p style={{fontSize: "12px"}}>Purchase</p>
+                                    <p style={{ fontSize: "12px" }}>Purchase</p>
                                 </button>
                                 <button
                                     onClick={() => setActive("P Accounting")}
-                                    style={{height: "40px"}}
+                                    style={{ height: "40px" }}
                                     className={
                                         active === "P Accounting"
                                             ? "adminAddCategoryInnerBoxTitle"
@@ -4524,21 +4544,21 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                     >
                                         {/* 02 */}
 
-                                        <MdOutlineLabelOff size={"17px"}/>
+                                        <MdOutlineLabelOff size={"17px"} />
                                     </div>
-                                    <p style={{fontSize: "12px"}}>P Accounting</p>
+                                    <p style={{ fontSize: "12px" }}>P Accounting</p>
                                 </button>
                                 <div className="bulkStockAddProductDetailsItem">
-                                    <label style={{margin: 0, cursor: "pointer"}}>
+                                    <label style={{ margin: 0, cursor: "pointer" }}>
                                         {/* Images {`${selectedFiles.length}`} */}
                                         <BsImages
                                             className="bulkStockAddProductAddImagesIcon"
-                                            style={{margin: "1.2rem", marginInline: "1rem"}}
+                                            style={{ margin: "1.2rem", marginInline: "1rem" }}
                                             size={"2.5rem"}
                                         />
                                         <input
                                             id="images"
-                                            style={{display: "none"}}
+                                            style={{ display: "none" }}
                                             type="file"
                                             multiple
                                             onChange={handleFileInputChange}
@@ -4558,69 +4578,69 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         >
                                             <table>
                                                 <thead>
-                                                <tr>
-                                                    <th>ITEM DETAILS</th>
-                                                    <th>RATE</th>
-                                                    <th>GROSS WT</th>
-                                                    <th>NET WT</th>
-                                                    <th>FINE%</th>
-                                                    <th>WASTAGE%</th>
-                                                    <th>MAKING</th>
-                                                    <th>PRICE</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th>ITEM DETAILS</th>
+                                                        <th>RATE</th>
+                                                        <th>GROSS WT</th>
+                                                        <th>NET WT</th>
+                                                        <th>FINE%</th>
+                                                        <th>WASTAGE%</th>
+                                                        <th>MAKING</th>
+                                                        <th>PRICE</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                {allSelectedProducts.length > 0
-                                                    ? allSelectedProducts.map((x, index) => (
-                                                        <tr
-                                                            style={{
-                                                                borderBottom:
-                                                                    "1px solid  rgba(128, 128, 128, 0.3)",
-                                                            }}
-                                                        >
-                                                            <td>
-                                                                <div className="adminAddInvoiceMainAddLabelOption">
-                                                                    <div
-                                                                        className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                                                        <BsCardImage size={"30px"}/>
-                                                                    </div>
-                                                                    <div
-                                                                        className="adminAddInvoiceMainAddLabelOptionLabelBox">
-                                                                        <p
-                                                                            style={{
-                                                                                textAlign: "left",
-                                                                                margin: "5px",
-                                                                                padding: "5px",
-                                                                                marginBottom: "0px",
-                                                                                paddingBottom: "0px",
-                                                                                color: "red",
-                                                                            }}
-                                                                        >
-                                                                            Purchase
-                                                                        </p>
+                                                    {allSelectedProducts.length > 0
+                                                        ? allSelectedProducts.map((x, index) => (
+                                                            <tr
+                                                                style={{
+                                                                    borderBottom:
+                                                                        "1px solid  rgba(128, 128, 128, 0.3)",
+                                                                }}
+                                                            >
+                                                                <td>
+                                                                    <div className="adminAddInvoiceMainAddLabelOption">
+                                                                        <div
+                                                                            className="adminAddInvoiceMainAddLabelOptionImageBox">
+                                                                            <BsCardImage size={"30px"} />
+                                                                        </div>
+                                                                        <div
+                                                                            className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                                                            <p
+                                                                                style={{
+                                                                                    textAlign: "left",
+                                                                                    margin: "5px",
+                                                                                    padding: "5px",
+                                                                                    marginBottom: "0px",
+                                                                                    paddingBottom: "0px",
+                                                                                    color: "red",
+                                                                                }}
+                                                                            >
+                                                                                Purchase
+                                                                            </p>
 
-                                                                        <p
-                                                                            style={{
-                                                                                fontWeight: "bold",
-                                                                                color: "red",
-                                                                                fontSize: "10px",
-                                                                                textAlign: "left",
-                                                                                margin: "0px 5px",
-                                                                                padding: "0px 5px",
-                                                                            }}
-                                                                        >
-                                                                            {`${x.CategoryName}, ${x.ProductName}`}
-                                                                        </p>
-                                                                    </div>
-                                                                    <div
-                                                                        className="adminAddInvoiceMainAddLabelOptionEditIconBox">
-                                                                        <button
-                                                                            onClick={() => {
-                                                                                // editItem(x);
-                                                                                removePurchaseProductFromList(
-                                                                                    index
-                                                                                ),
-                                                                                console.log('checking edit item ', x)
+                                                                            <p
+                                                                                style={{
+                                                                                    fontWeight: "bold",
+                                                                                    color: "red",
+                                                                                    fontSize: "10px",
+                                                                                    textAlign: "left",
+                                                                                    margin: "0px 5px",
+                                                                                    padding: "0px 5px",
+                                                                                }}
+                                                                            >
+                                                                                {`${x.CategoryName}, ${x.ProductName}`}
+                                                                            </p>
+                                                                        </div>
+                                                                        <div
+                                                                            className="adminAddInvoiceMainAddLabelOptionEditIconBox">
+                                                                            <button
+                                                                                onClick={() => {
+                                                                                    // editItem(x);
+                                                                                    removePurchaseProductFromList(
+                                                                                        index
+                                                                                    ),
+                                                                                        console.log('checking edit item ', x)
                                                                                     setPurchaseProduct({
                                                                                         ...x,
                                                                                         DiamondShape: getShapeValue(x.DiamondShape),
@@ -4629,112 +4649,112 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                                                         DiamondCut: getDiamondCut(x.DiamondCut),
                                                                                         DiamondSettingType: getSettingType(x.DiamondSettingType)
                                                                                     }),
-                                                                                    setActive("Purchase"),
+                                                                                        setActive("Purchase"),
 
-                                                                                    setConvertAmount(x.ConvertAmount),
-                                                                                    setFinePure(x.FinePure);
-                                                                                setSelectedSkuName(
-                                                                                    x.StockKeepingUnit
-                                                                                );
-                                                                            }}
-                                                                            className="adminAddInvoiceMainAddLabelOptionEditIcon"
-                                                                        >
-                                                                            <AiOutlineEdit/>
-                                                                        </button>
-                                                                        <button
-                                                                            style={{marginBottom: "5px"}}
-                                                                            onClick={() => {
-                                                                                removePurchaseProductFromList(
-                                                                                    index
-                                                                                );
-                                                                            }}
-                                                                            className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
-                                                                        >
-                                                                            <RxCross2/>
-                                                                        </button>
+                                                                                        setConvertAmount(x.ConvertAmount),
+                                                                                        setFinePure(x.FinePure);
+                                                                                    setSelectedSkuName(
+                                                                                        x.StockKeepingUnit
+                                                                                    );
+                                                                                }}
+                                                                                className="adminAddInvoiceMainAddLabelOptionEditIcon"
+                                                                            >
+                                                                                <AiOutlineEdit />
+                                                                            </button>
+                                                                            <button
+                                                                                style={{ marginBottom: "5px" }}
+                                                                                onClick={() => {
+                                                                                    removePurchaseProductFromList(
+                                                                                        index
+                                                                                    );
+                                                                                }}
+                                                                                className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
+                                                                            >
+                                                                                <RxCross2 />
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
+                                                                </td>
+
+                                                                <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td>
+
+                                                                <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
+
+                                                                <td> {parseFloat(x.NetWt).toFixed(3)}</td>
+
+                                                                <td>
+                                                                    {parseFloat(x.FinePercent).toFixed(3)}
+                                                                </td>
+                                                                <td> {parseFloat(x.WastageWt).toFixed(3)}</td>
+
+                                                                <td> ₹{parseFloat(x.Making).toFixed(3)}</td>
+                                                                <td>
+                                                                    ₹
+                                                                    {parseFloat(
+                                                                        parseFloat(x.FinalPrice) +
+                                                                        parseFloat(x.TotalGstAmount)
+                                                                    ).toFixed(3)}
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                        : null}
+                                                    <tr>
+                                                        <td>
+                                                            <div className="adminAddInvoiceMainAddLabelOption">
+                                                                <div className="adminAddInvoiceMainAddLabelOptionImageBox">
+                                                                    <BsCardImage size={"30px"} />
                                                                 </div>
-                                                            </td>
-
-                                                            <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td>
-
-                                                            <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
-
-                                                            <td> {parseFloat(x.NetWt).toFixed(3)}</td>
-
-                                                            <td>
-                                                                {parseFloat(x.FinePercent).toFixed(3)}
-                                                            </td>
-                                                            <td> {parseFloat(x.WastageWt).toFixed(3)}</td>
-
-                                                            <td> ₹{parseFloat(x.Making).toFixed(3)}</td>
-                                                            <td>
-                                                                ₹
-                                                                {parseFloat(
-                                                                    parseFloat(x.FinalPrice) +
-                                                                    parseFloat(x.TotalGstAmount)
-                                                                ).toFixed(3)}
-                                                            </td>
-                                                        </tr>
-                                                    ))
-                                                    : null}
-                                                <tr>
-                                                    <td>
-                                                        <div className="adminAddInvoiceMainAddLabelOption">
-                                                            <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                                                <BsCardImage size={"30px"}/>
-                                                            </div>
-                                                            <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
-                                                                <input
-                                                                    // tabIndex="1"
-                                                                    type="text"
-                                                                    placeholder="Type or click to select an item"
-                                                                    name="productLabel"
-                                                                    value={labelName}
-                                                                    onInput={handleProductLabelChange}
-                                                                    onKeyPress={(e) => {
-                                                                        if (e.key === "Ctrl") {
-                                                                            e.preventDefault();
-                                                                            // button1Ref.current.focus();
-                                                                            alert("Space");
-                                                                        } else if (e.key === "Enter") {
-                                                                            // Call your function here
-                                                                            if (selectedProduct.length !== 0) {
-                                                                                calculateFinalPrice(
-                                                                                    selectedProduct,
-                                                                                    true
-                                                                                );
-                                                                            } else {
-                                                                                // null;
-                                                                                button1Ref.current.focus();
+                                                                <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                                                                    <input
+                                                                        // tabIndex="1"
+                                                                        type="text"
+                                                                        placeholder="Type or click to select an item"
+                                                                        name="productLabel"
+                                                                        value={labelName}
+                                                                        onInput={handleProductLabelChange}
+                                                                        onKeyPress={(e) => {
+                                                                            if (e.key === "Ctrl") {
+                                                                                e.preventDefault();
+                                                                                // button1Ref.current.focus();
+                                                                                alert("Space");
+                                                                            } else if (e.key === "Enter") {
+                                                                                // Call your function here
+                                                                                if (selectedProduct.length !== 0) {
+                                                                                    calculateFinalPrice(
+                                                                                        selectedProduct,
+                                                                                        true
+                                                                                    );
+                                                                                } else {
+                                                                                    // null;
+                                                                                    button1Ref.current.focus();
+                                                                                }
                                                                             }
-                                                                        }
-                                                                    }}
-                                                                    list="productLabelList"
-                                                                />
-                                                                <datalist id="productLabelList">
-                                                                    {/* {allProducts.map((product, index) => (
+                                                                        }}
+                                                                        list="productLabelList"
+                                                                    />
+                                                                    <datalist id="productLabelList">
+                                                                        {/* {allProducts.map((product, index) => (
                                       <option
                                         key={index}
                                         value={product.itemCode}
                                       />
                                     ))} */}
-                                                                </datalist>
+                                                                    </datalist>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    {selectedProduct.length > 0 ? (
-                                                        <td>{selectedProduct.MetalRate}</td>
-                                                    ) : (
-                                                        <td>0</td>
-                                                    )}
-                                                    <td>{selectedProduct.GrossWt}</td>
-                                                    <td> {selectedProduct.NetWt}</td>
-                                                    <td> {selectedProduct.Purity}</td>
-                                                    <td>{selectedProduct.Making}</td>
+                                                        </td>
+                                                        {selectedProduct.length > 0 ? (
+                                                            <td>{selectedProduct.MetalRate}</td>
+                                                        ) : (
+                                                            <td>0</td>
+                                                        )}
+                                                        <td>{selectedProduct.GrossWt}</td>
+                                                        <td> {selectedProduct.NetWt}</td>
+                                                        <td> {selectedProduct.Purity}</td>
+                                                        <td>{selectedProduct.Making}</td>
 
-                                                    <td>₹{totalPayableAmount} </td>
-                                                </tr>
+                                                        <td>₹{totalPayableAmount} </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -4744,7 +4764,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         <td>
                                             <div className="adminAddInvoiceMainAddLabelOption">
                                                 <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                                    <BsCardImage size={"30px"}/>
+                                                    <BsCardImage size={"30px"} />
                                                 </div>
                                                 <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
                                                     <input
@@ -4786,7 +4806,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                     onClick={closeEditItem}
                                                     className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
                                                 >
-                                                    <RxCross2 size={"25px"}/>
+                                                    <RxCross2 size={"25px"} />
                                                 </button>
                                             </div>
                                             <div className="adminInvoiceOpenEditOuterGridBox">
@@ -5027,72 +5047,42 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
              > */}
                                     <table>
                                         <thead>
-                                        <tr>
-                                            <div>
-                                                <th>SKU</th>
-                                                <input
-                                                    // style={{ width: "30vw" }}
-                                                    type="text"
-                                                    name="skuList"
-                                                    placeholder="Enter SKU"
-                                                    value={selectedSkuName}
-                                                    onChange={handleSkuInputChange}
-                                                    list="skuList"
-                                                />
-                                                <datalist id="skuList">
-                                                    {allSkuList.map((sku, index) => (
-                                                        <option
-                                                            key={index}
-                                                            value={`${sku.StockKeepingUnit}`}
-                                                        />
-                                                    ))}
-                                                </datalist>
-                                            </div>
-                                            <div>
-                                                <th>CATEGORY</th>
-                                                <select
-                                                    name="CategoryId"
-                                                    // onChange={handleInputChangePurchase}
-                                                    onChange={(e) => {
-                                                        setSelectedCategory(e.target.value),
-                                                            handleInputChangePurchase(e);
-                                                    }}
-                                                    // value={purchaseProduct.names}
-                                                    // value={selectedCategory}
-                                                    value={`${purchaseProduct.CategoryId},${purchaseProduct.CategoryName}`}
-                                                    // value={purchaseProduct.CategoryName}
-                                                >
-                                                    <option value={""}>Select an Category</option>
-                                                    {allCategories.map((x, y) => {
-                                                        return (
-                                                            <option
-                                                                key={y}
-                                                                value={`${x.Id},${x.CategoryName}`}
-                                                            >
-                                                                {x.CategoryName}
-                                                            </option>
-                                                        );
-                                                    })}
-                                                </select>
-                                            </div>
-                                            {purchaseProduct.CategoryName &&
-                                            purchaseProduct.CategoryName.toLowerCase() ==
-                                            "diamonds" ? (
+                                            <tr>
                                                 <div>
-                                                    <th>METAL</th>
+                                                    <th>SKU</th>
+                                                    <input
+                                                        // style={{ width: "30vw" }}
+                                                        type="text"
+                                                        name="skuList"
+                                                        placeholder="Enter SKU"
+                                                        value={selectedSkuName}
+                                                        onChange={handleSkuInputChange}
+                                                        list="skuList"
+                                                    />
+                                                    <datalist id="skuList">
+                                                        {allSkuList.map((sku, index) => (
+                                                            <option
+                                                                key={index}
+                                                                value={`${sku.StockKeepingUnit}`}
+                                                            />
+                                                        ))}
+                                                    </datalist>
+                                                </div>
+                                                <div>
+                                                    <th>CATEGORY</th>
                                                     <select
-                                                        name="MetalId"
+                                                        name="CategoryId"
                                                         // onChange={handleInputChangePurchase}
                                                         onChange={(e) => {
-                                                            // setSelectedCategory(e.target.value),
-                                                            handleInputChangePurchase(e);
+                                                            setSelectedCategory(e.target.value),
+                                                                handleInputChangePurchase(e);
                                                         }}
                                                         // value={purchaseProduct.names}
                                                         // value={selectedCategory}
-                                                        value={`${purchaseProduct.MetalId},${purchaseProduct.MetalName}`}
-                                                        // value={purchaseProduct.CategoryName}
+                                                        value={`${purchaseProduct.CategoryId},${purchaseProduct.CategoryName}`}
+                                                    // value={purchaseProduct.CategoryName}
                                                     >
-                                                        <option value={""}>Select an Base Metal</option>
+                                                        <option value={""}>Select an Category</option>
                                                         {allCategories.map((x, y) => {
                                                             return (
                                                                 <option
@@ -5105,559 +5095,589 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                         })}
                                                     </select>
                                                 </div>
-                                            ) : null}
-                                            {purchaseProduct.CategoryName == "LOOSE DIAMOND" ? (
-                                                <>
+                                                {purchaseProduct.CategoryName &&
+                                                    purchaseProduct.CategoryName.toLowerCase() ==
+                                                    "diamonds" ? (
                                                     <div>
-                                                        <th>DIAMOND SHAPE</th>
-                                                        <input
-                                                            name="DiamondShape"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondShape}
-                                                            list="diamondAttributesShapeList"
-                                                        />
-                                                        <datalist id="diamondAttributesShapeList">
-                                                            {diamondShapes
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND CLARITY</th>
-                                                        <input
-                                                            name="DiamondClarity"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondClarity}
-                                                            list="diamondAttributesClarityList"
-                                                        />
-                                                        <datalist id="diamondAttributesClarityList">
-                                                            {diamondClarities
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND COLOUR</th>
-                                                        <input
-                                                            name="DiamondColour"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondColour}
-                                                            list="diamondAttributesColourList"
-                                                        />
-                                                        <datalist id="diamondAttributesColourList">
-                                                            {diamondColors
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND SIZE</th>
-                                                        <input
-                                                            name="DiamondSize"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondSize}
-                                                            list="diamondSizeList"
-                                                        />
-                                                        <datalist id="diamondSizeList">
-                                                            {allDiamondSizeWeightRate.map((x, index) => (
-                                                                <option key={index}>{x.DiamondSize}</option>
-                                                            ))}
-                                                        </datalist>
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND SLEVE</th>
-                                                        <input
-                                                            name="DiamondSleve"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondSleve}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND WEIGHT</th>
-                                                        <input
-                                                            name="DiamondWeight"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondWeight}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>
-                                                            DIAMOND <br/> PURCHASE RATE
-                                                        </th>
-                                                        <input
-                                                            name="DiamondPurchaseRate"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondPurchaseRate}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND QTY</th>
-                                                        <input
-                                                            name="DiamondTotalQuantity"
-                                                            onChange={(e) => {
-                                                                const value = e.target.value;
-                                                                setPurchaseProduct((prevProduct) => ({
-                                                                    ...prevProduct,
-                                                                    DiamondTotalQuantity: value,
-                                                                    DiamondTotalWeight: value * prevProduct.DiamondWeight,
-                                                                    DiamondAmount: value * prevProduct.DiamondPurchaseRate,
-                                                                }));
-                                                            }}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondTotalQuantity}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>TOTAL WT</th>
-                                                        <input
-                                                            name="DiamondTotalWeight"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondTotalWeight}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>TOTAL AMT</th>
-                                                        <input
-                                                            name="DiamondAmount"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondAmount}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>DIAMOND CUT</th>
-                                                        <input
-                                                            name="DiamondCut"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondCut}
-                                                            list="diamondAttributesCutList"
-                                                        />
-                                                        <datalist id="diamondAttributesCutList">
-                                                            {diamondCuts.map((attribute) => (
-                                                                <option value={attribute?.DiamondValue}>
-                                                                    {attribute?.DiamondValue}
-                                                                </option>
-                                                            ))}
-                                                        </datalist>
-                                                    </div>
-                                                    <div>
-                                                        <th>
-                                                            DIAMOND <br/> SETTINGTYPE
-                                                        </th>
-                                                        <input
-                                                            name="DiamondSettingType"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondSettingType}
-                                                            list="diamondAttributesSettingTypeList"
-                                                        />
-                                                        <datalist id="diamondAttributesSettingTypeList">
-                                                            {settingTypes
-                                                                .map((attribute) => (
-                                                                    <option value={attribute.DiamondValue}>
-                                                                        {attribute.DiamondValue}
-                                                                    </option>
-                                                                ))}
-                                                        </datalist>
-                                                    </div>
-                                                    <div>
-                                                        <th>CERTIFICATE</th>
-                                                        <input
-                                                            name="DiamondCertificate"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondCertificate}
-                                                        />
-                                                    </div>
-                                                    {/*<div>*/}
-                                                    {/*    <th>D.PIECES</th>*/}
-                                                    {/*    <input*/}
-                                                    {/*        name="DiamondPieces"*/}
-                                                    {/*        onChange={handleInputChangePurchase}*/}
-                                                    {/*        type="text"*/}
-                                                    {/*        value={purchaseProduct.DiamondPieces}*/}
-                                                    {/*    />*/}
-                                                    {/*</div>*/}
-                                                    <div>
-                                                        <th>DESCRIPTION</th>
-                                                        <input
-                                                            name="DiamondDescription"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.DiamondDescription}
-                                                        />
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <div>
-                                                        <th>PRODUCT</th>
+                                                        <th>METAL</th>
                                                         <select
-                                                            disabled={purchaseProduct.StockKeepingUnit}
-                                                            name="ProductName"
+                                                            name="MetalId"
+                                                            // onChange={handleInputChangePurchase}
                                                             onChange={(e) => {
-                                                                setSelectedProductType(e.target.value),
-                                                                    handleInputChangePurchase(e);
+                                                                // setSelectedCategory(e.target.value),
+                                                                handleInputChangePurchase(e);
                                                             }}
-                                                            // value={purchaseProduct.ProductNames}
-                                                            // value={purchaseProduct.ProductName}
-                                                            // value={selectedProductType}
-                                                            value={`${purchaseProduct.ProductId},${purchaseProduct.ProductName}`}
+                                                            // value={purchaseProduct.names}
+                                                            // value={selectedCategory}
+                                                            value={`${purchaseProduct.MetalId},${purchaseProduct.MetalName}`}
+                                                        // value={purchaseProduct.CategoryName}
                                                         >
-                                                            <option value={""}>Select an Product</option>
-                                                            {filteredProducts.map((x) => {
+                                                            <option value={""}>Select an Base Metal</option>
+                                                            {allCategories.map((x, y) => {
                                                                 return (
-                                                                    <option value={`${x.Id},${x.ProductName}`}>
-                                                                        {x.ProductName}
+                                                                    <option
+                                                                        key={y}
+                                                                        value={`${x.Id},${x.CategoryName}`}
+                                                                    >
+                                                                        {x.CategoryName}
                                                                     </option>
                                                                 );
                                                             })}
                                                         </select>
                                                     </div>
-                                                    <div>
-                                                        <th>GROSS WT</th>
-                                                        <input
-                                                            name="GrossWt"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.GrossWt}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>STONE WT</th>
-                                                        <input
-                                                            name="StoneWt"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.StoneWt}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>CLIP WT/Item</th>
-                                                        <input
-                                                            name="ClipWeight"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.ClipWeight}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>CLIP QUANTITY</th>
-                                                        <input
-                                                            name="ClipQuantity"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.ClipQuantity}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>NET WT</th>
-                                                        <input
-                                                            name="NetWt"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.NetWt}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>PURITY</th>
-                                                        <select
-                                                            disabled={purchaseProduct.StockKeepingUnit}
-                                                            name="PurityId"
-                                                            onChange={handleInputChangePurchase}
-                                                            value={purchaseProduct.PurityId}
-                                                        >
-                                                            <option value=""> Select an Option</option>
-                                                            {filteredPurities.map((x) => {
-                                                                return (
-                                                                    <option value={x.Id}>
-                                                                        {" "}
-                                                                        {x.PurityName}
+                                                ) : null}
+                                                {purchaseProduct.CategoryName == "LOOSE DIAMOND" ? (
+                                                    <>
+                                                        <div>
+                                                            <th>DIAMOND SHAPE</th>
+                                                            <input
+                                                                name="DiamondShape"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondShape}
+                                                                list="diamondAttributesShapeList"
+                                                            />
+                                                            <datalist id="diamondAttributesShapeList">
+                                                                {diamondShapes
+                                                                    .map((attribute) => (
+                                                                        <option value={attribute.DiamondValue}>
+                                                                            {attribute.DiamondValue}
+                                                                        </option>
+                                                                    ))}
+                                                            </datalist>
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND CLARITY</th>
+                                                            <input
+                                                                name="DiamondClarity"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondClarity}
+                                                                list="diamondAttributesClarityList"
+                                                            />
+                                                            <datalist id="diamondAttributesClarityList">
+                                                                {diamondClarities
+                                                                    .map((attribute) => (
+                                                                        <option value={attribute.DiamondValue}>
+                                                                            {attribute.DiamondValue}
+                                                                        </option>
+                                                                    ))}
+                                                            </datalist>
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND COLOUR</th>
+                                                            <input
+                                                                name="DiamondColour"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondColour}
+                                                                list="diamondAttributesColourList"
+                                                            />
+                                                            <datalist id="diamondAttributesColourList">
+                                                                {diamondColors
+                                                                    .map((attribute) => (
+                                                                        <option value={attribute.DiamondValue}>
+                                                                            {attribute.DiamondValue}
+                                                                        </option>
+                                                                    ))}
+                                                            </datalist>
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND SIZE</th>
+                                                            <input
+                                                                name="DiamondSize"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondSize}
+                                                                list="diamondSizeList"
+                                                            />
+                                                            <datalist id="diamondSizeList">
+                                                                {allDiamondSizeWeightRate.map((x, index) => (
+                                                                    <option key={index}>{x.DiamondSize}</option>
+                                                                ))}
+                                                            </datalist>
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND SLEVE</th>
+                                                            <input
+                                                                name="DiamondSleve"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondSleve}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND WEIGHT</th>
+                                                            <input
+                                                                name="DiamondWeight"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondWeight}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>
+                                                                DIAMOND <br /> PURCHASE RATE
+                                                            </th>
+                                                            <input
+                                                                name="DiamondPurchaseRate"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondPurchaseRate}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND QTY</th>
+                                                            <input
+                                                                name="DiamondTotalQuantity"
+                                                                onChange={(e) => {
+                                                                    const value = e.target.value;
+                                                                    setPurchaseProduct((prevProduct) => ({
+                                                                        ...prevProduct,
+                                                                        DiamondTotalQuantity: value,
+                                                                        DiamondTotalWeight: value * prevProduct.DiamondWeight,
+                                                                        DiamondAmount: value * prevProduct.DiamondPurchaseRate,
+                                                                    }));
+                                                                }}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondTotalQuantity}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>TOTAL WT</th>
+                                                            <input
+                                                                name="DiamondTotalWeight"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondTotalWeight}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>TOTAL AMT</th>
+                                                            <input
+                                                                name="DiamondAmount"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondAmount}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>DIAMOND CUT</th>
+                                                            <input
+                                                                name="DiamondCut"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondCut}
+                                                                list="diamondAttributesCutList"
+                                                            />
+                                                            <datalist id="diamondAttributesCutList">
+                                                                {diamondCuts.map((attribute) => (
+                                                                    <option value={attribute?.DiamondValue}>
+                                                                        {attribute?.DiamondValue}
                                                                     </option>
-                                                                );
-                                                            })}
-                                                        </select>
-                                                        {/* <input
+                                                                ))}
+                                                            </datalist>
+                                                        </div>
+                                                        <div>
+                                                            <th>
+                                                                DIAMOND <br /> SETTINGTYPE
+                                                            </th>
+                                                            <input
+                                                                name="DiamondSettingType"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondSettingType}
+                                                                list="diamondAttributesSettingTypeList"
+                                                            />
+                                                            <datalist id="diamondAttributesSettingTypeList">
+                                                                {settingTypes
+                                                                    .map((attribute) => (
+                                                                        <option value={attribute.DiamondValue}>
+                                                                            {attribute.DiamondValue}
+                                                                        </option>
+                                                                    ))}
+                                                            </datalist>
+                                                        </div>
+                                                        <div>
+                                                            <th>CERTIFICATE</th>
+                                                            <input
+                                                                name="DiamondCertificate"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondCertificate}
+                                                            />
+                                                        </div>
+                                                        {/*<div>*/}
+                                                        {/*    <th>D.PIECES</th>*/}
+                                                        {/*    <input*/}
+                                                        {/*        name="DiamondPieces"*/}
+                                                        {/*        onChange={handleInputChangePurchase}*/}
+                                                        {/*        type="text"*/}
+                                                        {/*        value={purchaseProduct.DiamondPieces}*/}
+                                                        {/*    />*/}
+                                                        {/*</div>*/}
+                                                        <div>
+                                                            <th>DESCRIPTION</th>
+                                                            <input
+                                                                name="DiamondDescription"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.DiamondDescription}
+                                                            />
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div>
+                                                            <th>PRODUCT</th>
+                                                            <select
+                                                                disabled={purchaseProduct.StockKeepingUnit}
+                                                                name="ProductName"
+                                                                onChange={(e) => {
+                                                                    setSelectedProductType(e.target.value),
+                                                                        handleInputChangePurchase(e);
+                                                                }}
+                                                                // value={purchaseProduct.ProductNames}
+                                                                // value={purchaseProduct.ProductName}
+                                                                // value={selectedProductType}
+                                                                value={`${purchaseProduct.ProductId},${purchaseProduct.ProductName}`}
+                                                            >
+                                                                <option value={""}>Select an Product</option>
+                                                                {filteredProducts.map((x) => {
+                                                                    return (
+                                                                        <option value={`${x.Id},${x.ProductName}`}>
+                                                                            {x.ProductName}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <th>GROSS WT</th>
+                                                            <input
+                                                                name="GrossWt"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.GrossWt}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>STONE WT</th>
+                                                            <input
+                                                                name="StoneWt"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.StoneWt}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>CLIP WT/Item</th>
+                                                            <input
+                                                                name="ClipWeight"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.ClipWeight}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>CLIP QUANTITY</th>
+                                                            <input
+                                                                name="ClipQuantity"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.ClipQuantity}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>NET WT</th>
+                                                            <input
+                                                                name="NetWt"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.NetWt}
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <th>PURITY</th>
+                                                            <select
+                                                                disabled={purchaseProduct.StockKeepingUnit}
+                                                                name="PurityId"
+                                                                onChange={handleInputChangePurchase}
+                                                                value={purchaseProduct.PurityId}
+                                                            >
+                                                                <option value=""> Select an Option</option>
+                                                                {filteredPurities.map((x) => {
+                                                                    return (
+                                                                        <option value={x.Id}>
+                                                                            {" "}
+                                                                            {x.PurityName}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </select>
+                                                            {/* <input
                             name="PurityId"
                             onChange={handleInputChangePurchase}
                             type="text"
                             value={purchaseProduct.PurityId}
                           /> */}
-                                                    </div>
-                                                    <div>
-                                                        <th>FINE PERCENT</th>
-                                                        <input
-                                                            name="FinePercent"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.FinePercent}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <th>WASTAGE%</th>
-                                                        <div className="adminPurchaseEntryDollarSignBox">
-                                                            <MdChangeCircle
-                                                                className="adminPurchaseEntryDollarSign"
-                                                                onClick={() => setFinePure(!finePure)}
-                                                                size={"17px"}
-                                                                style={{
-                                                                    cursor: "pointer",
-                                                                    color: finePure ? "green" : "grey",
-                                                                }}
-                                                            />
-
+                                                        </div>
+                                                        <div>
+                                                            <th>FINE PERCENT</th>
                                                             <input
-                                                                name="WastageWt"
+                                                                name="FinePercent"
                                                                 onChange={handleInputChangePurchase}
                                                                 type="text"
-                                                                value={purchaseProduct.WastageWt}
+                                                                value={purchaseProduct.FinePercent}
                                                             />
                                                         </div>
-                                                    </div>
+                                                        <div>
+                                                            <th>WASTAGE%</th>
+                                                            <div className="adminPurchaseEntryDollarSignBox">
+                                                                <MdChangeCircle
+                                                                    className="adminPurchaseEntryDollarSign"
+                                                                    onClick={() => setFinePure(!finePure)}
+                                                                    size={"17px"}
+                                                                    style={{
+                                                                        cursor: "pointer",
+                                                                        color: finePure ? "green" : "grey",
+                                                                    }}
+                                                                />
 
-                                                    <div>
-                                                        <th>STONE PIECES</th>
-                                                        <input
-                                                            name="StonePieces"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.StonePieces}
-                                                        />
-                                                    </div>
+                                                                <input
+                                                                    name="WastageWt"
+                                                                    onChange={handleInputChangePurchase}
+                                                                    type="text"
+                                                                    value={purchaseProduct.WastageWt}
+                                                                />
+                                                            </div>
+                                                        </div>
 
-                                                    {showAllFields ? (
-                                                        <>
-                                                            <div>
-                                                                <th>QUANTITY</th>
-                                                                <input
-                                                                    name="Quantity"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.Quantity}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>MAKING %</th>
-                                                                <input
-                                                                    name="MakingPercentage"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.MakingPercentage}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>MAKING/GM</th>
-                                                                <input
-                                                                    name="MakingPerGram"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.MakingPerGram}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>FIXED MAKING</th>
-                                                                <input
-                                                                    name="MakingFixedAmt"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.MakingFixedAmt}
-                                                                />
-                                                            </div>
+                                                        <div>
+                                                            <th>STONE PIECES</th>
+                                                            <input
+                                                                name="StonePieces"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.StonePieces}
+                                                            />
+                                                        </div>
 
-                                                            <div>
-                                                                <th>RATE/10GM</th>
-                                                                <div className="adminPurchaseEntryDollarSignBox">
-                                                                    <FaDollarSign
-                                                                        className="adminPurchaseEntryDollarSign"
-                                                                        onClick={() =>
-                                                                            setConvertAmount(!convertAmount)
-                                                                        }
-                                                                        size={"15px"}
-                                                                        style={{
-                                                                            cursor: "pointer",
-                                                                            color: convertAmount ? "green" : "grey",
-                                                                        }}
-                                                                    />
+                                                        {showAllFields ? (
+                                                            <>
+                                                                <div>
+                                                                    <th>QUANTITY</th>
                                                                     <input
-                                                                        name="MetalRate"
+                                                                        name="Quantity"
                                                                         onChange={handleInputChangePurchase}
                                                                         type="text"
-                                                                        value={purchaseProduct.MetalRate}
+                                                                        value={purchaseProduct.Quantity}
                                                                     />
                                                                 </div>
-                                                            </div>
+                                                                <div>
+                                                                    <th>MAKING %</th>
+                                                                    <input
+                                                                        name="MakingPercentage"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.MakingPercentage}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>MAKING/GM</th>
+                                                                    <input
+                                                                        name="MakingPerGram"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.MakingPerGram}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>FIXED MAKING</th>
+                                                                    <input
+                                                                        name="MakingFixedAmt"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.MakingFixedAmt}
+                                                                    />
+                                                                </div>
 
-                                                            <div>
-                                                                <th>STONE AMOUNT</th>
-                                                                <input
-                                                                    name="StoneAmount"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.StoneAmount}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>HALLMARK AMOUNT</th>
-                                                                <input
-                                                                    name="HallmarkAmt"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.HallmarkAmt}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>TAG WEIGHT</th>
-                                                                <input
-                                                                    name="TagWeight"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.TagWeight}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>FINDING WEIGHT</th>
-                                                                <input
-                                                                    name="FindingWeight"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.FindingWeight}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>LANYARD WEIGHT</th>
-                                                                <input
-                                                                    name="LanyardWeight"
-                                                                    onChange={handleInputChangePurchase}
-                                                                    type="text"
-                                                                    value={purchaseProduct.LanyardWeight}
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <th>TOTAL ITEM AMT</th>
-                                                                <input
-                                                                    style={{
-                                                                        cursor: "not-allowed",
-                                                                        color: "grey",
-                                                                    }}
-                                                                    name="TotalItemAmt"
-                                                                    // onChange={handleInputChangePurchase}
-                                                                    readOnly
-                                                                    type="text"
-                                                                    value={parseFloat(
-                                                                        purchaseProduct.TotalItemAmt
-                                                                    ).toFixed(3)}
-                                                                />
-                                                            </div>
-                                                        </>
-                                                    ) : null}
+                                                                <div>
+                                                                    <th>RATE/10GM</th>
+                                                                    <div className="adminPurchaseEntryDollarSignBox">
+                                                                        <FaDollarSign
+                                                                            className="adminPurchaseEntryDollarSign"
+                                                                            onClick={() =>
+                                                                                setConvertAmount(!convertAmount)
+                                                                            }
+                                                                            size={"15px"}
+                                                                            style={{
+                                                                                cursor: "pointer",
+                                                                                color: convertAmount ? "green" : "grey",
+                                                                            }}
+                                                                        />
+                                                                        <input
+                                                                            name="MetalRate"
+                                                                            onChange={handleInputChangePurchase}
+                                                                            type="text"
+                                                                            value={purchaseProduct.MetalRate}
+                                                                        />
+                                                                    </div>
+                                                                </div>
 
-                                                    {purchaseProduct.CategoryName == "DIAMOND GOLD" || purchaseProduct.CategoryName == "DIAMOND SILVER" || purchaseProduct.CategoryName == "DIAMOND PLATINUM" ? (
-                                                        <>
-                                                              <div>
-                                  <th>T DIA AMOUNT</th>
-                                  <input
-                                    style={{
-                                      cursor: "not-allowed",
-                                      color: "grey",
-                                    }}
-                                    name="TotalItemAmt"
-                                    // onChange={handleInputChangePurchase}
-                                    readOnly
-                                    type="text"
-                                    value={purchaseProduct.TotalDiamondAmount}
-                                  />
-                                </div>
+                                                                <div>
+                                                                    <th>STONE AMOUNT</th>
+                                                                    <input
+                                                                        name="StoneAmount"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.StoneAmount}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>HALLMARK AMOUNT</th>
+                                                                    <input
+                                                                        name="HallmarkAmt"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.HallmarkAmt}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>TAG WEIGHT</th>
+                                                                    <input
+                                                                        name="TagWeight"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.TagWeight}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>FINDING WEIGHT</th>
+                                                                    <input
+                                                                        name="FindingWeight"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.FindingWeight}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>LANYARD WEIGHT</th>
+                                                                    <input
+                                                                        name="LanyardWeight"
+                                                                        onChange={handleInputChangePurchase}
+                                                                        type="text"
+                                                                        value={purchaseProduct.LanyardWeight}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <th>TOTAL ITEM AMT</th>
+                                                                    <input
+                                                                        style={{
+                                                                            cursor: "not-allowed",
+                                                                            color: "grey",
+                                                                        }}
+                                                                        name="TotalItemAmt"
+                                                                        // onChange={handleInputChangePurchase}
+                                                                        readOnly
+                                                                        type="text"
+                                                                        value={parseFloat(
+                                                                            purchaseProduct.TotalItemAmt
+                                                                        ).toFixed(3)}
+                                                                    />
+                                                                </div>
+                                                            </>
+                                                        ) : null}
 
-                                <div>
-                                  <th>T DIA QTY</th>
-                                  <input
-                                    style={{
-                                      cursor: "not-allowed",
-                                      color: "grey",
-                                    }}
-                                    name="TotalItemAmt"
-                                    // onChange={handleInputChangePurchase}
-                                    readOnly
-                                    type="text"
-                                    value={purchaseProduct.TotalDiamondQty}
-                                  />
-                                </div>
+                                                        {purchaseProduct.CategoryName == "DIAMOND GOLD" || purchaseProduct.CategoryName == "DIAMOND SILVER" || purchaseProduct.CategoryName == "DIAMOND PLATINUM" ? (
+                                                            <>
+                                                                <div>
+                                                                    <th>T DIA AMOUNT</th>
+                                                                    <input
+                                                                        style={{
+                                                                            cursor: "not-allowed",
+                                                                            color: "grey",
+                                                                        }}
+                                                                        name="TotalItemAmt"
+                                                                        // onChange={handleInputChangePurchase}
+                                                                        readOnly
+                                                                        type="text"
+                                                                        value={purchaseProduct.TotalDiamondAmount}
+                                                                    />
+                                                                </div>
 
-                                <div>
-                                  <th>T DIA WT(GRM)</th>
-                                  <input
-                                    style={{
-                                      cursor: "not-allowed",
-                                      color: "grey",
-                                    }}
-                                    name="TotalItemAmt"
-                                    // onChange={handleInputChangePurchase}
-                                    readOnly
-                                    type="text"
-                                    value={parseFloat(
-                                      purchaseProduct.TotalDiamondWeight/5
-                                    ).toFixed(3)}
-                                  />
-                                </div>
-                                                        </>
-                                                    ) : null}
+                                                                <div>
+                                                                    <th>T DIA QTY</th>
+                                                                    <input
+                                                                        style={{
+                                                                            cursor: "not-allowed",
+                                                                            color: "grey",
+                                                                        }}
+                                                                        name="TotalItemAmt"
+                                                                        // onChange={handleInputChangePurchase}
+                                                                        readOnly
+                                                                        type="text"
+                                                                        value={purchaseProduct.TotalDiamondQty}
+                                                                    />
+                                                                </div>
 
-                                                    <div>
-                                                        <th>TESTING</th>
-                                                        <input
-                                                            name="Testing"
-                                                            onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={purchaseProduct.Testing}
-                                                        />
-                                                    </div>
+                                                                <div>
+                                                                    <th>T DIA WT(GRM)</th>
+                                                                    <input
+                                                                        style={{
+                                                                            cursor: "not-allowed",
+                                                                            color: "grey",
+                                                                        }}
+                                                                        name="TotalItemAmt"
+                                                                        // onChange={handleInputChangePurchase}
+                                                                        readOnly
+                                                                        type="text"
+                                                                        value={parseFloat(
+                                                                            purchaseProduct.TotalDiamondWeight / 5
+                                                                        ).toFixed(3)}
+                                                                    />
+                                                                </div>
+                                                            </>
+                                                        ) : null}
 
-                                                    <div>
-                                                        <th>FINE WT</th>
-                                                        <input
-                                                            style={{cursor: "not-allowed", color: "grey"}}
-                                                            name="FineWt"
-                                                            // onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            readOnly
-                                                            value={parseFloat(
-                                                                purchaseProduct.FineWt
-                                                            ).toFixed(3)}
-                                                        />
-                                                    </div>
+                                                        <div>
+                                                            <th>TESTING</th>
+                                                            <input
+                                                                name="Testing"
+                                                                onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={purchaseProduct.Testing}
+                                                            />
+                                                        </div>
 
-                                                    <div>
-                                                        <th>F WT + W WT</th>
-                                                        <input
-                                                            style={{cursor: "not-allowed", color: "grey"}}
-                                                            name="FineWastageWt"
-                                                            readOnly
-                                                            // onChange={handleInputChangePurchase}
-                                                            type="text"
-                                                            value={parseFloat(
-                                                                purchaseProduct.FineWastageWt
-                                                            ).toFixed(3)}
-                                                        />
-                                                    </div>
-                                                    {/* <div>
+                                                        <div>
+                                                            <th>FINE WT</th>
+                                                            <input
+                                                                style={{ cursor: "not-allowed", color: "grey" }}
+                                                                name="FineWt"
+                                                                // onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                readOnly
+                                                                value={parseFloat(
+                                                                    purchaseProduct.FineWt
+                                                                ).toFixed(3)}
+                                                            />
+                                                        </div>
+
+                                                        <div>
+                                                            <th>F WT + W WT</th>
+                                                            <input
+                                                                style={{ cursor: "not-allowed", color: "grey" }}
+                                                                name="FineWastageWt"
+                                                                readOnly
+                                                                // onChange={handleInputChangePurchase}
+                                                                type="text"
+                                                                value={parseFloat(
+                                                                    purchaseProduct.FineWastageWt
+                                                                ).toFixed(3)}
+                                                            />
+                                                        </div>
+                                                        {/* <div>
                           <th>SHOW ALL FIELDS</th>
                           <input
                             name="FineWastageWt"
@@ -5669,152 +5689,152 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             ).toFixed(3)}
                           />
                         </div> */}
-                                                    <div>
-                                                        <th>ADD TO UNLABEL</th>
+                                                        <div>
+                                                            <th>ADD TO UNLABEL</th>
 
-                                                        <input
-                                                            style={{
-                                                                width: "15px",
-                                                                height: "20px",
-                                                                cursor: "pointer",
-                                                            }}
-                                                            name="AddToUnlabelled"
-                                                            type="checkbox"
-                                                            checked={purchaseProduct.AddToUnlabelled}
-                                                            onChange={() =>
-                                                                setPurchaseProduct({
-                                                                    ...purchaseProduct,
-                                                                    AddToUnlabelled:
-                                                                        !purchaseProduct.AddToUnlabelled,
-                                                                })
-                                                            }
-                                                        />
+                                                            <input
+                                                                style={{
+                                                                    width: "15px",
+                                                                    height: "20px",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                                name="AddToUnlabelled"
+                                                                type="checkbox"
+                                                                checked={purchaseProduct.AddToUnlabelled}
+                                                                onChange={() =>
+                                                                    setPurchaseProduct({
+                                                                        ...purchaseProduct,
+                                                                        AddToUnlabelled:
+                                                                            !purchaseProduct.AddToUnlabelled,
+                                                                    })
+                                                                }
+                                                            />
 
-                                                        {/* <button>Add</button> */}
-                                                    </div>
-                                                    <div
-                                                        style={{margin: "0px"}}
-                                                        className="adminPanelLoginFormRegisterBox"
-                                                    >
-                                                        <h5
-                                                            style={{margin: "0px"}}
-                                                            onClick={() => setShowAllFields(!showAllFields)}
+                                                            {/* <button>Add</button> */}
+                                                        </div>
+                                                        <div
+                                                            style={{ margin: "0px" }}
+                                                            className="adminPanelLoginFormRegisterBox"
                                                         >
-                                                            {!showAllFields ? "Show All" : "Show Less"}
-                                                        </h5>
-                                                    </div>
-                                                    <div>
-                                                        <th>
-                                                            STONE - [{purchaseProduct.Stones.length} added]
-                                                        </th>
-                                                        <input
-                                                            style={{
-                                                                backgroundColor: "#02a8b5",
-                                                                color: "white",
-                                                                cursor: "pointer",
-                                                            }}
-                                                            value={"Add"}
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setShowAddStoneBox(true)
-                                                                if (!purchaseProduct.Stones.length > 0) {
-                                                                  setPurchaseProduct((previousState) => ({
-                                                                    ...previousState,
-                                                                    Stones: [...previousState.Stones, addStone],
-                                                                  }))
-                                                                }
-                              
-                                                              }}
-                                                        />
-                                                        {/* <button>Add</button> */}
-                                                    </div>
-                                                    <div>
-                                                        <th>
-                                                            DIAMOND - [{purchaseProduct.Diamonds.length}{" "}
-                                                            added]
-                                                        </th>
-                                                        <input
-                                                            style={{
-                                                                backgroundColor: "#02a8b5",
-                                                                color: "white",
-                                                                cursor: "pointer",
-                                                            }}
-                                                            value={"Add"}
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setShowAddDiamondBox(true);
-                                                                if (purchaseProduct.Diamonds.length === 0) {
-                                                                    setPurchaseProduct((previousState) => ({
-                                                                        ...previousState,
-                                                                        Diamonds: [
-                                                                            ...previousState.Diamonds,
-                                                                            addDiamond,
-                                                                        ],
-                                                                    }));
-                                                                }
+                                                            <h5
+                                                                style={{ margin: "0px" }}
+                                                                onClick={() => setShowAllFields(!showAllFields)}
+                                                            >
+                                                                {!showAllFields ? "Show All" : "Show Less"}
+                                                            </h5>
+                                                        </div>
+                                                        <div>
+                                                            <th>
+                                                                STONE - [{purchaseProduct.Stones.length} added]
+                                                            </th>
+                                                            <input
+                                                                style={{
+                                                                    backgroundColor: "#02a8b5",
+                                                                    color: "white",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                                value={"Add"}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setShowAddStoneBox(true)
+                                                                    if (!purchaseProduct.Stones.length > 0) {
+                                                                        setPurchaseProduct((previousState) => ({
+                                                                            ...previousState,
+                                                                            Stones: [...previousState.Stones, addStone],
+                                                                        }))
+                                                                    }
 
-                                                            }}
-                                                        />
-                                                        {/* <button>Add</button> */}
-                                                    </div>
-                                                </>
-                                            )}
-                                        </tr>
+                                                                }}
+                                                            />
+                                                            {/* <button>Add</button> */}
+                                                        </div>
+                                                        <div>
+                                                            <th>
+                                                                DIAMOND - [{purchaseProduct.Diamonds.length}{" "}
+                                                                added]
+                                                            </th>
+                                                            <input
+                                                                style={{
+                                                                    backgroundColor: "#02a8b5",
+                                                                    color: "white",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                                value={"Add"}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setShowAddDiamondBox(true);
+                                                                    if (purchaseProduct.Diamonds.length === 0) {
+                                                                        setPurchaseProduct((previousState) => ({
+                                                                            ...previousState,
+                                                                            Diamonds: [
+                                                                                ...previousState.Diamonds,
+                                                                                addDiamond,
+                                                                            ],
+                                                                        }));
+                                                                    }
+
+                                                                }}
+                                                            />
+                                                            {/* <button>Add</button> */}
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </tr>
                                         </thead>
                                     </table>
                                 </div>
                                 {showAddStoneBox && (
-                  <div className="popup">
-                    <div style={{ maxHeight: "250px", overflowY: "auto" }} className="popup-inner">
-                      <StonePopup
-                        purchaseProduct={purchaseProduct}
-                        handleStoneChange={handleStoneChange}
-                        deleteStone={deleteStone}
-                        addStone={addStone}
-                        setPurchaseProduct={setPurchaseProduct}
-                        closePopup={() => setShowAddStoneBox(false)} // Close function
-                        allStonesList={allStonesList}
-                      />
-                    </div>
-                  </div>
-                )}
+                                    <div className="popup">
+                                        <div style={{ maxHeight: "250px", overflowY: "auto" }} className="popup-inner">
+                                            <StonePopup
+                                                purchaseProduct={purchaseProduct}
+                                                handleStoneChange={handleStoneChange}
+                                                deleteStone={deleteStone}
+                                                addStone={addStone}
+                                                setPurchaseProduct={setPurchaseProduct}
+                                                closePopup={() => setShowAddStoneBox(false)} // Close function
+                                                allStonesList={allStonesList}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
 
                                 {showAddDiamondBox ? (
                                     <div className="popup">
                                         <div
-                                            style={{maxHeight: "310px", overflowY: "auto"}}
+                                            style={{ maxHeight: "310px", overflowY: "auto" }}
                                             className="popup-inner"
                                         >
                                             <div className="adminAddProductsPopupInnerBox">
                                                 {purchaseProduct.Diamonds.map((x, index) => (
                                                     <div className="adminPurchaseEntryAddStonesMainBox">
-                                                        
-                                                        
+
+
                                                         <DiamondEntryComponent
-                              key={index}
-                              index={index}
-                              diamond={x}
-                              allDiamondAttributes={allDiamondAttributes}
-                              allDiamondSizeWeightRate={
-                                allDiamondSizeWeightRate
-                              }
-                              handleDiamondChange={handleDiamondChange}
-                              deleteDiamond={deleteDiamond}
-                              addDiamond={() =>
-                                setPurchaseProduct((prevState) => ({
-                                  ...prevState,
-                                  Diamonds: [...prevState.Diamonds, addDiamond],
-                                }))
-                              }
-                              from={"purchase"}
-                            />
+                                                            key={index}
+                                                            index={index}
+                                                            diamond={x}
+                                                            allDiamondAttributes={allDiamondAttributes}
+                                                            allDiamondSizeWeightRate={
+                                                                allDiamondSizeWeightRate
+                                                            }
+                                                            handleDiamondChange={handleDiamondChange}
+                                                            deleteDiamond={deleteDiamond}
+                                                            addDiamond={() =>
+                                                                setPurchaseProduct((prevState) => ({
+                                                                    ...prevState,
+                                                                    Diamonds: [...prevState.Diamonds, addDiamond],
+                                                                }))
+                                                            }
+                                                            from={"purchase"}
+                                                        />
 
 
 
-                                                        
+
                                                     </div>
                                                 ))}
-                                                 {!purchaseProduct.Diamonds.length > 0 ? (
+                                                {!purchaseProduct.Diamonds.length > 0 ? (
                                                     <button
                                                         id="bulkStockAddProductImportButton"
                                                         onClick={() =>
@@ -5830,7 +5850,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                                     >
                                                         Add Diamond
                                                     </button>
-                                                ) : null} 
+                                                ) : null}
                                                 <button
                                                     onClick={() => setShowAddDiamondBox(false)}
                                                     className="bulkProductAddDeleteButton close-btn"
@@ -5845,7 +5865,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
 
                                 <div className="adminInvoiceAddProductsOptionsMainPurchaseItems"></div>
                                 <div
-                                    style={{justifyContent: "flex-start", margin: "20px 0px"}}
+                                    style={{ justifyContent: "flex-start", margin: "20px 0px" }}
                                     className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                                 >
                                     <button
@@ -5854,7 +5874,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         Add
                                     </button>
                                     <button
-                                        style={{marginLeft: "20px"}}
+                                        style={{ marginLeft: "20px" }}
                                         onClick={() => setActive("Sell")}
                                     >
                                         Items
@@ -5868,644 +5888,51 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             </div>
                         )}
                         <div
-                            style={{justifyContent: "flex-start", alignItems: "flex-start"}}
+                            style={{ justifyContent: "flex-start", alignItems: "flex-start" }}
                             className="adminInviceAddedProductsTotalOuterBox"
                         >
                             <div className="adminInviceAddedProductsTotalAmountOuterBox">
-                                <div className="adminInviceAddedProductsTotalItemBoxPaymentType">
-                                    <div
-                                        onClick={() => {
-                                            setPaymentType("Receive"),
-                                                setPaymentOptions("Cash"),
-                                                setPaymentAmount(Math.abs(paymentAmount));
-                                        }}
-                                    >
-                                        {paymentType === "Receive" ? (
-                                            <FaRegDotCircle style={{marginRight: "5px"}}/>
-                                        ) : (
-                                            <FaRegCircle style={{marginRight: "5px"}}/>
-                                        )}
-                                        Receive
-                                    </div>
-                                    <div onClick={() => setPaymentType("Paid")}>
-                                        {paymentType === "Paid" ? (
-                                            <FaRegDotCircle style={{marginRight: "5px"}}/>
-                                        ) : (
-                                            <FaRegCircle style={{marginRight: "5px"}}/>
-                                        )}
-                                        Paid
-                                    </div>
-                                </div>
-                                <div
-                                    style={{
-                                        justifyContent: "flex-start",
-                                        alignItems: "flex-start",
-                                        textAlign: "left",
-                                        borderTopLeftRadius: "0px",
-                                        borderTopRightRadius: "0px",
-                                    }}
-                                    className="adminInviceAddedProductsTotalItemBox"
-                                >
-                                    <label>Payment Modee</label>
-                                    <select
-                                        tabIndex="3"
-                                        ref={button2Ref}
-                                        onKeyPress={(e) => {
-                                            if (e.key === "Enter") {
-                                                button3Ref.current.focus();
-                                            }
-                                        }}
-                                        style={{width: "auto"}}
-                                        onChange={(e) => setPaymentOptions(e.target.value)}
-                                        value={paymentOptions}
-                                    >
-                                        <option value={"Cash"}>Cash</option>
-                                        <option value={"Card"}>Card</option>
-                                        <option value={"UPI"}>UPI</option>
-                                        <option value={"Cheque"}>Cheque</option>
-                                        <option value={"RTGS"}>RTGS</option>
-                                        <option value={"MDS"}>MDS</option>
-                                        {paymentType === "Paid" ? (
-                                            <>
-                                                <option value={"Advance Amount"}>Advance Amount</option>
-                                            </>
-                                        ) : null}
-                                        <option value={"Metal"}>Metal</option>
-                                        <option value={"Metal to Cash"}>Metal to Cash</option>
-                                        <option value={"Cash to Metal"}>Cash to Metal</option>
-                                    </select>
-                                    {paymentOptions !== "Advance Amount" &&
-                                    paymentOptions !== "Cash to Metal" &&
-                                    paymentOptions !== "Metal to Cash" &&
-                                    paymentOptions !== "Metal" ? (
-                                        <>
-                                            <label style={{whiteSpace: "nowrap"}}>
-                                                Description
-                                            </label>
-                                            <input
-                                                style={{width: "100%"}}
-                                                type="text"
-                                                value={paymentDescription}
-                                                onChange={(e) => setPaymentDescription(e.target.value)}
-                                            />
-                                            <label>Amount1</label>
-                                            <div className="adminInviceAddedProductsAmountInputBox">
-                                                <input
-                                                    style={{
-                                                        color:
-                                                            paymentType === "Paid" && paymentAmount !== 0
-                                                                ? "red"
-                                                                : paymentType === "Receive" && paymentAmount > 0
-                                                                ? "green"
-                                                                : "black",
-                                                    }}
-                                                    tabindex="4"
-                                                    ref={button3Ref}
-                                                    onKeyPress={(e) => {
-                                                        if (e.key === "Enter") {
-                                                            button4Ref.current.focus();
-                                                        }
-                                                    }}
-                                                    type="number"
-                                                    value={paymentAmount}
-                                                    onChange={(e) => setPaymentAmount(e.target.value)}
-                                                />
-                                                <button
-                                                    tabindex="5"
-                                                    ref={button4Ref}
-                                                    onKeyPress={(e) => {
-                                                        if (e.key === "Enter") {
-                                                            button5Ref.current.focus();
-                                                        }
-                                                    }}
-                                                    onClick={() => {
-                                                        if (
-                                                            paymentOptions == "Cash" &&
-                                                            totalPaidCashAmount + parseInt(paymentAmount) >
-                                                            200000
-                                                        ) {
-                                                            alert("Could Not Take more than 200000 in Cash");
-                                                        } else if (
-                                                            paymentAmount > 200000 &&
-                                                            paymentOptions == "Cash"
-                                                        ) {
-                                                            alert("Could'nt Take more than 200000 in Cash");
-                                                        } else {
-                                                            // addPayment();
-                                                            handleAddPayment();
-                                                        }
-                                                    }}
-                                                >
-                                                    <GiCheckMark/>
-                                                </button>
-                                                <button
-                                                    tabindex="6"
-                                                    ref={button5Ref}
-                                                    onKeyPress={(e) => {
-                                                        if (e.key === "Enter") {
-                                                            button6Ref.current.focus();
-                                                        }
-                                                    }}
-                                                    onClick={() => {
-                                                        setPaymentAmount(0), setPaymentOptions("Cash");
-                                                    }}
-                                                >
-                                                    <RxCross2/>
-                                                </button>
-                                            </div>
-                                        </>
-                                    ) : null}
-                                </div>
+                            <PaymentForm
+      paymentType={paymentType}
+      setPaymentType={setPaymentType}
+      paymentOptions={paymentOptions}
+      setPaymentOptions={setPaymentOptions}
+      paymentAmount={paymentAmount}
+      setPaymentAmount={setPaymentAmount}
+      paymentDescription={paymentDescription}
+      setPaymentDescription={setPaymentDescription}
+      buttonRefs={buttonRefs}
+      handleAddPayment={handleAddPayment}
+      totalPaidCashAmount={0} // Replace with actual value
+      metalPaymentOption={metalPaymentOption}
+      setMetalPaymentOption={setMetalPaymentOption}
+      handleMetalPaymentOption={handleMetalPaymentOption}
+      advanceType={advanceType}
+      setAdvanceType={setAdvanceType}
+    />
                                 
-                                
-                                
-                                
-                                {paymentOptions === "Metal to Cash" ? (
-                                    <div className="adminInviceAddedProductsMetaltoCashMainBox">
-                                        <div>
-                                            <label>Metal</label>
-                                            <select
-                                                onChange={(e) =>
-                                                    setMetalPaymentOption({
-                                                        ...metalPaymentOption,
-                                                        optionSelected: `${e.target.value}`,
-                                                    })
-                                                }
-                                                value={metalPaymentOption.optionSelected}
-                                            >
-                                                <option value={"GOLD"}>GOLD</option>
-                                                <option value={"SILVER"}>SILVER</option>
-                                                <option value={"PLATINUM"}>PLATINUM</option>
-                                                <option value={"PURE GOLD"}>PURE GOLD</option>
-                                                <option value={"PURE SILVER"}>PURE SILVER</option>
-                                                <option value={"OLD GOLD"}>OLD GOLD</option>
-                                                <option value={"OLD SILVER"}>OLD SILVER</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label>Fine Paid</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.fineWt}
-                                                onChange={(e) => {
-                                                    handleMetalPaymentOption("fineWt", e);
-                                                }}
-                                                //     onChange={(e) =>
-                                                //       setMetalPaymentOption({
-                                                //         ...metalPaymentOption,
-                                                //         fineWt: e.target.value,
-                                                //     })
-                                                // }
-                                            />
-                                        </div>
-                                        <div>
-                                            <label>Rate 10/Gm</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.fineRate}
-                                                onChange={(e) => {
-                                                    handleMetalPaymentOption("Rate", e);
-                                                }}
-                                                // onChange={(e) =>
-                                                //   setMetalPaymentOption({
-                                                //     ...metalPaymentOption,
-                                                //     fineRate: e.target.value,
-                                                //   })
-                                                // }
-                                            />
-                                        </div>
-                                        <div>
-                                            <label>Total amount</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.totalAmount}
-                                                readOnly
-                                            />
-                                        </div>
-                                        <div
-                                            style={{
-                                                margin: "10px",
-                                                width: "100px",
-                                                marginLeft: "auto",
-                                                marginRight: "0px",
-                                            }}
-                                            className="adminInvoiceMainSaveButtonBox"
-                                        >
-                                            <button onClick={() =>
-                                                // addPayment
-                                                handleAddPayment()
-                                                }>Add</button>
-                                        </div>
-                                    </div>
-                                ) : paymentOptions === "Cash to Metal" ? (
-                                    <div className="adminInviceAddedProductsMetaltoCashMainBox">
-                                        <div>
-                                            <label>Metal</label>
-                                            <select
-                                                onChange={(e) =>
-                                                    setMetalPaymentOption({
-                                                        ...metalPaymentOption,
-                                                        optionSelected: `${e.target.value}`,
-                                                    })
-                                                }
-                                                value={metalPaymentOption.optionSelected}
-                                            >
-                                                <option value={"GOLD"}>GOLD</option>
-                                                <option value={"SILVER"}>SILVER</option>
-                                                <option value={"PLATINUM"}>PLATINUM</option>
-                                                <option value={"PURE GOLD"}>PURE GOLD</option>
-                                                <option value={"PURE SILVER"}>PURE SILVER</option>
-                                                <option value={"OLD GOLD"}>OLD GOLD</option>
-                                                <option value={"OLD SILVER"}>OLD SILVER</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label>Total amount</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.totalAmount}
-                                                onChange={(e) => {
-                                                    handleMetalPaymentOption("Amount", e);
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label>Rate 10/Gm</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.fineRate}
-                                                onChange={(e) => {
-                                                    handleMetalPaymentOption("Rate", e);
-                                                }}
-                                                // onChange={(e) =>
-                                                //   setMetalPaymentOption({
-                                                //     ...metalPaymentOption,
-                                                //     fineRate: e.target.value,
-                                                //   })
-                                                // }
-                                            />
-                                        </div>
 
-                                        <div>
-                                            <label>Fine Paid</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.fineWt}
-                                                readOnly
-                                                //     onChange={(e) =>
-                                                //       setMetalPaymentOption({
-                                                //         ...metalPaymentOption,
-                                                //         fineWt: e.target.value,
-                                                //     })
-                                                // }
-                                            />
-                                        </div>
-                                        <div
-                                            style={{
-                                                margin: "10px",
-                                                width: "100px",
-                                                marginLeft: "auto",
-                                                marginRight: "0px",
-                                            }}
-                                            className="adminInvoiceMainSaveButtonBox"
-                                        >
-                                            <button onClick={() =>
-                                                // addPayment
-                                                handleAddPayment()
-                                                }>Add</button>
-                                        </div>
-                                    </div>
-                                ) : paymentOptions === "Metal" ? (
-                                    <div className="adminInviceAddedProductsMetaltoCashMainBox">
-                                        <div>
-                                            <label>Metal</label>
-                                            <select
-                                                onChange={(e) =>
-                                                    setMetalPaymentOption({
-                                                        ...metalPaymentOption,
-                                                        optionSelected: `${e.target.value}`,
-                                                    })
-                                                }
-                                                value={metalPaymentOption.optionSelected}
-                                            >
-                                                <option value={"GOLD"}>GOLD</option>
-                                                <option value={"SILVER"}>SILVER</option>
-                                                <option value={"PLATINUM"}>PLATINUM</option>
-                                                <option value={"PURE GOLD"}>PURE GOLD</option>
-                                                <option value={"PURE SILVER"}>PURE SILVER</option>
-                                                <option value={"OLD GOLD"}>OLD GOLD</option>
-                                                <option value={"OLD SILVER"}>OLD SILVER</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label>Total Weight</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.totalWt}
-                                                onChange={(e) => {
-                                                    handleMetalPaymentOption("totalWt", e);
-                                                }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label>Fine Percent</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.finePurity}
-                                                onChange={(e) => {
-                                                    handleMetalPaymentOption("finePurity", e);
-                                                }}
-                                                // onChange={(e) =>
-                                                //   setMetalPaymentOption({
-                                                //     ...metalPaymentOption,
-                                                //     fineRate: e.target.value,
-                                                //   })
-                                                // }
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label>Fine Paid</label>
-                                            <input
-                                                type="number"
-                                                value={metalPaymentOption.fineWt}
-                                                readOnly
-                                                //     onChange={(e) =>
-                                                //       setMetalPaymentOption({
-                                                //         ...metalPaymentOption,
-                                                //         fineWt: e.target.value,
-                                                //     })
-                                                // }
-                                            />
-                                        </div>
-                                        <div
-                                            style={{
-                                                margin: "10px",
-                                                width: "100px",
-                                                marginLeft: "auto",
-                                                marginRight: "0px",
-                                            }}
-                                            className="adminInvoiceMainSaveButtonBox"
-                                        >
-                                            <button onClick={() =>
-                                                // addPayment
-                                                handleAddPayment()
-                                                }>Add</button>
-                                        </div>
-                                    </div>
-                                ) : null}
-
-                                {paymentOptions === "Advance Amount" ? (
-                                    <div style={{marginTop: "20px"}}>
-                                        <div
-                                            style={{gridAutoFlow: "row"}}
-                                            className="adminInviceAddedProductsTotalItemBoxPaymentType"
-                                        >
-                                            <div
-                                                onClick={() => {
-                                                    setPaymentAmount(Math.abs(paymentAmount));
-                                                    setAdvanceType("Advance Received");
-                                                }}
-                                            >
-                                                {advanceType === "Advance Received" ? (
-                                                    <FaRegDotCircle style={{marginRight: "5px"}}/>
-                                                ) : (
-                                                    <FaRegCircle style={{marginRight: "5px"}}/>
-                                                )}
-                                                Adv Rcvd
-                                            </div>
-                                            <div onClick={() => setAdvanceType("Deduct Advance")}>
-                                                {advanceType === "Deduct Advance" ? (
-                                                    <FaRegDotCircle style={{marginRight: "5px"}}/>
-                                                ) : (
-                                                    <FaRegCircle style={{marginRight: "5px"}}/>
-                                                )}
-                                                Deduct Adv
-                                            </div>
-                                        </div>
-
-                                        {advanceType === "Advance Received" ? (
-                                            <div
-                                                style={{
-                                                    justifyContent: "flex-start",
-                                                    alignItems: "flex-start",
-                                                    textAlign: "left",
-                                                }}
-                                                className="adminInviceAddedProductsTotalItemBox"
-                                            >
-                                                <label style={{whiteSpace: "nowrap"}}>
-                                                    Description
-                                                </label>
-                                                <input
-                                                    style={{width: "100%"}}
-                                                    type="text"
-                                                    value={paymentDescription}
-                                                    onChange={(e) =>
-                                                        setPaymentDescription(e.target.value)
-                                                    }
-                                                />
-                                                <label>Amount</label>
-                                                <div className="adminInviceAddedProductsAmountInputBox">
-                                                    <input
-                                                        style={{
-                                                            color:
-                                                                paymentType === "Paid" && paymentAmount !== 0
-                                                                    ? "red"
-                                                                    : paymentType === "Receive" &&
-                                                                    paymentAmount > 0
-                                                                    ? "green"
-                                                                    : "black",
-                                                        }}
-                                                        tabindex="4"
-                                                        ref={button3Ref}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                button4Ref.current.focus();
-                                                            }
-                                                        }}
-                                                        type="number"
-                                                        value={advanceAmount}
-                                                        onChange={(e) => setAdvanceAmount(e.target.value)}
-                                                    />
-                                                    <button
-                                                        tabindex="5"
-                                                        ref={button4Ref}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                button5Ref.current.focus();
-                                                            }
-                                                        }}
-                                                        onClick={() => {
-                                                            if (
-                                                                paymentOptions == "Cash" &&
-                                                                totalPaidCashAmount + parseInt(paymentAmount) >
-                                                                200000
-                                                            ) {
-                                                                alert(
-                                                                    "Could Not Take more than 200000 in Cash"
-                                                                );
-                                                            } else if (
-                                                                paymentAmount > 200000 &&
-                                                                paymentOptions == "Cash"
-                                                            ) {
-                                                                alert("Could'nt Take more than 200000 in Cash");
-                                                            } else {
-                                                                // addPayment();
-                                                                handleAddPayment()
-                                                            }
-                                                        }}
-                                                    >
-                                                        <GiCheckMark/>
-                                                    </button>
-                                                    <button
-                                                        tabindex="6"
-                                                        ref={button5Ref}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                button6Ref.current.focus();
-                                                            }
-                                                        }}
-                                                        onClick={() => {
-                                                            setPaymentAmount(0), setPaymentOptions("Cash");
-                                                        }}
-                                                    >
-                                                        <RxCross2/>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div
-                                                style={{
-                                                    justifyContent: "flex-start",
-                                                    alignItems: "flex-start",
-                                                    textAlign: "left",
-                                                }}
-                                                className="adminInviceAddedProductsTotalItemBox"
-                                            >
-                                                <label style={{whiteSpace: "nowrap"}}>
-                                                    Description
-                                                </label>
-                                                <input
-                                                    style={{width: "100%"}}
-                                                    type="text"
-                                                    value={paymentDescription}
-                                                    onChange={(e) =>
-                                                        setPaymentDescription(e.target.value)
-                                                    }
-                                                />
-                                                <label>Amount Available</label>
-                                                {/* <div className="adminInviceAddedProductsAmountInputBox"> */}
-                                                <input
-                                                    type="text"
-                                                    value={
-                                                        selectedCustomer ? selectedCustomer.advanceAmt : "0"
-                                                    }
-                                                    readOnly
-                                                />
-                                                {/* </div> */}
-                                                <label>Deduct Amount</label>
-                                                <div className="adminInviceAddedProductsAmountInputBox">
-                                                    <input
-                                                        style={{
-                                                            color:
-                                                                paymentType === "Paid" && paymentAmount !== 0
-                                                                    ? "red"
-                                                                    : paymentType === "Receive" &&
-                                                                    paymentAmount > 0
-                                                                    ? "green"
-                                                                    : "black",
-                                                        }}
-                                                        tabindex="4"
-                                                        ref={button3Ref}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                button4Ref.current.focus();
-                                                            }
-                                                        }}
-                                                        type="number"
-                                                        value={advanceAmount}
-                                                        onChange={(e) => {
-                                                            if (
-                                                                selectedCustomer &&
-                                                                parseFloat(selectedCustomer.advanceAmt) -
-                                                                parseFloat(e.target.value) >=
-                                                                0
-                                                            ) {
-                                                                setAdvanceAmount(e.target.value);
-                                                            } else {
-                                                                null;
-                                                            }
-                                                        }}
-                                                    />
-                                                    <button
-                                                        tabindex="5"
-                                                        ref={button4Ref}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                button5Ref.current.focus();
-                                                            }
-                                                        }}
-                                                        onClick={() => {
-                                                            if (
-                                                                paymentOptions == "Cash" &&
-                                                                totalPaidCashAmount + parseInt(paymentAmount) >
-                                                                200000
-                                                            ) {
-                                                                alert(
-                                                                    "Could Not Take more than 200000 in Cash"
-                                                                );
-                                                            } else if (
-                                                                paymentAmount > 200000 &&
-                                                                paymentOptions == "Cash"
-                                                            ) {
-                                                                alert("Could'nt Take more than 200000 in Cash");
-                                                            } else {
-                                                                // addPayment();
-                                                                handleAddPayment()
-                                                            }
-                                                        }}
-                                                    >
-                                                        <GiCheckMark/>
-                                                    </button>
-                                                    <button
-                                                        tabindex="6"
-                                                        ref={button5Ref}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                button6Ref.current.focus();
-                                                            }
-                                                        }}
-                                                        onClick={() => {
-                                                            setPaymentAmount(0), setPaymentOptions("Cash");
-                                                        }}
-                                                    >
-                                                        <RxCross2/>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : null}
                                 <div className="adminInviceAddedProductsTotalAmountBox">
                                     <table>
                                         <thead>
-                                        <tr>
-                                            <th>Mode</th>
-                                            <th>Amount</th>
-                                            <th>Gold</th>
-                                            <th>Silver</th>
-                                            <th>Delete</th>
-                                        </tr>
+                                            <tr>
+                                                <th>Mode</th>
+                                                <th>Amount</th>
+                                                <th>Gold</th>
+                                                <th>Silver</th>
+                                                <th>Delete</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        {payments.map((payment, index) => (
-                                            <tr key={index}>
-                                                <td>{payment.mode}</td>
-                                                <td>{payment.amount}</td>
-                                                <td>{payment.fineGold}</td>
-                                                <td>{payment.fineSilver}</td>
-                                                {/* Button to delete the payment */}
-                                                {/* <td onClick={() => deletePayment(index)}>
+                                            {payments.map((payment, index) => (
+                                                <tr key={index}>
+                                                    <td>{payment.mode}</td>
+                                                    <td>{payment.amount}</td>
+                                                    <td>{payment.fineGold}</td>
+                                                    <td>{payment.fineSilver}</td>
+                                                    {/* Button to delete the payment */}
+                                                    {/* <td onClick={() => deletePayment(index)}>
+                            
                             <button
                               tabIndex="7"
                               ref={button6Ref}
@@ -6522,37 +5949,37 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                               Delete
                             </button>
                           </td> */}
-                                                <td>
-                                                    {!payment.Id ||
-                                                    (payment.Id &&
-                                                        isWithinLast24Hours(payment.CreatedOn)) ? (
-                                                        <button
-                                                            tabIndex="7"
-                                                            className="adminInviceAddedProductsTotalAmountDeleteOption"
-                                                            onClick={() => 
-                                                                // deletePayment(index)
-                                                                handleDeletePayment(index)
-                                                            }
-                                                            onKeyPress={(e) => {
-                                                                if (e.key === "Enter" && button7Ref.current) {
-                                                                    button7Ref.current.focus();
+                                                    <td>
+                                                        {!payment.Id ||
+                                                            (payment.Id &&
+                                                                isWithinLast24Hours(payment.CreatedOn)) ? (
+                                                            <button
+                                                                tabIndex="7"
+                                                                className="adminInviceAddedProductsTotalAmountDeleteOption"
+                                                                onClick={() =>
+                                                                    // deletePayment(index)
+                                                                    handleDeletePayment(index)
                                                                 }
-                                                            }}
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            style={{color: "rgba(0,0,0,0.4)"}}
-                                                            disabled
-                                                            className="adminInviceAddedProductsTotalAmountDeleteOption"
-                                                        >
-                                                            Delete (Disabled)
-                                                        </button>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                                onKeyPress={(e) => {
+                                                                    if (e.key === "Enter" && button7Ref.current) {
+                                                                        button7Ref.current.focus();
+                                                                    }
+                                                                }}
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                style={{ color: "rgba(0,0,0,0.4)" }}
+                                                                disabled
+                                                                className="adminInviceAddedProductsTotalAmountDeleteOption"
+                                                            >
+                                                                Delete (Disabled)
+                                                            </button>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </table>
                                 </div>
@@ -6586,11 +6013,11 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                     <label>GST 3% </label>
                                     <input
                                         // className="invoiceGstCheckBox1"
-                                        style={{marginLeft: "10px"}}
+                                        style={{ marginLeft: "10px" }}
                                         type="checkbox"
                                         checked={gstType}
                                         onChange={() => {
-                                            
+
                                             setGstType(!gstType), setConvertAmount(!convertAmount), setIscal(true), setDiscountAmount(0);
                                             // setGstType(!gstType), setDiscountAmount(0);
                                         }}
@@ -6604,7 +6031,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
 
                                 <label>Total Amount</label>
                                 <input
-                                readOnly
+                                    readOnly
                                     tabIndex="2"
                                     ref={button1Ref}
                                     onKeyPress={(e) => {
@@ -6613,7 +6040,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                                         }
                                     }}
                                     type="text"
-                                    style={{backgroundColor: "wheat"}}
+                                    style={{ backgroundColor: "wheat" }}
                                     value={totalPayableAmount}
                                     onChange={(e) => {
                                         const newTotalPayableAmount = parseFloat(e.target.value);
@@ -6665,7 +6092,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                     }}
                   /> */}
                                 <label>Paid Amount</label>
-                                <input type="text" value={totalPaidAmount} readOnly/>
+                                <input type="text" value={totalPaidAmount} readOnly />
                                 <label>Balance Amount</label>
                                 <input
                                     type="text"
@@ -6679,7 +6106,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             <button
                                 tabIndex="10"
                                 ref={button9Ref}
-                                style={{marginInline: "10px"}}
+                                style={{ marginInline: "10px" }}
                                 onClick={() => {
                                     if (selectedCustomer && allSelectedProducts.length > 0) {
                                         // createOrder();
@@ -6694,7 +6121,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             <button
                                 tabIndex="11"
                                 ref={button10Ref}
-                                style={{marginInline: "10px"}}
+                                style={{ marginInline: "10px" }}
                                 onClick={() => resetAllFields()}
                             >
                                 Reset{" "}
@@ -6702,7 +6129,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                             <button
                                 tabIndex="11"
                                 ref={button10Ref}
-                                style={{marginInline: "10px"}}
+                                style={{ marginInline: "10px" }}
                                 onClick={() => navigate("/purchase")}
                             >
                                 Purchase List
