@@ -65,6 +65,7 @@ function AdminStockTransfer() {
     const [tableData, setTableData] = useState([]);
     const [showError, setShowError] = useState(false);
     const [messageType, setMessageType] = useState("");
+    // const [fromId, setFromId] = useState("");
     const [messageToShow, setMessageToShow] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -141,6 +142,16 @@ function AdminStockTransfer() {
         }
     }, [selectedValue]);
     useEffect(() => {
+        let fromId;
+        if(fromOptionKey == "PacketName" && formData.Source){
+            const oneItem = packetsOption.find((item) => item.PacketName === formData.Source);
+            if(oneItem) fromId = oneItem.Id;
+        }
+        if(fromOptionKey == "BoxName" && formData.Source){
+            const oneItem = boxOption.find((item) => item.BoxName === formData.Source);
+            if(oneItem) fromId = oneItem.Id;
+        }
+        console.log("fromIdfromIdfromId : ",fromId)
         const getFilteredData = async () => {
             const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName)?.Id || 0;
             const designId = allDesign.find((item, _) => item.DesignName === filterData.DesignName)?.Id || 0;
@@ -179,6 +190,11 @@ function AdminStockTransfer() {
 
                     if (idKey) {
                         resultdata = resData.filter((item) => item[idKey] !== 0);
+                        if(fromId){
+                            console.log(idKey);
+                        resultdata = resultdata.filter((item) => item[idKey] == fromId);
+                            console.log("res ",resultdata);
+                        }
                     }
 
                     if (['DisplayName', 'FirstName'].includes(fromOptionKey)) {
@@ -202,7 +218,6 @@ function AdminStockTransfer() {
                 console.log(error);
             }
         };
-
         getFilteredData();
     }, [filterData, formData]);
 

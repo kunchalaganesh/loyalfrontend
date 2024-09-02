@@ -192,11 +192,11 @@ function AdminApprovalStockTransfer() {
                         <Box display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                             <Box display={"flex"} alignItems={"center"} mx={1}>
                                 <Typography sx={{fontWeight: "600"}}>Transfer type :</Typography>
-                                <Typography mx={1}>{tableData.StockTransferTypeName}</Typography>
+                                <Typography mx={1}>{tableData?.StockTransferTypeName}</Typography>
                             </Box>
                             <Box display={"flex"} alignItems={"center"} mx={1}>
                                 <Typography sx={{fontWeight: "600"}}>Stock Type :</Typography>
-                                <Typography mx={1}>{tableData.StockType}</Typography>
+                                <Typography mx={1}>{tableData?.StockType}</Typography>
                             </Box>
                             <Box display={"flex"} alignItems={"center"} mx={1}>
                                 <Typography sx={{fontWeight: "600"}}>Transfer By :</Typography>
