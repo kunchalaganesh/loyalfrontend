@@ -84,6 +84,7 @@ export default function AdminAddBox() {
             setInputPacketMaster("");
         }
     };
+
     function getAllPacket() {
 
         const formData = {
@@ -99,6 +100,7 @@ export default function AdminAddBox() {
             .then((res) => res.json())
             .then((data) => setPacketMasterData(data));
     }
+
     useEffect(() => {
 
         getAllPacket();
@@ -314,13 +316,13 @@ export default function AdminAddBox() {
         setNewCategory({...newCategory, [name]: value});
     };
 
-        const trasformData = selectedPacketMaster.map((item) => item.split("-")[0]).join(',');
-        // const trasformData = selectedPacketMaster.join(',');
+    const trasformData = selectedPacketMaster.map((item) => item.split("-")[0]).join(',');
+    // const trasformData = selectedPacketMaster.join(',');
 
     const addNewCategory = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData  = editId ? {
+        const formData = editId ? {
             Id: editId,
             ClientCode: clientCode,
             CategoryId: newCategory.CategoryId,
@@ -481,8 +483,8 @@ export default function AdminAddBox() {
                                 <tr>
                                     <th>Edit</th>
                                     <th>Sr.No</th>
-                                     <th>Category Name</th>
-                                     <th>Product Name</th>
+                                    <th>Category Name</th>
+                                    <th>Product Name</th>
                                     <th>Box Name</th>
                                     <th>Packets</th>
                                     <th>Empty Weight</th>
@@ -507,8 +509,8 @@ export default function AdminAddBox() {
                                             </button>
                                         </td>
                                         <td>{index + 1}</td>
-                                         <td>{x.CategoryName}</td>
-                                         <td>{x.ProductName}</td>
+                                        <td>{x.CategoryName}</td>
+                                        <td>{x.ProductName}</td>
                                         <td>{x.BoxName}</td>
                                         <td>
                                             {x.PacketIds && x.PacketIds.split(',').length > 0 ? (
@@ -524,7 +526,7 @@ export default function AdminAddBox() {
                       <td>{x.CompanyId}</td>
                       <td>{x.BranchId}</td> */}
                                         <td>{x.Description}</td>
-                                         <td>{x.Status}</td>
+                                        <td>{x.Status}</td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -597,7 +599,6 @@ export default function AdminAddBox() {
                                         required="required"
                                     >
                                         <option value={""}>Select an option</option>
-                                        ;
                                         {allCategoriesList.map((x) => {
                                             return (
                                                 <>
@@ -618,15 +619,19 @@ export default function AdminAddBox() {
                                         required="required"
                                     >
                                         <option value={""}>Select an option</option>
-                                        ;
-                                        {allProductsList.map((x) => {
-                                            return (
-                                                <>
-                                                    <option value={x.Id}>{x.ProductName}</option>
-                                                    ;
-                                                </>
-                                            );
-                                        })}
+                                        {allProductsList
+                                            .filter((pro) => {
+                                                const matchesCategory =
+                                                    newCategory.CategoryId === 0 ||
+                                                    newCategory.CategoryId === "" ||
+                                                    newCategory.CategoryId === null
+                                                        ? true
+                                                        : pro.CategoryId ===
+                                                        parseInt(newCategory.CategoryId);
+                                                return matchesCategory;
+                                            }).map((x) => {
+                                                return <option value={x.Id}>{x.ProductName}</option>;
+                                            })}
                                     </select>{" "}
                                     <label>
                                         Box Name<sup>*</sup>
@@ -669,28 +674,28 @@ export default function AdminAddBox() {
                                         <option value={"InActive"}>InActive</option>
                                     </select>
                                     {/*<div className="adminSkuAddSkuInnerItemsBox">*/}
-                                        <label htmlFor="netWt" style={{margin: "10px 0px"}}>Select Packet Master</label>
-                                        <select
-                                            type="number"
-                                            // required="required"
-                                            // name="VendorId"
-                                            value={inputPacketMaster}
-                                            onChange={(e) => setInputPacketMaster(e.target.value)}
-                                        >
-                                            <option value={0}>Select Packet</option>
-                                            {PacketMasterData.filter((item) => item.BoxName == "" || item.BoxName == null).map((x) => (
-                                                <option value={`${x.Id}-${x.PacketName}`}>
-                                                    {`${x.PacketName} - ${x.Id}`}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            style={{marginBottom: "25px", margin: "0px 20px",width: "180px"}}
-                                            type="button"
-                                            onClick={handleAddVendor}
-                                        >
-                                            Add Packet
-                                        </button>
+                                    <label htmlFor="netWt" style={{margin: "10px 0px"}}>Select Packet Master</label>
+                                    <select
+                                        type="number"
+                                        // required="required"
+                                        // name="VendorId"
+                                        value={inputPacketMaster}
+                                        onChange={(e) => setInputPacketMaster(e.target.value)}
+                                    >
+                                        <option value={0}>Select Packet</option>
+                                        {PacketMasterData.filter((item) => item.BoxName == "" || item.BoxName == null).map((x) => (
+                                            <option value={`${x.Id}-${x.PacketName}`}>
+                                                {`${x.PacketName} - ${x.Id}`}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        style={{marginBottom: "25px", margin: "0px 20px", width: "180px"}}
+                                        type="button"
+                                        onClick={handleAddVendor}
+                                    >
+                                        Add Packet
+                                    </button>
 
                                     {/*</div>*/}
                                     <div

@@ -147,7 +147,7 @@ function AdminStockTransferList() {
     //     getFilteredData()
     // }, [filterFormData])
     const handleInputChangePurchase = (e) => {
-        const {name, value} = e.target;
+        const {name, value} = e.target
         setFilterFormData({
             ...filterFormData,
             [name]: value,

@@ -519,174 +519,174 @@ export default function AdminAddSku() {
 
     const addNewSku = async (e) => {
         e.preventDefault();
-        if (!selectedVendors.length > 0) {
-            setMessageType("error");
-            setMessageToShow("Please Select Atleast One Vendor");
-            setShowError(true);
-            scrollToCenter("adminSkuAddSkuSelectVendor");
-        } else {
-            const selectedVendorsIdsList =
-                selectedVendors.length > 0
-                    ? selectedVendors.map((x) => x.split("- ")[1])
-                    : [];
-            const selectedVendorsList = selectedVendorsIdsList.map((x) => {
-                return {
-                    VendorId: parseInt(x),
-                    SKUId: newSku.Id || 0,
-                    ClientCode: clientCode,
-                    CompanyId: CompanyId || 0,
-                    BranchId: BranchId || 0,
-                    EmployeeId: EmployeId || 0,
-                };
-            });
-
-
-            let formData = {
-                ...newSku,
-                SKUVendor: selectedVendorsList,
-                VendorId: selectedVendorsList[0].VendorId,
+        // if (!selectedVendors.length > 0) {
+        // setMessageType("error");
+        // setMessageToShow("Please Select Atleast One Vendor");
+        // setShowError(true);
+        // scrollToCenter("adminSkuAddSkuSelectVendor");
+        // } else {
+        const selectedVendorsIdsList =
+            selectedVendors.length > 0
+                ? selectedVendors.map((x) => x.split("- ")[1])
+                : [];
+        const selectedVendorsList = selectedVendorsIdsList.map((x) => {
+            return {
+                VendorId: parseInt(x),
+                SKUId: newSku.Id || 0,
+                ClientCode: clientCode,
+                CompanyId: CompanyId || 0,
+                BranchId: BranchId || 0,
+                EmployeeId: EmployeId || 0,
             };
-            // const formData = new FormData();
+        });
 
-            // Append regular fields
-            // formData.append("StockKeepingUnit", stockKeepingUnit.toUpperCase());
-            // formData.append("Description", description);
-            // formData.append("ProductRemark", productRemark);
-            // formData.append("ProductType", productTypeName);
-            // formData.append("Purity", purityName);
-            // formData.append("Colour", color);
-            // formData.append("Collection", collectionName);
-            // formData.append("CategoryId", parseInt(categoryId)); // Convert to string
-            // formData.append("Category", categoryName.toString()); // Convert to string
-            // formData.append("Size", size);
-            // formData.append("GrossWt", grosswt.toString()); // Convert to string
-            // formData.append("NetWt", netWt.toString()); // Convert to string
-            // formData.append("TotalStoneWt", stoneWeight.toString()); // Convert to string
 
-            // // Append StoneAmounts, StoneNames, StoneWts
+        let formData = {
+            ...newSku,
+            SKUVendor: selectedVendorsList,
+            VendorId: selectedVendorsList[0]?.VendorId,
+        };
+        // const formData = new FormData();
 
-            // // Append other fields
-            // formData.append("MakingPercentage", making_Percentage.toString()); // Convert to string
-            // formData.append("MakingFixedAmt", making_Fixed_Amt.toString()); // Convert to string
-            // formData.append("MakingFixedWastage", making_Fixed_Wastage.toString()); // Convert to string
-            // formData.append("MakingPerGram", making_per_gram.toString()); // Convert to string
-            // formData.append("MRP", mrp.toString()); // Convert to string
-            // formData.append("SaleType", saleType);
-            // formData.append("StonePieces", stonePieces.toString()); // Convert to string
-            // formData.append("PurityId", parseInt(purityId));
-            // formData.append("ProductTypeId", parseInt(productTypeId));
-            // formData.append("CollectionId", parseInt(collectionId)); // Convert to string
-            // oldEntry ? formData.append("Id", parseInt(selectedSkuId)) : null;
-            // // Images
-            // filesType
-            //   ? selectedFiles.forEach((file) => {
-            //       formData.append("Images", file);
-            //     })
-            //   : formData.append("Images", selectedFiles);
+        // Append regular fields
+        // formData.append("StockKeepingUnit", stockKeepingUnit.toUpperCase());
+        // formData.append("Description", description);
+        // formData.append("ProductRemark", productRemark);
+        // formData.append("ProductType", productTypeName);
+        // formData.append("Purity", purityName);
+        // formData.append("Colour", color);
+        // formData.append("Collection", collectionName);
+        // formData.append("CategoryId", parseInt(categoryId)); // Convert to string
+        // formData.append("Category", categoryName.toString()); // Convert to string
+        // formData.append("Size", size);
+        // formData.append("GrossWt", grosswt.toString()); // Convert to string
+        // formData.append("NetWt", netWt.toString()); // Convert to string
+        // formData.append("TotalStoneWt", stoneWeight.toString()); // Convert to string
 
-            // // Now you can use this formData object in your fetch request
-            // console.log(formData, "formData");
-            // for (const entry of formData.entries()) {
-            //   console.log(entry);
-            // }
-            try {
-                const response = await fetch(!oldEntry ? a168 : a169, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                });
-                const data = await response.json();
-                fetchAllSku();
-                setActive("List");
-                setNewSku({
-                    BlackBeads: "",
-                    BoxId: "0",
-                    BoxName: "",
-                    BranchId: 0,
-                    BranchName: "Home",
-                    CategoryId: 1,
-                    ClientCode: clientCode,
-                    CollectionName: "",
-                    Colour: "",
-                    CompanyId: 0,
-                    CounterId: 0,
-                    CuttingGrossWt: "",
-                    CuttingNetWt: "",
-                    Description: "",
-                    DesignId: 0,
-                    Diamonds: [],
-                    EmployeeId: 0,
-                    EstimatedDays: "0",
-                    Featured: "Yes",
-                    Gender: "",
-                    GrossWt: "0",
-                    HSNCode: "",
-                    HUIDCode: "",
-                    HallmarkAmount: "0",
-                    Height: "0",
-                    Id: 0,
-                    Images: "",
-                    MRP: "0",
-                    MakingFixedAmt: "0",
-                    MakingFixedWastage: "0",
-                    MakingPerGram: "0",
-                    MakingPercentage: "0",
-                    Margin: "0",
-                    MetalName: "",
-                    MetalRate: "0",
-                    MinQuantity: "0",
-                    MinWeight: "0",
-                    NetWt: "0",
-                    OccassionName: "",
-                    OfferPrice: "0",
-                    Pieces: "1",
-                    ProductId: 0,
-                    ProductRemark: "",
-                    PurchaseCost: "",
-                    PurityId: 0,
-                    Quantity: "1",
-                    Ranking: "0",
-                    Size: "0",
-                    SketchNo: "",
-                    Status: "Active",
-                    StockKeepingUnit: "",
-                    SKUStoneMain: [],
-                    TotalDiamondAmount: "0",
-                    TotalDiamondPieces: "0",
-                    TotalDiamondWeight: "0",
-                    TotalStoneAmount: "0",
-                    TotalStonePieces: "0",
-                    TotalStoneWeight: "0",
-                    VendorId: 0,
-                    WeightCategories: "0",
-                    Width: "0",
-                    TagWeight: "0",
-                    FindingWeight: "0",
-                    LanyardWeight: "0",
-                    OtherWeight: "0",
-                    PouchWeight: "0",
-                    ClipWeight: "0",
-                    oldEntry: false,
-                });
-                if (data.Message) {
-                    // alert(data.message);
-                    setMessageType("error");
-                    setMessageToShow(data.Message);
-                    setShowError(true);
-                    setActive("AddNew");
-                } else {
-                    setMessageType("success");
-                    setMessageToShow("SKU Added Successfully");
-                    setShowError(true);
-                }
-                resetStateValues();
-                resetAllFields();
-            } catch (error) {
-                console.error(error);
+        // // Append StoneAmounts, StoneNames, StoneWts
+
+        // // Append other fields
+        // formData.append("MakingPercentage", making_Percentage.toString()); // Convert to string
+        // formData.append("MakingFixedAmt", making_Fixed_Amt.toString()); // Convert to string
+        // formData.append("MakingFixedWastage", making_Fixed_Wastage.toString()); // Convert to string
+        // formData.append("MakingPerGram", making_per_gram.toString()); // Convert to string
+        // formData.append("MRP", mrp.toString()); // Convert to string
+        // formData.append("SaleType", saleType);
+        // formData.append("StonePieces", stonePieces.toString()); // Convert to string
+        // formData.append("PurityId", parseInt(purityId));
+        // formData.append("ProductTypeId", parseInt(productTypeId));
+        // formData.append("CollectionId", parseInt(collectionId)); // Convert to string
+        // oldEntry ? formData.append("Id", parseInt(selectedSkuId)) : null;
+        // // Images
+        // filesType
+        //   ? selectedFiles.forEach((file) => {
+        //       formData.append("Images", file);
+        //     })
+        //   : formData.append("Images", selectedFiles);
+
+        // // Now you can use this formData object in your fetch request
+        // console.log(formData, "formData");
+        // for (const entry of formData.entries()) {
+        //   console.log(entry);
+        // }
+        try {
+            const response = await fetch(!oldEntry ? a168 : a169, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+            fetchAllSku();
+            setActive("List");
+            setNewSku({
+                BlackBeads: "",
+                BoxId: "0",
+                BoxName: "",
+                BranchId: 0,
+                BranchName: "Home",
+                CategoryId: 1,
+                ClientCode: clientCode,
+                CollectionName: "",
+                Colour: "",
+                CompanyId: 0,
+                CounterId: 0,
+                CuttingGrossWt: "",
+                CuttingNetWt: "",
+                Description: "",
+                DesignId: 0,
+                Diamonds: [],
+                EmployeeId: 0,
+                EstimatedDays: "0",
+                Featured: "Yes",
+                Gender: "",
+                GrossWt: "0",
+                HSNCode: "",
+                HUIDCode: "",
+                HallmarkAmount: "0",
+                Height: "0",
+                Id: 0,
+                Images: "",
+                MRP: "0",
+                MakingFixedAmt: "0",
+                MakingFixedWastage: "0",
+                MakingPerGram: "0",
+                MakingPercentage: "0",
+                Margin: "0",
+                MetalName: "",
+                MetalRate: "0",
+                MinQuantity: "0",
+                MinWeight: "0",
+                NetWt: "0",
+                OccassionName: "",
+                OfferPrice: "0",
+                Pieces: "1",
+                ProductId: 0,
+                ProductRemark: "",
+                PurchaseCost: "",
+                PurityId: 0,
+                Quantity: "1",
+                Ranking: "0",
+                Size: "0",
+                SketchNo: "",
+                Status: "Active",
+                StockKeepingUnit: "",
+                SKUStoneMain: [],
+                TotalDiamondAmount: "0",
+                TotalDiamondPieces: "0",
+                TotalDiamondWeight: "0",
+                TotalStoneAmount: "0",
+                TotalStonePieces: "0",
+                TotalStoneWeight: "0",
+                VendorId: 0,
+                WeightCategories: "0",
+                Width: "0",
+                TagWeight: "0",
+                FindingWeight: "0",
+                LanyardWeight: "0",
+                OtherWeight: "0",
+                PouchWeight: "0",
+                ClipWeight: "0",
+                oldEntry: false,
+            });
+            if (data.Message) {
+                // alert(data.message);
+                setMessageType("error");
+                setMessageToShow(data.Message);
+                setShowError(true);
+                setActive("AddNew");
+            } else {
+                setMessageType("success");
+                setMessageToShow("SKU Added Successfully");
+                setShowError(true);
             }
+            resetStateValues();
+            resetAllFields();
+        } catch (error) {
+            console.error(error);
         }
+        // }
     };
 
     const resetStateValues = () => {
@@ -1859,7 +1859,6 @@ export default function AdminAddSku() {
 
                                             <select
                                                 type="number"
-                                                required="required"
                                                 // name="VendorId"
                                                 value={inputVendors}
                                                 onChange={(e) => setInputVendors(e.target.value)}
@@ -1973,7 +1972,7 @@ export default function AdminAddSku() {
                                             </label>
                                             <select
                                                 name="CategoryId"
-                                                required="required"
+                                                required={"required"}
                                                 value={newSku.CategoryId}
                                                 onChange={handleNewSkuChange}
                                             >
@@ -1993,7 +1992,7 @@ export default function AdminAddSku() {
                                             </label>
                                             <select
                                                 name="ProductId"
-                                                required="required"
+                                                required={"required"}
                                                 value={newSku.ProductId}
                                                 onChange={handleNewSkuChange}
                                             >
@@ -2013,7 +2012,7 @@ export default function AdminAddSku() {
                                             </label>
                                             <select
                                                 name="DesignId"
-                                                required="required"
+                                                required={"required"}
                                                 value={newSku.DesignId}
                                                 onChange={handleNewSkuChange}
                                             >
@@ -2033,7 +2032,7 @@ export default function AdminAddSku() {
                                             </label>
                                             <select
                                                 name="PurityId"
-                                                required="required"
+                                                required={"required"}
                                                 value={newSku.PurityId}
                                                 onChange={handleNewSkuChange}
                                             >
@@ -2151,11 +2150,10 @@ export default function AdminAddSku() {
                                                 name="MinQuantity"
                                                 value={newSku.MinQuantity}
                                                 onChange={handleNewSkuChange}
-                                                min="1"
                                             />
                                         </div>
                                         <div
-                                            id="adminSkuAddSkuSelectWeights"
+                                            // id="adminSkuAddSkuSelectWeights"
                                             className="adminSkuAddSkuInnerItemsBox"
                                         >
                                             <label htmlFor="netWt">Weight Categories</label>

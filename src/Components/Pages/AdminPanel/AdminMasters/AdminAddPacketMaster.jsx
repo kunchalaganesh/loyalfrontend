@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminMasters.css";
@@ -16,9 +16,10 @@ import {
   a95,
   a98,
 } from "../../../Api/RootApiPath";
-import { useSelector } from "react-redux";
-import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
+import {useSelector} from "react-redux";
+import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+
 export default function AdminAddPacketMaster() {
   const [active, setActive] = useState("List");
   const [showError, setShowError] = useState(false);
@@ -38,7 +39,7 @@ export default function AdminAddPacketMaster() {
     BranchId: "",
     EmployeeId: "",
     Status: "",
-    BoxId : "",
+    BoxId: "",
     OldEntry: false,
   });
   const [allCompaniesList, setAllCompaniesList] = useState([]);
@@ -78,11 +79,11 @@ export default function AdminAddPacketMaster() {
       } else {
         setActive("addNew");
         document
-          .getElementById("addCategoryListTitle")
-          .classList.add("activeCategoryTitle");
+            .getElementById("addCategoryListTitle")
+            .classList.add("activeCategoryTitle");
         document
-          .getElementById("addCategoryListLogo")
-          .classList.add("activeCategoryLogo");
+            .getElementById("addCategoryListLogo")
+            .classList.add("activeCategoryLogo");
         document.getElementById("addCategoryListTitle").click();
       }
     } catch (error) {
@@ -310,11 +311,11 @@ export default function AdminAddPacketMaster() {
   // console.log(allCategoriesList, "allCategoriesList");
 
   const handleNewCategoryChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     if (name == "SKUId") {
       if (value !== "") {
         const selectedSku = allSkuList.filter(
-          (x) => x.Id == parseInt(value)
+            (x) => x.Id == parseInt(value)
         )[0];
         setNewCategory({
           ...newCategory,
@@ -331,7 +332,7 @@ export default function AdminAddPacketMaster() {
         });
       }
     } else {
-      setNewCategory({ ...newCategory, [name]: value });
+      setNewCategory({...newCategory, [name]: value});
     }
   };
   console.log(newCategory, "newCategory");
@@ -354,20 +355,20 @@ export default function AdminAddPacketMaster() {
       BoxId: newCategory.BoxId ? newCategory.BoxId : null,
       EmployeeId: employeeId || 0,
 
-      ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
+      ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
     };
     console.log(formData, "formData to send");
     try {
       const response = await fetch(
-        !newCategory.OldEntry ? a224 : a225,
-        // a96,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
+          !newCategory.OldEntry ? a224 : a225,
+          // a96,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
       );
       const data = await response.json();
       console.log(data);
@@ -413,83 +414,83 @@ export default function AdminAddPacketMaster() {
     console.log(data, "data");
     console.log(data, "data");
     console.log(data, "data");
-    setNewCategory({ ...data, OldEntry: true });
+    setNewCategory({...data, OldEntry: true});
     setActive("AddNew");
   };
   return (
-    <div>
-      <AdminHeading />
-      <div className="adminMainBodyBox">
-        {showError ? (
-          <AlertMessage message={messageToShow} type={messageType} />
-        ) : null}
-        <AdminBreadCrump
-          title={"Add Packet"}
-          companyName={"Loyalstring"}
-          module={"Product Masters"}
-          page={"Packet"}
-        />
-        <div className="adminAddCategoryMainBox">
-          <div className="adminAddCategoryInnerBox">
-            <div className="adminAddCategoryInnerBoxTitlesBox">
-              <div
-                onClick={() => {
-                  setActive("List");
-                }}
-                className={
-                  active === "List"
-                    ? "adminAddCategoryInnerBoxTitle"
-                    : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                }
-              >
+      <div>
+        <AdminHeading/>
+        <div className="adminMainBodyBox">
+          {showError ? (
+              <AlertMessage message={messageToShow} type={messageType}/>
+          ) : null}
+          <AdminBreadCrump
+              title={"Add Packet"}
+              companyName={"Loyalstring"}
+              module={"Product Masters"}
+              page={"Packet"}
+          />
+          <div className="adminAddCategoryMainBox">
+            <div className="adminAddCategoryInnerBox">
+              <div className="adminAddCategoryInnerBoxTitlesBox">
                 <div
-                  className={
-                    active === "List"
-                      ? "adminAddCategoryInnerBoxTitleLogo"
-                      : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                  }
+                    onClick={() => {
+                      setActive("List");
+                    }}
+                    className={
+                      active === "List"
+                          ? "adminAddCategoryInnerBoxTitle"
+                          : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                    }
                 >
-                  {/* 01 */}
-                  <RiListUnordered />
+                  <div
+                      className={
+                        active === "List"
+                            ? "adminAddCategoryInnerBoxTitleLogo"
+                            : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                      }
+                  >
+                    {/* 01 */}
+                    <RiListUnordered/>
+                  </div>
+                  <p>All Packets</p>
                 </div>
-                <p>All Packets</p>
-              </div>
 
-              <div
-                id="addCategoryListTitle"
-                onClick={() => setActive("AddNew")}
-                className={
-                  active === "AddNew"
-                    ? "adminAddCategoryInnerBoxTitle"
-                    : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
-                }
-              >
                 <div
-                  id="addCategoryListLogo"
-                  className={
-                    active === "AddNew"
-                      ? "adminAddCategoryInnerBoxTitleLogo"
-                      : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
-                  }
+                    id="addCategoryListTitle"
+                    onClick={() => setActive("AddNew")}
+                    className={
+                      active === "AddNew"
+                          ? "adminAddCategoryInnerBoxTitle"
+                          : "adminAddCategoryInnerBoxTitle activeCategoryTitle"
+                    }
                 >
-                  {/* 02 */}
-                  <RiPlayListAddLine />
+                  <div
+                      id="addCategoryListLogo"
+                      className={
+                        active === "AddNew"
+                            ? "adminAddCategoryInnerBoxTitleLogo"
+                            : "adminAddCategoryInnerBoxTitleLogo activeCategoryLogo"
+                      }
+                  >
+                    {/* 02 */}
+                    <RiPlayListAddLine/>
+                  </div>
+                  <p>Add Packet</p>
                 </div>
-                <p>Add Packet</p>
               </div>
-            </div>
-            <div
-              className={
-                active === "List" ? "adminCategoryListMainBox" : "none"
-              }
-            >
-              <table>
-                <thead>
+              <div
+                  className={
+                    active === "List" ? "adminCategoryListMainBox" : "none"
+                  }
+              >
+                <table>
+                  <thead>
                   <tr>
                     <th>Edit</th>
                     <th>Sr.No</th>
-                     <th>Category Name</th>
-                     <th>Product Name</th>
+                    <th>Category Name</th>
+                    <th>Product Name</th>
                     <th>Packet Name</th>
                     <th>Box</th>
                     <th>SKU</th>
@@ -500,211 +501,228 @@ export default function AdminAddPacketMaster() {
                       <th>Company Id</th>
                       <th>Branch Id</th> */}
                     <th>Description</th>
-                     <th>Status</th>
+                    <th>Status</th>
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   {allCategories.map((x, index) => (
-                    <tr key={x.id}>
-                      <td>
-                        <button
-                          className="adminAddCategoryEditButton"
-                          // onClick={() => handleEditClick(x.id)}
-                          onClick={() => handleEditData(x)}
-                        >
-                          Edit
-                        </button>
-                      </td>
-                      <td>{index + 1}</td>
-                       <td>{x.CategoryName}</td>
-                       <td>{x.ProductName}</td>
-                      <td>{x.PacketName}</td>
-                      <td>{x.BoxName ? x.BoxName : "-"}</td>
-                      <td>{x.StockKeepingUnit}</td>
-                      {/*<td>{x.CategoryName}</td>*/}
-                      {/*<td>{x.ProductName}</td>*/}
-                      <td>{x.EmptyWeight}</td>
-                      {/* <td>{x.ProductId}</td>
+                      <tr key={x.id}>
+                        <td>
+                          <button
+                              className="adminAddCategoryEditButton"
+                              // onClick={() => handleEditClick(x.id)}
+                              onClick={() => handleEditData(x)}
+                          >
+                            Edit
+                          </button>
+                        </td>
+                        <td>{index + 1}</td>
+                        <td>{x.CategoryName}</td>
+                        <td>{x.ProductName}</td>
+                        <td>{x.PacketName}</td>
+                        <td>{x.BoxName ? x.BoxName : "-"}</td>
+                        <td>{x.StockKeepingUnit}</td>
+                        {/*<td>{x.CategoryName}</td>*/}
+                        {/*<td>{x.ProductName}</td>*/}
+                        <td>{x.EmptyWeight}</td>
+                        {/* <td>{x.ProductId}</td>
                         <td>{x.CompanyId}</td>
                         <td>{x.BranchId}</td> */}
-                      <td>{x.Description}</td>
-                       <td>{x.Status}</td>
-                    </tr>
+                        <td>{x.Description}</td>
+                        <td>{x.Status}</td>
+                      </tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-            <div
-              className={
-                active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
-              }
-            >
-              <p>Add New Packet</p>
-              <form onSubmit={addNewCategory}>
-                <div
-                  style={{
-                    gridTemplateColumns: "repeat(4,1fr)",
-                    columnGap: "40px",
-                  }}
-                  className="adminCategoryAddCategoryInnerBox"
-                >
-                  <label>
-                    Company <sup>*</sup>
-                  </label>
-                  <select
-                    name="CompanyId"
-                    value={newCategory.CompanyId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
+                  </tbody>
+                </table>
+              </div>
+              <div
+                  className={
+                    active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
+                  }
+              >
+                <p>Add New Packet</p>
+                <form onSubmit={addNewCategory}>
+                  <div
+                      style={{
+                        gridTemplateColumns: "repeat(4,1fr)",
+                        columnGap: "40px",
+                      }}
+                      className="adminCategoryAddCategoryInnerBox"
                   >
-                    <option value={""}>Select an option</option>;
-                    {allCompaniesList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.CompName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Branch <sup>*</sup>{" "}
-                  </label>
-                  <select
-                    name="BranchId"
-                    value={newCategory.BranchId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allBranchesList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.BranchName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>
-                  <label>SKU</label>
-                  <select
-                    name="SKUId"
-                    value={newCategory.SKUId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allSkuList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.StockKeepingUnit}</option>;
-                        </>
-                      );
-                    })}
-                  </select>
-                  <label>
-                    Category <sup>*</sup>
-                  </label>
-                  <select
-                    name="CategoryId"
-                    value={newCategory.CategoryId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allCategoriesList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.CategoryName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Product<sup>*</sup>
-                  </label>
-                  <select
-                    name="ProductId"
-                    value={newCategory.ProductId}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allProductsList.map((x) => {
-                      return (
-                        <>
-                          <option value={x.Id}>{x.ProductName}</option>;
-                        </>
-                      );
-                    })}
-                  </select>{" "}
-                  <label>
-                    Packet Name<sup>*</sup>
-                  </label>
-                  <input
-                    name="PacketName"
-                    value={newCategory.PacketName}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  />
-                  <label>
-                    Empty Weight<sup>*</sup>
-                  </label>
-                  <input
-                    name="EmptyWeight"
-                    value={newCategory.EmptyWeight}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  />
-                  <label>Description</label>
-                  <input
-                    name="Description"
-                    value={newCategory.Description}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                  />
-                  <label htmlFor="Status">
-                    Status <sup>*</sup>
-                  </label>
-                  <select
-                    name="Status"
-                    required="required"
-                    value={newCategory.Status}
-                    onChange={handleNewCategoryChange}
-                  >
-                    <option value={""}>Select Status</option>
-                    <option value={"Active"}>Active</option>
-                    <option value={"InActive"}>InActive</option>
-                  </select>
-                  <label>
-                    Box
-                  </label>
-                  <select
-                      name="BoxId"
-                      value={newCategory.BoxId}
-                      onChange={handleNewCategoryChange}
-                      type="text"
-                  >
-                    <option value={""}>Select an option</option>;
-                    {allBoxList.map((x) => {
-                      return (
-                          <>
-                            <option value={x.Id}>{x.BoxName}</option>;
-                          </>
-                      );
-                    })}
-                  </select>{" "}
-                </div>
-                {!loading ? <button type="submit">Submit</button> : null}
-              </form>
+                    <label>
+                      Company <sup>*</sup>
+                    </label>
+                    <select
+                        name="CompanyId"
+                        value={newCategory.CompanyId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allCompaniesList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.CompName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                    <label>
+                      Branch <sup>*</sup>{" "}
+                    </label>
+                    <select
+                        name="BranchId"
+                        value={newCategory.BranchId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allBranchesList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.BranchName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>
+                    <label>SKU</label>
+                    <select
+                        name="SKUId"
+                        value={newCategory.SKUId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allSkuList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.StockKeepingUnit}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>
+                    <label>
+                      Category <sup>*</sup>
+                    </label>
+                    <select
+                        name="CategoryId"
+                        value={newCategory.CategoryId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allCategoriesList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.CategoryName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                    <label>
+                      Product<sup>*</sup>
+                    </label>
+                    <select
+                        name="ProductId"
+                        value={newCategory.ProductId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allProductsList
+                          .filter((pro) => {
+                            const matchesCategory =
+                                newCategory.CategoryId === 0 ||
+                                newCategory.CategoryId === "" ||
+                                newCategory.CategoryId === null
+                                    ? true
+                                    : pro.CategoryId ===
+                                    parseInt(newCategory.CategoryId);
+                            return matchesCategory;
+                          }).map((x) => {
+                            return <option value={x.Id}>{x.ProductName}</option>;
+                          })}
+                    </select>{" "}
+                    <label>
+                      Packet Name<sup>*</sup>
+                    </label>
+                    <input
+                        name="PacketName"
+                        value={newCategory.PacketName}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    />
+                    <label>
+                      Empty Weight<sup>*</sup>
+                    </label>
+                    <input
+                        name="EmptyWeight"
+                        value={newCategory.EmptyWeight}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                        required="required"
+                    />
+                    <label>Description</label>
+                    <input
+                        name="Description"
+                        value={newCategory.Description}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                    />
+                    <label htmlFor="Status">
+                      Status <sup>*</sup>
+                    </label>
+                    <select
+                        name="Status"
+                        required="required"
+                        value={newCategory.Status}
+                        onChange={handleNewCategoryChange}
+                    >
+                      <option value={""}>Select Status</option>
+                      <option value={"Active"}>Active</option>
+                      <option value={"InActive"}>InActive</option>
+                    </select>
+                    <label>
+                      Box
+                    </label>
+                    <select
+                        name="BoxId"
+                        value={newCategory.BoxId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                    >
+                      <option value={""}>Select an option</option>
+                      ;
+                      {allBoxList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.BoxName}</option>
+                              ;
+                            </>
+                        );
+                      })}
+                    </select>{" "}
+                  </div>
+                  {!loading ? <button type="submit">Submit</button> : null}
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }

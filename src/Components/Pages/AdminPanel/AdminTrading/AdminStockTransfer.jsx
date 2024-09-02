@@ -40,7 +40,7 @@ import {InfinitySpin} from "react-loader-spinner";
 function AdminStockTransfer() {
     const [checkdata, setCheckdata] = useState([])
     const [selectedValue, setSelectedValue] = useState('labelled');
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
     const [allCategories, setAllCategories] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
     const [allDesign, setAllDesign] = useState([]);
@@ -109,7 +109,7 @@ function AdminStockTransfer() {
     };
 
     const fetchAllUnlabelledStock = async () => {
-            setIsLoading(true);
+        setIsLoading(true);
         const formData = {
             ClientCode: clientCode,
         };
@@ -142,18 +142,19 @@ function AdminStockTransfer() {
     }, [selectedValue]);
     useEffect(() => {
         const getFilteredData = async () => {
-            const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName);
-            const designId = allDesign.find((item, _) => item.DesignName === filterData.DesignName);
-            const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName);
-            const purityId = allPurity.find((item, _) => item.PurityName === filterData.PurityName);
+            const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName)?.Id || 0;
+            const designId = allDesign.find((item, _) => item.DesignName === filterData.DesignName)?.Id || 0;
+            const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName)?.Id || 0;
+            const purityId = allPurity.find((item, _) => item.PurityName === filterData.PurityName)?.Id || 0;
 
             const payload = {
                 ClientCode: clientCode,
-                CategoryId: categoryId ? categoryId.Id : 0,
-                DesignId: designId ? designId.Id : 0,
-                ProductId: productId ? productId.Id : 0,
-                PurityId: purityId ? purityId.Id : 0,
+                CategoryId: categoryId,
+                DesignId: designId,
+                ProductId: productId,
+                PurityId: purityId,
             };
+
             try {
                 const response = await fetch(selectedValue === 'labelled' ? a233 : a234, {
                     method: "POST",
@@ -162,14 +163,48 @@ function AdminStockTransfer() {
                     },
                     body: JSON.stringify(payload),
                 });
-                const data = await response.json();
-                setTableData(data);
+
+                const resData = await response.json();
+                let resultdata = resData;
+                let idKey;
+
+                if (fromOptionKey) {
+                    if (fromOptionKey === 'PacketName') {
+                        idKey = 'PacketId';
+                    } else if (fromOptionKey === 'BoxName') {
+                        idKey = 'BoxId';
+                    } else if(fromOptionKey === 'BoxName'){
+                        idKey = 'BranchId';
+                    }
+
+                    if (idKey) {
+                        resultdata = resData.filter((item) => item[idKey] !== 0);
+                    }
+
+                    if (['DisplayName', 'FirstName'].includes(fromOptionKey)) {
+                        resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0);
+                    }
+
+                    if (data.length > 0) {
+                        resultdata = resultdata.filter((item2) => !data.some((item) => item.Id === item2.Id));
+                    }
+
+                    setTableData(resultdata);
+                } else {
+                    if (data.length > 0) {
+                        const filterRes = resData.filter((item2) => !data.some((item) => item.Id === item2.Id));
+                        setTableData(filterRes);
+                    } else {
+                        setTableData(resData);
+                    }
+                }
             } catch (error) {
                 console.log(error);
             }
-        }
-        getFilteredData()
-    }, [filterData])
+        };
+
+        getFilteredData();
+    }, [filterData, formData]);
 
     const fetchAllCategories = async () => {
         const formData = {ClientCode: clientCode};
@@ -354,6 +389,24 @@ function AdminStockTransfer() {
         setSelectAll(isChecked);
         setSelectedRows(isChecked ? tableData.map(row => row.Id) : []);
     };
+    useEffect(() => {
+
+        const totalgrosswt = data.reduce(
+            (total, product) =>
+                total + parseFloat(selectedValue === "labelled" ? product.GrossWt : product.TotalGrossWt),
+            0
+        );
+        const totalnetwt = data.reduce(
+            (total, product) =>
+                total + parseFloat(selectedValue === "labelled" ? product.NetWt : product.TotalNetWt),
+            0
+        );
+        setFormData({
+            ...formData,
+            TotalGrossWT: totalgrosswt,
+            TotalNetWT: totalnetwt
+        });
+    },[data])
     const handleRowCheckboxChange = (e, id) => {
         const isChecked = e.target.checked;
         setSelectedRows(prevState =>
@@ -367,21 +420,7 @@ function AdminStockTransfer() {
             const updatedCheckData = isChecked
                 ? [...(prevCheckData || []), selectedRow]
                 : (prevCheckData || []).filter(row => row.Id !== id);
-            const totalgrosswt = updatedCheckData.reduce(
-                (total, product) =>
-                    total + parseFloat(selectedValue === "labelled" ? product.GrossWt : product.TotalGrossWt),
-                0
-            );
-            const totalnetwt = updatedCheckData.reduce(
-                (total, product) =>
-                    total + parseFloat(selectedValue === "labelled" ? product.NetWt : product.TotalNetWt),
-                0
-            );
-            setFormData({
-                ...formData,
-                TotalGrossWT: totalgrosswt,
-                TotalNetWT: totalnetwt
-            });
+
             return updatedCheckData;
         });
 
@@ -404,7 +443,7 @@ function AdminStockTransfer() {
         setFilterData((list) => ({...list, [name]: value}));
     };
     const transferStock = () => {
-        const selectedData = tableData.filter(row => selectedRows.includes(row.Id));
+        const selectedData = tableData?.filter(row => selectedRows.includes(row.Id));
         setData(prevData => [...prevData, ...selectedData]);
         setTableData(prevData => prevData.filter(row => !selectedRows.includes(row.Id)));
         setSelectedRows([]);
@@ -417,6 +456,7 @@ function AdminStockTransfer() {
     };
     const handleInputChangePurchase = (e) => {
         const {name, value} = e.target;
+
         if (value.split(' ') && name === 'StockTransferTypeName') {
             if (e.target.value.split(' ')[0] === 'Packet') {
                 setFromOptionKey('PacketName');
@@ -677,7 +717,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Product
                                             </option>
-                                            {allProducts.map((x, y) => (
+                                            {filterData.CategoryName && allProducts.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.ProductName}
@@ -696,7 +736,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Design
                                             </option>
-                                            {allDesign.map((x, y) => (
+                                            {(filterData.ProductName && filterData.CategoryName) && allDesign.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.DesignName}
@@ -715,7 +755,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Purity
                                             </option>
-                                            {allPurity.map((x, y) => (
+                                            {filterData.CategoryName && allPurity.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.PurityName}
@@ -750,7 +790,7 @@ function AdminStockTransfer() {
                             </Box>
                         </Grid>
                     </Grid>
-                    <Grid container alignItems="start" justifyContent="space-around" sx={{ my: 2 }} spacing={2}>
+                    <Grid container alignItems="start" justifyContent="space-around" sx={{my: 2}} spacing={2}>
                         <Grid item xs>
                             {isLoading ? (
                                 <Box
@@ -761,25 +801,26 @@ function AdminStockTransfer() {
                                         width: "100%",
                                     }}
                                 >
-                                    <InfinitySpin width="200" color="#4fa94d" />
+                                    <InfinitySpin width="200" color="#4fa94d"/>
                                 </Box>
                             ) : (
                                 <TableContainer
                                     sx={{
                                         height: "50vh",
                                         overflowY: "auto",
-                                        ' th, td': { border: '1px solid #ccc' }
+                                        ' th, td': {border: '1px solid #ccc'}
                                     }}
                                 >
                                     <Table
                                         size="small"
                                         aria-label="first table"
-                                        sx={{ borderRadius: '4px', borderCollapse: 'collapse' }}
+                                        sx={{borderRadius: '4px', borderCollapse: 'collapse'}}
                                     >
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell align="center" sx={{fontWeight: "600"}}>Sr</TableCell>
-                                                <TableCell align="center" sx={{fontWeight: "600"}}>Product Name</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Product
+                                                    Name</TableCell>
                                                 <TableCell align="center" sx={{fontWeight: "600"}}>Label</TableCell>
                                                 <TableCell align="center" sx={{fontWeight: "600"}}>Gross WT</TableCell>
                                                 <TableCell align="center" sx={{fontWeight: "600"}}>Net WT</TableCell>
@@ -787,7 +828,7 @@ function AdminStockTransfer() {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {tableData?.map((item, index) => (
+                                            {(tableData && fromOptionKey) && tableData.map((item, index) => (
                                                 <TableRow key={item.id}>
                                                     <TableCell align="center">{index + 1}</TableCell>
                                                     <TableCell align="center">
@@ -835,13 +876,13 @@ function AdminStockTransfer() {
                                 sx={{
                                     height: "50vh",
                                     overflowY: "auto",
-                                    ' th, td': { border: '1px solid #ccc' }
+                                    ' th, td': {border: '1px solid #ccc'}
                                 }}
                             >
                                 <Table
                                     size="small"
                                     aria-label="second table"
-                                    sx={{ borderRadius: '4px', borderCollapse: 'collapse' }}
+                                    sx={{borderRadius: '4px', borderCollapse: 'collapse'}}
                                 >
                                     <TableHead>
                                         <TableRow>
@@ -857,16 +898,19 @@ function AdminStockTransfer() {
                                         {data.map((item, index) => (
                                             <TableRow key={item.id}>
                                                 <TableCell align="center">{index + 1}</TableCell>
-                                                <TableCell align="center">{selectedValue === "labelled" ? item.ProductTitle : item.DesignName}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedValue === "labelled" ? item.ProductTitle : item.DesignName}</TableCell>
                                                 <TableCell align="center">{item.ItemCode}</TableCell>
-                                                <TableCell align="center">{selectedValue === "labelled" ?  item.GrossWt : item.TotalGrossWt}</TableCell>
-                                                <TableCell align="center">{selectedValue === "labelled" ?  item.NetWt : item.TotalNetWt}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedValue === "labelled" ? item.GrossWt : item.TotalGrossWt}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedValue === "labelled" ? item.NetWt : item.TotalNetWt}</TableCell>
                                                 <TableCell align="center">
                                                     <Typography
                                                         variant="body2"
                                                         color="error"
                                                         onClick={() => removeRow(item.Id)}
-                                                        sx={{ cursor: 'pointer' }}
+                                                        sx={{cursor: 'pointer'}}
                                                     >
                                                         X
                                                     </Typography>
@@ -949,6 +993,7 @@ function AdminStockTransfer() {
                                             className="inputstock"
                                             name={"TotalGrossWT"}
                                             value={formData.TotalGrossWT}
+                                            readOnly
                                             onChange={handleInputChangePurchase}/>
                                     </Box>
                                 </Grid>
@@ -965,6 +1010,7 @@ function AdminStockTransfer() {
                                             className="inputstock"
                                             name={"TotalNetWT"}
                                             value={formData.TotalNetWT}
+                                            readOnly
                                             onChange={handleInputChangePurchase}/>
                                     </Box>
                                 </Grid>
