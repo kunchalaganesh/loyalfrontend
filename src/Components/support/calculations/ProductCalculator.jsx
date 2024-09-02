@@ -17,16 +17,13 @@ class ProductCalculator {
       // Purity and Vendor Tounche Calculations
       this.calculatePurityAndVendorTounche(updatedProduct, allPurities, allVendorTounche, selectedCustomer);
 
+
+       // Diamond Calculations
+       this.calculateDiamonds(updatedProduct, allDiamondSizeWeightRate);
+
+
       // Net Weight Calculations
       this.calculateNetWeight(updatedProduct, selectedSku);
-
-
-      // Diamond Calculations
-    //   this.calculateDiamonds(updatedProduct, allDiamondSizeWeightRate);
-
-      
-
-      
 
       // Wastage and Fine Calculations
       this.calculateWastageAndFine(updatedProduct, finePure);
@@ -39,26 +36,62 @@ class ProductCalculator {
 
     
     static calculateDiamonds(updatedProduct, allDiamondSizeWeightRate) {
-      if (updatedProduct.DiamondPieces) {
-        const selectedDiamondSizeWeightRate = allDiamondSizeWeightRate.filter(
-          (x) => x.DiamondSize === updatedProduct.DiamondSize
-        );
-        if (updatedProduct.DiamondPieces !== "" && selectedDiamondSizeWeightRate.length > 0) {
-          updatedProduct.DiamondWeight = parseFloat(
-            selectedDiamondSizeWeightRate[0].DiamondWeight * updatedProduct.DiamondPieces
-          ).toFixed(3);
-          updatedProduct.DiamondPurchaseAmount = parseFloat(
-            selectedDiamondSizeWeightRate[0].DiamondPurchaseRate * updatedProduct.DiamondPieces
-          ).toFixed(3);
-          updatedProduct.DiamondSellAmount = parseFloat(
-            selectedDiamondSizeWeightRate[0].DiamondSellRate * updatedProduct.DiamondPieces
-          ).toFixed(3);
-        } else {
-          updatedProduct.DiamondWeight = 0;
-          updatedProduct.DiamondPurchaseAmount = 0;
-          updatedProduct.DiamondSellAmount = 0;
-        }
-      }
+      
+      const newDiamond = updatedProduct.Diamonds;
+
+      const totalDiamondAmount = newDiamond.reduce(
+        (acc, diamond) => acc + (parseFloat(diamond.DiamondRate) || 0),
+        0
+    );
+
+    // Calculate total DiamondPurchaseAmount
+    const totalDiamondPurchaseAmount = newDiamond.reduce(
+        (acc, diamond) => acc + (parseFloat(diamond.DiamondPurchaseAmt) || 0),
+        0
+    );
+
+    // Calculate total DiamondWeight
+    const totalDiamondWeight = newDiamond.reduce(
+        (acc, diamond) => acc + (parseFloat(diamond.DiamondTotalWeight) || 0),
+        0
+    );
+
+    // Calculate total DiamondPieces
+    const totalDiamondPieces = newDiamond.reduce(
+        (acc, diamond) => acc + (parseInt(diamond.DiamondPieces, 10) || 0),
+        0
+    );
+
+    // Calculate total StoneWeight
+    const totalStoneWeight = newDiamond.reduce(
+        (acc, diamond) => acc + (parseFloat(diamond.StoneWeight) || 0),
+        0
+    );
+
+    // Calculate NetWt
+    const netwt = parseFloat(
+        parseFloat(updatedProduct.GrossWt) -
+        parseFloat(updatedProduct.StoneWt) -
+        parseFloat(parseFloat(updatedProduct.ClipWeight) * parseFloat(updatedProduct.ClipQuantity)) -
+        parseFloat(totalDiamondWeight / 5)
+    ).toFixed(3);
+
+    const totalDiamondQty = newDiamond.length;
+
+    // Update the product with the calculated values
+    // updatedProduct.Diamonds = newDiamond;
+    updatedProduct.TotalDiamondWeight = totalDiamondWeight||0;
+    updatedProduct.TotalDiamondQty = totalDiamondQty||0;
+    updatedProduct.TotalDiamondAmount = totalDiamondPurchaseAmount||0;
+    updatedProduct.NetWt = netwt;
+
+    console.log("Total diamond weight: ", totalDiamondWeight);
+    console.log("Total diamond pieces: ", totalDiamondPieces);
+    console.log("Total diamond amount: ", totalDiamondPurchaseAmount);
+    console.log("Total stone weight: ", totalStoneWeight);
+
+
+
     }
 
     static calculateNetWeight(updatedProduct, selectedSku) {
@@ -131,41 +164,77 @@ class ProductCalculator {
           updatedProduct.PurityId = 0;
         }
 
-        const matchingVendorTounche = allVendorTounche.filter(
-          (tounches) =>
-            tounches.CategoryId === updatedProduct.CategoryId &&
-            tounches.ProductId === updatedProduct.ProductId &&
-            selectedCustomer &&
-            tounches.PurityId === updatedProduct.PurityId &&
-            tounches.VendorId === selectedCustomer.Id
+        // console.log('checking vendor ',allVendorTounche )
+        // console.log('checking product ',updatedProduct )
+        // console.log('checking selectedcustomer  ',selectedCustomer )
+
+
+
+        // const matchingVendorTounche = allVendorTounche.filter(
+        //   (tounches) =>
+        //     tounches.CategoryId === updatedProduct.CategoryId &&
+        //     tounches.ProductId === updatedProduct.ProductId &&
+        //     tounches.VendorId === selectedCustomer.Id &&
+        //     tounches.PurityId === updatedProduct.PurityId
             
-            // && tounches.StockKeepingUnit === updatedProduct.StockKeepingUnit
-        );
+        //     // && tounches.StockKeepingUnit === updatedProduct.StockKeepingUnit
+        // );
+
+
+        const categoryId = parseInt(updatedProduct.CategoryId, 10);
+const productId = parseInt(updatedProduct.ProductId, 10);
+const vendorId = parseInt(selectedCustomer.Id, 10);
+const purityId = parseInt(updatedProduct.PurityId, 10);
+
+const matchingVendorTounche = allVendorTounche.filter((tounches) => {
+    console.log(
+        `Comparing: tounches.CategoryId=${tounches.CategoryId} === ${categoryId}, 
+        tounches.ProductId=${tounches.ProductId} === ${productId}, 
+        tounches.VendorId=${tounches.VendorId} === ${vendorId}, 
+        tounches.PurityId=${tounches.PurityId} === ${purityId}`
+    );
+
+    return (
+        tounches.CategoryId === categoryId &&
+        tounches.ProductId === productId &&
+        tounches.VendorId === vendorId &&
+        tounches.PurityId === purityId
+    );
+});
+
+
+console.log('Matching Vendor Tounche: ', matchingVendorTounche);
+
+
         let wastagewt = updatedProduct.WastageWt;
         let MakingPercentage = updatedProduct.MakingPercentage;
         let MakingFixedAmt = updatedProduct.MakingFixedAmt;
         let MakingFixedWastage = updatedProduct.MakingFixedWastage;
         let MakingPerGram = updatedProduct.MakingPerGram;
-        let FinePure = updatedProduct.FinePure;
 
-        console.log('checking matching vendor ',matchingVendorTounche )
+        
         if (selectedCustomer && matchingVendorTounche.length > 0) {
-          updatedProduct.WastageWt = matchingVendorTounche[0].WastageWt || wastagewt;
-          updatedProduct.MakingPercentage = matchingVendorTounche[0].MakingPercentage || 0;
+          updatedProduct.WastageWt = matchingVendorTounche[0].WastageWt || 0;
+          updatedProduct.MakingPercentage = matchingVendorTounche[0].wastagewt || 0;
           updatedProduct.MakingFixedAmt = matchingVendorTounche[0].MakingFixedAmt || 0;
-          updatedProduct.MakingFixedWastage = matchingVendorTounche[0].MakingFixedWastage || 0;
-          updatedProduct.MakingPerGram = matchingVendorTounche[0].MakingPerGram || 9;
-          updatedProduct.FinePure = matchingVendorTounche[0].FinePure || 0;
+          updatedProduct.MakingFixedWastage = parseFloat(matchingVendorTounche[0].MakingFixedWastage);
+          updatedProduct.MakingPerGram = matchingVendorTounche[0].MakingPerGram || 0;
         } else {
           updatedProduct.WastageWt = wastagewt;
           updatedProduct.MakingFixedAmt = MakingFixedAmt;
           updatedProduct.MakingPerGram = MakingPerGram;
-          updatedProduct.MakingPercentage = MakingPercentage;
+          updatedProduct.MakingPercentage = wastagewt;
           updatedProduct.MakingFixedWastage = MakingFixedWastage;
         //   updatedProduct.WastagePercent = WastagePercent;
         }
+
+        console.log('check updateproduct1 ', updatedProduct)
+        console.log('check updateproduct ', updatedProduct.MakingFixedWastage)
+
+        
       }
       
+     
 
 
     }
@@ -193,6 +262,9 @@ class ProductCalculator {
             updatedProduct.selectedSku && updatedProduct.selectedSkuName !== ""
                 ? parseFloat(updatedProduct.selectedSku.MakingFixedWastage || 0).toFixed(3)
                 : "0";
+
+
+
     }
     
       
@@ -223,11 +295,10 @@ nnet = updatedProduct.FineWastageWt;
 
         let fineRate = (parseFloat(nnet) * parseFloat(updatedProduct.MetalRate)) / 10;
         
-        
       
         // Calculate other rates (stone amount, diamond purchase amount, hallmark amount)
         let stoneAmount = parseFloat(updatedProduct.StoneAmount || 0);
-        let totalDiamondPurchaseAmount = parseFloat(updatedProduct.DiamondPurchaseAmount || 0);
+        let totalDiamondPurchaseAmount = parseFloat(updatedProduct.TotalDiamondAmount || 0);
         let hallmarkAmt = parseFloat(updatedProduct.HallmarkAmt || 0);
         let otherrate = stoneAmount + totalDiamondPurchaseAmount + hallmarkAmt;
         
@@ -236,7 +307,7 @@ nnet = updatedProduct.FineWastageWt;
         // Calculate GST on the total rate and on the making charges
         let allItemGstRate = totalRate * 0.03;
         let gstRateOnMaking = parseFloat(otherrate+parseFloat(totalMakingCharges||0)) * 0.03;
-        console.log("Other Rate:", totalRate,'  ', otherrate, '  ',stoneAmount, '  ',  totalDiamondPurchaseAmount, '  ',hallmarkAmt );
+        console.log("Other Rate:", totalRate,'  ', otherrate, '  ',stoneAmount, '  ',  totalDiamondPurchaseAmount, '  ',hallmarkAmt, '  ', totalMakingCharges );
         
         // Calculate TotalItemAmt
         updatedProduct.TotalItemAmt = convertAmount ? (totalRate + otherrate) : totalMakingCharges+otherrate;
@@ -246,6 +317,7 @@ nnet = updatedProduct.FineWastageWt;
       
 
         console.log("checking rates :",parseFloat(totalMakingCharges+otherrate), '  ',convertAmount)
+        updatedProduct.ConvertAmount = convertAmount
         updatedProduct.FinalPrice = convertAmount
           ? `${totalRate}`
           : parseInt(totalMakingCharges+otherrate) !== 0

@@ -220,10 +220,10 @@ export const createOrder = async (orderDetails) => {
   
       formData.append("TotalNetAmount", parseFloat(allProdctsNetAmount).toFixed(3));
       formData.append("TotalGSTAmount", parseFloat(totalPayableGstAmount).toFixed(3));
-      formData.append("TotalPurchaseAmount", Math.ceil(totalPayableAmount).toFixed(3));
+      formData.append("TotalPurchaseAmount", parseFloat(totalPayableAmount).toFixed(3));
       formData.append("PurchaseStatus", payments.length > 0 ? "Partial" : "None");
       formData.append("Quantity", totalQuantity);
-      formData.append("PurchaseAmount", Math.ceil(totalPayableAmount).toFixed(3));
+      formData.append("PurchaseAmount", parseFloat(totalPayableAmount).toFixed(3));
       formData.append("VendorId", selectedCustomer.Id);
       formData.append("GSTApplied", gstType);
       formData.append("Branch", "Home");

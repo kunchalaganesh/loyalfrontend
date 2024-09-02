@@ -109,7 +109,7 @@ const DiamondEntryComponent = ({ index, diamond, allDiamondAttributes, allDiamon
                 ))}
             </datalist>
 
-            <label>Diamond Weight</label>
+            <label>Diamond Weight 1 PCS</label>
             <input
                 value={diamond.DiamondWeight}
                 onChange={(e) =>

@@ -71,7 +71,6 @@ import { createOrder } from '../../../Api/postapiservice';
 import { addPayment, deletePayment, handlePaymentOption } from "../../../support/purchasesupport/usePayment";
 import {handleallitemscal} from "../../../support/purchasesupport/Calculations"
 
-
 export default function AdminPurchaseEntryEdit() {
     const [allCsData, setAllCsData] = useState([]);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
