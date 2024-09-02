@@ -558,15 +558,16 @@ export default function AdminFirstLogin({
                 value={newCompany.FinancialYear}
                 onChange={handleNewCompanyChange}
               /> */}
-              <div>
-                <label>Company GSTIN No.</label>
-                <input
-                    type="text"
-                    name="CompGSTINNo"
-                    value={newCompany.CompGSTINNo}
-                    onChange={handleNewCompanyChange}
-                />
-              </div>
+
+            </div>
+            <div>
+              <label>Company GST IN No.</label>
+              <input
+                  type="text"
+                  name="CompGSTINNo"
+                  value={newCompany.CompGSTINNo}
+                  onChange={handleNewCompanyChange}
+              />
             </div>
             <div>
               <label>
