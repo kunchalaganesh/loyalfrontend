@@ -134,13 +134,13 @@ function AdminStockTransfer() {
             setShowError(false);
         }, 2000);
     }, [showError]);
-    useEffect(() => {
-        if (selectedValue === "labelled") {
-            fetchAllLabelledStock();
-        } else {
-            fetchAllUnlabelledStock();
-        }
-    }, [selectedValue]);
+    // useEffect(() => {
+    //     if (selectedValue === "labelled") {
+    //         fetchAllLabelledStock();
+    //     } else {
+    //         fetchAllUnlabelledStock();
+    //     }
+    // }, [selectedValue]);
     useEffect(() => {
         let fromId;
         if(fromOptionKey == "PacketName" && formData.Source){
@@ -151,7 +151,6 @@ function AdminStockTransfer() {
             const oneItem = boxOption.find((item) => item.BoxName === formData.Source);
             if(oneItem) fromId = oneItem.Id;
         }
-        console.log("fromIdfromIdfromId : ",fromId)
         const getFilteredData = async () => {
             const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName)?.Id || 0;
             const designId = allDesign.find((item, _) => item.DesignName === filterData.DesignName)?.Id || 0;
@@ -191,9 +190,7 @@ function AdminStockTransfer() {
                     if (idKey) {
                         resultdata = resData.filter((item) => item[idKey] !== 0);
                         if(fromId){
-                            console.log(idKey);
                         resultdata = resultdata.filter((item) => item[idKey] == fromId);
-                            console.log("res ",resultdata);
                         }
                     }
 
@@ -211,7 +208,7 @@ function AdminStockTransfer() {
                         const filterRes = resData.filter((item2) => !data.some((item) => item.Id === item2.Id));
                         setTableData(filterRes);
                     } else {
-                        setTableData(resData);
+                        setTableData(resultdata);
                     }
                 }
             } catch (error) {
@@ -219,8 +216,7 @@ function AdminStockTransfer() {
             }
         };
         getFilteredData();
-    }, [filterData, formData]);
-
+    }, [filterData, formData,selectedValue]);
     const fetchAllCategories = async () => {
         const formData = {ClientCode: clientCode};
         try {
@@ -388,10 +384,12 @@ function AdminStockTransfer() {
         });
         setFormData((prev) => ({
             ...prev,
-            TotalGrossWT: 0,
-            TotalNetWT: 0
+            StockTransferTypeName: '',
+            Source : '',
+            Destination: ''
         }));
-
+        setFromOptionKey('');
+        setToOptionKey('');
         setCheckdata([]);
         setSelectedRows([]);
         setSelectAll(false);
