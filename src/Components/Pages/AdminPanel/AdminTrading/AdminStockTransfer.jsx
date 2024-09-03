@@ -143,12 +143,16 @@ function AdminStockTransfer() {
     // }, [selectedValue]);
     useEffect(() => {
         let fromId;
-        if(fromOptionKey == "PacketName" && formData.Source){
+        if(fromOptionKey === "PacketName" && formData.Source){
             const oneItem = packetsOption.find((item) => item.PacketName === formData.Source);
             if(oneItem) fromId = oneItem.Id;
         }
-        if(fromOptionKey == "BoxName" && formData.Source){
+        if(fromOptionKey === "BoxName" && formData.Source){
             const oneItem = boxOption.find((item) => item.BoxName === formData.Source);
+            if(oneItem) fromId = oneItem.Id;
+        }
+        if(fromOptionKey === "BranchName" && formData.Source){
+            const oneItem = branchOption.find((item) => item.BranchName === formData.Source);
             if(oneItem) fromId = oneItem.Id;
         }
         const getFilteredData = async () => {

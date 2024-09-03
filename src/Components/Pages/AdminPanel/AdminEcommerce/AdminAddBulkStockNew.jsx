@@ -43,7 +43,7 @@ import {
     a57,
     a71,
     a8,
-    a90,
+    a90, a98,
 } from "../../../Api/RootApiPath";
 import QRCode from "qrcode";
 import jsPDF from "jspdf";
@@ -187,6 +187,7 @@ export default function AdminAddBulkStockNew() {
     const [showAddDiamondBox, setShowAddDiamondBox] = useState(false);
     const [grossWithClip, setGrossWithClip] = useState(false);
     const [readOnly, setReadOnly] = useState(false);
+    const [branchOption, setBranchOption] = useState([]);
     const [showDiamondBtn, setShowDiamondBtn] = useState(false);
     const [addStone, setAddStone] = useState({
         StoneName: "",
@@ -418,6 +419,20 @@ export default function AdminAddBulkStockNew() {
         })
             .then((res) => res.json())
             .then((data) => setCategoriesData(data?.filter(item => item.CategoryName !== 'DIAMOND')));
+    }, []);
+    useEffect(() => {
+        const formData = {
+            ClientCode: clientCode,
+        };
+        fetch(a98, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        })
+            .then((res) => res.json())
+            .then((data) => setBranchOption(data));
     }, []);
     useEffect(() => {
         const formData = {
@@ -1376,8 +1391,6 @@ export default function AdminAddBulkStockNew() {
                 )
                 : 0;
 
-        console.log("filter vali error ", allLabelledStockData);
-
         const totalCollectionItem = allLabelledStockData && allLabelledStockData.filter(
             (x) => x.DesignId == collectionId
         );
@@ -1448,7 +1461,7 @@ export default function AdminAddBulkStockNew() {
         //   "selectedSku length check"
         // );
         // console.log(selectedSkuStones, "selectedSkuStones");
-
+        const curBranch = branchOption.find((item) => item.BranchName === branch);
         let selectedSkuData =
             Array.isArray(selectedSku) && selectedSku.length > 0
                 ? selectedSku[0]
@@ -1527,7 +1540,7 @@ export default function AdminAddBulkStockNew() {
             ClientCode: clientCode,
             EmployeeCode: employeeCode ? employeeCode : "",
             CompanyId: CompanyId ? CompanyId : 0,
-            BranchId: BranchId ? BranchId : 0,
+            BranchId: curBranch.Id ? curBranch.Id : 0,
             CounterId: CounterId ? CounterId : 0,
             EstimatedDays: "0",
             MetalRate: "0",
@@ -2030,7 +2043,7 @@ export default function AdminAddBulkStockNew() {
                 } else {
                     editProduct = false;
                 }
-                console.log("updatedProductsStringupdatedProductsString : ",updatedProductsString)
+                console.log("updatedProductsStringupdatedProductsString : ", updatedProductsString)
 
                 // Send the updated products to the edit API endpoint
                 // const transformedData = updatedProductsString.map((item,ind))
@@ -2633,7 +2646,7 @@ export default function AdminAddBulkStockNew() {
                 const updatedDiamonds = product.Diamonds.map((diamond, sIndex) => {
                     if (sIndex !== diamondIndex) return diamond;
 
-                    let updatedDiamond = { ...diamond, [field]: value };
+                    let updatedDiamond = {...diamond, [field]: value};
 
                     if (field === "DiamondSize") {
                         const selectedDiamond = allDiamondSizeWeightRate.find(
@@ -3651,8 +3664,10 @@ export default function AdminAddBulkStockNew() {
                                                         value={branch}
                                                         onChange={(e) => setBranch(e.target.value)}
                                                     >
-                                                        <option value="Home">Home</option>
-                                                        <option value="Branch 2">Branch 2</option>
+                                                        <option value="">Select a branch</option>
+                                                        {branchOption.map((item) => (
+                                                            <option value={item.BranchName}>{item.BranchName}</option>
+                                                        ))}
                                                     </select>
 
                                                     <p>Unlabelled Other :</p>
@@ -4961,7 +4976,7 @@ export default function AdminAddBulkStockNew() {
                                                         <th>MRP</th>
                                                         <th>Add Stone</th>
                                                         {/*{addedProducts.length > 0 && addedProducts[0].CategoryId === 5 && (*/}
-                                                            <th>Add Diamond</th>
+                                                        <th>Add Diamond</th>
                                                         {/*)}*/}
                                                         <th>Occassion</th>
                                                         <th>Gender</th>
