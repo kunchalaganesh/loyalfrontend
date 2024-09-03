@@ -183,7 +183,7 @@ function AdminStockTransfer() {
                         idKey = 'PacketId';
                     } else if (fromOptionKey === 'BoxName') {
                         idKey = 'BoxId';
-                    } else if(fromOptionKey === 'BoxName'){
+                    } else if(fromOptionKey === 'BranchName'){
                         idKey = 'BranchId';
                     }
 
@@ -512,6 +512,24 @@ function AdminStockTransfer() {
                 setToOption([]);
             }
         }
+            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Packet" && formData.StockTransferTypeName.split(" ")[0] === "Packet"){
+                // setFromOptionKey('PacketName');
+                // setToOptionKey('PacketName');
+                const filterTo = packetsOption.filter((item) => item.PacketName !== value)
+                setToOption(filterTo);
+            }
+            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Box" && formData.StockTransferTypeName.split(" ")[0] === "Box"){
+                // setFromOptionKey('BoxName');
+                // setToOptionKey('BoxName');
+                const filterTo = boxOption.filter((item) => item.BoxName !== value)
+                setToOption(filterTo);
+            }
+            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Branch" && formData.StockTransferTypeName.split(" ")[0] === "Branch"){
+                // setFromOptionKey('BranchName');
+                // setToOptionKey('BranchName');
+                const filterTo = branchOption.filter((item) => item.BranchName !== value)
+                setToOption(filterTo);
+            }
         setFormData((list) => ({...list, [name]: value}));
     }
     const handleSubmit = async () => {
@@ -565,6 +583,7 @@ function AdminStockTransfer() {
             setMessageType("success");
             setMessageToShow("Stock Transfer Successfully");
             setShowError(true);
+            navigate("/stock_transfer_list");
         } catch (error) {
             console.log(error);
             setMessageType("error");
@@ -845,7 +864,7 @@ function AdminStockTransfer() {
                                                 <TableRow key={item.id}>
                                                     <TableCell align="center">{index + 1}</TableCell>
                                                     <TableCell align="center">
-                                                        {selectedValue === "labelled" ? item.ProductTitle : item.DesignName}
+                                                        {selectedValue === "labelled" ? item.ProductName : item.DesignName}
                                                     </TableCell>
                                                     <TableCell align="center">
                                                         {selectedValue === "labelled" ? item.ItemCode : item.ItemCode}
@@ -912,7 +931,7 @@ function AdminStockTransfer() {
                                             <TableRow key={item.id}>
                                                 <TableCell align="center">{index + 1}</TableCell>
                                                 <TableCell
-                                                    align="center">{selectedValue === "labelled" ? item.ProductTitle : item.DesignName}</TableCell>
+                                                    align="center">{selectedValue === "labelled" ? item.ProductName : item.DesignName}</TableCell>
                                                 <TableCell align="center">{item.ItemCode}</TableCell>
                                                 <TableCell
                                                     align="center">{selectedValue === "labelled" ? item.GrossWt : item.TotalGrossWt}</TableCell>
