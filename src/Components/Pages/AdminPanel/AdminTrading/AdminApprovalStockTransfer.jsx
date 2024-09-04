@@ -261,7 +261,7 @@ function AdminApprovalStockTransfer() {
                                     Reject
                                 </button>
                             </Box>
-                            {(tableData.TransferByEmployee !== tableData.ReceivedByEmployee) && <Box
+                            {(tableData?.TransferByEmployee !== tableData?.ReceivedByEmployee) && <Box
                                 mx={1}
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
