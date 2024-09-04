@@ -303,9 +303,9 @@ function AdminStockTransferList() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">Transfer By</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Transfer To</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Received By</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Pending</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Approved</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Rejected</TableCell>
-                                        <TableCell sx={{fontWeight: "600"}} align="center">Pending</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Remark</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Download</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center"/>
@@ -331,11 +331,11 @@ function AdminStockTransferList() {
                                                 <TableCell align="center">{item.TransferedToBranch}</TableCell>
                                                 <TableCell align="center">{item.ReceivedByEmployee}</TableCell>
                                                 <TableCell
+                                                    align="center">{item.Pending}</TableCell>
+                                                <TableCell
                                                     align="center">{item.Approved}</TableCell>
                                                 <TableCell
                                                     align="center">{item.Rejected}</TableCell>
-                                                <TableCell
-                                                    align="center">{item.Pending}</TableCell>
                                                 <TableCell
                                                     align="center">{item.Remarks ? item.Remarks : '-'}</TableCell>
                                                 <TableCell align="center">

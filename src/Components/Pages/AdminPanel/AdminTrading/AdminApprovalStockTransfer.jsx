@@ -171,7 +171,7 @@ function AdminApprovalStockTransfer() {
             setSelectAll(false);
         }
     };
-
+    console.log("looooooooooooooooooooooooooooooooooooog : ",tableData)
     return (
         <>
             <AdminHeading/>
@@ -261,7 +261,7 @@ function AdminApprovalStockTransfer() {
                                     Reject
                                 </button>
                             </Box>
-                            <Box
+                            {(tableData.TransferByEmployee !== tableData.ReceivedByEmployee) && <Box
                                 mx={1}
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
@@ -272,7 +272,7 @@ function AdminApprovalStockTransfer() {
                                     Lost
                                 </button>
 
-                            </Box>
+                            </Box>}
                             <Box mx={1} sx={{display: "flex", alignItems: "center",}}>
                                 <input
                                     type="checkbox"
