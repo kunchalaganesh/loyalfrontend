@@ -1507,6 +1507,7 @@ export default function AdminAddBulkStockNew() {
             SKU: selectedSkuName,
             SKUId: selectedSkuData.Id || 0,
             BlackBeads: "",
+            BoxId: boxId ? boxId : 0,
             BoxName: "",
             Status: "Active",
             CuttingGrossWt: "0",
