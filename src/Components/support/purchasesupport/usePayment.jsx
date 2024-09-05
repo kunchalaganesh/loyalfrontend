@@ -85,8 +85,8 @@ export const addPayment = ({
           ]);
         }
   
-        setGrandTotal((prevTotal) => prevTotal - parseInt(paymentAmount));
-        setPaymentAmount((prevTotal) => prevTotal - parseInt(paymentAmount));
+        setGrandTotal((prevTotal) => prevTotal - parseFloat(paymentAmount));
+        setPaymentAmount((prevTotal) => prevTotal - parseFoat(paymentAmount));
   
       } else if (paymentType === "Receive") {
         const newReceivePayment = {

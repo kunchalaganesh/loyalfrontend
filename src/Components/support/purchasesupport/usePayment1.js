@@ -92,7 +92,7 @@ export const addPayment = ({
       } else if (paymentType === "Receive") {
         const newReceivePayment = {
           ...newPayment,
-          amount: -paymentAmount,
+          amount: parseFloat(-paymentAmount),
           fineGold: parseFloat(-paymentGold),
           fineSilver: parseFloat(-paymentSilver),
           deductGold: parseFloat(-deductGold),
@@ -111,13 +111,18 @@ export const addPayment = ({
             .includes("gold") ? -metalPaymentOption.totalAmount : 0,
         };
         setPayments((prevPayments) => [...prevPayments, newReceivePayment]);
-        setGrandTotal((prevTotal) => prevTotal + paymentAmount);
+        setGrandTotal((prevTotal) => parseFloat(prevTotal) - parseFloat(paymentAmount));
+        setPaymentAmount((prevTotal) => parseFloat(prevTotal) - parseFloat(paymentAmount))
+        // setGrandTotal('12000')
+        console.log('check paymentss',newReceivePayment )
       }
   
       // Update total payable amounts
       setTotalPayableGold((prevGold) => prevGold - deductGold);
       setTotalPayableSilver((prevSilver) => prevSilver - deductSilver);
       setPaymentDescription("");
+
+     
   
       // Reset metal payment options and amounts
       setMetalPaymentOption({

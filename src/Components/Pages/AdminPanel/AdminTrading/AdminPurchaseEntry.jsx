@@ -3920,9 +3920,10 @@ console.log('checking parameter atchange', name);
 
 
 
+
                         {purchaseProduct.CategoryName &&
                           purchaseProduct.CategoryName.toLowerCase() ==
-                          "loose diamonds" ? (
+                          "loose diamond" ? (
 
                           <LooseDiamonds
                             purchaseProduct={purchaseProduct}
