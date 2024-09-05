@@ -35,6 +35,7 @@ import {allCountriesList} from "../../../Api/CountriesAllList";
 export default function AdminAllCustomers() {
     const [active, setActive] = useState("List");
     const [allCustomersData, setAllCustomersData] = useState([]);
+    const [countryStates, setCountryStates] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [editedData, setEditedData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -47,54 +48,58 @@ export default function AdminAllCustomers() {
     );
     const [customerCreditPeriodList, setCustomerCreditPeriodList] = useState([]);
 
-  const [newCs, setNewCs] = useState({
-    FirstName: "",
-    LastName: "",
-    MiddleName: "",
-    PerAddStreet: "",
-    CurrAddStreet: "",
-    Mobile: "",
-    Email: "",
-    Password: "",
-    CustomerLoginId: "",
-    DateOfBirth: "",
-    PerAddPincode: "",
-    Gender: "",
-    CustomerSlabId: 0,
-    CreditPeriodId: 0,
-    RateOfInterestId: 0,
-    OnlineStatus: "",
-    CurrAddTown: "",
-    CurrAddPincode: "",
-    CurrAddState: "",
-    PerAddTown: "",
-    PerAddState: "",
-    CurrAddCountry: "India",
-    PerAddCountry: "India",
-    GstNo: "",
-    PanNo: "",
-    AadharNo: "",
-    BalanceAmount: "0",
-    AdvanceAmount: "0",
-    Discount: "0",
-    CreditPeriod: "0",
-    FineGold: "0",
-    FineSilver: "0",
-    VendorId: 0,
-    AddToVendor: false,
-    oldEntry: false,
-  });
-  const allStates = useSelector((state) => state);
-  const adminLoggedIn = allStates.reducer1;
-  //   let Entryby_Staff_id = parseInt(adminLoggedIn);
-  const clientCode = adminLoggedIn.ClientCode;
-  const employeeCode = adminLoggedIn.EmployeeCode;
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const openView = params.get("openView");
-  const csName = params.get("csName");
-  const csMobile = params.get("csMobile");
-  const csAddress = params.get("csAddress");
+    const [newCs, setNewCs] = useState({
+        FirstName: "",
+        LastName: "",
+        MiddleName: "",
+        PerAddStreet: "",
+        CurrAddStreet: "",
+        Mobile: "",
+        Email: "",
+        Password: "",
+        CustomerLoginId: "",
+        DateOfBirth: "",
+        PerAddPincode: "",
+        Gender: "",
+        CustomerSlabId: 0,
+        CreditPeriodId: 0,
+        RateOfInterestId: 0,
+        OnlineStatus: "",
+        CurrAddTown: "",
+        CurrAddPincode: "",
+        CurrAddState: "",
+        PerAddTown: "",
+        PerAddState: "",
+        CurrAddCountry: "India",
+        PerAddCountry: "India",
+        GstNo: "",
+        PanNo: "",
+        AadharNo: "",
+        BalanceAmount: "0",
+        AdvanceAmount: "0",
+        Discount: "0",
+        CreditPeriod: "0",
+        FineGold: "0",
+        FineSilver: "0",
+        VendorId: 0,
+        AddToVendor: false,
+        oldEntry: false,
+    });
+    const allStates = useSelector((state) => state);
+    const adminLoggedIn = allStates.reducer1;
+    //   let Entryby_Staff_id = parseInt(adminLoggedIn);
+    const clientCode = adminLoggedIn.ClientCode;
+    const employeeCode = adminLoggedIn.EmployeeCode;
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const openView = params.get("openView");
+    const csName = params.get("csName");
+    const states = {
+        US: ["California", "Texas", "Florida", "New York"],
+        IN: allStateList,
+    };
+    const csMobile = params.get("csMobile");
+    const csAddress = params.get("csAddress");
 
     useEffect(() => {
         window.scroll(0, 0);
@@ -309,10 +314,23 @@ export default function AdminAllCustomers() {
         setNewCs({...newCs, [name]: value});
         console.log(newCs);
     };
-
+    useEffect(() => {
+        if (newCs.PerAddCountry == "India") {
+            setCountryStates(states.IN);
+        }
+    }, []);
     const handleNewCsChange = (e) => {
         const {name, value} = e.target;
-        // Update the edited data in the state
+        if (name == "PerAddCountry" && value == "India") {
+            setCountryStates(states.IN);
+            setNewCs({ ...newCs, Country: value, State: "" });
+        } else if (name == "PerAddCountry" && value == "United States") {
+            setCountryStates(states.US);
+            setNewCs({ ...newCs, Country: value, State: "" });
+        } else {
+            setNewCs({ ...newCs, [name]: value });
+            setCountryStates([]);
+        }
         if (name == "AddToVendor") {
             if (!newCs.oldEntry) {
                 setNewCs({...newCs, [name]: value});
@@ -681,7 +699,7 @@ export default function AdminAllCustomers() {
                             }
                         >
                             <h4
-                                style={{ marginTop: "20px", marginBottom: "20px" }}
+                                style={{marginTop: "20px", marginBottom: "20px"}}
                                 id="adminInvoiceAddedCustomerEdit"
                                 className="adminInvoiceAddTitles"
                             >
@@ -830,7 +848,7 @@ export default function AdminAllCustomers() {
                                     />
                                 </div>
                                 <h4
-                                    style={{ marginTop: "20px", marginBottom: "20px" }}
+                                    style={{marginTop: "20px", marginBottom: "20px"}}
                                     id="adminInvoiceAddedCustomerEdit"
                                     className="adminInvoiceAddTitles"
                                 >
@@ -951,7 +969,7 @@ export default function AdminAllCustomers() {
                                     </select>
                                 </div>
                                 <h4
-                                    style={{ marginTop: "20px", marginBottom: "20px" }}
+                                    style={{marginTop: "20px", marginBottom: "20px"}}
                                     id="adminInvoiceAddedCustomerEdit"
                                     className="adminInvoiceAddTitles"
                                 >
@@ -974,7 +992,7 @@ export default function AdminAllCustomers() {
                                         onChange={handleNewCsChange}
                                         type="text"
                                     />
-                                    <label>Billing Address (Town)</label>
+                                    <label>Town</label>
                                     <input
                                         name="CurrAddTown"
                                         value={newCs.CurrAddTown}
@@ -982,7 +1000,7 @@ export default function AdminAllCustomers() {
                                         type="text"
                                     />
                                     <label>
-                                        Billing Address (Country) <sup>*</sup>
+                                      Country <sup>*</sup>
                                     </label>
                                     <select
                                         name="CurrAddCountry"
@@ -997,24 +1015,39 @@ export default function AdminAllCustomers() {
                                         ))}
                                     </select>
                                     <label>
-                                        Billing Address (State) <sup> *</sup>
+                                      State <sup> *</sup>
                                     </label>
-                                    <select
-                                        // required="required"
-                                        type="text"
+                                    {/*<select*/}
+                                    {/*    // required="required"*/}
+                                    {/*    type="text"*/}
+                                    {/*    name="CurrAddState"*/}
+                                    {/*    required="required"*/}
+                                    {/*    value={newCs.CurrAddState}*/}
+                                    {/*    onChange={handleNewCsChange}*/}
+                                    {/*>*/}
+                                    {/*    <option value="">Select a state</option>*/}
+                                    {/*    {countryStates.map((state) => (*/}
+                                    {/*        <option key={state} value={state}>*/}
+                                    {/*            {state}*/}
+                                    {/*        </option>*/}
+                                    {/*    ))}*/}
+                                    {/*</select>*/}
+                                    <input
                                         name="CurrAddState"
-                                        required="required"
                                         value={newCs.CurrAddState}
                                         onChange={handleNewCsChange}
-                                    >
-                                        <option value="">Select a state</option>
-                                        {allStateList.map((state) => (
-                                            <option key={state} value={state}>
-                                                {state}
+                                        type="text"
+                                        required="required"
+                                        list="CurrAddState"
+                                    />
+                                    <datalist id="CurrAddState">
+                                        {countryStates.map((x, index) => (
+                                            <option key={index} value={x}>
+                                                {x}
                                             </option>
                                         ))}
-                                    </select>
-                                    <label>Billing Address (Pincode)</label>
+                                    </datalist>
+                                    <label>Pincode</label>
                                     <input
                                         name="CurrAddPincode"
                                         value={newCs.CurrAddPincode}
@@ -1028,7 +1061,7 @@ export default function AdminAllCustomers() {
                                     id="adminInvoiceAddedCustomerEdit"
                                     className="adminInvoiceAddTitles"
                                 >
-                                    permanent Address details </h4>
+                                    Permanent Address details </h4>
                                 <div
                                     style={{
                                         gridTemplateColumns: "repeat(4,1fr)",
@@ -1040,65 +1073,80 @@ export default function AdminAllCustomers() {
                                     }}
                                     className="adminCategoryAddCategoryInnerBox"
 
-                >
-                  <label>Permanent Address (Street)</label>
-                  <input
-                      name="PerAddStreet"
-                      value={newCs.PerAddStreet}
-                      onChange={handleNewCsChange}
-                      type="text"
-                  />
-                  <label>Permanent Address (Town)</label>
-                  <input
-                      name="PerAddTown"
-                      value={newCs.PerAddTown}
-                      onChange={handleNewCsChange}
-                      type="text"
-                  />
-                  <label>
-                    Permanent Address (Country)
-                  </label>
-                  <select
-                      name="PerAddCountry"
-                      value={newCs.PerAddCountry}
-                      onChange={handleNewCsChange}
-                  >
-                    {allCountriesList.map((x, y) => (
-                        <option key={y} value={x}>
-                          {x}
-                        </option>
-                    ))}
-                  </select>
-                  <label>
-                    Permanent Address (State)
-                  </label>
-                  <select
-                      type="text"
-                      name="PerAddState"
-                      value={newCs.PerAddState}
-                      onChange={handleNewCsChange}
-                  >
-                    <option value="">Select a state</option>
-                    {allStateList.map((state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                    ))}
-                  </select>
-                  <label>Permanent Address (Pincode)</label>
-                  <input
-                      name="PerAddPincode"
-                      value={newCs.PerAddPincode}
-                      onChange={handleNewCsChange}
-                      type="text"
-                  />
+                                >
+                                    <label>Permanent Address (Street)</label>
+                                    <input
+                                        name="PerAddStreet"
+                                        value={newCs.PerAddStreet}
+                                        onChange={handleNewCsChange}
+                                        type="text"
+                                    />
+                                    <label>Town</label>
+                                    <input
+                                        name="PerAddTown"
+                                        value={newCs.PerAddTown}
+                                        onChange={handleNewCsChange}
+                                        type="text"
+                                    />
+                                    <label>
+                                       Country
+                                    </label>
+                                    <select
+                                        name="PerAddCountry"
+                                        value={newCs.PerAddCountry}
+                                        onChange={handleNewCsChange}
+                                    >
+                                        {allCountriesList.map((x, y) => (
+                                            <option key={y} value={x}>
+                                                {x}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label>
+                                       State
+                                    </label>
+                                    <input
+                                        name="PerAddState"
+                                        value={newCs.State}
+                                        onChange={handleNewCsChange}
+                                        type="text"
+                                        required="required"
+                                        list="PerAddState"
+                                    />
+                                    <datalist id="PerAddState">
+                                        {countryStates.map((x, index) => (
+                                            <option key={index} value={x}>
+                                                {x}
+                                            </option>
+                                        ))}
+                                    </datalist>
+                                    {/*<select*/}
+                                    {/*    type="text"*/}
+                                    {/*    name="PerAddState"*/}
+                                    {/*    value={newCs.PerAddState}*/}
+                                    {/*    onChange={handleNewCsChange}*/}
+                                    {/*>*/}
+                                    {/*  <option value="">Select a state</option>*/}
+                                    {/*  {allStateList.map((state) => (*/}
+                                    {/*      <option key={state} value={state}>*/}
+                                    {/*        {state}*/}
+                                    {/*      </option>*/}
+                                    {/*  ))}*/}
+                                    {/*</select>*/}
+                                    <label>Pincode</label>
+                                    <input
+                                        name="PerAddPincode"
+                                        value={newCs.PerAddPincode}
+                                        onChange={handleNewCsChange}
+                                        type="text"
+                                    />
+                                </div>
+                                {!loading ? <button type="submit">Submit</button> : null}
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                {!loading ? <button type="submit">Submit</button> : null}
-              </form>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

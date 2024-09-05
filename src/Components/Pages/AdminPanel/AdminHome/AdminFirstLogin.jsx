@@ -1156,7 +1156,7 @@ export default function AdminFirstLogin({
             </div>
             <div>
               <label>
-                Ifsc Code<sup>*</sup>
+                IFSC Code<sup>*</sup>
               </label>
               <input
                 name="IfscCode"

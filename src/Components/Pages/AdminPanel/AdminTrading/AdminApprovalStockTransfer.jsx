@@ -171,7 +171,6 @@ function AdminApprovalStockTransfer() {
             setSelectAll(false);
         }
     };
-    console.log("looooooooooooooooooooooooooooooooooooog : ",tableData)
     return (
         <>
             <AdminHeading/>
@@ -261,7 +260,7 @@ function AdminApprovalStockTransfer() {
                                     Reject
                                 </button>
                             </Box>
-                            {(tableData.TransferByEmployee !== tableData.ReceivedByEmployee) && <Box
+                            {(tableData?.TransferByEmployee !== tableData?.ReceivedByEmployee) && <Box
                                 mx={1}
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
@@ -305,15 +304,15 @@ function AdminApprovalStockTransfer() {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
-                                                    <TableCell sx={{fontWeight: "600"}} align="center">Metal
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Category
                                                         Name</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Item
                                                         Code</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Branch
                                                         Name</TableCell>
-                                                    <TableCell sx={{fontWeight: "600"}} align="center">NetWt</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Net Wt</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}
-                                                               align="center">GrossWt</TableCell>
+                                                               align="center">Gross Wt</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}
                                                                align="center">Status</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}

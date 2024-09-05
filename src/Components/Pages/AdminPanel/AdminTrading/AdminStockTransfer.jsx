@@ -143,17 +143,17 @@ function AdminStockTransfer() {
     // }, [selectedValue]);
     useEffect(() => {
         let fromId;
-        if(fromOptionKey === "PacketName" && formData.Source){
+        if (fromOptionKey === "PacketName" && formData.Source) {
             const oneItem = packetsOption.find((item) => item.PacketName === formData.Source);
-            if(oneItem) fromId = oneItem.Id;
+            if (oneItem) fromId = oneItem.Id;
         }
-        if(fromOptionKey === "BoxName" && formData.Source){
+        if (fromOptionKey === "BoxName" && formData.Source) {
             const oneItem = boxOption.find((item) => item.BoxName === formData.Source);
-            if(oneItem) fromId = oneItem.Id;
+            if (oneItem) fromId = oneItem.Id;
         }
-        if(fromOptionKey === "BranchName" && formData.Source){
+        if (fromOptionKey === "BranchName" && formData.Source) {
             const oneItem = branchOption.find((item) => item.BranchName === formData.Source);
-            if(oneItem) fromId = oneItem.Id;
+            if (oneItem) fromId = oneItem.Id;
         }
         const getFilteredData = async () => {
             const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName)?.Id || 0;
@@ -187,14 +187,14 @@ function AdminStockTransfer() {
                         idKey = 'PacketId';
                     } else if (fromOptionKey === 'BoxName') {
                         idKey = 'BoxId';
-                    } else if(fromOptionKey === 'BranchName'){
+                    } else if (fromOptionKey === 'BranchName') {
                         idKey = 'BranchId';
                     }
 
                     if (idKey) {
                         resultdata = resData.filter((item) => item[idKey] !== 0);
-                        if(fromId){
-                        resultdata = resultdata.filter((item) => item[idKey] == fromId);
+                        if (fromId) {
+                            resultdata = resultdata.filter((item) => item[idKey] == fromId);
                         }
                     }
 
@@ -220,7 +220,7 @@ function AdminStockTransfer() {
             }
         };
         getFilteredData();
-    }, [filterData, formData,selectedValue]);
+    }, [filterData, formData, selectedValue]);
     const fetchAllCategories = async () => {
         const formData = {ClientCode: clientCode};
         try {
@@ -389,7 +389,7 @@ function AdminStockTransfer() {
         setFormData((prev) => ({
             ...prev,
             StockTransferTypeName: '',
-            Source : '',
+            Source: '',
             Destination: ''
         }));
         setFromOptionKey('');
@@ -423,7 +423,7 @@ function AdminStockTransfer() {
             TotalGrossWT: totalgrosswt,
             TotalNetWT: totalnetwt
         });
-    },[data])
+    }, [data])
     const handleRowCheckboxChange = (e, id) => {
         const isChecked = e.target.checked;
         setSelectedRows(prevState =>
@@ -516,24 +516,24 @@ function AdminStockTransfer() {
                 setToOption([]);
             }
         }
-            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Packet" && formData.StockTransferTypeName.split(" ")[0] === "Packet"){
-                // setFromOptionKey('PacketName');
-                // setToOptionKey('PacketName');
-                const filterTo = packetsOption.filter((item) => item.PacketName !== value)
-                setToOption(filterTo);
-            }
-            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Box" && formData.StockTransferTypeName.split(" ")[0] === "Box"){
-                // setFromOptionKey('BoxName');
-                // setToOptionKey('BoxName');
-                const filterTo = boxOption.filter((item) => item.BoxName !== value)
-                setToOption(filterTo);
-            }
-            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Branch" && formData.StockTransferTypeName.split(" ")[0] === "Branch"){
-                // setFromOptionKey('BranchName');
-                // setToOptionKey('BranchName');
-                const filterTo = branchOption.filter((item) => item.BranchName !== value)
-                setToOption(filterTo);
-            }
+        if (name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Packet" && formData.StockTransferTypeName.split(" ")[0] === "Packet") {
+            // setFromOptionKey('PacketName');
+            // setToOptionKey('PacketName');
+            const filterTo = packetsOption.filter((item) => item.PacketName !== value)
+            setToOption(filterTo);
+        }
+        if (name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Box" && formData.StockTransferTypeName.split(" ")[0] === "Box") {
+            // setFromOptionKey('BoxName');
+            // setToOptionKey('BoxName');
+            const filterTo = boxOption.filter((item) => item.BoxName !== value)
+            setToOption(filterTo);
+        }
+        if (name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Branch" && formData.StockTransferTypeName.split(" ")[0] === "Branch") {
+            // setFromOptionKey('BranchName');
+            // setToOptionKey('BranchName');
+            const filterTo = branchOption.filter((item) => item.BranchName !== value)
+            setToOption(filterTo);
+        }
         setFormData((list) => ({...list, [name]: value}));
     }
     const handleSubmit = async () => {
@@ -613,73 +613,86 @@ function AdminStockTransfer() {
             <Box className="adminAddCategoryMainBox">
                 <Box className="adminAddCategoryInnerBox">
                     <Box id="adminInvoiceAddedCustomerEdit" className="adminInvoiceAddTitles">
-                        <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                            <Box sx={{display: "flex", alignItems: "center",}}>
-                                <Box sx={{display: "flex", alignItems: "center"}}>
-                                    <label style={{width: "160px"}}>Transfer Type :</label>
-                                    <select className={"input-select"} name={"StockTransferTypeName"}
-                                            onChange={handleInputChangePurchase} value={formData.StockTransferTypeName}>
-                                        <option value="">
-                                            Choose a Transfer Type
-                                        </option>
-                                        {transferType?.map((x, y) => (
-                                            <option
-                                                key={y}
-                                                value={x.TransferType}
-                                            >
-                                                {x.TransferType}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Box>
-                                <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                                    <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
-                                        <label style={{width: "100px", marginRight: "5px", marginLeft: "10px"}}>From
-                                            : </label>
-                                        <select className={"input-select"} name={"Source"}
-                                                onChange={handleInputChangePurchase} value={formData.Source}>
-                                            <option value="">
-                                                From
-                                            </option>
-                                            {fromOptionKey === 'DisplayName' ? (
-                                                <option selected value={"Display"}>
-                                                    Display
+                        <Grid container sx={{
+                            display: {xs: "block", md: "flex"},
+                            justifyContent: {md: "space-between"},
+                            alignItems: "center"
+                        }}>
+                            <Grid item sm={12} md={8}>
+                                <Grid container sx={{display: "flex", alignItems: "center"}}>
+                                    <Grid item xs={12} md={6}>
+                                        <Box sx={{display: "flex", alignItems: "center",justifyContent: "left"}}>
+                                            <label style={{width: "160px"}}>Transfer Type :</label>
+                                            <select className={"input-select"} name={"StockTransferTypeName"}
+                                                    onChange={handleInputChangePurchase}
+                                                    value={formData.StockTransferTypeName}>
+                                                <option value="">
+                                                    Choose a Transfer Type
                                                 </option>
-                                            ) : fromOption.map((x, y) => (
-                                                <option
-                                                    key={y}
-                                                    value={x[`${fromOptionKey}`]}
-                                                >
-                                                    {x[`${fromOptionKey}`]}
+                                                {transferType?.map((x, y) => (
+                                                    <option
+                                                        key={y}
+                                                        value={x.TransferType}
+                                                    >
+                                                        {x.TransferType}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                    <Box sx={{display: "flex", justifyContent: "left", alignItems: "center",my: {xs:"10px",sm:"0px"}}}>
+                                        <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
+                                            <label style={{width: "100px", marginRight: "5px", marginLeft: "10px"}}>From
+                                                : </label>
+                                            <select className={"input-select"} name={"Source"}
+                                                    onChange={handleInputChangePurchase} value={formData.Source}>
+                                                <option value="">
+                                                    From
                                                 </option>
-                                            ))}
-                                        </select>
+                                                {fromOptionKey === 'DisplayName' ? (
+                                                    <option selected value={"Display"}>
+                                                        Display
+                                                    </option>
+                                                ) : fromOption.map((x, y) => (
+                                                    <option
+                                                        key={y}
+                                                        value={x[`${fromOptionKey}`]}
+                                                    >
+                                                        {x[`${fromOptionKey}`]}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </Box>
+
+                                        <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
+                                            <label style={{width: "100px", marginLeft: "10px"}}>To : </label>
+                                            <select className={"input-select"} name={"Destination"}
+                                                    onChange={handleInputChangePurchase} value={formData.Destination}>
+                                                <option value="">
+                                                    To
+                                                </option>
+                                                {toOptionKey === 'DisplayName' ? (
+                                                    <option selected value={"Display"}>
+                                                        Display
+                                                    </option>
+                                                ) : toOption.map((x, y) => (
+                                                    <option
+
+                                                        key={y}
+                                                        value={x[`${toOptionKey}`]}
+                                                    >
+                                                        {x[`${toOptionKey}`]}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </Box>
                                     </Box>
-                                    <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
-                                        <label style={{width: "100px", marginLeft: "10px"}}>To : </label>
-                                        <select className={"input-select"} name={"Destination"}
-                                                onChange={handleInputChangePurchase} value={formData.Destination}>
-                                            <option value="">
-                                                To
-                                            </option>
-                                            {toOptionKey === 'DisplayName' ? (
-                                                <option selected value={"Display"}>
-                                                    Display
-                                                </option>
-                                            ) : toOption.map((x, y) => (
-                                                <option
-                                                    key={y}
-                                                    value={x[`${toOptionKey}`]}
-                                                >
-                                                    {x[`${toOptionKey}`]}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </Box>
-                                </Box>
-                            </Box>
-                            <Box>
-                                <Box>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item sm={12} md={4}>
+                                <Box sx={{display: "flex", justifyContent: {md: "right"}}}>
                                     <Box display="flex" alignItems="center">
                                         <InputLabel htmlFor="datePicker" sx={{margin: "0px 5px"}}>Date : </InputLabel>
                                         <TextField
@@ -694,8 +707,8 @@ function AdminStockTransfer() {
                                         />
                                     </Box>
                                 </Box>
-                            </Box>
-                        </Box>
+                            </Grid>
+                        </Grid>
                     </Box>
                     <Box mt={2} sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                         <Box sx={{display: "flex", alignItems: "center"}}>
@@ -726,7 +739,7 @@ function AdminStockTransfer() {
                             <Grid container
                                   spacing={2}
                                   sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                                <Grid item xs={3}>
+                                <Grid item xs={12} sm={6} lg={3}>
                                     <Box sx={{textAlign: "start"}}>
                                         <label style={{marginBottom: "8px", display: "block"}}>Category</label>
                                         <select className={"input-select"} name={"CategoryName"}
@@ -745,7 +758,7 @@ function AdminStockTransfer() {
                                         </select>
                                     </Box>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={12} sm={6} lg={3}>
                                     <Box sx={{textAlign: "start"}}>
                                         <label style={{marginBottom: "8px", display: "block"}}>Product</label>
                                         <select className={"input-select"} name={"ProductName"}
@@ -764,7 +777,7 @@ function AdminStockTransfer() {
                                         </select>
                                     </Box>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={12} sm={6} lg={3}>
                                     <Box sx={{textAlign: "start"}}>
                                         <label style={{marginBottom: "8px", display: "block"}}>Design</label>
                                         <select className={"input-select"} name={"DesignName"}
@@ -783,7 +796,7 @@ function AdminStockTransfer() {
                                         </select>
                                     </Box>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid item xs={12} sm={6} lg={3}>
                                     <Box sx={{textAlign: "start"}}>
                                         <label style={{marginBottom: "8px", display: "block"}}>Purity</label>
                                         <select className={"input-select"} name={"PurityName"}

@@ -71,6 +71,7 @@ export default function AdminRates() {
             } else {
                 setMessageType("success");
                 setMessageToShow("Rate Updated Successfully");
+                setActive("List")
                 setShowError(true)
             }
         } catch (error) {
