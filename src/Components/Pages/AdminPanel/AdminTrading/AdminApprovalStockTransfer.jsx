@@ -17,12 +17,13 @@ import {
 import {useSelector} from "react-redux";
 import {a236, a237} from "../../../Api/RootApiPath";
 import AlertMessage from "../../../Other Functions/AlertMessage";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import moment from "moment";
 import {InfinitySpin} from "react-loader-spinner";
 
 function AdminApprovalStockTransfer() {
     const [tableData, setTableData] = useState([]);
+    const navigate = useNavigate();
     const [filteredData, setFilteredData] = useState([]); // New state for filtered data
     const [selectedRows, setSelectedRows] = useState([]); // Updated to hold multiple selected rows
     const [selectAll, setSelectAll] = useState(false); // State for Select All checkbox
@@ -178,12 +179,18 @@ function AdminApprovalStockTransfer() {
                 {showError ? (
                     <AlertMessage message={messageToShow} type={messageType}/>
                 ) : null}
-                <AdminBreadCrump
-                    title={"Stock Transfer / Approval"}
-                    companyName={"Loyalstring"}
-                    module={"Trading"}
-                    page={"Stock Transfer / Approval"}
-                />
+                <div className="adminDesktopBreadCrumpMainBox">
+                    <h4>Stock Transfer / Approval</h4>
+                    <div className="adminDesktopBreadCrumpLinks">
+                        <p onClick={() => navigate("/adminhome")}>Loyalstring</p>
+                        <p>{` > `}</p>
+                        <p onClick={() => navigate("/stock_transfer_list")}>Stock Transfer List</p>
+                        <p>{` > `}</p>
+                        <p style={{ textDecoration: "underline" }}>
+                            <strong>Stock Transfer / Approval</strong>
+                        </p>
+                    </div>
+                </div>
             </Box>
             <Box className="adminAddCategoryMainBox" sx={{width: '100%'}}>
                 <Box className="adminAddCategoryInnerBox" sx={{width: '100%'}}>

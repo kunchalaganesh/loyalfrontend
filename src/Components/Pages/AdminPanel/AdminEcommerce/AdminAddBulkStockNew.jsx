@@ -57,6 +57,7 @@ import {IoIosAddCircleOutline, IoMdAddCircleOutline} from "react-icons/io";
 import {CiImport} from "react-icons/ci";
 import {GenerateLabel} from "../../../Other Functions/GenerateLabel";
 import {color} from "chart.js/helpers";
+import {Grid} from "@mui/material";
 
 export default function AdminAddBulkStockNew() {
     const [diamondTemplateId, setDiamondTemplateId] = useState(null)
@@ -136,6 +137,7 @@ export default function AdminAddBulkStockNew() {
     const [deleteAll, setDeleteAll] = useState(false);
     const [deleteSelected, setDeleteSelected] = useState(false);
     const [showAllFields, setShowAllFields] = useState(false);
+    const [showAllFields2, setShowAllFields2] = useState(false);
     const [stockType, setStockType] = useState("Labelled");
     const [branch, setBranch] = useState("Home");
     const [lotNumber, setLotNumber] = useState(0);
@@ -3494,11 +3496,50 @@ export default function AdminAddBulkStockNew() {
                                                 // ? handleSubmit
                                             }
                                         >
-                                            <h3
-                                                className="adminAddBulkStockAddedTitle"
-                                                style={{marginBottom: "3rem", width: "97%"}}
-                                            >
-                                                ADD BULK STOCK
+                                            <h3 className="adminAddBulkStockAddedTitle" style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                margin: "0px"
+                                            }}>
+                                                <div style={{width: "97%"}}>ADD BULK STOCK</div>
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                        <label htmlFor="selectBranch" style={{textAlign: "right"}}>
+                                                            <strong style={{textAlign: "right", color: "white"}}>SELECT BRANCH</strong>
+                                                        </label>
+                                                        <select
+                                                            id="selectBranch"
+                                                            required="required"
+                                                            value={branch}
+                                                            onChange={(e) => setBranch(e.target.value)}
+                                                        >
+                                                            <option value="">Select a branch</option>
+                                                            {branchOption.map((item) => (
+                                                                <option
+                                                                    value={item.BranchName}>{item.BranchName}</option>
+                                                            ))}
+                                                        </select>
+                                                    {/*<label htmlFor="selectBranch" style={{textAlign: "right"}}>*/}
+                                                    {/*    <strong style={{textAlign: "right", color: "white"}}>SELECT LOT*/}
+                                                    {/*        NUMBER</strong>*/}
+                                                    {/*</label>*/}
+                                                    {/*<select*/}
+                                                    {/*    id="selectBranch"*/}
+                                                    {/*    // required="required"*/}
+                                                    {/*    style={{margin: "0px"}}*/}
+                                                    {/*    value={lotNumber}*/}
+                                                    {/*    onChange={(e) => setLotNumber(e.target.value)}*/}
+                                                    {/*>*/}
+                                                    {/*    <option value={0}>Select Lot Number</option>*/}
+                                                    {/*    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {*/}
+                                                    {/*        return (*/}
+                                                    {/*            <option value={x.LotNumber}>*/}
+                                                    {/*                {x.LotNumber}*/}
+                                                    {/*            </option>*/}
+                                                    {/*        );*/}
+                                                    {/*    })}*/}
+                                                    {/*</select>*/}
+                                                </div>
                                             </h3>
 
                                             {/* <h4
@@ -3513,214 +3554,221 @@ export default function AdminAddBulkStockNew() {
                         >
                           Add Product
                         </h4>{" "} */}
-                                            <div className="addProductDetailsUpperBox">
+                                            <div className="addProductDetailsUpperBox" style={{marginTop: "3rem"}}>
                                                 <div
                                                     // style={{ width: "92%" }}
                                                     className="addProductDetailsBox"
                                                 >
-                                                    <label htmlFor="category">
-                                                        <strong>SUPPLIER</strong>
-                                                    </label>
-                                                    <select
-                                                        id="category"
-                                                        required="required"
-                                                        value={partyTypeId}
-                                                        onChange={(e) => {
-                                                            setPartyTypeId(e.target.value)
-                                                            const tempId = partyData.find((event, ind) => event.Id == e.target.value)
-                                                            setDiamondTemplateId(tempId?.DiamondSizeWeightRateTemplateId)
-                                                        }}
-                                                    >
-                                                        <option value="">
-                                                            Select Party / Karigar Name
-                                                        </option>
-                                                        {partyData.map((x, y) => {
-                                                            return (
-                                                                <option key={y} value={parseInt(x.Id)}>
-                                                                    {x.VendorName}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </select>
-                                                    <p>Unlabelled Gold :</p>
+                                                    <Grid container xs={12} >
+                                                        <Grid xs={3} item>
+                                                            <div>
+                                                                <label htmlFor="category" style={{marginLeft: "0%"}}>
+                                                                    <strong>SUPPLIER</strong>
+                                                                </label>
+                                                                <select
+                                                                    id="category"
+                                                                    required="required"
+                                                                    value={partyTypeId}
+                                                                    onChange={(e) => {
+                                                                        setPartyTypeId(e.target.value)
+                                                                        const tempId = partyData.find((event, ind) => event.Id == e.target.value)
+                                                                        setDiamondTemplateId(tempId?.DiamondSizeWeightRateTemplateId)
+                                                                    }}
+                                                                >
+                                                                    <option value="">
+                                                                        Select Party / Karigar Name
+                                                                    </option>
+                                                                    {partyData.map((x, y) => {
+                                                                        return (
+                                                                            <option key={y} value={parseInt(x.Id)}>
+                                                                                {x.VendorName}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={3} item>
+                                                            <div>
+                                                                <label htmlFor="sku" style={{marginLeft: "0%"}}>
+                                                                    <strong>SKU</strong>
+                                                                </label>
+                                                                <input
+                                                                    // style={{ width: "30vw" }}
+                                                                    type="text"
+                                                                    name="skuList"
+                                                                    placeholder="Enter SKU"
+                                                                    value={selectedSkuName}
+                                                                    onInput={handleSkuInputChange}
+                                                                    list="skuList"
+                                                                />
+                                                                <datalist id="skuList">
+                                                                    {allSku.map((sku, index) => (
+                                                                        <option
+                                                                            key={index}
+                                                                            value={`${sku.StockKeepingUnit}`}
+                                                                        />
+                                                                    ))}
+                                                                </datalist>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={3} item>
+                                                            <div className="addProductDetailsBox">
+                                                                {/*<label htmlFor="selectBranch" style={{marginLeft: "0%"}}>*/}
+                                                                {/*    <strong>SELECT BRANCH</strong>*/}
+                                                                {/*</label>*/}
+                                                                {/*<select*/}
+                                                                {/*    id="selectBranch"*/}
+                                                                {/*    required="required"*/}
+                                                                {/*    value={branch}*/}
+                                                                {/*    onChange={(e) => setBranch(e.target.value)}*/}
+                                                                {/*>*/}
+                                                                {/*    <option value="">Select a branch</option>*/}
+                                                                {/*    {branchOption.map((item) => (*/}
+                                                                {/*        <option*/}
+                                                                {/*            value={item.BranchName}>{item.BranchName}</option>*/}
+                                                                {/*    ))}*/}
+                                                                {/*</select>*/}
+                                                                <label htmlFor="selectBranch" style={{marginLeft: "0%",paddingLeft: "0%",marginBottom: "10px"}}>
+                                                                    <strong>SELECT LOT NUMBER</strong>
+                                                                </label>
+                                                                <select
+                                                                    id="selectBranch"
+                                                                    // required="required"
+                                                                    style={{margin: "0px"}}
+                                                                    value={lotNumber}
+                                                                    onChange={(e) => setLotNumber(e.target.value)}
+                                                                >
+                                                                    <option value={0}>Select Lot Number</option>
+                                                                    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
+                                                                        return (
+                                                                            <option value={x.LotNumber}>
+                                                                                {x.LotNumber}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={3} item>
+                                                        <div className="addProductDetailsBox">
+                                                            <label htmlFor="invoiceType" style={{marginLeft: "0%"}}>
+                                                                <strong>STOCK TYPE</strong>
+                                                            </label>
+                                                            <select
+                                                                id="invoiceType"
+                                                                required="required"
+                                                                value={stockType}
+                                                                onChange={(e) => setStockType(e.target.value)}
+                                                            >
+                                                                <option value="Labelled">Labelled</option>
+                                                                <option value="Unlabelled">Unlabelled</option>
+                                                            </select>
+                                                        </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                  <Grid container>
+                                                      <Grid item xs={3}>
+                                                      <div style={{display: "flex",alignItems: "center"}}>
+                                                          <p>Unlabelled Diamond :</p>
+                                                          <div>
+                                                              {(() => {
+                                                                  const selectedParty = partyData.find(
+                                                                      (x) => x.Id === parseInt(partyTypeId)
+                                                                  );
+                                                                  if (selectedParty) {
+                                                                      return (
+                                                                          <div
+                                                                              className="addProductSupplierDetailsBox"
+                                                                              key={selectedParty.Id}
+                                                                          >
+                                                                              <p>{selectedParty.VendorName}</p>
+                                                                          </div>
+                                                                      );
+                                                                  }
+                                                                  return null;
+                                                              })()}
+                                                          </div>
+                                                      </div>
+                                                      </Grid>
+                                                      <Grid item xs={3}>
+                                                      <div style={{display: "flex",alignItems: "center"}} >
+                                                          <p>Unlabelled Gold :</p>
+                                                          <div>
+                                                              {(() => {
+                                                                  const selectedParty = partyData.find(
+                                                                      (x) => x.Id === parseInt(partyTypeId)
+                                                                  );
+                                                                  if (selectedParty) {
+                                                                      return (
+                                                                          <div
+                                                                              className="addProductSupplierDetailsBox"
+                                                                              key={selectedParty.Id}
+                                                                          >
+                                                                              {" "}
+                                                                              {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                              <p>{selectedParty.InwardGold}</p>
+                                                                          </div>
+                                                                      );
+                                                                  }
+                                                                  return null; // If no party is found, render nothing
+                                                              })()}
+                                                          </div>
+                                                      </div>
+                                                      </Grid>
+                                                      <Grid item xs={3}>
+                                                      <div style={{display: "flex",alignItems: "center"}} >
+                                                          <p>Unlabelled Silver :</p>
+                                                          <div>
+                                                              {(() => {
+                                                                  const selectedParty = partyData.find(
+                                                                      (x) => x.Id === parseInt(partyTypeId)
+                                                                  );
+                                                                  if (selectedParty) {
+                                                                      return (
+                                                                          <div
+                                                                              className="addProductSupplierDetailsBox"
+                                                                              key={selectedParty.Id}
+                                                                          >
+                                                                              {" "}
+                                                                              {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                              <p>{selectedParty.InwardSilver}</p>
+                                                                          </div>
+                                                                      );
+                                                                  }
+                                                                  return null; // If no party is found, render nothing
+                                                              })()}
+                                                          </div>
+                                                      </div>
+                                                      </Grid>
+                                                      <Grid item xs={3}>
+                                                      <div style={{display: "flex",alignItems: "center"}}>
+                                                          <p>Unlabelled Other :</p>
+                                                          <div>
+                                                              {(() => {
+                                                                  const selectedParty = partyData.find(
+                                                                      (x) => x.Id === parseInt(partyTypeId)
+                                                                  );
+                                                                  if (selectedParty) {
+                                                                      return (
+                                                                          <div
+                                                                              className="addProductSupplierDetailsBox"
+                                                                              key={selectedParty.Id}
+                                                                          >
+                                                                              {" "}
+                                                                              {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                              <p>{selectedParty.VendorName}</p>
+                                                                          </div>
+                                                                      );
+                                                                  }
+                                                                  return null; // If no party is found, render nothing
+                                                              })()}
+                                                          </div>
+                                                      </div>
+                                                      </Grid>
+                                                  </Grid>
+                                                </div>
 
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        {" "}
-                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                                                        <p>{selectedParty.InwardGold}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null; // If no party is found, render nothing
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    // style={{ width: "92%" }}
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="sku">
-                                                        <strong>SKU</strong>
-                                                    </label>
-                                                    <input
-                                                        // style={{ width: "30vw" }}
-                                                        type="text"
-                                                        name="skuList"
-                                                        placeholder="Enter SKU"
-                                                        value={selectedSkuName}
-                                                        onInput={handleSkuInputChange}
-                                                        list="skuList"
-                                                    />
-                                                    <datalist id="skuList">
-                                                        {allSku.map((sku, index) => (
-                                                            <option
-                                                                key={index}
-                                                                value={`${sku.StockKeepingUnit}`}
-                                                            />
-                                                        ))}
-                                                    </datalist>
-                                                    <p>Unlabelled Silver :</p>
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        {" "}
-                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                                                        <p>{selectedParty.InwardSilver}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null; // If no party is found, render nothing
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    // style={{ width: "92%" }}
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="invoiceType">
-                                                        <strong>STOCK TYPE</strong>
-                                                    </label>
-                                                    <select
-                                                        id="invoiceType"
-                                                        required="required"
-                                                        value={stockType}
-                                                        onChange={(e) => setStockType(e.target.value)}
-                                                    >
-                                                        <option value="Labelled">Labelled</option>
-                                                        <option value="Unlabelled">Unlabelled</option>
-                                                    </select>
-                                                    <p>Unlabelled Diamond :</p>
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        <p>{selectedParty.VendorName}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null;
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    style={
-                                                        {
-                                                            // width: "92%",
-                                                            // marginBottom: "20px",
-                                                        }
-                                                    }
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="selectBranch">
-                                                        <strong>SELECT BRANCH</strong>
-                                                    </label>
-                                                    <select
-                                                        id="selectBranch"
-                                                        required="required"
-                                                        value={branch}
-                                                        onChange={(e) => setBranch(e.target.value)}
-                                                    >
-                                                        <option value="">Select a branch</option>
-                                                        {branchOption.map((item) => (
-                                                            <option value={item.BranchName}>{item.BranchName}</option>
-                                                        ))}
-                                                    </select>
-
-                                                    <p>Unlabelled Other :</p>
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        {" "}
-                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                                                        <p>{selectedParty.VendorName}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null; // If no party is found, render nothing
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    style={
-                                                        {
-                                                            // width: "92%",
-                                                            // marginBottom: "20px",
-                                                        }
-                                                    }
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="selectBranch">
-                                                        <strong>SELECT LOT NUMBER</strong>
-                                                    </label>
-                                                    <select
-                                                        id="selectBranch"
-                                                        // required="required"
-                                                        value={lotNumber}
-                                                        onChange={(e) => setLotNumber(e.target.value)}
-                                                    >
-                                                        <option value={0}>Select Lot Number</option>
-                                                        {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
-                                                            return (
-                                                                <option value={x.LotNumber}>
-                                                                    {x.LotNumber}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </select>
-                                                </div>
                                             </div>
                                             <h4
                                                 style={{width: "95%", marginTop: "30px"}}
@@ -4030,6 +4078,15 @@ export default function AdminAddBulkStockNew() {
                                                                     );
                                                                 })}
                                                             </select>
+                                                        </div>
+                                                        <div className="bulkStockAddProductDetailsItem"
+                                                        >
+                                                            <h5
+                                                                style={{margin: "0px"}}
+                                                                onClick={() => setShowAllFields2(!showAllFields2)}
+                                                            >
+                                                                {!showAllFields2 ? "Show All" : "Show Less"}
+                                                            </h5>
                                                         </div>
                                                         <div className="bulkStockAddProductDetailsItem">
                                                             <label style={{margin: 0}}>Sleve</label>

@@ -200,8 +200,6 @@ export default function AdminAllCustomers() {
         try {
             if (data.length > 0) {
                 setCustomerRateOfInterestList(data);
-            } else {
-                alert("Please Add Customers Rate Of Interest");
             }
         } catch (error) {
             console.log(error);
@@ -227,8 +225,6 @@ export default function AdminAllCustomers() {
         try {
             if (data.length > 0) {
                 setCustomerCreditPeriodList(data);
-            } else {
-                alert("Please Add Customers Credit Period");
             }
         } catch (error) {
             console.log(error);

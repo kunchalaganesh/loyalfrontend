@@ -308,10 +308,10 @@ textarea {
 }
 .addProductDetailsBox {
   /* width: 95%; */
-  display: grid;
-  justify-items: flex-end;
-  align-items: center;
-  grid-template-columns: repeat(4, 1fr);
+  /*display: grid;*/
+  /*justify-items: flex-end;*/
+  /*align-items: center;*/
+  /*grid-template-columns: repeat(4, 1fr);*/
 }
 
 .addProductMain input,

@@ -56,8 +56,8 @@ export default function AdminAddProduct() {
     Slug: "",
     LabelCode: "",
     Status: "",
-    MinQuantity: "",
-    MinWeight: "",
+    MinQuantity: "0",
+    MinWeight: "0",
 
     OldEntry: false,
   });
@@ -328,8 +328,8 @@ export default function AdminAddProduct() {
         Slug: "",
         LabelCode: "",
         Status: "",
-        MinQuantity: "",
-        MinWeight: "",
+        MinQuantity: "0",
+        MinWeight: "0",
         OldEntry: false,
       });
       if (data.message) {
@@ -563,6 +563,8 @@ export default function AdminAddProduct() {
                     name="LabelCode"
                     value={newCategory.LabelCode}
                     onChange={handleNewCategoryChange}
+                    maxLength={5}
+                    minLength={5}
                     type="text"
                     required="required"
                     placeholder="Only Capitals"
