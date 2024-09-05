@@ -30,16 +30,31 @@ function AdminStockTransferList() {
         TransferType: ""
     });
 
-    const getAllStockTransfersIn = async () => {
+    const getAllStockTransfers = async () => {
         setIsLoading(true);
         const transferTypeId = transferType.find((item, _) => item.TransferType == filterFormData.TransferType);
         const branchNameId = branchOption.find((item, _) => item.Id == filterFormData.BranchName);
         const payload = {
-            TransferTypeId: transferTypeId ? transferTypeId.Id : 0,
-            BranchNameId: branchNameId ? branchNameId.Id : 0,
-            StockType: filterFormData.StockType ? filterFormData.StockType : '',
             ClientCode: clientCode
         };
+
+        if (transferTypeId && transferTypeId.Id) {
+            payload.TransferType = transferTypeId.Id;
+        }
+
+        if (branchNameId && branchNameId.Id) {
+            payload.BranchId = branchNameId.Id;
+        }
+
+        if (filterFormData.StockType) {
+            payload.StockType = filterFormData.StockType;
+        }
+        if (filterFormData.StartDate) {
+            payload.StartDate = filterFormData.StartDate;
+        }
+        if (filterFormData.EndDate) {
+            payload.EndDate = filterFormData.EndDate;
+        }
         try {
             const response = await fetch(a236, {
                 method: "POST",
@@ -47,26 +62,24 @@ function AdminStockTransferList() {
                 body: JSON.stringify(payload),
             });
             const data = await response.json();
-            setTableData(data);
+            if (selectedTab === 0) {
+                const inReqData = data.filter((item) => item.Direction === 2)
+                setTableData(inReqData);
+            } else {
+                const outReqData = data.filter((item) => item.Direction === 1)
+                console.log(outReqData,data)
+                setTableData(outReqData);
+            }
             setIsLoading(false);
         } catch (error) {
             console.error("Error fetching stock transfers:", error);
         }
     };
 
-    const getAllStockTransfersOut = async () => {
-        setIsLoading(true);
-        setTableData([]);
-        setIsLoading(false);
-    };
 
     useEffect(() => {
-        if (selectedTab === 0) {
-            getAllStockTransfersIn();
-        } else {
-            getAllStockTransfersOut();
-        }
-    }, [selectedTab,filterFormData]);
+        getAllStockTransfers();
+    }, [selectedTab, filterFormData]);
 
     const getAllBranch = async () => {
         const payload = {ClientCode: clientCode};
@@ -106,35 +119,35 @@ function AdminStockTransferList() {
     const handleRowExpandToggle = (id) => {
         setExpandedRow(expandedRow === id ? null : id);
     };
-    useEffect(() => {
-        const getFilteredData = async () => {
-            const transferTypeId = transferType.find((item, _) => item.TransferType == filterFormData.TransferType);
-            const branchNameId = branchOption.find((item, _) => item.Id == filterFormData.BranchName);
-            // const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName);
-            const payload = {
-                TransferTypeId: transferTypeId ? transferTypeId.Id : 0,
-                BranchNameId: branchNameId ? branchNameId.Id : 0,
-                // DesignId: designId ? designId.Id : 0,
-            };
-            console.log("SASASASAASSASASASASASASA",payload)
-            // try {
-            //     const response = await fetch(selectedValue === 'labelled' ? a233 : a234, {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //         },
-            //         body: JSON.stringify(payload),
-            //     });
-            //     const data = await response.json();
-            //     setTableData(data);
-            // } catch (error) {
-            //     console.log(error);
-            // }
-        }
-        // getFilteredData()
-    }, [filterFormData])
+    // useEffect(() => {
+    //     const getFilteredData = async () => {
+    //         const transferTypeId = transferType.find((item, _) => item.TransferType == filterFormData.TransferType);
+    //         const branchNameId = branchOption.find((item, _) => item.Id == filterFormData.BranchName);
+    //         // const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName);
+    //         const payload = {
+    //             TransferTypeId: transferTypeId ? transferTypeId.Id : 0,
+    //             BranchNameId: branchNameId ? branchNameId.Id : 0,
+    //             DesignId: designId ? designId.Id : 0,
+    //         };
+    //         console.log("SASASASAASSASASASASASASA ", payload)
+    //         try {
+    //             const response = await fetch(selectedValue === 'labelled' ? a233 : a234, {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 },
+    //                 body: JSON.stringify(payload),
+    //             });
+    //             const data = await response.json();
+    //             setTableData(data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     }
+    //     getFilteredData()
+    // }, [filterFormData])
     const handleInputChangePurchase = (e) => {
-        const {name, value} = e.target;
+        const {name, value} = e.target
         setFilterFormData({
             ...filterFormData,
             [name]: value,
@@ -222,17 +235,8 @@ function AdminStockTransferList() {
                             </Grid>
                         </Grid>
                     </Grid>
-                    {isLoading ? (<>
-                        <Box sx={{
-                            height: "80vh",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%"
-                        }}>
-                            <InfinitySpin width="200" color="#4fa94d"/>
-                        </Box>
-                    </>) : (<Grid container mb={2} justifyContent={"space-between"} alignItems={"start"}>
+
+                    <Grid container mb={2} justifyContent={"space-between"} alignItems={"start"}>
                         <Grid item sx={{marginTop: "10px"}}>
                             <Grid container display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
                                 <Grid item>
@@ -275,64 +279,80 @@ function AdminStockTransferList() {
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>)}
-                    <TableContainer sx={{' th, td': {border: '1px solid #ccc'}}}>
-                        <Table size="small" sx={{borderRadius: '4px', borderCollapse: 'collapse'}}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Stock Type</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Transfer Type</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">From</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">To</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Transfer By</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Transfer To</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Received By</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Remark</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center">Download</TableCell>
-                                    <TableCell sx={{fontWeight: "600"}} align="center"/>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {tableData && tableData.length > 0 ? (
-                                    tableData.map((item, index) => (
-                                        <TableRow key={item.id}>
-                                            <TableCell align="center">{index + 1}</TableCell>
-                                            <TableCell align="center">{item.StockType}</TableCell>
-                                            <TableCell
-                                                align="center" sx={{
-                                                backgroundColor: item.StockTransferTypeName === 'Branch To Branch' && '#f0f0f0',
-                                                color: item.StockTransferTypeName === 'Branch To Branch' && '#000',
-                                            }}>{item.StockTransferTypeName}</TableCell>
-                                            <TableCell
-                                                align="center">{item.SourceName ? item.SourceName : 'Display'}</TableCell>
-                                            <TableCell
-                                                align="center">{item.DestinationName ? item.DestinationName : "Display"}</TableCell>
-                                            <TableCell align="center">{item.TransferByEmployee}</TableCell>
-                                            <TableCell align="center">{item.TransferedToBranch}</TableCell>
-                                            <TableCell align="center">{item.ReceivedByEmployee}</TableCell>
-                                            <TableCell align="center">{item.Remarks ? item.Remarks : '-'}</TableCell>
-                                            <TableCell align="center">
-                                                <Box onClick={() => handleDownload(item)} sx={{cursor: "pointer"}}>
-                                                    <DownloadIcon/>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell align="center" sx={{cursor: "pointer"}}
-                                                       onClick={() => navigate(`/stock_transfer_approval/${item.Id}`)}>
-                                                <Box><EastIcon/></Box>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
+                    </Grid>
+                    {isLoading ? (<>
+                        <Box sx={{
+                            height: "80vh",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "100%"
+                        }}>
+                            <InfinitySpin width="200" color="#4fa94d"/>
+                        </Box>
+                    </>) : (
+                        <TableContainer sx={{' th, td': {border: '1px solid #ccc'}}}>
+                            <Table size="small" sx={{borderRadius: '4px', borderCollapse: 'collapse'}}>
+                                <TableHead>
                                     <TableRow>
-                                        <TableCell colSpan={11} align="center">
-                                            {selectedTab === 1 ? "Out Request API is not available" : "No data available"}
-                                        </TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Stock Type</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Transfer Type</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">From</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">To</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Transfer By</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Transfer To</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Received By</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Pending</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Approved</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Rejected</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Remark</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Download</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center"/>
                                     </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                </TableHead>
+                                <TableBody>
+                                    {
+                                        tableData && tableData.map((item, index) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell align="center">{index + 1}</TableCell>
+                                                <TableCell align="center">{item.StockType}</TableCell>
+                                                <TableCell
+                                                    align="center" sx={{
+                                                    backgroundColor: item.StockTransferTypeName === 'Branch To Branch' && '#f0f0f0',
+                                                    color: item.StockTransferTypeName === 'Branch To Branch' && '#000',
+                                                }}>{item.StockTransferTypeName}</TableCell>
+
+                                                <TableCell
+                                                    align="center">{item.SourceName ? item.SourceName : 'Display'}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.DestinationName ? item.DestinationName : "Display"}</TableCell>
+                                                <TableCell align="center">{item.TransferByEmployee}</TableCell>
+                                                <TableCell align="center">{item.TransferedToBranch}</TableCell>
+                                                <TableCell align="center">{item.ReceivedByEmployee}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Pending}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Approved}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Rejected}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.Remarks ? item.Remarks : '-'}</TableCell>
+                                                <TableCell align="center">
+                                                    <Box onClick={() => handleDownload(item)} sx={{cursor: "pointer"}}>
+                                                        <DownloadIcon/>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell align="center" sx={{cursor: "pointer"}}
+                                                           onClick={() => navigate(`/stock_transfer_approval/${item.Id}`)}>
+                                                    <Box><EastIcon/></Box>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>)}
                 </Box>
             </Box>
         </>

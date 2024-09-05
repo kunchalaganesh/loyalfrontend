@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import {
@@ -10,9 +10,10 @@ import {
   a163,
   a221,
 } from "../../../Api/RootApiPath";
-import { useSelector } from "react-redux";
-import { MagnifyingGlass } from "react-loader-spinner";
-import { ExportToExcel } from "../../../Other Functions/ExportToExcel";
+import {useSelector} from "react-redux";
+import {MagnifyingGlass} from "react-loader-spinner";
+import {ExportToExcel} from "../../../Other Functions/ExportToExcel";
+import jsPDF from "jspdf";
 
 export default function AdminSkuKarigarWiseReport() {
   const allStates = useSelector((state) => state);
@@ -45,7 +46,7 @@ export default function AdminSkuKarigarWiseReport() {
     };
     const response = await fetch(a149, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
     });
     const data = await response.json();
@@ -63,7 +64,7 @@ export default function AdminSkuKarigarWiseReport() {
     };
     const response = await fetch(a125, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
     });
     const data = await response.json();
@@ -76,65 +77,65 @@ export default function AdminSkuKarigarWiseReport() {
     fetchAllCategory();
   }, []);
   const fetchProductTypes = async () => {
-    const formData = { ClientCode: clientCode };
+    const formData = {ClientCode: clientCode};
     await fetch(a128, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllProductTypes(response);
-        fetchCollectonData();
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllProductTypes(response);
+          fetchCollectonData();
+        });
   };
 
   // useEffect(() => {
   //   fetchProductTypes();
   // }, []);
   const fetchCollectonData = async () => {
-    const formData = { ClientCode: clientCode };
+    const formData = {ClientCode: clientCode};
     // setLoading(true);
     await fetch(a131, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllCollectionTypes(response);
-        fetchPuritiesData();
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllCollectionTypes(response);
+          fetchPuritiesData();
+        });
   };
 
   // useEffect(() => {
   //   fetchCollectonData();
   // }, []);
   const fetchPuritiesData = async () => {
-    const formData = { ClientCode: clientCode };
+    const formData = {ClientCode: clientCode};
     await fetch(a134, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllPurityTypes(response);
-        fetchAllSkuData();
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllPurityTypes(response);
+          fetchAllSkuData();
+        });
   };
   const fetchAllSkuData = async () => {
-    const formData = { ClientCode: clientCode };
+    const formData = {ClientCode: clientCode};
     await fetch(a163, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((response) => {
-        setAllSku(response);
-        fetchAllSkuKarigarReport();
-      });
+        .then((res) => res.json())
+        .then((response) => {
+          setAllSku(response);
+          fetchAllSkuKarigarReport();
+        });
   };
   const fetchAllSkuKarigarReport = async () => {
     const formData = {
@@ -170,15 +171,15 @@ export default function AdminSkuKarigarWiseReport() {
   const selectedVendorName = vendorName.split(",")[1];
 
   const filteredProductTypes = allProductTypes.filter(
-    (product) => product.CategoryId == categoryId
+      (product) => product.CategoryId == categoryId
   );
 
   const filteredCollection = allCollectionTypes.filter(
-    (product) => product.ProductId == productTypeIdSelected
+      (product) => product.ProductId == productTypeIdSelected
   );
 
   const filteredPurities = allPurityTypes.filter(
-    (product) => product.CategoryId == categoryId
+      (product) => product.CategoryId == categoryId
   );
 
   const filterReports = () => {
@@ -191,19 +192,19 @@ export default function AdminSkuKarigarWiseReport() {
     if (categoryName) {
       const categoryId = parseInt(categoryName.split(",")[0]);
       filteredReports = filteredReports.filter(
-        (x) => x.CategoryId === categoryId
+          (x) => x.CategoryId === categoryId
       );
     }
     if (productName) {
       const productTypeId = parseInt(productName.split(",")[0]);
       filteredReports = filteredReports.filter(
-        (x) => x.ProductId === productTypeId
+          (x) => x.ProductId === productTypeId
       );
     }
     if (collectionName) {
       const collectionId = parseInt(collectionName.split(",")[0]);
       filteredReports = filteredReports.filter(
-        (x) => x.DesignId === collectionId
+          (x) => x.DesignId === collectionId
       );
     }
     if (purityName) {
@@ -242,46 +243,39 @@ export default function AdminSkuKarigarWiseReport() {
     const margin = 5;
     const serialNumberWidth = 20; // Width for the serial number column
     const columnWidth =
-      (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
+        (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
     doc.setFont("helvetica", "normal");
     // doc.setFontSize(12);
     doc.setFontSize(8);
 
     const generateHeader = () => {
-      doc.text("S. No.", startX, startY); // Serial Number
-      doc.text("Collection", startX + columnWidth, startY);
-      doc.text("Gross Wt", startX + 2 * columnWidth, startY);
-      doc.text("Net Wt", startX + 3 * columnWidth, startY);
-      doc.text("Item Code", startX + 4 * columnWidth, startY);
-      doc.text("Barcode No", startX + 5.5 * columnWidth, startY);
-      // doc.text("M Fixed Amt", startX + 7 * columnWidth, startY);
-      // doc.text("M Fix Wastage", startX + 8.5 * columnWidth, startY);
-      // doc.text("M Percentage", startX + 10 * columnWidth, startY);
-      // doc.text("M per_gram", startX + 11.5 * columnWidth, startY);
-      // doc.text("stoneAmount", startX + 13 * columnWidth, startY);
-      doc.text("Tid", startX + 7.53 * columnWidth, startY);
+      doc.text("SKU", startX, startY); // Serial Number
+      doc.text("Weight Categories", startX + columnWidth, startY);
+      doc.text("Design Name", startX + 9 * columnWidth, startY);
+      doc.text("Total Stone Wt", startX + 11 * columnWidth, startY);
+      doc.text("Total Gross Wt", startX + 13 * columnWidth, startY);
     };
     const totalNetWt = data.reduce(
-      (total, item) => total + (parseFloat(item.NetWt) || 0),
-      0
+        (total, item) => total + (parseFloat(item.NetWt) || 0),
+        0
     );
     const totalGrossWt = data.reduce(
-      (total, item) => total + (parseFloat(item.GrossWt) || 0),
-      0
+        (total, item) => total + (parseFloat(item.GrossWt) || 0),
+        0
     );
     // Generate header on the first page
     generateHeader();
-    doc.text(
-      `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
-      startX + 5 * columnWidth,
-      startY - 10
-    );
-    doc.text(
-      `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
-      startX,
-      startY - 10
-    );
+    // doc.text(
+    //     `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
+    //     startX + 5 * columnWidth,
+    //     startY - 10
+    // );
+    // doc.text(
+    //     `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
+    //     startX,
+    //     startY - 10
+    // );
     // Generate data rows
 
     let y = startY + lineHeight + margin;
@@ -295,64 +289,62 @@ export default function AdminSkuKarigarWiseReport() {
         y = startY + lineHeight + margin; // Update y position for the new page
       }
 
+      let combinedContent;
+
+      if (item.StoneCategories && item.StonePieces) {
+        // Split and process StoneCategories and StonePieces
+        const categories = item.StoneCategories.split(",");
+        const pieces = item.StonePieces.split(",");
+
+        // Ensure the arrays have the same length to avoid index errors
+        const maxLength = Math.min(categories.length, pieces.length);
+
+        // Create paired content
+        const pairs = [];
+        for (let i = 0; i < maxLength; i++) {
+          pairs.push(`${categories[i]} GM = ${pieces[i]}`);
+        }
+
+        // Combine the pairs into the final content
+        combinedContent = pairs.join(", ");
+      } else if (item.StoneCategories) {
+        combinedContent = item.StoneCategories
+            .split(",")
+            .map((category) => `${category} GM`)
+            .join(", ");
+      } else if (item.StonePieces) {
+        combinedContent = item.StonePieces
+            .split(",")
+            .map((piece) => piece)
+            .join(", ");
+      } else {
+        combinedContent = "N/A";
+      }
+
       const serialNumber = index + 1;
-      doc.text(serialNumber.toString(), startX, y);
       doc.text(
-        item.collection ? item.collection.toString().substr(0, 8) : "N/A",
-        startX + columnWidth,
-        y
+          item.SKU ? item.SKU.toString().substr(0, 8) : "N/A",
+          startX,
+          y
+      );
+      doc.text(combinedContent, startX + columnWidth, y);
+
+      doc.text(
+          item.DesignName ? item.DesignName.toString() : "N/A",
+          startX + 9 * columnWidth,
+          y
       );
       doc.text(
-        item.GrossWt ? item.GrossWt.toString() : "N/A",
-        startX + 2 * columnWidth,
-        y
+          item.TotalStoneWeight ? item.TotalStoneWeight.toString() : "N/A",
+          startX + 11 * columnWidth,
+          y
       );
       doc.text(
-        item.netWt ? item.netWt.toString() : "N/A",
-        startX + 3 * columnWidth,
-        y
-      );
-      doc.text(
-        item.itemCode ? item.itemCode.toString() : "N/A",
-        startX + 4 * columnWidth,
-        y
-      );
-      doc.text(
-        item.barcodeNumber ? item.barcodeNumber.toString() : "N/A",
-        startX + 5.5 * columnWidth,
-        y
-      );
-      // doc.text(
-      //   item.making_Fixed_Amt ? item.making_Fixed_Amt.toString() : "N/A",
-      //   startX + 7 * columnWidth,
-      //   y
-      // );
-      // doc.text(
-      //   item.making_Fixed_Wastage
-      //     ? item.making_Fixed_Wastage.toString()
-      //     : "N/A",
-      //   startX + 8.5 * columnWidth,
-      //   y
-      // );
-      // doc.text(
-      //   item.making_Percentage ? item.making_Percentage.toString() : "N/A",
-      //   startX + 10 * columnWidth,
-      //   y
-      // );
-      // doc.text(
-      //   item.making_per_gram ? item.making_per_gram.toString() : "N/A",
-      //   startX + 11.5 * columnWidth,
-      //   y
-      // );
-      // doc.text(
-      //   item.stoneAmount ? item.stoneAmount.toString() : "N/A",
-      //   startX + 13 * columnWidth,
-      //   y
-      // );
-      doc.text(
-        item.tid ? item.tid.toString() : "N/A",
-        startX + 7.5 * columnWidth,
-        y
+          item.TotalPlaneWeight
+              ? item.TotalPlaneWeight
+                  .toString() : "N/A",
+          startX + 13 * columnWidth,
+          y
       );
       y += lineHeight + margin;
     });
@@ -368,7 +360,7 @@ export default function AdminSkuKarigarWiseReport() {
     const pdfData = doc.output();
 
     // Create a new Blob from the PDF data
-    const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
+    const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
 
     // Create a URL from the Blob
     const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -389,234 +381,234 @@ export default function AdminSkuKarigarWiseReport() {
       };
     });
     ExportToExcel(
-      filteredSkuKarigarReport,
-      `${selectedVendorName} - ${today.toISOString().split("T")[0]}`
+        filteredSkuKarigarReport,
+        `${selectedVendorName} - ${today.toISOString().split("T")[0]}`
     );
   };
 
   return (
-    <div>
-      <AdminHeading />
-      <div style={{ paddingTop: "130px" }}>
-        <AdminBreadCrump
-          title={"SKU / Karigar Report"}
-          companyName={"Loyalstring"}
-          module={"Reports"}
-          page={"SKU / Karigar Report"}
-        />
-        <div className="adminAddCategoryMainBox">
-          <div className="adminAddCategoryInnerBox">
-            <div className={loading == true ? "loading" : "none"}>
-              {/* <h1>Loading...</h1> */}
-              {/* <InfinitySpin width="200" color="#4fa94d" /> */}
-              <MagnifyingGlass
-                visible={true}
-                height="80"
-                width="80"
-                ariaLabel="MagnifyingGlass-loading"
-                wrapperStyle={{}}
-                wrapperClass="MagnifyingGlass-wrapper"
-                glassColor="#c0efff"
-                color="#e15b64"
-              />
-            </div>
-
-            {!loading == true ? (
-              <div>
-                <div className="adminAllProductsFilterDatesBox">
-                  <select
-                    value={categoryName}
-                    onChange={(e) => {
-                      setCategoryName(e.target.value);
-                      // setCurrentPage(1);
-                    }}
-                  >
-                    <option value="">Select Category</option>
-                    {allCategories.map((x) => {
-                      return (
-                        <option value={`${x.Id},${x.CategoryName}`}>
-                          {x.CategoryName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <select
-                    value={purityName}
-                    onChange={(e) => {
-                      setPurityName(e.target.value);
-                      // setCurrentPage(1);
-                    }}
-                  >
-                    <option value="0">Select Purity</option>
-                    {filteredPurities.map((x) => {
-                      return (
-                        <option value={`${x.Id},${x.PurityName}`}>
-                          {x.PurityName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div className="adminAllProductsFilterDatesBox">
-                  <select
-                    value={productName}
-                    onChange={(e) => {
-                      setProductName(e.target.value);
-                      // setCurrentPage(1);
-                      setCollectionName("");
-                    }}
-                  >
-                    <option value="">Select Product Type</option>
-                    {filteredProductTypes.map((x) => {
-                      return (
-                        <option value={`${parseInt(x.Id)},${x.ProductName}`}>
-                          {x.ProductName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <select
-                    value={collectionName}
-                    onChange={(e) => {
-                      setCollectionName(e.target.value);
-                      // setCurrentPage(1);
-                    }}
-                  >
-                    <option value="">Select Design</option>
-                    {filteredCollection.map((x) => {
-                      return (
-                        <option value={`${parseInt(x.Id)},${x.DesignName}`}>
-                          {x.DesignName}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <div
-                  style={{
-                    width: "100%",
-                    justifyContent: "left",
-                    flexWrap: "wrap",
-                  }}
-                  className="adminAllProductsFilterBox"
-                >
-                  {/* <div className="adminAllProductsFilterCategoryBox"> */}
-                  <div className="adminAllProductsFilterDatesBox">
-                    <select
-                      value={vendorName}
-                      onChange={(e) => {
-                        setVendorName(e.target.value);
-                      }}
-                    >
-                      <option value="">Select Vendor</option>
-                      {allVendors.map((x) => {
-                        return (
-                          <option value={`${x.Id},${x.VendorName}`}>
-                            {x.VendorName}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <select
-                      value={skuName}
-                      onChange={(e) => {
-                        setSkuName(e.target.value);
-                        // setCurrentPage(1);
-                      }}
-                    >
-                      <option value="">Select Sku</option>
-                      {allSku.map((x) => {
-                        return (
-                          <option
-                            value={`${parseInt(x.Id)},${x.StockKeepingUnit}`}
-                          >
-                            {x.StockKeepingUnit}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-
-                  <div className="adminAllLabelledListButtonBox">
-                    {/* <button onClick={printAll}>Print</button> */}
-                    <button onClick={printList}>Print List</button>
-                    <button onClick={printExcel}>Export Excel</button>
-                    {/* <button onClick={printListAll}>Print List</button> */}
-
-                    <button
-                      onClick={() => {
-                        setVendorName(""),
-                          setCategoryName(""),
-                          setProductName(""),
-                          setCollectionName(""),
-                          setPurityName(""),
-                          setSkuName("");
-                      }}
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
+      <div>
+        <AdminHeading/>
+        <div style={{paddingTop: "130px"}}>
+          <AdminBreadCrump
+              title={"SKU / Karigar Report"}
+              companyName={"Loyalstring"}
+              module={"Reports"}
+              page={"SKU / Karigar Report"}
+          />
+          <div className="adminAddCategoryMainBox">
+            <div className="adminAddCategoryInnerBox">
+              <div className={loading == true ? "loading" : "none"}>
+                {/* <h1>Loading...</h1> */}
+                {/* <InfinitySpin width="200" color="#4fa94d" /> */}
+                <MagnifyingGlass
+                    visible={true}
+                    height="80"
+                    width="80"
+                    ariaLabel="MagnifyingGlass-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="MagnifyingGlass-wrapper"
+                    glassColor="#c0efff"
+                    color="#e15b64"
+                />
               </div>
-            ) : null}
-            <div className="adminReportTableMainBox">
-              <table className="adminReportTable">
-                <thead>
+
+              {!loading == true ? (
+                  <div>
+                    <div className="adminAllProductsFilterDatesBox">
+                      <select
+                          value={categoryName}
+                          onChange={(e) => {
+                            setCategoryName(e.target.value);
+                            // setCurrentPage(1);
+                          }}
+                      >
+                        <option value="">Select Category</option>
+                        {allCategories.map((x) => {
+                          return (
+                              <option value={`${x.Id},${x.CategoryName}`}>
+                                {x.CategoryName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                      <select
+                          value={purityName}
+                          onChange={(e) => {
+                            setPurityName(e.target.value);
+                            // setCurrentPage(1);
+                          }}
+                      >
+                        <option value="0">Select Purity</option>
+                        {filteredPurities.map((x) => {
+                          return (
+                              <option value={`${x.Id},${x.PurityName}`}>
+                                {x.PurityName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div className="adminAllProductsFilterDatesBox">
+                      <select
+                          value={productName}
+                          onChange={(e) => {
+                            setProductName(e.target.value);
+                            // setCurrentPage(1);
+                            setCollectionName("");
+                          }}
+                      >
+                        <option value="">Select Product Type</option>
+                        {filteredProductTypes.map((x) => {
+                          return (
+                              <option value={`${parseInt(x.Id)},${x.ProductName}`}>
+                                {x.ProductName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                      <select
+                          value={collectionName}
+                          onChange={(e) => {
+                            setCollectionName(e.target.value);
+                            // setCurrentPage(1);
+                          }}
+                      >
+                        <option value="">Select Design</option>
+                        {filteredCollection.map((x) => {
+                          return (
+                              <option value={`${parseInt(x.Id)},${x.DesignName}`}>
+                                {x.DesignName}
+                              </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div
+                        style={{
+                          width: "100%",
+                          justifyContent: "left",
+                          flexWrap: "wrap",
+                        }}
+                        className="adminAllProductsFilterBox"
+                    >
+                      {/* <div className="adminAllProductsFilterCategoryBox"> */}
+                      <div className="adminAllProductsFilterDatesBox">
+                        <select
+                            value={vendorName}
+                            onChange={(e) => {
+                              setVendorName(e.target.value);
+                            }}
+                        >
+                          <option value="">Select Vendor</option>
+                          {allVendors.map((x) => {
+                            return (
+                                <option value={`${x.Id},${x.VendorName}`}>
+                                  {x.VendorName}
+                                </option>
+                            );
+                          })}
+                        </select>
+                        <select
+                            value={skuName}
+                            onChange={(e) => {
+                              setSkuName(e.target.value);
+                              // setCurrentPage(1);
+                            }}
+                        >
+                          <option value="">Select Sku</option>
+                          {allSku.map((x) => {
+                            return (
+                                <option
+                                    value={`${parseInt(x.Id)},${x.StockKeepingUnit}`}
+                                >
+                                  {x.StockKeepingUnit}
+                                </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+
+                      <div className="adminAllLabelledListButtonBox">
+                        {/* <button onClick={printAll}>Print</button> */}
+                        <button onClick={printList}>Print List</button>
+                        <button onClick={printExcel}>Export Excel</button>
+                        {/* <button onClick={printListAll}>Print List</button> */}
+
+                        <button
+                            onClick={() => {
+                              setVendorName(""),
+                                  setCategoryName(""),
+                                  setProductName(""),
+                                  setCollectionName(""),
+                                  setPurityName(""),
+                                  setSkuName("");
+                            }}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+              ) : null}
+              <div className="adminReportTableMainBox">
+                <table className="adminReportTable">
+                  <thead>
                   <tr>
                     <th>SKU</th>
-                    
+
                     <th>Weight Categories</th>
                     <th>Total Stone Wt</th>
                     <th>Total Gross Wt</th>
                     {/* <th>Plain</th> */}
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   {filteredSkuKarigarReport.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.SKU}</td>
-                      
-                      <td>
-                        <table>
-                          <tbody>
+                      <tr key={index}>
+                        <td>{item.SKU}</td>
+
+                        <td>
+                          <table>
+                            <tbody>
                             <tr>
                               {item.StoneCategories.split(",").map(
-                                (category, idx) => (
-                                  <td
-                                    key={idx}
-                                    style={{
-                                      backgroundColor: "#666",
-                                      color: "white",
-                                      minWidth: "50px",
-                                      border: "1px solid #ddd",
-                                    }}
-                                  >
-                                    {`${category} GM`}
-                                  </td>
-                                )
+                                  (category, idx) => (
+                                      <td
+                                          key={idx}
+                                          style={{
+                                            backgroundColor: "#666",
+                                            color: "white",
+                                            minWidth: "50px",
+                                            border: "1px solid #ddd",
+                                          }}
+                                      >
+                                        {`${category} GM`}
+                                      </td>
+                                  )
                               )}
                             </tr>
                             <tr>
                               {item.StonePieces.split(",").map((piece, idx) => (
-                                <td
-                                  key={idx}
-                                  style={{
-                                    backgroundColor: "white",
-                                    color: "black",
-                                    minWidth: "80px",
-                                    border: "1px solid #ddd",
-                                  }}
-                                >
-                                  {piece}
-                                </td>
+                                  <td
+                                      key={idx}
+                                      style={{
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        minWidth: "80px",
+                                        border: "1px solid #ddd",
+                                      }}
+                                  >
+                                    {piece}
+                                  </td>
                               ))}
                             </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                      <td>{item.TotalStoneWeight}</td>
-                      <td>{item.TotalPlaneWeight}</td>
-                      {/* <td>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td>{item.TotalStoneWeight}</td>
+                        <td>{item.TotalPlaneWeight}</td>
+                        {/* <td>
                         <table>
                           <tbody>
                             <tr>
@@ -654,14 +646,14 @@ export default function AdminSkuKarigarWiseReport() {
                           </tbody>
                         </table>
                       </td> */}
-                    </tr>
+                      </tr>
                   ))}
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }

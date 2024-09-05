@@ -7,7 +7,6 @@ export default function AdminReportTable({
   currentDisplay,
 }) {
   const [tableHeadings, setTableHeadings] = useState([]);
-
   useEffect(() => {
     if (tableHeads && tableHeads.length > 0) {
       setTableHeadings(tableHeads);
@@ -20,13 +19,22 @@ export default function AdminReportTable({
     }
   }, [tableHeads, data]);
 
+  console.log("datatata : ", data)
+
   return (
     <div className="adminReportTableMainBox">
       <table className="adminReportTable">
         <thead>
           <tr>
             {tableHeadings &&
-              tableHeadings.map((x, index) => <th key={index}>{x}</th>)}
+              tableHeadings.map((x, index) => {
+                if(x === 'Id'){
+                  return null;
+                }
+                return (
+                <th key={index}>{x}</th>
+                )
+              })}
           </tr>
         </thead>
         <tbody>
@@ -40,9 +48,14 @@ export default function AdminReportTable({
                 }}
                 key={rowIndex}
               >
-                {Object.keys(rowData).map((key, colIndex) => (
-                  <td key={colIndex}>{rowData[key]}</td>
-                ))}
+                {Object.keys(rowData).map((key, colIndex) => {
+                  if(key === 'Id'){
+                    return null;
+                  }
+                  return (
+                      <td key={colIndex}>{rowData[key]}</td>
+                  )
+                })}
               </tr>
             ))}
         </tbody>

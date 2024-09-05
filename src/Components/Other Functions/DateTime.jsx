@@ -59,9 +59,9 @@ export const DateTime = ({ dateRcvd, showInv, gstType }) => {
     })
       .then((res) => res.json())
       .then((response) => {
-        let rcvdData = response.reverse();
-        let gstTypeOrder = rcvdData.filter((x) =>
-          gstType !== true ? x.BillType === "false" : x.BillType === "true"
+        let rcvdData = response?.reverse();
+        let gstTypeOrder = rcvdData?.filter((x) =>
+          gstType !== true ? x?.BillType === "false" : x?.BillType === "true"
         );
         setAllOrders(gstTypeOrder);
         // changeLastNo(

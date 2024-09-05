@@ -322,7 +322,7 @@ export default function AdminAddBanks() {
                   {/* 01 */}
                   <RiListUnordered />
                 </div>
-                <p>All Banks</p>
+                <p>All Bank Accounts</p>
               </div>
 
               <div
@@ -345,7 +345,7 @@ export default function AdminAddBanks() {
                   {/* 02 */}
                   <RiPlayListAddLine />
                 </div>
-                <p>Add Bank</p>
+                <p>Add Bank Account</p>
               </div>
             </div>
             <div
@@ -356,6 +356,7 @@ export default function AdminAddBanks() {
               <table>
                 <thead>
                   <tr>
+                    <th>Edit</th>
                     <th>Bank Name</th>
                     <th>Account Name</th>
                     <th>Bank Account No</th>
@@ -363,7 +364,7 @@ export default function AdminAddBanks() {
                     <th>Mobile Number</th>
                     <th>Account Type</th>
                     <th>Branch Address</th>
-                    <th>Ifsc Code</th>
+                    <th>IFSC Code</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -378,7 +379,7 @@ export default function AdminAddBanks() {
                           Edit
                         </button>
                       </td>
-                      <td>{index + 1}</td>
+                      {/*<td>{index + 1}</td>*/}
 
                       <td>{x.BankName}</td>
                       <td>{x.AccountName}</td>
@@ -459,13 +460,25 @@ export default function AdminAddBanks() {
                   <label>
                     Account Type<sup>*</sup>
                   </label>
-                  <input
-                    name="AccountType"
-                    value={newCategory.AccountType}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  />
+                  {/*<input*/}
+                  {/*  name="AccountType"*/}
+                  {/*  value={newCategory.AccountType}*/}
+                  {/*  onChange={handleNewCategoryChange}*/}
+                  {/*  type="text"*/}
+                  {/*  required="required"*/}
+                  {/*/>*/}
+                  <select
+                      name="AccountType"
+                      value={newCategory.AccountType}
+                      onChange={handleNewCategoryChange}
+                      required="required"
+                  >
+                    <option value={""}>Select Account Type</option>
+                    <option value={"Saving"}>Saving</option>
+                    <option value={"Current"}>Current</option>
+                    <option value={"OD"}>OD</option>
+                    <option value={"CC"}>CC</option>
+                  </select>
 
                   <label>Branch Address</label>
                   <input
@@ -475,7 +488,7 @@ export default function AdminAddBanks() {
                     type="text"
                   />
                   <label>
-                    Ifsc Code<sup>*</sup>
+                    IFSC Code<sup>*</sup>
                   </label>
                   <input
                     name="IfscCode"

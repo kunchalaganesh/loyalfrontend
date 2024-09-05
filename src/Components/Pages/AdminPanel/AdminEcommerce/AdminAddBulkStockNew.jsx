@@ -4,46 +4,46 @@ import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import { useSelector } from "react-redux";
 import {
-  a125,
-  a128,
-  a131,
-  a134,
-  a137,
-  a146,
-  a149,
-  a152,
-  a153,
-  a16,
-  a162,
-  a163,
-  a170,
-  a175,
-  a176,
-  a177,
-  a178,
-  a18,
-  a181,
-  a191,
-  a194,
-  a198,
-  a199,
-  a20,
-  a217,
-  a22,
-  a226,
-  a24,
-  a28,
-  a30,
-  a31,
-  a33,
-  a41,
-  a43,
-  a47,
-  a55,
-  a57,
-  a71,
-  a8,
-  a90,
+    a125,
+    a128,
+    a131,
+    a134,
+    a137,
+    a146,
+    a149,
+    a152,
+    a153,
+    a16,
+    a162,
+    a163,
+    a170,
+    a175,
+    a176,
+    a177,
+    a178,
+    a18,
+    a181,
+    a191,
+    a194,
+    a198,
+    a199,
+    a20,
+    a217,
+    a22,
+    a226,
+    a24,
+    a28,
+    a30,
+    a31,
+    a33,
+    a41,
+    a43,
+    a47,
+    a55,
+    a57,
+    a71,
+    a8,
+    a90,
 } from "../../../Api/RootApiPath";
 import QRCode from "qrcode";
 import jsPDF from "jspdf";
@@ -176,45 +176,45 @@ export default function AdminAddBulkStockNew() {
   const [diamondTotalAmount, setDiamondTotalAmount] = useState("0");
   const [diamondDescription, setDiamondDescription] = useState("");
 
-  const [selectedProductIndex, setSelectedProductIndex] = useState(null);
-  const [allDiamondSizeWeightRate, setAllDiamondSizeWeightRate] = useState([]);
-  const [allDiamondAttributes, setAllDiamondAttributes] = useState([]);
-  const [newStonesList, setNewStonesList] = useState([]);
-  const [newDiamondsList, setNewDiamondsList] = useState([]);
-  const [allStonesList, setAllStonesList] = useState([]);
-  const [allDiamondsList, setAllDiamondsList] = useState([]);
-  const [showAddStoneBox, setShowAddStoneBox] = useState(false);
-  const [showAddDiamondBox, setShowAddDiamondBox] = useState(false);
-  const [grossWithClip, setGrossWithClip] = useState(false);
-  const [readOnly, setReadOnly] = useState(false);
-  const [showDiamondBtn, setShowDiamondBtn] = useState(false);
-  const [addStone, setAddStone] = useState({
-    StoneName: "",
-    StoneWeight: 0,
-    StonePieces: 0,
-    StoneRate: 0,
-    StoneAmount: 0,
-    Description: "",
-    ClientCode: "",
-    EmployeeCode: "",
-    ProductId: 0,
-  });
-  const [addDiamond, setAddDiamond] = useState({
-    DiamondName: "",
-    DiamondWeight: 0,
-    DiamondRate: 0,
-    DiamondPieces: 0,
-    DiamondClarity: "",
-    DiamondColour: "",
-    DiamondCut: "",
-    DiamondShape: "",
-    DiamondSize: 0,
-    Certificate: "",
-    SettingType: "",
-    DiamondAmount: 0,
-    DiamondPurchaseAmt: 0,
-    Description: "",
-  });
+    const [selectedProductIndex, setSelectedProductIndex] = useState(null);
+    const [allDiamondSizeWeightRate, setAllDiamondSizeWeightRate] = useState([]);
+    const [allDiamondAttributes, setAllDiamondAttributes] = useState([]);
+    const [newStonesList, setNewStonesList] = useState([]);
+    const [newDiamondsList, setNewDiamondsList] = useState([]);
+    const [allStonesList, setAllStonesList] = useState([]);
+    const [allDiamondsList, setAllDiamondsList] = useState([]);
+    const [showAddStoneBox, setShowAddStoneBox] = useState(false);
+    const [showAddDiamondBox, setShowAddDiamondBox] = useState(false);
+    const [grossWithClip, setGrossWithClip] = useState(false);
+    const [readOnly, setReadOnly] = useState(false);
+    const [showDiamondBtn, setShowDiamondBtn] = useState(false);
+    const [addStone, setAddStone] = useState({
+        StoneName: "",
+        StoneWeight: 0,
+        StonePieces: 0,
+        StoneRate: 0,
+        StoneAmount: 0,
+        Description: "",
+        ClientCode: "",
+        EmployeeCode: "",
+        ProductId: 0,
+    });
+    const [addDiamond, setAddDiamond] = useState({
+        DiamondName: "",
+        DiamondWeight: 0,
+        DiamondRate: 0,
+        DiamondPieces: 0,
+        DiamondClarity: "",
+        DiamondColour: "",
+        DiamondCut: "",
+        DiamondShape: "",
+        DiamondSize: 0,
+        Certificate: "",
+        SettingType: "",
+        DiamondAmount: 0,
+        DiamondPurchaseAmt: 0,
+        Description: "",
+    });
 
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
@@ -395,49 +395,45 @@ export default function AdminAddBulkStockNew() {
 
   let Entryby_Staff_id = parseInt(adminLoggedIn);
 
-  const scrollToCenter = (elementId) => {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-    // console.log("scroll");
-  };
-  useEffect(() => {
-    const formData = {
-      ClientCode: clientCode,
+    const scrollToCenter = (elementId) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }
+        // console.log("scroll");
     };
-    fetch(a125, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((data) =>
-        setCategoriesData(
-          data?.filter((item) => item.CategoryName !== "DIAMOND")
-        )
-      );
-  }, []);
-  useEffect(() => {
-    const formData = {
-      ClientCode: clientCode,
-    };
-    fetch(a128, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((x) => x.json())
-      .then((y) => setProductTypeData(y));
-  }, []);
-  // console.log(productTypeData.category_id);
+    useEffect(() => {
+        const formData = {
+            ClientCode: clientCode,
+        };
+        fetch(a125, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        })
+            .then((res) => res.json())
+            .then((data) => setCategoriesData(data?.filter(item => item.CategoryName !== 'DIAMOND')));
+    }, []);
+    useEffect(() => {
+        const formData = {
+            ClientCode: clientCode,
+        };
+        fetch(a128, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        })
+            .then((x) => x.json())
+            .then((y) => setProductTypeData(y));
+    }, []);
+    // console.log(productTypeData.category_id);
 
   useEffect(() => {
     const formData = {
@@ -1380,11 +1376,11 @@ export default function AdminAddBulkStockNew() {
           )
         : 0;
 
-    console.log("filter vali error ", allLabelledStockData);
+        console.log("filter vali error ", allLabelledStockData);
 
-    const totalCollectionItem =
-      allLabelledStockData &&
-      allLabelledStockData.filter((x) => x.DesignId == collectionId);
+        const totalCollectionItem = allLabelledStockData && allLabelledStockData.filter(
+            (x) => x.DesignId == collectionId
+        );
 
     const lastCollectionItem = totalCollectionItem.reduce(
       (max, item) => (item.Id > max.Id ? item : max),
@@ -1442,128 +1438,128 @@ export default function AdminAddBulkStockNew() {
 
     // const newItemCode = `${prefix}${String(number + 1).padStart(2, '0')}`;
 
-    // console.log(lastCollectionItem, "lastCollectionItemCode");
-    // console.log(lastCollectionItem, "lastCollectionItemCode");
-    // console.log(lastCollectionItem, "lastCollectionItemCode");
-    // console.log(selectedSku, "selectedSku");
-    // console.log(Array.isArray(selectedSku), "Is selectedSku an array?");
-    // console.log(
-    //   selectedSku && selectedSku.length > 0,
-    //   "selectedSku length check"
-    // );
-    // console.log(selectedSkuStones, "selectedSkuStones");
+        // console.log(lastCollectionItem, "lastCollectionItemCode");
+        // console.log(lastCollectionItem, "lastCollectionItemCode");
+        // console.log(lastCollectionItem, "lastCollectionItemCode");
+        // console.log(selectedSku, "selectedSku");
+        // console.log(Array.isArray(selectedSku), "Is selectedSku an array?");
+        // console.log(
+        //   selectedSku && selectedSku.length > 0,
+        //   "selectedSku length check"
+        // );
+        // console.log(selectedSkuStones, "selectedSkuStones");
 
-    let selectedSkuData =
-      Array.isArray(selectedSku) && selectedSku.length > 0
-        ? selectedSku[0]
-        : selectedSku && typeof selectedSku === "object"
-        ? selectedSku
-        : {};
-    let createdProduct = {
-      ProductTitle: productName,
-      CategoryId: categoryId,
-      ProductId: parseInt(productTypeId),
-      DesignId: parseInt(collectionId),
-      VendorId: parseInt(partyId),
-      SupplierId: parseInt(partyId),
-      PurityId: purityId,
-      MRP: `${parseFloat(mrp).toFixed(2)}`,
-      Quantity: quantity,
-      GrossWt: !grossWithClip
-        ? `${parseFloat(grosswt).toFixed(3)}`
-        : `${parseFloat(parseFloat(grosswt) - parseFloat(clipWeight)).toFixed(
-            3
-          )}`,
-      ClipWeight: `${parseFloat(clipWeight).toFixed(3)}`,
-      TotalStoneWeight: `${parseFloat(stoneWeight).toFixed(3)}`,
-      TotalStoneAmount: `${parseFloat(stoneAmount).toFixed(2)}`,
-      NetWt: `${parseFloat(netWt).toFixed(3)}`,
-      ProductCode: productCode,
-      MetalName: `${metalName}`,
-      MetalId: `${baseMetal}`,
-      Pieces: `${parseInt(pieces)}`,
-      HUIDCode: huid,
-      Size: `${size}`,
-      HallmarkAmount: `${hallmarkAmount}`,
-      CollectionName: "",
-      OccassionName: "",
-      Gender: gender,
-      Description: description,
-      MakingFixedAmt: `${making_Fixed_Amt}`,
-      MakingPerGram: `${making_per_gram}`,
-      MakingPercentage: making_Percentage !== "" ? `${making_Percentage}` : "0",
-      MakingFixedWastage: `${making_Fixed_Wastage}`,
-      Featured: featured,
-      BranchName: branch,
-      SKU: selectedSkuName,
-      SKUId: selectedSkuData.Id || 0,
-      BlackBeads: "",
-      BoxName: "",
-      Status: "Active",
-      CuttingGrossWt: "0",
-      CuttingNetWt: "0",
-      HSNCode: "0",
-      LotNumber: `${lotNumber}`,
-      WarehouseId: 0,
-      WeightCategory: weights,
-      Margin: "0",
-      OfferPrice: "0",
-      Colour: selectedSkuData.Colour || "",
-      OtherWeight: selectedSkuData.OtherWeight
-        ? `${selectedSkuData.OtherWeight}`
-        : "0",
-      PouchWeight: selectedSkuData.PouchWeight
-        ? `${selectedSkuData.PouchWeight}`
-        : "0",
-      TagWeight: selectedSkuData.TagWeight
-        ? `${selectedSkuData.TagWeight}`
-        : "0",
-      FindingWeight: selectedSkuData.FindingWeight
-        ? `${selectedSkuData.FindingWeight}`
-        : "0",
-      LanyardWeight: selectedSkuData.LanyardWeight
-        ? `${selectedSkuData.LanyardWeight}`
-        : "0",
-      Ranking: "0",
-      UpdatedFrom: "Web",
-      Width: "0",
-      Height: "0",
-      ClientCode: clientCode,
-      EmployeeCode: employeeCode ? employeeCode : "",
-      CompanyId: CompanyId ? CompanyId : 0,
-      BranchId: BranchId ? BranchId : 0,
-      CounterId: CounterId ? CounterId : 0,
-      EstimatedDays: "0",
-      MetalRate: "0",
-      PurchaseCost: "0",
-      Rating: "0",
-      TotalDiamondAmount: "0",
-      TotalDiamondPieces: "0",
-      TotalDiamondWeight: "0",
-      TotalStonePieces: "0",
-      ClipQuantity: clipWeight !== 0 ? "1" : "0",
-      DiamondSize: `${diamondSize}`,
-      DiamondWeight: `${diamondWeight}`,
-      DiamondPurchaseRate: `${diamondPurchaseRate}`,
-      DiamondSellRate: `${diamondSellRate}`,
-      DiamondClarity: `${diamondClarity}`,
-      DiamondColour: `${diamondColour}`,
-      DiamondShape: `${diamondShape}`,
-      DiamondCut: `${diamondCut}`,
-      DiamondSettingType: `${diamondSettingType}`,
-      DiamondCertificate: `${diamondCertificate}`,
-      DiamondPieces: `${diamondPieces.toString()}`,
-      DiamondPurchaseAmount: `${diamondPurchaseAmount}`,
-      DiamondSellAmount: `${diamondTotalAmount}`,
-      DiamondDescription: `${diamondDescription}`,
-      DesignName: collectionName,
-      PurityName: purityName,
-      ProductName: productTypeName,
-      TaxPercentage: "3",
-      Stones: newStonesList,
-      Diamonds: [],
-      PacketId: packetNumber !== "" ? parseInt(packetNumber) : 0,
-    };
+        let selectedSkuData =
+            Array.isArray(selectedSku) && selectedSku.length > 0
+                ? selectedSku[0]
+                : selectedSku && typeof selectedSku === "object"
+                ? selectedSku
+                : {};
+        let createdProduct = {
+            ProductTitle: productName,
+            CategoryId: categoryId,
+            ProductId: parseInt(productTypeId),
+            DesignId: parseInt(collectionId),
+            VendorId: parseInt(partyId),
+            SupplierId: parseInt(partyId),
+            PurityId: purityId,
+            MRP: `${parseFloat(mrp).toFixed(2)}`,
+            Quantity: quantity,
+            GrossWt: !grossWithClip
+                ? `${parseFloat(grosswt).toFixed(3)}`
+                : `${parseFloat(parseFloat(grosswt) - parseFloat(clipWeight)).toFixed(
+                    3
+                )}`,
+            ClipWeight: `${parseFloat(clipWeight).toFixed(3)}`,
+            TotalStoneWeight: `${parseFloat(stoneWeight).toFixed(3)}`,
+            TotalStoneAmount: `${parseFloat(stoneAmount).toFixed(2)}`,
+            NetWt: `${parseFloat(netWt).toFixed(3)}`,
+            ProductCode: productCode,
+            MetalName: `${metalName}`,
+            MetalId: `${baseMetal}`,
+            Pieces: `${parseInt(pieces)}`,
+            HUIDCode: huid,
+            Size: `${size}`,
+            HallmarkAmount: `${hallmarkAmount}`,
+            CollectionName: "",
+            OccassionName: "",
+            Gender: gender,
+            Description: description,
+            MakingFixedAmt: `${making_Fixed_Amt}`,
+            MakingPerGram: `${making_per_gram}`,
+            MakingPercentage: making_Percentage !== "" ? `${making_Percentage}` : "0",
+            MakingFixedWastage: `${making_Fixed_Wastage}`,
+            Featured: featured,
+            BranchName: branch,
+            SKU: selectedSkuName,
+            SKUId: selectedSkuData.Id || 0,
+            BlackBeads: "",
+            BoxName: "",
+            Status: "Active",
+            CuttingGrossWt: "0",
+            CuttingNetWt: "0",
+            HSNCode: "0",
+            LotNumber: `${lotNumber}`,
+            WarehouseId: 0,
+            WeightCategory: weights,
+            Margin: "0",
+            OfferPrice: "0",
+            Colour: selectedSkuData.Colour || "",
+            OtherWeight: selectedSkuData.OtherWeight
+                ? `${selectedSkuData.OtherWeight}`
+                : "0",
+            PouchWeight: selectedSkuData.PouchWeight
+                ? `${selectedSkuData.PouchWeight}`
+                : "0",
+            TagWeight: selectedSkuData.TagWeight
+                ? `${selectedSkuData.TagWeight}`
+                : "0",
+            FindingWeight: selectedSkuData.FindingWeight
+                ? `${selectedSkuData.FindingWeight}`
+                : "0",
+            LanyardWeight: selectedSkuData.LanyardWeight
+                ? `${selectedSkuData.LanyardWeight}`
+                : "0",
+            Ranking: "0",
+            UpdatedFrom: "Web",
+            Width: "0",
+            Height: "0",
+            ClientCode: clientCode,
+            EmployeeCode: employeeCode ? employeeCode : "",
+            CompanyId: CompanyId ? CompanyId : 0,
+            BranchId: BranchId ? BranchId : 0,
+            CounterId: CounterId ? CounterId : 0,
+            EstimatedDays: "0",
+            MetalRate: "0",
+            PurchaseCost: "0",
+            Rating: "0",
+            TotalDiamondAmount: "0",
+            TotalDiamondPieces: "0",
+            TotalDiamondWeight: "0",
+            TotalStonePieces: "0",
+            ClipQuantity: clipWeight !== 0 ? "1" : "0",
+            DiamondSize: `${diamondSize}`,
+            DiamondWeight: `${diamondWeight}`,
+            DiamondPurchaseRate: `${diamondPurchaseRate}`,
+            DiamondSellRate: `${diamondSellRate}`,
+            DiamondClarity: `${diamondClarity}`,
+            DiamondColour: `${diamondColour}`,
+            DiamondShape: `${diamondShape}`,
+            DiamondCut: `${diamondCut}`,
+            DiamondSettingType: `${diamondSettingType}`,
+            DiamondCertificate: `${diamondCertificate}`,
+            DiamondPieces: `${diamondPieces.toString()}`,
+            DiamondPurchaseAmount: `${diamondPurchaseAmount}`,
+            DiamondSellAmount: `${diamondTotalAmount}`,
+            DiamondDescription: `${diamondDescription}`,
+            DesignName: collectionName,
+            PurityName: purityName,
+            ProductName: productTypeName,
+            TaxPercentage: "3",
+            Stones: newStonesList,
+            Diamonds: [],
+            PacketId: packetNumber !== "" ? parseInt(packetNumber) : 0,
+        };
 
     // const productList = Array.from(
     //   { length: createdProduct.Quantity },
@@ -2105,16 +2101,13 @@ export default function AdminAddBulkStockNew() {
         //   ClipWeight: product.ClipWeight.toString(),
         // }));
 
-        let editProduct = false;
-        if (updatedProductsString && updatedProductsString[0].Id) {
-          editProduct = true;
-        } else {
-          editProduct = false;
-        }
-        console.log(
-          "updatedProductsStringupdatedProductsString : ",
-          updatedProductsString
-        );
+                let editProduct = false;
+                if (updatedProductsString && updatedProductsString[0].Id) {
+                    editProduct = true;
+                } else {
+                    editProduct = false;
+                }
+                console.log("updatedProductsStringupdatedProductsString : ",updatedProductsString)
 
         // Send the updated products to the edit API endpoint
         // const transformedData = updatedProductsString.map((item,ind))
@@ -2753,7 +2746,7 @@ export default function AdminAddBulkStockNew() {
         const updatedDiamonds = product.Diamonds.map((diamond, sIndex) => {
           if (sIndex !== diamondIndex) return diamond;
 
-          let updatedDiamond = { ...diamond, [field]: value };
+                    let updatedDiamond = { ...diamond, [field]: value };
 
           if (field === "DiamondSize") {
             const selectedDiamond = allDiamondSizeWeightRate.find(
@@ -3687,165 +3680,161 @@ export default function AdminAddBulkStockNew() {
                         >
                           Add Product
                         </h4>{" "} */}
-                      <div className="addProductDetailsUpperBox">
-                        <div
-                          // style={{ width: "92%" }}
-                          className="addProductDetailsBox"
-                        >
-                          <label htmlFor="category">
-                            <strong>SUPPLIER</strong>
-                          </label>
-                          <select
-                            id="category"
-                            required="required"
-                            value={partyTypeId}
-                            onChange={(e) => {
-                              setPartyTypeId(e.target.value);
-                              const tempId = partyData.find(
-                                (event, ind) => event.Id == e.target.value
-                              );
-                              setDiamondTemplateId(
-                                tempId.DiamondSizeWeightRateTemplateId
-                              );
-                            }}
-                          >
-                            <option value="">
-                              Select Party / Karigar Name
-                            </option>
-                            {partyData.map((x, y) => {
-                              return (
-                                <option key={y} value={parseInt(x.Id)}>
-                                  {x.VendorName}
-                                </option>
-                              );
-                            })}
-                          </select>
-                          <p>Unlabelled Gold :</p>
+                                            <div className="addProductDetailsUpperBox">
+                                                <div
+                                                    // style={{ width: "92%" }}
+                                                    className="addProductDetailsBox"
+                                                >
+                                                    <label htmlFor="category">
+                                                        <strong>SUPPLIER</strong>
+                                                    </label>
+                                                    <select
+                                                        id="category"
+                                                        required="required"
+                                                        value={partyTypeId}
+                                                        onChange={(e) => {
+                                                            setPartyTypeId(e.target.value)
+                                                            const tempId = partyData.find((event, ind) => event.Id == e.target.value)
+                                                            setDiamondTemplateId(tempId.DiamondSizeWeightRateTemplateId)
+                                                        }}
+                                                    >
+                                                        <option value="">
+                                                            Select Party / Karigar Name
+                                                        </option>
+                                                        {partyData.map((x, y) => {
+                                                            return (
+                                                                <option key={y} value={parseInt(x.Id)}>
+                                                                    {x.VendorName}
+                                                                </option>
+                                                            );
+                                                        })}
+                                                    </select>
+                                                    <p>Unlabelled Gold :</p>
 
-                          <div>
-                            {(() => {
-                              const selectedParty = partyData.find(
-                                (x) => x.Id === parseInt(partyTypeId)
-                              );
-                              if (selectedParty) {
-                                return (
-                                  <div
-                                    className="addProductSupplierDetailsBox"
-                                    key={selectedParty.Id}
-                                  >
-                                    {" "}
-                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                    <p>{selectedParty.InwardGold}</p>
-                                  </div>
-                                );
-                              }
-                              return null; // If no party is found, render nothing
-                            })()}
-                          </div>
-                        </div>
-                        <div
-                          // style={{ width: "92%" }}
-                          className="addProductDetailsBox"
-                        >
-                          <label htmlFor="sku">
-                            <strong>SKU</strong>
-                          </label>
-                          <input
-                            // style={{ width: "30vw" }}
-                            type="text"
-                            name="skuList"
-                            placeholder="Enter SKU"
-                            value={selectedSkuName}
-                            onInput={handleSkuInputChange}
-                            list="skuList"
-                          />
-                          <datalist id="skuList">
-                            {allSku.map((sku, index) => (
-                              <option
-                                key={index}
-                                value={`${sku.StockKeepingUnit}`}
-                              />
-                            ))}
-                          </datalist>
-                          <p>Unlabelled Silver :</p>
-                          <div>
-                            {(() => {
-                              const selectedParty = partyData.find(
-                                (x) => x.Id === parseInt(partyTypeId)
-                              );
-                              if (selectedParty) {
-                                return (
-                                  <div
-                                    className="addProductSupplierDetailsBox"
-                                    key={selectedParty.Id}
-                                  >
-                                    {" "}
-                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                    <p>{selectedParty.InwardSilver}</p>
-                                  </div>
-                                );
-                              }
-                              return null; // If no party is found, render nothing
-                            })()}
-                          </div>
-                        </div>
-                        <div
-                          // style={{ width: "92%" }}
-                          className="addProductDetailsBox"
-                        >
-                          <label htmlFor="invoiceType">
-                            <strong>STOCK TYPE</strong>
-                          </label>
-                          <select
-                            id="invoiceType"
-                            required="required"
-                            value={stockType}
-                            onChange={(e) => setStockType(e.target.value)}
-                          >
-                            <option value="Labelled">Labelled</option>
-                            <option value="Unlabelled">Unlabelled</option>
-                          </select>
-                          <p>Unlabelled Diamond :</p>
-                          <div>
-                            {(() => {
-                              const selectedParty = partyData.find(
-                                (x) => x.Id === parseInt(partyTypeId)
-                              );
-                              if (selectedParty) {
-                                return (
-                                  <div
-                                    className="addProductSupplierDetailsBox"
-                                    key={selectedParty.Id}
-                                  >
-                                    <p>{selectedParty.VendorName}</p>
-                                  </div>
-                                );
-                              }
-                              return null;
-                            })()}
-                          </div>
-                        </div>
-                        <div
-                          style={
-                            {
-                              // width: "92%",
-                              // marginBottom: "20px",
-                            }
-                          }
-                          className="addProductDetailsBox"
-                        >
-                          <label htmlFor="selectBranch">
-                            <strong>SELECT BRANCH</strong>
-                          </label>
-                          <select
-                            id="selectBranch"
-                            required="required"
-                            value={branch}
-                            onChange={(e) => setBranch(e.target.value)}
-                          >
-                            <option value="Home">Home</option>
-                            <option value="Branch 2">Branch 2</option>
-                          </select>
+                                                    <div>
+                                                        {(() => {
+                                                            const selectedParty = partyData.find(
+                                                                (x) => x.Id === parseInt(partyTypeId)
+                                                            );
+                                                            if (selectedParty) {
+                                                                return (
+                                                                    <div
+                                                                        className="addProductSupplierDetailsBox"
+                                                                        key={selectedParty.Id}
+                                                                    >
+                                                                        {" "}
+                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                        <p>{selectedParty.InwardGold}</p>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return null; // If no party is found, render nothing
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    // style={{ width: "92%" }}
+                                                    className="addProductDetailsBox"
+                                                >
+                                                    <label htmlFor="sku">
+                                                        <strong>SKU</strong>
+                                                    </label>
+                                                    <input
+                                                        // style={{ width: "30vw" }}
+                                                        type="text"
+                                                        name="skuList"
+                                                        placeholder="Enter SKU"
+                                                        value={selectedSkuName}
+                                                        onInput={handleSkuInputChange}
+                                                        list="skuList"
+                                                    />
+                                                    <datalist id="skuList">
+                                                        {allSku.map((sku, index) => (
+                                                            <option
+                                                                key={index}
+                                                                value={`${sku.StockKeepingUnit}`}
+                                                            />
+                                                        ))}
+                                                    </datalist>
+                                                    <p>Unlabelled Silver :</p>
+                                                    <div>
+                                                        {(() => {
+                                                            const selectedParty = partyData.find(
+                                                                (x) => x.Id === parseInt(partyTypeId)
+                                                            );
+                                                            if (selectedParty) {
+                                                                return (
+                                                                    <div
+                                                                        className="addProductSupplierDetailsBox"
+                                                                        key={selectedParty.Id}
+                                                                    >
+                                                                        {" "}
+                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                        <p>{selectedParty.InwardSilver}</p>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return null; // If no party is found, render nothing
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    // style={{ width: "92%" }}
+                                                    className="addProductDetailsBox"
+                                                >
+                                                    <label htmlFor="invoiceType">
+                                                        <strong>STOCK TYPE</strong>
+                                                    </label>
+                                                    <select
+                                                        id="invoiceType"
+                                                        required="required"
+                                                        value={stockType}
+                                                        onChange={(e) => setStockType(e.target.value)}
+                                                    >
+                                                        <option value="Labelled">Labelled</option>
+                                                        <option value="Unlabelled">Unlabelled</option>
+                                                    </select>
+                                                    <p>Unlabelled Diamond :</p>
+                                                    <div>
+                                                        {(() => {
+                                                            const selectedParty = partyData.find(
+                                                                (x) => x.Id === parseInt(partyTypeId)
+                                                            );
+                                                            if (selectedParty) {
+                                                                return (
+                                                                    <div
+                                                                        className="addProductSupplierDetailsBox"
+                                                                        key={selectedParty.Id}
+                                                                    >
+                                                                        <p>{selectedParty.VendorName}</p>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return null;
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    style={
+                                                        {
+                                                            // width: "92%",
+                                                            // marginBottom: "20px",
+                                                        }
+                                                    }
+                                                    className="addProductDetailsBox"
+                                                >
+                                                    <label htmlFor="selectBranch">
+                                                        <strong>SELECT BRANCH</strong>
+                                                    </label>
+                                                    <select
+                                                        id="selectBranch"
+                                                        required="required"
+                                                        value={branch}
+                                                        onChange={(e) => setBranch(e.target.value)}
+                                                    >
+                                                        <option value="Home">Home</option>
+                                                        <option value="Branch 2">Branch 2</option>
+                                                    </select>
 
                           <p>Unlabelled Other :</p>
                           <div>
@@ -5095,130 +5084,131 @@ export default function AdminAddBulkStockNew() {
                <tbody>{renderTableRows()}</tbody>
             </table>
           </div> */}
-                <div
-                  style={{ height: "100px", marginBottom: "1rem" }}
-                  className={loading === true ? "loading" : "none"}
-                >
-                  <InfinitySpin
-                    className={loading === true ? "loading" : "none"}
-                    width="150"
-                    color="#4fa94d"
-                  />
-                </div>
-                <div
-                  id="adminAddBulkStockAddedTitleStatement"
-                  className="adminAddBulkStockShowEditBox"
-                >
-                  <h3
-                    style={{
-                      margin: "0px",
-                      padding: "0px",
-                    }}
-                    className="adminAddBulkStockAddedTitle"
-                  >
-                    Added Products
-                  </h3>
-                  <div className="adminAddBulkStockShowEditButton">
-                    <AiOutlineEdit
-                      onClick={() => setShowAllFields(!showAllFields)}
-                      size={"20px"}
-                    />
-                  </div>
-                </div>
-                {console.log(categoryName)}
-                <div className="adminAddBulkStockAddedProductsOuterBox">
-                  {/* <form onSubmit={updatedetailsBox}> */}
-                  {showAllFields ? (
-                    <div
-                      className="bulkProductAddingTableMain"
-                      style={{ margin: "1.5rem", overflowX: "auto" }}
-                    >
-                      <table style={{ width: "100%" }}>
-                        {stockType === "Labelled" ? (
-                          <thead>
-                            <tr style={{ whiteSpace: "nowrap" }}>
-                              <th>Product Type</th>
-                              <th>Collection</th>
-                              <th>Purity</th>
-                              <th>Label</th>
-                              <th>Barcode Number</th>
-                              <th>TID</th>
-                              <th>GrossWt</th>
-                              <th>ClipWt</th>
-                              <th>StoneWt</th>
-                              <th>NetWt</th>
-                              <th>Size</th>
-                              <th>Pieces</th>
-                              <th>Description</th>
-                              <th>Product name</th>
-                              <th>HUID Code</th>
-                              <th>Hallmark Amount</th>
-                              <th>Stone Amount</th>
-                              <th>Making Per Gram</th>
-                              <th>Making Percentage</th>
-                              <th>Fixed Making</th>
-                              <th>Fixed Wastage</th>
-                              <th>MRP</th>
-                              <th>Add Stone</th>
-                              {/*{addedProducts.length > 0 && addedProducts[0].CategoryId === 5 && (*/}
-                              <th>Add Diamond</th>
-                              {/*)}*/}
-                              <th>Occassion</th>
-                              <th>Gender</th>
-                              <th>Online Status</th>
-                              <th>Delete Product</th>
-                            </tr>
-                          </thead>
-                        ) : (
-                          <thead>
-                            <tr style={{ whiteSpace: "nowrap" }}>
-                              {isLooseDiamond ? (
-                                <>
-                                  <th>Diamond Shape</th>
-                                  <th>Diamond Clarity</th>
-                                  <th>Diamond Colour</th>
-                                  <th>Diamond Cut</th>
-                                  <th>Diamond Size</th>
-                                  <th>Sieve</th>
-                                  <th>Diamond Weight</th>
-                                  <th>Sell rate</th>
-                                  <th>Quantity</th>
-                                  <th>Packet</th>
-                                  <th>Total Weight</th>
-                                  <th>Total Amount</th>
-                                  <th>Setting Type</th>
-                                  <th>Certificate</th>
-                                  <th>Description</th>
-                                </>
-                              ) : (
-                                <>
-                                  <th>Metal</th>
-                                  <th>Product Type</th>
-                                  <th>Collection</th>
-                                  <th>Purity</th>
-                                  <th>Quantity</th>
-                                  <th>GrossWt</th>
-                                  <th>StoneWt</th>
-                                  <th>NetWt</th>
-                                  <th>Making Per Gram</th>
-                                  <th>Making Percentage</th>
-                                  <th>Fixed Making</th>
-                                  <th>Fixed Wastage</th>
-                                  <th>Pieces</th>
-                                  <th>Size</th>
-                                  <th>Description</th>
-                                  <th>Occasion</th>
-                                  <th>Gender</th>
-                                  <th>Featured</th>
-                                  <th>Online Status</th>
-                                </>
-                              )}
-                            </tr>
-                          </thead>
-                        )}
-                        <tbody>
-                          {addedProducts?.map((x, index) => (
-                            // <tr key={x.Customer_id}>
+                                <div
+                                    style={{height: "100px", marginBottom: "1rem"}}
+                                    className={loading === true ? "loading" : "none"}
+                                >
+                                    <InfinitySpin
+                                        className={loading === true ? "loading" : "none"}
+                                        width="150"
+                                        color="#4fa94d"
+                                    />
+                                </div>
+                                <div
+                                    id="adminAddBulkStockAddedTitleStatement"
+                                    className="adminAddBulkStockShowEditBox"
+                                >
+                                    <h3
+                                        style={{
+                                            margin: "0px",
+                                            padding: "0px",
+                                        }}
+                                        className="adminAddBulkStockAddedTitle"
+                                    >
+                                        Added Products
+                                    </h3>
+                                    <div className="adminAddBulkStockShowEditButton">
+                                        <AiOutlineEdit
+                                            onClick={() => setShowAllFields(!showAllFields)}
+                                            size={"20px"}
+                                        />
+                                    </div>
+                                </div>
+                                {console.log(categoryName)}
+                                <div className="adminAddBulkStockAddedProductsOuterBox">
+                                    {/* <form onSubmit={updatedetailsBox}> */}
+                                    {showAllFields ? (
+                                        <div
+                                            className="bulkProductAddingTableMain"
+                                            style={{margin: "1.5rem", overflowX: "auto"}}
+                                        >
+                                            <table style={{width: "100%"}}>
+                                                {stockType === "Labelled" ? (
+                                                    <thead>
+                                                    <tr style={{whiteSpace: "nowrap"}}>
+                                                        <th>Product Type</th>
+                                                        <th>Collection</th>
+                                                        <th>Purity</th>
+                                                        <th>Label</th>
+                                                        <th>Barcode Number</th>
+                                                        <th>TID</th>
+                                                        <th>GrossWt</th>
+                                                        <th>ClipWt</th>
+                                                        <th>StoneWt</th>
+                                                        <th>NetWt</th>
+                                                        <th>Size</th>
+                                                        <th>Pieces</th>
+                                                        <th>Description</th>
+                                                        <th>Product name</th>
+                                                        <th>HUID Code</th>
+                                                        <th>Hallmark Amount</th>
+                                                        <th>Stone Amount</th>
+                                                        <th>Making Per Gram</th>
+                                                        <th>Making Percentage</th>
+                                                        <th>Fixed Making</th>
+                                                        <th>Fixed Wastage</th>
+                                                        <th>MRP</th>
+                                                        <th>Add Stone</th>
+                                                        {/*{addedProducts.length > 0 && addedProducts[0].CategoryId === 5 && (*/}
+                                                            <th>Add Diamond</th>
+                                                        {/*)}*/}
+                                                        <th>Occassion</th>
+                                                        <th>Gender</th>
+                                                        <th>Online Status</th>
+                                                        <th>Delete Product</th>
+                                                    </tr>
+                                                    </thead>
+                                                ) : (
+                                                    <thead>
+                                                    <tr style={{whiteSpace: "nowrap"}}>
+                                                        {isLooseDiamond ? (
+                                                            <>
+                                                                <th>Diamond Shape</th>
+                                                                <th>Diamond Clarity</th>
+                                                                <th>Diamond Colour</th>
+                                                                <th>Diamond Cut</th>
+                                                                <th>Diamond Size</th>
+                                                                <th>Sieve</th>
+                                                                <th>Diamond Weight</th>
+                                                                <th>Sell rate</th>
+                                                                <th>Quantity</th>
+                                                                <th>Packet</th>
+                                                                <th>Total Weight</th>
+                                                                <th>Total Amount</th>
+                                                                <th>Setting Type</th>
+                                                                <th>Certificate</th>
+                                                                <th>Description</th>
+
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <th>Metal</th>
+                                                                <th>Product Type</th>
+                                                                <th>Collection</th>
+                                                                <th>Purity</th>
+                                                                <th>Quantity</th>
+                                                                <th>GrossWt</th>
+                                                                <th>StoneWt</th>
+                                                                <th>NetWt</th>
+                                                                <th>Making Per Gram</th>
+                                                                <th>Making Percentage</th>
+                                                                <th>Fixed Making</th>
+                                                                <th>Fixed Wastage</th>
+                                                                <th>Pieces</th>
+                                                                <th>Size</th>
+                                                                <th>Description</th>
+                                                                <th>Occasion</th>
+                                                                <th>Gender</th>
+                                                                <th>Featured</th>
+                                                                <th>Online Status</th>
+                                                            </>
+                                                        )}
+                                                    </tr>
+                                                    </thead>
+                                                )}
+                                                <tbody>
+                                                {addedProducts?.map((x, index) => (
+                                                    // <tr key={x.Customer_id}>
 
                             <tr key={index}>
                               {isLooseDiamond ? (
@@ -5834,110 +5824,108 @@ export default function AdminAddBulkStockNew() {
                                   />
                                 </td> */}
 
-                                  {stockType === "Labelled" ? (
-                                    <td>
-                                      <input
-                                        type="number"
-                                        placeholder={x.MRP}
-                                        value={x.MRP}
-                                        onChange={(e) =>
-                                          handleInputChange(e, index, "MRP")
-                                        }
-                                      />
-                                    </td>
-                                  ) : null}
-                                  {stockType === "Labelled" ? (
-                                    <td>
-                                      <button
-                                        onClick={() => {
-                                          setAddedProducts((prevProducts) =>
-                                            prevProducts.map((item, i) =>
-                                              i === index
-                                                ? {
-                                                    ...item,
-                                                    Stones: [
-                                                      ...item.Stones,
-                                                      addStone,
-                                                    ],
-                                                  }
-                                                : item
-                                            )
-                                          ),
-                                            setShowAddStoneBox(true);
-                                          setSelectedProductIndex(index);
-                                        }}
-                                      >
-                                        Stone{x.Stones.length}
-                                      </button>
-                                    </td>
-                                  ) : null}
-                                  <td>
-                                    <button
-                                      style={{ display: "flex" }}
-                                      onClick={() => {
-                                        // setAddedProducts((prevProducts) =>
-                                        //     prevProducts.map((product, index) =>
-                                        //         index === selectedProductIndex
-                                        //             ? {...product, Diamonds: [...product.Diamonds, {}]}
-                                        //             : product
-                                        //     )
-                                        // );
-                                        if (x.Diamonds.length === 0) {
-                                          setAddedProducts((prevProducts) =>
-                                            prevProducts.map((item, i) =>
-                                              i === index
-                                                ? {
-                                                    ...item,
-                                                    Diamonds: [
-                                                      ...item.Diamonds,
-                                                      addDiamond,
-                                                    ],
-                                                  }
-                                                : item
-                                            )
-                                          );
-                                        }
-                                        setShowAddDiamondBox(true);
-                                        setSelectedProductIndex(index);
-                                      }}
-                                    >
-                                      {/*<IoMdAddCircleOutline*/}
-                                      {/*    style={{*/}
-                                      {/*        marginRight: "5px",*/}
-                                      {/*    }}*/}
-                                      {/*    size={"18px"}*/}
-                                      {/*/>*/}
-                                      DIAMOND-{x.Diamonds.length}
-                                    </button>
-                                  </td>
-                                  {stockType === "Labelled" &&
-                                  addedProducts.length > 0 &&
-                                  addedProducts[0].CategoryId == 5 ? (
-                                    <td>
-                                      <button
-                                        onClick={() => {
-                                          setAddedProducts((prevProducts) =>
-                                            prevProducts.map((item, i) =>
-                                              i === index
-                                                ? {
-                                                    ...item,
-                                                    Diamonds: [
-                                                      ...item.Diamonds,
-                                                      addDiamond,
-                                                    ],
-                                                  }
-                                                : item
-                                            )
-                                          ),
-                                            setShowAddDiamondBox(true);
-                                          setSelectedProductIndex(index);
-                                        }}
-                                      >
-                                        Diamond-{x.Diamonds.length}
-                                      </button>
-                                    </td>
-                                  ) : null}
-                                  {/* {stockType === "Labelled" ? (
+                                                            {stockType === "Labelled" ? (
+                                                                <td>
+                                                                    <input
+                                                                        type="number"
+                                                                        placeholder={x.MRP}
+                                                                        value={x.MRP}
+                                                                        onChange={(e) =>
+                                                                            handleInputChange(e, index, "MRP")
+                                                                        }
+                                                                    />
+                                                                </td>
+                                                            ) : null}
+                                                            {stockType === "Labelled" ? (
+                                                                <td>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setAddedProducts((prevProducts) =>
+                                                                                prevProducts.map((item, i) =>
+                                                                                    i === index
+                                                                                        ? {
+                                                                                            ...item,
+                                                                                            Stones: [
+                                                                                                ...item.Stones,
+                                                                                                addStone,
+                                                                                            ],
+                                                                                        }
+                                                                                        : item
+                                                                                )
+                                                                            ),
+                                                                                setShowAddStoneBox(true);
+                                                                            setSelectedProductIndex(index);
+                                                                        }}
+                                                                    >
+                                                                        Stone{x.Stones.length}
+                                                                    </button>
+                                                                </td>
+                                                            ) : null}
+                                                            <td>
+                                                                <button style={{display: "flex"}}
+                                                                        onClick={() => {
+                                                                            // setAddedProducts((prevProducts) =>
+                                                                            //     prevProducts.map((product, index) =>
+                                                                            //         index === selectedProductIndex
+                                                                            //             ? {...product, Diamonds: [...product.Diamonds, {}]}
+                                                                            //             : product
+                                                                            //     )
+                                                                            // );
+                                                                            if (x.Diamonds.length === 0) {
+                                                                                setAddedProducts((prevProducts) =>
+                                                                                    prevProducts.map((item, i) =>
+                                                                                        i === index
+                                                                                            ? {
+                                                                                                ...item,
+                                                                                                Diamonds: [
+                                                                                                    ...item.Diamonds,
+                                                                                                    addDiamond,
+                                                                                                ],
+                                                                                            }
+                                                                                            : item
+                                                                                    )
+                                                                                )
+                                                                            }
+                                                                            setShowAddDiamondBox(true);
+                                                                            setSelectedProductIndex(index);
+                                                                        }}>
+                                                                    {/*<IoMdAddCircleOutline*/}
+                                                                    {/*    style={{*/}
+                                                                    {/*        marginRight: "5px",*/}
+                                                                    {/*    }}*/}
+                                                                    {/*    size={"18px"}*/}
+                                                                    {/*/>*/}
+                                                                    DIAMOND-{x.Diamonds.length}
+                                                                </button>
+                                                            </td>
+                                                            {stockType === "Labelled" &&
+                                                            addedProducts.length > 0 &&
+                                                            addedProducts[0].CategoryId == 5 ? (
+                                                                <td>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setAddedProducts((prevProducts) =>
+                                                                                prevProducts.map((item, i) =>
+                                                                                    i === index
+                                                                                        ? {
+                                                                                            ...item,
+                                                                                            Diamonds: [
+                                                                                                ...item.Diamonds,
+                                                                                                addDiamond,
+                                                                                            ],
+                                                                                        }
+                                                                                        : item
+                                                                                )
+                                                                            ),
+                                                                                setShowAddDiamondBox(true);
+                                                                            setSelectedProductIndex(index);
+                                                                        }}
+                                                                    >
+                                                                        Diamond-{x.Diamonds.length}
+                                                                    </button>
+                                                                </td>
+                                                            ) : null}
+                                                            {/* {stockType === "Labelled" ? (
                                   <td>
                                     <input
                                       type="text"

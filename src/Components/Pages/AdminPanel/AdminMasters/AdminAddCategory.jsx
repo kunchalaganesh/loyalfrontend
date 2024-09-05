@@ -365,13 +365,13 @@ export default function AdminAddCategory() {
                   <tr>
                     <th>Edit</th>
                     <th>Sr.No</th>
-                    <th>CategoryName</th>
+                    <th>Category Name</th>
                     <th>Description</th>
-                    <th>ShortName</th>
-                    <th>ParentCategory</th>
+                    <th>Short Name</th>
+                    <th>Parent Category</th>
                     <th>Slug</th>
                     <th>Status</th>
-                    <th>HSNCode</th>
+                    <th>HSN Code</th>
                   </tr>
                 </thead>
                 <tbody>

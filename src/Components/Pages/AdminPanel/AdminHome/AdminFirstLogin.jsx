@@ -558,6 +558,16 @@ export default function AdminFirstLogin({
                 value={newCompany.FinancialYear}
                 onChange={handleNewCompanyChange}
               /> */}
+
+            </div>
+            <div>
+              <label>Company GST IN No.</label>
+              <input
+                  type="text"
+                  name="CompGSTINNo"
+                  value={newCompany.CompGSTINNo}
+                  onChange={handleNewCompanyChange}
+              />
             </div>
             <div>
               <label>
@@ -582,18 +592,6 @@ export default function AdminFirstLogin({
                 value={newCompany.BaseCurrency} 
                 onChange={handleNewCompanyChange}
               /> */}
-            </div>
-            <div>
-              <label>
-                Transaction Series <sup>*</sup>
-              </label>
-              <input
-                required="required"
-                type="text"
-                name="TransactionSeries"
-                value={newCompany.TransactionSeries}
-                onChange={handleNewCompanyChange}
-              />
             </div>
             {!isOpen ? (
               <div>
@@ -623,6 +621,18 @@ export default function AdminFirstLogin({
 
             {isOpen ? (
               <>
+                  <div>
+                      <label>
+                          Transaction Series
+                      </label>
+                      <input
+                          // required="required"
+                          type="text"
+                          name="TransactionSeries"
+                          value={newCompany.TransactionSeries}
+                          onChange={handleNewCompanyChange}
+                      />
+                  </div>
                 <div>
                   <label>Company Owner Name </label>
                   <input
@@ -685,15 +695,6 @@ export default function AdminFirstLogin({
                     name="CompEmail"
                     type="text"
                     value={newCompany.CompEmail}
-                    onChange={handleNewCompanyChange}
-                  />
-                </div>
-                <div>
-                  <label>Company GSTIN No.</label>
-                  <input
-                    type="text"
-                    name="CompGSTINNo"
-                    value={newCompany.CompGSTINNo}
                     onChange={handleNewCompanyChange}
                   />
                 </div>
@@ -835,7 +836,7 @@ export default function AdminFirstLogin({
                 type="text"
                 required="required"
               >
-                <option value={""}>Select an option</option>;
+                <option value={""}>Select an option</option>
                 <option value={"Showroom"}>Showroom</option>
                 <option value={"Warehouse"}>Warehouse</option>
                 <option value={"Exhibition"}>Exhibition</option>
@@ -1068,7 +1069,7 @@ export default function AdminFirstLogin({
                 required="required"
               >
                 <option value={""}>Select Bank Name</option>
-                {allBanksList.map((x, index) => (
+                {popularBanksIndia.map((x, index) => (
                   <option key={index} value={x}>
                     {x}
                   </option>

@@ -14,6 +14,7 @@ import {
 import { useSelector } from "react-redux";
 import { MagnifyingGlass } from "react-loader-spinner";
 import { ExportToExcel } from "../../../Other Functions/ExportToExcel";
+import jsPDF from "jspdf";
 
 export default function AdminSkuReport() {
   const allStates = useSelector((state) => state);
@@ -256,11 +257,11 @@ export default function AdminSkuReport() {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const startX = 10; // Adjusted startX value for the serial number column
+    const startX = 10;
     let startY = 20;
     const lineHeight = 5;
     const margin = 5;
-    const serialNumberWidth = 20; // Width for the serial number column
+    const serialNumberWidth = 20;
     const columnWidth =
       (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
@@ -270,17 +271,21 @@ export default function AdminSkuReport() {
 
     const generateHeader = () => {
       doc.text("S. No.", startX, startY); // Serial Number
-      doc.text("Collection", startX + columnWidth, startY);
-      doc.text("Gross Wt", startX + 2 * columnWidth, startY);
-      doc.text("Net Wt", startX + 3 * columnWidth, startY);
-      doc.text("Item Code", startX + 4 * columnWidth, startY);
-      doc.text("Barcode No", startX + 5.5 * columnWidth, startY);
+      doc.text("SKU", startX + columnWidth, startY);
+      doc.text("Item Code", startX + 2 * columnWidth, startY);
+      doc.text("QTY", startX + 3.4 * columnWidth, startY);
+      doc.text("Total Wt", startX + 4.3 * columnWidth, startY);
+      doc.text("Packing Wt", startX + 5.5 * columnWidth, startY);
+      doc.text("Gross Wt", startX + 6.8 * columnWidth, startY);
+      doc.text("Stone Pcs", startX + 8 * columnWidth, startY);
+      doc.text("Stone Wt", startX + 9.3 * columnWidth, startY);
+      doc.text("Net Wt", startX +10.5 * columnWidth, startY);
       // doc.text("M Fixed Amt", startX + 7 * columnWidth, startY);
       // doc.text("M Fix Wastage", startX + 8.5 * columnWidth, startY);
       // doc.text("M Percentage", startX + 10 * columnWidth, startY);
       // doc.text("M per_gram", startX + 11.5 * columnWidth, startY);
       // doc.text("stoneAmount", startX + 13 * columnWidth, startY);
-      doc.text("Tid", startX + 7.53 * columnWidth, startY);
+      doc.text("Fine Wt", startX + 11.5 * columnWidth, startY);
     };
     const totalNetWt = data.reduce(
       (total, item) => total + (parseFloat(item.NetWt) || 0),
@@ -292,16 +297,16 @@ export default function AdminSkuReport() {
     );
     // Generate header on the first page
     generateHeader();
-    doc.text(
-      `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
-      startX + 5 * columnWidth,
-      startY - 10
-    );
-    doc.text(
-      `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
-      startX,
-      startY - 10
-    );
+    // doc.text(
+    //   `Total Net Wt: ${totalNetWt.toFixed(3)} gm`,
+    //   startX + 5 * columnWidth,
+    //   startY - 10
+    // );
+    // doc.text(
+    //   `Total Gross Wt: ${totalGrossWt.toFixed(3)} gm`,
+    //   startX,
+    //   startY - 10
+    // );
     // Generate data rows
 
     let y = startY + lineHeight + margin;
@@ -314,32 +319,57 @@ export default function AdminSkuReport() {
         generateHeader();
         y = startY + lineHeight + margin; // Update y position for the new page
       }
-
       const serialNumber = index + 1;
       doc.text(serialNumber.toString(), startX, y);
+
       doc.text(
-        item.collection ? item.collection.toString().substr(0, 8) : "N/A",
+        item.SKU ? item.SKU.toString().substr(0, 8) : "N/A",
         startX + columnWidth,
         y
       );
       doc.text(
-        item.GrossWt ? item.GrossWt.toString() : "N/A",
+        item.ItemName ? item.ItemName .toString() : "N/A",
         startX + 2 * columnWidth,
         y
       );
       doc.text(
-        item.netWt ? item.netWt.toString() : "N/A",
-        startX + 3 * columnWidth,
+        item.Pc ? item.Pc.toString() : "N/A",
+          startX + 3.4 * columnWidth,
         y
       );
       doc.text(
-        item.itemCode ? item.itemCode.toString() : "N/A",
-        startX + 4 * columnWidth,
+        item.TotalWeight ? item.TotalWeight.toString() : "N/A",
+          startX + 4.3 * columnWidth,
         y
       );
       doc.text(
-        item.barcodeNumber ? item.barcodeNumber.toString() : "N/A",
-        startX + 5.5 * columnWidth,
+        item.PackingWeight ? item.PackingWeight.toString() : "N/A",
+          startX + 5.5 * columnWidth,
+        y
+      );
+      doc.text(
+        item.GrossWeight ? item.GrossWeight.toString() : "N/A",
+          startX + 6.8 * columnWidth,
+        y
+      );
+      doc.text(
+        item.StonePcs ? item.StonePcs.toString() : "N/A",
+          startX + 8 * columnWidth,
+        y
+      );
+      doc.text(
+        item.StoneWeight ? item.StoneWeight.toString() : "N/A",
+          startX + 9.3 * columnWidth,
+        y
+      );
+      doc.text(
+        item.NetWeight ? item.NetWeight.toString() : "N/A",
+          startX +10.5 * columnWidth,
+        y
+      );
+      doc.text(
+        item.FineWeight ? item.FineWeight.toString() : "N/A",
+          startX + 11.5 * columnWidth,
         y
       );
       // doc.text(
@@ -369,11 +399,11 @@ export default function AdminSkuReport() {
       //   startX + 13 * columnWidth,
       //   y
       // );
-      doc.text(
-        item.tid ? item.tid.toString() : "N/A",
-        startX + 7.5 * columnWidth,
-        y
-      );
+      // doc.text(
+      //   item.tid ? item.tid.toString() : "N/A",
+      //   startX + 7.5 * columnWidth,
+      //   y
+      // );
       y += lineHeight + margin;
     });
 

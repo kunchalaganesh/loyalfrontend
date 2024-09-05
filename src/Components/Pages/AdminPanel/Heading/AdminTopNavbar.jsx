@@ -47,7 +47,7 @@ import user3 from "../../../Images/ProfileList/user3.jpg";
 import adminProfilePic from "../../../Images/AdminProfile/loyalStringLogoSmall.png";
 import {useNavigate} from "react-router-dom";
 import ResponsiveDrawer from "./ResponsiveDrawer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {adminLoggedOut} from "../../../../redux/action/Actions";
 
 export default function AdminTopNavbar() {
@@ -57,7 +57,8 @@ export default function AdminTopNavbar() {
   const [dropdown4, setDropdown4] = useState(false);
   const [dropdown5, setDropdown5] = useState(false);
   const [dropdown6, setDropdown6] = useState(false);
-
+  const allStates = useSelector((state) => state);
+  const adminLoggedIn = allStates.reducer1;
   const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
   const [drawerSection, setDrawerSection] = useState("Settings");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -68,7 +69,6 @@ export default function AdminTopNavbar() {
   const toggleDrawer = () => {
     setSettingsPanelOpen(!settingsPanelOpen);
   };
-
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   const dropdownRef = useRef(null);
@@ -218,7 +218,7 @@ export default function AdminTopNavbar() {
         {id: 4, name: "Department", linkto: "/add_department"},
         {id: 5, name: "Roles", linkto: "/add_roles"},
         {id: 6, name: "Employees", linkto: "/add_employees"},
-        {id: 7, name: "Bank", linkto: "/add_banks"},
+        {id: 7, name: "Bank Account", linkto: "/add_banks"},
         {id: 8, name: "Devices", linkto: "/add_devices"},
         {id: 9, name: "Tax", linkto: "/add_tax"},
         {id: 10, name: "Rate Conversion", linkto: "/add_rate"},
@@ -425,7 +425,7 @@ export default function AdminTopNavbar() {
   ];
   const userProfile = {
     id: 1,
-    name: "Loyal String",
+    name: `${adminLoggedIn.FirstName} ${adminLoggedIn.LastName}`,
     profilePic: adminProfilePic,
   };
   const navigate = useNavigate();
@@ -523,7 +523,7 @@ export default function AdminTopNavbar() {
                     </li>
                     <li onClick={() => navigate("/add_vendor")}>
                       <MdOutlinePersonAddAlt size={"17px"}/>
-                      <p>Supplier</p>
+                      <p>Vendor</p>
                     </li>
                     {/* <li onClick={() => navigate("/add_employee")}> */}
                     <li onClick={() => navigate("/add_employees")}>
@@ -804,7 +804,7 @@ export default function AdminTopNavbar() {
                       src={userProfile.profilePic}
                       alt="selectedProfile"
                   />
-                  <p style={{whiteSpace: "nowrap"}}>{userProfile.name}</p>
+                  <p style={{whiteSpace: "nowrap",minWidth: "120px"}}>{userProfile.name}</p>
                   <AiOutlineDown style={{padding: "10px 5px"}} size={"12px"}/>
                 </div>
 

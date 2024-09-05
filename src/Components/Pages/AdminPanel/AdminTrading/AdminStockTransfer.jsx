@@ -40,7 +40,7 @@ import {InfinitySpin} from "react-loader-spinner";
 function AdminStockTransfer() {
     const [checkdata, setCheckdata] = useState([])
     const [selectedValue, setSelectedValue] = useState('labelled');
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
     const [allCategories, setAllCategories] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
     const [allDesign, setAllDesign] = useState([]);
@@ -65,6 +65,7 @@ function AdminStockTransfer() {
     const [tableData, setTableData] = useState([]);
     const [showError, setShowError] = useState(false);
     const [messageType, setMessageType] = useState("");
+    // const [fromId, setFromId] = useState("");
     const [messageToShow, setMessageToShow] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -109,7 +110,7 @@ function AdminStockTransfer() {
     };
 
     const fetchAllUnlabelledStock = async () => {
-            setIsLoading(true);
+        setIsLoading(true);
         const formData = {
             ClientCode: clientCode,
         };
@@ -133,27 +134,41 @@ function AdminStockTransfer() {
             setShowError(false);
         }, 2000);
     }, [showError]);
+    // useEffect(() => {
+    //     if (selectedValue === "labelled") {
+    //         fetchAllLabelledStock();
+    //     } else {
+    //         fetchAllUnlabelledStock();
+    //     }
+    // }, [selectedValue]);
     useEffect(() => {
-        if (selectedValue === "labelled") {
-            fetchAllLabelledStock();
-        } else {
-            fetchAllUnlabelledStock();
+        let fromId;
+        if(fromOptionKey === "PacketName" && formData.Source){
+            const oneItem = packetsOption.find((item) => item.PacketName === formData.Source);
+            if(oneItem) fromId = oneItem.Id;
         }
-    }, [selectedValue]);
-    useEffect(() => {
+        if(fromOptionKey === "BoxName" && formData.Source){
+            const oneItem = boxOption.find((item) => item.BoxName === formData.Source);
+            if(oneItem) fromId = oneItem.Id;
+        }
+        if(fromOptionKey === "BranchName" && formData.Source){
+            const oneItem = branchOption.find((item) => item.BranchName === formData.Source);
+            if(oneItem) fromId = oneItem.Id;
+        }
         const getFilteredData = async () => {
-            const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName);
-            const designId = allDesign.find((item, _) => item.DesignName === filterData.DesignName);
-            const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName);
-            const purityId = allPurity.find((item, _) => item.PurityName === filterData.PurityName);
+            const categoryId = allCategories.find((item, _) => item.CategoryName === filterData.CategoryName)?.Id || 0;
+            const designId = allDesign.find((item, _) => item.DesignName === filterData.DesignName)?.Id || 0;
+            const productId = allProducts.find((item, _) => item.ProductName === filterData.ProductName)?.Id || 0;
+            const purityId = allPurity.find((item, _) => item.PurityName === filterData.PurityName)?.Id || 0;
 
             const payload = {
                 ClientCode: clientCode,
-                CategoryId: categoryId ? categoryId.Id : 0,
-                DesignId: designId ? designId.Id : 0,
-                ProductId: productId ? productId.Id : 0,
-                PurityId: purityId ? purityId.Id : 0,
+                CategoryId: categoryId,
+                DesignId: designId,
+                ProductId: productId,
+                PurityId: purityId,
             };
+
             try {
                 const response = await fetch(selectedValue === 'labelled' ? a233 : a234, {
                     method: "POST",
@@ -162,15 +177,50 @@ function AdminStockTransfer() {
                     },
                     body: JSON.stringify(payload),
                 });
-                const data = await response.json();
-                setTableData(data);
+
+                const resData = await response.json();
+                let resultdata = resData;
+                let idKey;
+
+                if (fromOptionKey) {
+                    if (fromOptionKey === 'PacketName') {
+                        idKey = 'PacketId';
+                    } else if (fromOptionKey === 'BoxName') {
+                        idKey = 'BoxId';
+                    } else if(fromOptionKey === 'BranchName'){
+                        idKey = 'BranchId';
+                    }
+
+                    if (idKey) {
+                        resultdata = resData.filter((item) => item[idKey] !== 0);
+                        if(fromId){
+                        resultdata = resultdata.filter((item) => item[idKey] == fromId);
+                        }
+                    }
+
+                    if (['DisplayName', 'FirstName'].includes(fromOptionKey)) {
+                        resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0);
+                    }
+
+                    if (data.length > 0) {
+                        resultdata = resultdata.filter((item2) => !data.some((item) => item.Id === item2.Id));
+                    }
+
+                    setTableData(resultdata);
+                } else {
+                    if (data.length > 0) {
+                        const filterRes = resData.filter((item2) => !data.some((item) => item.Id === item2.Id));
+                        setTableData(filterRes);
+                    } else {
+                        setTableData(resultdata);
+                    }
+                }
             } catch (error) {
                 console.log(error);
             }
-        }
-        getFilteredData()
-    }, [filterData])
-
+        };
+        getFilteredData();
+    }, [filterData, formData,selectedValue]);
     const fetchAllCategories = async () => {
         const formData = {ClientCode: clientCode};
         try {
@@ -338,9 +388,12 @@ function AdminStockTransfer() {
         });
         setFormData((prev) => ({
             ...prev,
-            TotalGrossWT: 0,
-            TotalNetWT: 0
+            StockTransferTypeName: '',
+            Source : '',
+            Destination: ''
         }));
+        setFromOptionKey('');
+        setToOptionKey('');
         setCheckdata([]);
         setSelectedRows([]);
         setSelectAll(false);
@@ -353,6 +406,24 @@ function AdminStockTransfer() {
         setSelectAll(isChecked);
         setSelectedRows(isChecked ? tableData.map(row => row.Id) : []);
     };
+    useEffect(() => {
+
+        const totalgrosswt = data.reduce(
+            (total, product) =>
+                total + parseFloat(selectedValue === "labelled" ? product.GrossWt : product.TotalGrossWt),
+            0
+        );
+        const totalnetwt = data.reduce(
+            (total, product) =>
+                total + parseFloat(selectedValue === "labelled" ? product.NetWt : product.TotalNetWt),
+            0
+        );
+        setFormData({
+            ...formData,
+            TotalGrossWT: totalgrosswt,
+            TotalNetWT: totalnetwt
+        });
+    },[data])
     const handleRowCheckboxChange = (e, id) => {
         const isChecked = e.target.checked;
         setSelectedRows(prevState =>
@@ -366,21 +437,7 @@ function AdminStockTransfer() {
             const updatedCheckData = isChecked
                 ? [...(prevCheckData || []), selectedRow]
                 : (prevCheckData || []).filter(row => row.Id !== id);
-            const totalgrosswt = updatedCheckData.reduce(
-                (total, product) =>
-                    total + parseFloat(selectedValue === "labelled" ? product.GrossWt : product.TotalGrossWt),
-                0
-            );
-            const totalnetwt = updatedCheckData.reduce(
-                (total, product) =>
-                    total + parseFloat(selectedValue === "labelled" ? product.NetWt : product.TotalNetWt),
-                0
-            );
-            setFormData({
-                ...formData,
-                TotalGrossWT: totalgrosswt,
-                TotalNetWT: totalnetwt
-            });
+
             return updatedCheckData;
         });
 
@@ -403,7 +460,7 @@ function AdminStockTransfer() {
         setFilterData((list) => ({...list, [name]: value}));
     };
     const transferStock = () => {
-        const selectedData = tableData.filter(row => selectedRows.includes(row.Id));
+        const selectedData = tableData?.filter(row => selectedRows.includes(row.Id));
         setData(prevData => [...prevData, ...selectedData]);
         setTableData(prevData => prevData.filter(row => !selectedRows.includes(row.Id)));
         setSelectedRows([]);
@@ -416,6 +473,7 @@ function AdminStockTransfer() {
     };
     const handleInputChangePurchase = (e) => {
         const {name, value} = e.target;
+
         if (value.split(' ') && name === 'StockTransferTypeName') {
             if (e.target.value.split(' ')[0] === 'Packet') {
                 setFromOptionKey('PacketName');
@@ -458,6 +516,24 @@ function AdminStockTransfer() {
                 setToOption([]);
             }
         }
+            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Packet" && formData.StockTransferTypeName.split(" ")[0] === "Packet"){
+                // setFromOptionKey('PacketName');
+                // setToOptionKey('PacketName');
+                const filterTo = packetsOption.filter((item) => item.PacketName !== value)
+                setToOption(filterTo);
+            }
+            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Box" && formData.StockTransferTypeName.split(" ")[0] === "Box"){
+                // setFromOptionKey('BoxName');
+                // setToOptionKey('BoxName');
+                const filterTo = boxOption.filter((item) => item.BoxName !== value)
+                setToOption(filterTo);
+            }
+            if(name == "Source" && formData.StockTransferTypeName.split(" ")[2] === "Branch" && formData.StockTransferTypeName.split(" ")[0] === "Branch"){
+                // setFromOptionKey('BranchName');
+                // setToOptionKey('BranchName');
+                const filterTo = branchOption.filter((item) => item.BranchName !== value)
+                setToOption(filterTo);
+            }
         setFormData((list) => ({...list, [name]: value}));
     }
     const handleSubmit = async () => {
@@ -477,7 +553,6 @@ function AdminStockTransfer() {
             Destination: destinationItem ? destinationItem.Id : 0,
             Remarks: formData.Remarks,
             ReceivedByEmployee: formData.ReceivedBy === 'Other' ? formData.ReceivedByEmployee : formData.ReceivedBy,
-            IsApproved: true
         }
         try {
             const response = await fetch(a235, {
@@ -512,6 +587,7 @@ function AdminStockTransfer() {
             setMessageType("success");
             setMessageToShow("Stock Transfer Successfully");
             setShowError(true);
+            navigate("/stock_transfer_list");
         } catch (error) {
             console.log(error);
             setMessageType("error");
@@ -677,7 +753,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Product
                                             </option>
-                                            {allProducts.map((x, y) => (
+                                            {filterData.CategoryName && allProducts.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.ProductName}
@@ -696,7 +772,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Design
                                             </option>
-                                            {allDesign.map((x, y) => (
+                                            {(filterData.ProductName && filterData.CategoryName) && allDesign.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.DesignName}
@@ -715,7 +791,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Purity
                                             </option>
-                                            {allPurity.map((x, y) => (
+                                            {filterData.CategoryName && allPurity.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.PurityName}
@@ -750,7 +826,7 @@ function AdminStockTransfer() {
                             </Box>
                         </Grid>
                     </Grid>
-                    <Grid container alignItems="start" justifyContent="space-around" sx={{ my: 2 }} spacing={2}>
+                    <Grid container alignItems="start" justifyContent="space-around" sx={{my: 2}} spacing={2}>
                         <Grid item xs>
                             {isLoading ? (
                                 <Box
@@ -761,37 +837,38 @@ function AdminStockTransfer() {
                                         width: "100%",
                                     }}
                                 >
-                                    <InfinitySpin width="200" color="#4fa94d" />
+                                    <InfinitySpin width="200" color="#4fa94d"/>
                                 </Box>
                             ) : (
                                 <TableContainer
                                     sx={{
                                         height: "50vh",
                                         overflowY: "auto",
-                                        ' th, td': { border: '1px solid #ccc' }
+                                        ' th, td': {border: '1px solid #ccc'}
                                     }}
                                 >
                                     <Table
                                         size="small"
                                         aria-label="first table"
-                                        sx={{ borderRadius: '4px', borderCollapse: 'collapse' }}
+                                        sx={{borderRadius: '4px', borderCollapse: 'collapse'}}
                                     >
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell align="center">Sr</TableCell>
-                                                <TableCell align="center">Product Name</TableCell>
-                                                <TableCell align="center">Label</TableCell>
-                                                <TableCell align="center">Gross WT</TableCell>
-                                                <TableCell align="center">Net WT</TableCell>
-                                                <TableCell align="center">Transfer</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Sr</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Product
+                                                    Name</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Label</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Gross WT</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Net WT</TableCell>
+                                                <TableCell align="center" sx={{fontWeight: "600"}}>Transfer</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {tableData?.map((item, index) => (
+                                            {(tableData && fromOptionKey) && tableData.map((item, index) => (
                                                 <TableRow key={item.id}>
                                                     <TableCell align="center">{index + 1}</TableCell>
                                                     <TableCell align="center">
-                                                        {selectedValue === "labelled" ? item.ProductTitle : item.DesignName}
+                                                        {selectedValue === "labelled" ? item.ProductName : item.DesignName}
                                                     </TableCell>
                                                     <TableCell align="center">
                                                         {selectedValue === "labelled" ? item.ItemCode : item.ItemCode}
@@ -835,38 +912,41 @@ function AdminStockTransfer() {
                                 sx={{
                                     height: "50vh",
                                     overflowY: "auto",
-                                    ' th, td': { border: '1px solid #ccc' }
+                                    ' th, td': {border: '1px solid #ccc'}
                                 }}
                             >
                                 <Table
                                     size="small"
                                     aria-label="second table"
-                                    sx={{ borderRadius: '4px', borderCollapse: 'collapse' }}
+                                    sx={{borderRadius: '4px', borderCollapse: 'collapse'}}
                                 >
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell align="center">Sr</TableCell>
-                                            <TableCell align="center">Product Name</TableCell>
-                                            <TableCell align="center">Label</TableCell>
-                                            <TableCell align="center">Gross WT</TableCell>
-                                            <TableCell align="center">Net WT</TableCell>
-                                            <TableCell align="center">Remove</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Sr</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Product Name</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Label</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Gross WT</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Net WT</TableCell>
+                                            <TableCell align="center" sx={{fontWeight: "600"}}>Remove</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {data.map((item, index) => (
                                             <TableRow key={item.id}>
                                                 <TableCell align="center">{index + 1}</TableCell>
-                                                <TableCell align="center">{selectedValue === "labelled" ? item.ProductTitle : item.DesignName}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedValue === "labelled" ? item.ProductName : item.DesignName}</TableCell>
                                                 <TableCell align="center">{item.ItemCode}</TableCell>
-                                                <TableCell align="center">{selectedValue === "labelled" ?  item.GrossWt : item.TotalGrossWt}</TableCell>
-                                                <TableCell align="center">{selectedValue === "labelled" ?  item.NetWt : item.TotalNetWt}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedValue === "labelled" ? item.GrossWt : item.TotalGrossWt}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedValue === "labelled" ? item.NetWt : item.TotalNetWt}</TableCell>
                                                 <TableCell align="center">
                                                     <Typography
                                                         variant="body2"
                                                         color="error"
                                                         onClick={() => removeRow(item.Id)}
-                                                        sx={{ cursor: 'pointer' }}
+                                                        sx={{cursor: 'pointer'}}
                                                     >
                                                         X
                                                     </Typography>
@@ -949,6 +1029,7 @@ function AdminStockTransfer() {
                                             className="inputstock"
                                             name={"TotalGrossWT"}
                                             value={formData.TotalGrossWT}
+                                            readOnly
                                             onChange={handleInputChangePurchase}/>
                                     </Box>
                                 </Grid>
@@ -965,6 +1046,7 @@ function AdminStockTransfer() {
                                             className="inputstock"
                                             name={"TotalNetWT"}
                                             value={formData.TotalNetWT}
+                                            readOnly
                                             onChange={handleInputChangePurchase}/>
                                     </Box>
                                 </Grid>
@@ -996,22 +1078,6 @@ function AdminStockTransfer() {
                                         </select>
                                     </Box>
                                 </Grid>
-                                <Grid item>
-                                    <Box sx={{width: "100%"}}>
-                                        <label
-                                            style={{
-                                                display: "block",
-                                                textAlign: "start",
-                                                marginBottom: "5px",
-                                                fontSize: "15px"
-                                            }}
-                                        >
-                                            Remark
-                                        </label>
-                                        <input type="text" className="inputstock" name={"Remarks"}
-                                               onChange={handleInputChangePurchase} value={formData.Remarks}/>
-                                    </Box>
-                                </Grid>
                                 {formData.ReceivedBy === "Other" && (
                                     <>
                                         <Grid item>
@@ -1033,6 +1099,23 @@ function AdminStockTransfer() {
                                         </Grid>
                                     </>
                                 )}
+                                <Grid item>
+                                    <Box sx={{width: "100%"}}>
+                                        <label
+                                            style={{
+                                                display: "block",
+                                                textAlign: "start",
+                                                marginBottom: "5px",
+                                                fontSize: "15px"
+                                            }}
+                                        >
+                                            Remark
+                                        </label>
+                                        <input type="text" className="inputstock" name={"Remarks"}
+                                               onChange={handleInputChangePurchase} value={formData.Remarks}/>
+                                    </Box>
+                                </Grid>
+
                             </Grid>
                         </Grid>
                     </Grid>

@@ -402,10 +402,7 @@ export default function AdminPairCustomerVendor() {
     }, 2000);
   }, [showError]);
   const handleEditData = (data) => {
-    console.log(data, "data");
-    console.log(data, "data");
-    console.log(data, "data");
-    setNewCategory({ ...data, OldEntry: true });
+    setNewCategory({ ...data,CustomerId: data.Id, OldEntry: true });
     setActive("AddNew");
   };
   return (
