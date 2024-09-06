@@ -3556,7 +3556,7 @@ export default function AdminAddBulkStockNew() {
                         >
                           Add Product
                         </h4>{" "} */}
-                                            <div className="addProductDetailsUpperBox" style={{marginTop: "3rem"}}>
+                                            <div className="addProductDetailsUpperBox" style={{marginTop: "3rem",display: "unset",marginLeft: "30px",marginRight: "20px"}}>
                                                 <div>
                                                     <Grid container xs={12} spacing={4}>
                                                         <Grid xs={6} md={3} item>
@@ -4306,7 +4306,7 @@ export default function AdminAddBulkStockNew() {
                                                         {/*{addedProducts.length <= 0  ? (*/}
                                                         <div
                                                             style={{
-                                                                justifyContent: "left",
+                                                                justifyContent: "right",
                                                                 marginTop: "20px",
                                                             }}
                                                             className="bulkStockAddProductDetailsItem"
@@ -4535,7 +4535,7 @@ export default function AdminAddBulkStockNew() {
                                                             />
                                                         </div>
                                                         {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
+                                                            <div className="bulkStockAddProductDetailsItem" style={{display: "flex"}}>
                                                                 <label style={{margin: 0, cursor: "pointer"}}>
                                                                     {/* Images {`${selectedFiles.length}`} */}
                                                                     <BsImages
@@ -4569,8 +4569,7 @@ export default function AdminAddBulkStockNew() {
                               />
                             </div> */}
 
-                                                        <div className="bulkStockAddProductDetailsItem"
-                                                        >
+                                                        <div className="bulkStockAddProductDetailsItem" style={{display: "flex",justifyContent:"center",alignItems:"center"}}>
                                                             <h5
                                                                 style={{margin: "0px"}}
                                                                 onClick={() => setShowAllFields2(!showAllFields2)}
@@ -4776,7 +4775,9 @@ export default function AdminAddBulkStockNew() {
                                                         {addedProducts.length <= 0 ? (
                                                             <div
                                                                 style={{
+                                                                    display:"flex",
                                                                     justifyContent: "left",
+                                                                    alignItems:"center"
                                                                 }}
                                                                 className="bulkStockAddProductDetailsItem"
                                                             >

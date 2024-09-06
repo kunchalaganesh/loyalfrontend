@@ -601,11 +601,16 @@ textarea {
   height: auto;
 }
 .bulkStockAddProductDetailsItem {
-  display: flex;
+  /*display: flex;*/
   justify-content: space-around;
   align-items: center;
 }
-
+.bulkStockAddProductDetailsItem label{
+  display: block;
+}
+.bulkStockAddProductDetailsItem select,.bulkStockAddProductDetailsItem input{
+  width: 100% !important;
+}
 /* .bulkStockAddProductDetailsItem { */
 /* width: 11%; */
 /* overflow: hidden; */
@@ -613,7 +618,7 @@ textarea {
 .bulkStockAddProductDetailsItem select,
 .bulkStockAddProductDetailsItem label,
 .bulkStockAddProductDetailsItem input {
-  width: 100px;
+  /*width: 100px;*/
   padding: 5px;
   margin: 10px;
   margin-left: 0;
