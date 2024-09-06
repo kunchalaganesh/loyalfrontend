@@ -1014,10 +1014,10 @@ function AdminStockTransfer() {
                                             textAlign: "start",
                                             marginBottom: "5px",
                                             fontSize: "15px"
-                                        }}>Transferred To<sup>*</sup></label>
+                                        }}>Transferred To<sup>{(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? "*" : null}</sup></label>
                                         <select style={{width: "100%",height: "30px"}} className={"input-select"} name={"TransferedToBranch"}
                                                 onChange={handleInputChangePurchase}
-                                                value={formData.TransferedToBranch} required={"required"}>
+                                                value={formData.TransferedToBranch}   required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false}>
                                             <option value="">
                                                 Select Transferred To
                                             </option>
