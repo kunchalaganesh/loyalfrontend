@@ -6,7 +6,7 @@ import {
     a125,
     a128,
     a131,
-    a134,
+    a134, a149, a163,
     a181,
     a218,
     a219, a220,
@@ -31,10 +31,16 @@ function AllReport() {
     const [allPurityTypes, setAllPurityTypes] = useState([]);
     const [allProductTypes, setAllProductTypes] = useState([]);
     const [allCollectionTypes, setAllCollectionTypes] = useState([]);
+    const [allSku, setAllSku] = useState([]);
+    const [allVendors, setAllVendors] = useState([]);
     let today = new Date();
     const [fromDate, setFromDate] = useState(today.toISOString().split("T")[0]);
     const [toDate, setToDate] = useState(today.toISOString().split("T")[0]);
     const [stockType, setStockType] = useState("");
+    const [labelCode, setLabelCode] = useState("");
+    const [barCode, setBarCode] = useState("");
+    const [vendorName, setVendorName] = useState("");
+    const [skuName, setSkuName] = useState("");
     const [categoryName, setCategoryName] = useState("");
     const [purityName, setPurityName] = useState("");
     const [productName, setProductName] = useState("");
@@ -68,6 +74,33 @@ function AllReport() {
         });
         const data = await response.json();
         setAllCategories(data);
+    };
+
+    const fetchAllSkuData = async () => {
+        const formData = {ClientCode: clientCode};
+        await fetch(a163, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(formData),
+        })
+            .then((res) => res.json())
+            .then((response) => {
+                setAllSku(response);
+                fetchAllSkuKarigarReport();
+            });
+    };
+
+    const fetchAllVendors = async () => {
+        const formData = {
+            ClientCode: clientCode,
+        };
+        const response = await fetch(a149, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        setAllVendors(data);
     };
 
     const fetchProductTypes = async () => {
@@ -113,8 +146,10 @@ function AllReport() {
         fetchPuritiesData(),
             fetchCollectonData(),
             fetchProductTypes(),
-            fetchAllCategory()
-    }, [selectedTab == 0]);
+            fetchAllCategory(),
+            fetchAllSkuData(),
+            fetchAllVendors()
+    }, [selectedTab]);
 
     let categoryId = parseInt(categoryName.split(",")[0]);
     let productTypeIdSelected = parseInt(productName.split(",")[0]);
@@ -154,6 +189,19 @@ function AllReport() {
             const purityId = parseInt(purityName.split(",")[0]);
             filtered = filtered.filter((x) => x.PurityId === purityId);
         }
+
+        // if (fromDate && toDate) {
+        //     filtered = filtered.filter((product) => {
+        //         const productFromDate = new Date(product.FromDate);
+        //         const productToDate = new Date(product.ToDate);
+        //         const filterFromDate = new Date(fromDate);
+        //         const filterToDate = new Date(toDate);
+        //         return (
+        //             productFromDate >= filterFromDate && productToDate <= filterToDate
+        //         );
+        //     });
+        // }
+
         setFilteredStockReport(filtered);
         setCurrentPage(1);
     };
@@ -165,6 +213,20 @@ function AllReport() {
             const categoryId = parseInt(categoryName.split(",")[0]);
             filtered = filtered.filter(
                 (x) => x.CategoryId === categoryId
+            );
+        }
+
+        if (vendorName) {
+            const vendorId = parseInt(vendorName.split(",")[0]);
+            filtered = filtered.filter(
+                (x) => x.VendorId === vendorId
+            );
+        }
+
+        if (skuName) {
+            const skuId = parseInt(skuName.split(",")[0]);
+            filtered = filtered.filter(
+                (x) => x.SKUId === skuId
             );
         }
 
@@ -207,6 +269,20 @@ function AllReport() {
             );
         }
 
+        if (vendorName) {
+            const vendorId = parseInt(vendorName.split(",")[0]);
+            filtered = filtered.filter(
+                (x) => x.VendorId === vendorId
+            );
+        }
+
+        if (skuName) {
+            const skuId = parseInt(skuName.split(",")[0]);
+            filtered = filtered.filter(
+                (x) => x.SKUId === skuId
+            );
+        }
+
         if (collectionName) {
             const collectionId = parseInt(collectionName.split(",")[0]);
             filtered = filtered.filter(
@@ -232,6 +308,18 @@ function AllReport() {
             );
         }
 
+        if (labelCode !== "") {
+            filtered = filtered.filter(
+                (product) => product.ItemCode && product.ItemCode.includes(labelCode)
+            );
+        }
+
+        if (barCode !== "") {
+            filtered = filtered.filter(
+                (product) => product.RFIDCode && product.RFIDCode.includes(barCode)
+            );
+        }
+
         if (productName) {
             const productTypeId = parseInt(productName.split(",")[0]);
             filtered = filtered.filter(
@@ -246,6 +334,15 @@ function AllReport() {
             );
         }
 
+        // if (fromDate !== "" && toDate !== "") {
+        //     filtered = filtered.filter((product) => {
+        //         const createdDate = new Date(product.CreatedOn);
+        //         return (
+        //             createdDate >= new Date(fromDate) && createdDate <= new Date(toDate)
+        //         );
+        //     });
+        // }
+
         setFilteredInventoryReport(filtered);
         setCurrentPage(1);
     };
@@ -257,7 +354,9 @@ function AllReport() {
         productName,
         collectionName,
         purityName,
-        allStockReport
+        allStockReport,
+        fromDate,
+        toDate
     ]);
 
     useEffect(() => {
@@ -267,7 +366,9 @@ function AllReport() {
         productName,
         collectionName,
         purityName,
-        allSkuReport
+        allSkuReport,
+        vendorName,
+        skuName
     ]);
 
     useEffect(() => {
@@ -277,7 +378,9 @@ function AllReport() {
         productName,
         collectionName,
         purityName,
-        allSkuKarigarReport
+        allSkuKarigarReport,
+        vendorName,
+        skuName
     ]);
 
     useEffect(() => {
@@ -287,7 +390,11 @@ function AllReport() {
         productName,
         collectionName,
         purityName,
-        allInventory
+        allInventory,
+        barCode,
+        labelCode,
+        fromDate,
+        toDate
     ]);
     async function filterPackets() {
 
@@ -990,19 +1097,16 @@ function AllReport() {
         const generateHeader = () => {
             doc.text("Sr No.", startX, startY);
             doc.text("Category", startX + columnWidth, startY);
-            doc.text("product", startX + 3 * columnWidth, startY);
-            doc.text("design", startX + 4.2 * columnWidth, startY);
-            doc.text("SKU", startX + 5.3 * columnWidth, startY);
-            doc.text("Item Code", startX + 6.5 * columnWidth, startY);
-            doc.text("RFID Code", startX + 6.5 * columnWidth, startY);
-            doc.text("Gross wt", startX + 8 * columnWidth, startY);
-            doc.text("stone wt", startX + 9.5 * columnWidth, startY);
-            doc.text("clip wt", startX + 9.5 * columnWidth, startY);
-            doc.text("net wt", startX + 9.5 * columnWidth, startY);
-            doc.text("MRP", startX + 9.5 * columnWidth, startY);
-            doc.text("packet name", startX + 9.5 * columnWidth, startY);
-            doc.text("box name", startX + 9.5 * columnWidth, startY);
-            doc.text("branch name", startX + 9.5 * columnWidth, startY);
+            doc.text("product", startX + 2.4 * columnWidth, startY);
+            doc.text("design", startX + 3.6 * columnWidth, startY);
+            doc.text("SKU", startX + 4.6 * columnWidth, startY);
+            doc.text("Item Code", startX + 5.6 * columnWidth, startY);
+            doc.text("RFID Code", startX + 7.2 * columnWidth, startY);
+            doc.text("Gross wt", startX + 8.8 * columnWidth, startY);
+            doc.text("stone wt", startX + 10.1 * columnWidth, startY);
+            doc.text("clip wt", startX + 11.2 * columnWidth, startY);
+            doc.text("net wt", startX + 12.1 * columnWidth, startY);
+            doc.text("MRP", startX + 13 * columnWidth, startY);
         };
         const totalNetWt = data.reduce(
             (total, item) => total + (parseFloat(item.netWt) || 0),
@@ -1026,38 +1130,58 @@ function AllReport() {
             const serialNumber = index + 1;
             doc.text(serialNumber.toString(), startX, y);
             doc.text(
-                item.DesignName ? item.DesignName.toString().substr(0, 8) : "N/A",
+                item.CategoryName ? item.CategoryName.toString().substr(0, 8) : "N/A",
                 startX + columnWidth,
                 y
             );
             doc.text(
+                item.ProductName ? item.ProductName.toString() : "N/A",
+                startX + 2.4 * columnWidth,
+                y
+            );
+            doc.text(
+                item.DesignName ? item.DesignName.toString() : "N/A",
+                startX + 3.6 * columnWidth,
+                y
+            );
+            doc.text(
                 item.SKU ? item.SKU.toString() : "N/A",
-                startX + 3 * columnWidth,
-                y
-            );
-            doc.text(
-                item.GrossWt ? item.GrossWt.toString() : "N/A",
-                startX + 4.2 * columnWidth,
-                y
-            );
-            doc.text(
-                item.NetWt ? item.NetWt.toString() : "N/A",
-                startX + 5.3 * columnWidth,
+                startX + 4.6 * columnWidth,
                 y
             );
             doc.text(
                 item.ItemCode ? item.ItemCode.toString() : "N/A",
-                startX + 6.5 * columnWidth,
+                startX + 5.6 * columnWidth,
                 y
             );
             doc.text(
-                item.BranchName ? item.BranchName.toString() : "N/A",
-                startX + 8 * columnWidth,
+                item.RFIDCode ? item.RFIDCode.toString() : "N/A",
+                startX + 7.2 * columnWidth,
                 y
             );
             doc.text(
-                item.TIDNumber ? item.TIDNumber.toString() : "N/A",
-                startX + 9.5 * columnWidth,
+                item.GrossWt ? item.GrossWt.toString() : "N/A",
+                startX + 8.8 * columnWidth,
+                y
+            );
+            doc.text(
+                item.TotalStoneWeight ? item.TotalStoneWeight.toString() : "N/A",
+                startX + 10.1 * columnWidth,
+                y
+            );
+            doc.text(
+                item.ClipWeight ? item.ClipWeight.toString() : "N/A",
+                startX + 11.2 * columnWidth,
+                y
+            );
+            doc.text(
+                item.NetWt ? item.NetWt.toString() : "N/A",
+                startX + 12.1 * columnWidth,
+                y
+            );
+            doc.text(
+                item.MRP ? item.MRP.toString() : "N/A",
+                startX + 13 * columnWidth,
                 y
             );
             y += lineHeight + margin;
@@ -1117,6 +1241,7 @@ function AllReport() {
                                     <Tab label="Inventory"/>
                                     <Tab label="Packets"/>
                                     <Tab label="Boxs"/>
+                                    <Tab label="label Stock"/>
                                 </Tabs>
                             </Box>
                         </Grid>
@@ -1313,7 +1438,85 @@ function AllReport() {
                                                 </option>
                                             );
                                         })}
-                                    </select>}
+                                    </select>
+                                    }
+                                    {(selectedTab === 1 || selectedTab === 2) && (<>
+                                        <select
+                                            style={{margin: "5px 5px"}}
+                                            className={"input-select"}
+                                            value={vendorName}
+                                            onChange={(e) => {
+                                                setVendorName(e.target.value);
+                                            }}
+                                        >
+                                            <option value="">Select Vendor</option>
+                                            {allVendors.map((x) => {
+                                                return (
+                                                    <option value={`${x.Id},${x.VendorName}`}>
+                                                        {x.VendorName}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
+                                        <select
+                                            style={{margin: "5px 5px"}}
+                                            className={"input-select"}
+                                            value={skuName}
+                                            onChange={(e) => {
+                                                setSkuName(e.target.value);
+                                            }}
+                                        >
+                                            <option value="">Select Sku</option>
+                                            {allSku.map((x) => {
+                                                return (
+                                                    <option
+                                                        value={`${parseInt(x.Id)},${x.StockKeepingUnit}`}
+                                                    >
+                                                        {x.StockKeepingUnit}
+                                                    </option>
+                                                );
+                                            })}
+                                        </select>
+                                    </>)}
+                                    {selectedTab === 3 && (<>
+                                        <input
+                                            className={"input-select"}
+                                            style={{width: "100%", margin: "5px 5px"}}
+                                            type="text"
+                                            placeholder="Label..."
+                                            value={labelCode}
+                                            onChange={(e) => {
+                                                setLabelCode(e.target.value.toUpperCase());
+                                                setCurrentPage(1);
+                                            }}
+                                        />
+                                        <input
+                                            className={"input-select"}
+                                            style={{width: "100%", margin: "5px 5px"}}
+                                            type="text"
+                                            placeholder="RFID Code"
+                                            value={barCode}
+                                            onChange={(e) => {
+                                                setBarCode(e.target.value.toUpperCase());
+                                                setCurrentPage(1);
+                                            }}
+                                        />
+                                        <input
+                                            style={{cursor: "pointer", margin: "5px 5px"}}
+                                            type="date"
+                                            placeholder="From Date"
+                                            value={fromDate}
+                                            onChange={(e) => setFromDate(e.target.value)}
+                                        />
+                                        <input
+                                            style={{cursor: "pointer", margin: "5px 5px"}}
+                                            type="date"
+                                            placeholder="To Date"
+                                            value={toDate}
+                                            onChange={(e) => setToDate(e.target.value)}
+                                        />
+                                    </>)
+                                    }
                                 </div>
                                 <div className="adminAllProductsFilterDatesBox">
                                     <div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px"}}>
@@ -1322,7 +1525,7 @@ function AllReport() {
                                                 setCategoryName(""),
                                                     setProductName(""),
                                                     setCollectionName(""),
-                                                    setPurityName("");
+                                                    setPurityName(""), setSkuName(''), setVendorName(''), setBarCode(''), setLabelCode(''), setStockType("")
                                             }}
                                         >
                                             Reset
@@ -1686,10 +1889,10 @@ function AllReport() {
                                     selectedTab === 3 && (filteredInventoryReport.map((item, index) => (
                                         <TableRow key={item.id}>
                                             <TableCell align="center">{index + 1}</TableCell>
-                                            <TableCell align="center">{item.CategoryId}</TableCell>
-                                            <TableCell align="center">{item.ProductId}</TableCell>
-                                            <TableCell align="center">{item.DesignId}</TableCell>
-                                            <TableCell align="center">{item.SKUId}</TableCell>
+                                            <TableCell align="center">{item.CategoryName}</TableCell>
+                                            <TableCell align="center">{item.ProductName}</TableCell>
+                                            <TableCell align="center">{item.DesignName}</TableCell>
+                                            <TableCell align="center">{item.SKU}</TableCell>
                                             <TableCell align="center">{item.ItemCode}</TableCell>
                                             <TableCell align="center">{item.RFIDCode}</TableCell>
                                             <TableCell align="center">{item.GrossWt}</TableCell>
