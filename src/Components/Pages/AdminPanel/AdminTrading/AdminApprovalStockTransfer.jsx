@@ -206,7 +206,7 @@ function AdminApprovalStockTransfer() {
                             </Box>
                             <Box display={"flex"} alignItems={"center"} mx={1}>
                                 <Typography sx={{fontWeight: "600"}}>Transfer By :</Typography>
-                                <Typography mx={1}>{tableData?.StockTransferByName}</Typography>
+                                <Typography mx={1}>{tableData?.TransferByEmployee}</Typography>
                             </Box>
                         </Box>
                         <Box>
