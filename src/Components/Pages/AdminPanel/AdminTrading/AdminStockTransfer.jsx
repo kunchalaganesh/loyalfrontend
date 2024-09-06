@@ -645,9 +645,9 @@ function AdminStockTransfer() {
                                     <Grid item xs={12} md={6}>
                                     <Box sx={{display: "flex", justifyContent: "left", alignItems: "center",my: {xs:"10px",sm:"0px"}}}>
                                         <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
-                                            <label style={{width: "100px", marginRight: "5px", marginLeft: "10px"}}>From<sup>*</sup>
+                                            <label style={{textAlign: "right", marginRight: "5px", marginLeft: "10px"}}>From<sup>*</sup>
                                                 : </label>
-                                            <select className={"input-select"} name={"Source"}
+                                            <select style={{width: "111px"}} className={"input-select"} name={"Source"}
                                                     onChange={handleInputChangePurchase} value={formData.Source} required={"required"}>
                                                 <option value="">
                                                     From
@@ -668,8 +668,8 @@ function AdminStockTransfer() {
                                         </Box>
 
                                         <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
-                                            <label style={{width: "100px", marginLeft: "10px"}}>To<sup>*</sup> : </label>
-                                            <select className={"input-select"} name={"Destination"}
+                                            <label style={{textAlign: "right",  marginRight: "5px",marginLeft: "10px"}}>To<sup>*</sup> : </label>
+                                            <select style={{width: "111px"}} className={"input-select"} name={"Destination"}
                                                     onChange={handleInputChangePurchase} value={formData.Destination} required={"required"}>
                                                 <option value="">
                                                     To
@@ -985,7 +985,7 @@ function AdminStockTransfer() {
                                             marginBottom: "5px",
                                             fontSize: "15px"
                                         }}>Transferred By<sup>*</sup></label>
-                                        <select
+                                        <select style={{width: "100%",height: "30px"}}
                                             className={"input-select"}
                                             name={"TransferByEmployee"}
                                             onChange={handleInputChangePurchase}
@@ -1015,17 +1015,19 @@ function AdminStockTransfer() {
                                             marginBottom: "5px",
                                             fontSize: "15px"
                                         }}>Transferred To<sup>*</sup></label>
-                                        <select className={"input-select"} name={"TransferedToBranch"}
+                                        <select style={{width: "100%",height: "30px"}} className={"input-select"} name={"TransferedToBranch"}
                                                 onChange={handleInputChangePurchase}
                                                 value={formData.TransferedToBranch} required={"required"}>
                                             <option value="">
                                                 Select Transferred To
                                             </option>
-                                            {allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id).map((x, y) => (
-                                                <option
-                                                    key={y}
-                                                    value={x.Id}
-                                                >
+                                            {(
+                                                formData.StockTransferTypeName.includes("Salesman") ||
+                                                formData.StockTransferTypeName === "Branch To Branch"
+                                                    ? allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id) // Apply filter
+                                                    : allEmployee // No filter
+                                            ).map((x, y) => (
+                                                <option key={y} value={x.Id}>
                                                     {x.FirstName} {x.LastName}
                                                 </option>
                                             ))}
@@ -1033,7 +1035,7 @@ function AdminStockTransfer() {
                                     </Box>
                                 </Grid>
                                 <Grid item>
-                                    <Box sx={{width: "100%"}}>
+                                    <Box sx={{width: "100%",marginTop: "3px"}}>
                                         <label style={{
                                             display: "block",
                                             textAlign: "start",
@@ -1041,8 +1043,9 @@ function AdminStockTransfer() {
                                             fontSize: "15px"
                                         }}>Total Gross WT</label>
                                         <input
+                                            style={{width: "100%",height: "30px"}}
                                             type="text"
-                                            className="inputstock"
+                                            className={"input-select"}
                                             name={"TotalGrossWT"}
                                             value={formData.TotalGrossWT}
                                             readOnly
@@ -1050,7 +1053,7 @@ function AdminStockTransfer() {
                                     </Box>
                                 </Grid>
                                 <Grid item>
-                                    <Box sx={{width: "100%"}}>
+                                    <Box sx={{width: "100%",marginTop: "3px"}}>
                                         <label style={{
                                             display: "block",
                                             textAlign: "start",
@@ -1058,8 +1061,9 @@ function AdminStockTransfer() {
                                             fontSize: "15px"
                                         }}>Total Net WT</label>
                                         <input
+                                            style={{width: "100%",height: "30px"}}
                                             type="text"
-                                            className="inputstock"
+                                            className={"input-select"}
                                             name={"TotalNetWT"}
                                             value={formData.TotalNetWT}
                                             readOnly
@@ -1075,6 +1079,7 @@ function AdminStockTransfer() {
                                             fontSize: "15px"
                                         }}>Received By<sup>{(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? "*" : null}</sup></label>
                                         <select
+                                            style={{width: "100%",height: "30px"}}
                                             className={"input-select"}
                                             name={"ReceivedBy"}
                                             required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false}
@@ -1098,7 +1103,7 @@ function AdminStockTransfer() {
                                 {formData.ReceivedBy === "Other" && (
                                     <>
                                         <Grid item>
-                                            <Box sx={{width: "100%"}}>
+                                            <Box sx={{width: "100%",height: "30px"}}>
                                                 <label
                                                     style={{
                                                         display: "block",
@@ -1109,7 +1114,7 @@ function AdminStockTransfer() {
                                                 >
                                                     Received By <sup>{(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? "*" : null}</sup>
                                                 </label>
-                                                <input type="text" className="inputstock" required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false} name={"ReceivedByEmployee"}
+                                                <input style={{width: "100%"}} type="text"   className={"input-select"} required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false} name={"ReceivedByEmployee"}
                                                        onChange={handleInputChangePurchase}
                                                        value={formData.ReceivedByEmployee}/>
                                             </Box>
@@ -1128,7 +1133,7 @@ function AdminStockTransfer() {
                                         >
                                             Remark
                                         </label>
-                                        <input type="text" className="inputstock" name={"Remarks"}
+                                        <input style={{width: "100%",height: "30px",marginTop: "3px"}} type="text"  className={"input-select"} name={"Remarks"}
                                                onChange={handleInputChangePurchase} value={formData.Remarks}/>
                                     </Box>
                                 </Grid>

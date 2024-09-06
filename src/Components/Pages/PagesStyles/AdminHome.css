@@ -307,11 +307,11 @@ textarea {
   /* border-bottom-width: 80%; */
 }
 .addProductDetailsBox {
-  /* width: 95%; */
-  /*display: grid;*/
-  /*justify-items: flex-end;*/
-  /*align-items: center;*/
-  /*grid-template-columns: repeat(4, 1fr);*/
+   width: 95%;
+  display: grid;
+  justify-items: flex-end;
+  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .addProductMain input,
@@ -567,7 +567,6 @@ textarea {
 .bulkStockAddProductDetailsBox {
   display: grid;
   padding-bottom: 20px;
-  /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
   grid-template-columns: repeat(4, 1fr);
   width: 95%;
   box-sizing: border-box;
@@ -576,6 +575,23 @@ textarea {
   row-gap: 10px;
   justify-content: space-evenly;
   transition: all ease-in-out 0.5s;
+}
+@media (max-width: 1024px) {
+  .bulkStockAddProductDetailsBox {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bulkStockAddProductDetailsBox {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .bulkStockAddProductDetailsBox {
+    grid-template-columns: 1fr;
+  }
 }
 .bulkStockAddProductDetailsBoxHalfHeight {
   height: 100px;

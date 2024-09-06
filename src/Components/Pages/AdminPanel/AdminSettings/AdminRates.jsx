@@ -190,7 +190,7 @@ export default function AdminRates() {
                                                         <TableCell>{x.FinePercentage}</TableCell>
                                                         <TableCell>
                                                             <TextField
-                                                                type="number"
+                                                                type="text"
                                                                 value={inputValues[x.Id] || ''}
                                                                 placeholder={x.TodaysRate.toString()}
                                                                 onChange={(e) =>

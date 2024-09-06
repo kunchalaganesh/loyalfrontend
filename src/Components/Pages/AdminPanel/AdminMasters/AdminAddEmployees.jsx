@@ -573,7 +573,7 @@ export default function AdminAddEmployees() {
                 active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
               }
             >
-              <p>Add New Employee</p>
+              {/*<p>Add New Employee</p>*/}
               <form onSubmit={addNewCategory}>
                 <h4
                   style={{ marginTop: "20px", marginBottom: "20px" }}
