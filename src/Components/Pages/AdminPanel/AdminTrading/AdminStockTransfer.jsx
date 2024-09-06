@@ -548,7 +548,7 @@ function AdminStockTransfer() {
             StockType: selectedValue,
             StockTransferTypeName: formData.TransferType,
             TransferTypeId: (transferType.find((item, _) => item.TransferType === formData.StockTransferTypeName)).Id,
-            TransferByEmployee: formData.TransferByEmployee,
+            TransferByEmployee: String(allEmployee?.[0]?.Id) || "0",
             TransferedToBranch: formData.TransferedToBranch,
             Source: sourceItem ? sourceItem.Id : 0,
             Destination: destinationItem ? destinationItem.Id : 0,
@@ -909,7 +909,7 @@ function AdminStockTransfer() {
                             )}
                         </Grid>
                         <Grid item xs={1} container justifyContent="center" alignItems="center">
-                            <button
+                            <div
                                 style={{
                                     backgroundColor: "grey",
                                     color: "white",
@@ -919,8 +919,8 @@ function AdminStockTransfer() {
                                 }}
                                 onClick={transferStock}
                             >
-                                Transfer Stock to Another Box &gt;&gt;
-                            </button>
+                                Transfer Stock &gt;&gt;
+                            </div>
                         </Grid>
                         <Grid item xs>
                             <TableContainer
