@@ -280,22 +280,22 @@ export default function AdminTopNavbar() {
             id: 4,
             name: "Reports",
             items: [
-                {id: 1, name: "Stock", linkto: "/stock_report"},
-                {id: 0, name: "SKU Report", linkto: "/admin_sku_report"},
-                {
-                    id: 10,
-                    name: "Sku / Karigar Report",
-                    linkto: "/admin_sku_karigar_wise_report",
-                },
-                {id: 2, name: "Inventory", linkto: "/inventory"},
+                {id: 1, name: "Stock", linkto: "/all_Report"},
+                // {id: 0, name: "SKU Report", linkto: "/admin_sku_report"},
+                // {
+                //     id: 10,
+                //     name: "Sku / Karigar Report",
+                //     linkto: "/admin_sku_karigar_wise_report",
+                // },
+                // {id: 2, name: "Inventory", linkto: "/inventory"},
                 {id: 3, name: "Sale", linkto: "/admin_sale_report"},
                 {id: 4, name: "Order List", linkto: "/admin_orders"},
                 {id: 5, name: "Purchase", linkto: "/purchase"},
                 {id: 6, name: "Customer Ledger", linkto: "/admin_customer_ledger"},
                 {id: 7, name: "Supplier Ledger", linkto: "/admin_vendor_ledger"},
                 {id: 8, name: "Old Metal", linkto: "/purchase"},
-                // {id: 9, name: "Cash", linkto: "/cash_report"},
-                {id: 10, name: "allReport", linkto: "/all_Report"},
+                {id: 9, name: "Cash", linkto: "/cash_report"},
+                // {id: 10, name: "allReport", linkto: "/all_Report"},
 
                 // {
                 //   id: 10,
