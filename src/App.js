@@ -183,7 +183,7 @@ function App() {
                     element={isAuthenticated ? <AdminLedgerMain/> : <AdminPanelLogin/>}
                 />
                 <Route
-                    path="/all_Report"
+                    path="/stock_report"
                     element={isAuthenticated ? <AllReport/> : <AdminPanelLogin/>}
                 />
                 <Route

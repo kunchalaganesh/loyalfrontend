@@ -975,7 +975,6 @@ function AllReport() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     };
-
     const printSKU_karigarListAll = async (data) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -1078,7 +1077,6 @@ function AllReport() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     };
-
     const printInventoryListAll = async (data) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -1238,10 +1236,9 @@ function AllReport() {
                                     <Tab label="Stock"/>
                                     <Tab label="SKU Report"/>
                                     <Tab label="SKU / Karigar Report"/>
-                                    <Tab label="Inventory"/>
+                                    <Tab label="Labelled Stock"/>
                                     <Tab label="Packets"/>
                                     <Tab label="Boxs"/>
-                                    <Tab label="label Stock"/>
                                 </Tabs>
                             </Box>
                         </Grid>

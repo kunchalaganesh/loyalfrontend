@@ -280,7 +280,7 @@ export default function AdminTopNavbar() {
             id: 4,
             name: "Reports",
             items: [
-                {id: 1, name: "Stock", linkto: "/all_Report"},
+                {id: 1, name: "Stock", linkto: "/stock_report"},
                 // {id: 0, name: "SKU Report", linkto: "/admin_sku_report"},
                 // {
                 //     id: 10,

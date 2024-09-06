@@ -20,11 +20,12 @@ export default function AdminSecondNavbar() {
   const reports = [
     { id: 24, name: "Stock", linkto: "/stock_report" },
     { id: 25, name: "Sale", linkto: "/admin_sale_report" },
+    { id: 25, name: "Order List", linkto: "/admin_orders" },
     { id: 26, name: "Purchase", linkto: "/purchase" },
     { id: 27, name: "Customer Ledger", linkto: "/ledger_main" },
     { id: 27, name: "Supplier Ledger", linkto: "/ledger_main" },
-    { id: 28, name: "Cash", linkto: "/cash_report" },
     { id: 29, name: "Old Metal", linkto: "/purchase?openView:RDPurchase" },
+    { id: 28, name: "Cash", linkto: "/cash_report" },
     // { id: 30, name: "GST", linkto: "/adminhome" },
   ];
 
