@@ -476,7 +476,7 @@ export default function AdminAddProduct() {
                     onChange={handleNewCategoryChange}
                     type="text"
                     maxLength={5}
-                    minLength={5}
+                    minLength={0}
                     required="required"
                   />
                   <label>Description</label>

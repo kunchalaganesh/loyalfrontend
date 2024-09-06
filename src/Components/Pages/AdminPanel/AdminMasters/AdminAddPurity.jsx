@@ -520,7 +520,7 @@ export default function AdminAddPurity() {
                     type="text"
                     required="required"
                     maxLength={5}
-                    minLength={5}
+                    minLength={1}
                   />
                   <label htmlFor="Description">Description</label>
                   <input

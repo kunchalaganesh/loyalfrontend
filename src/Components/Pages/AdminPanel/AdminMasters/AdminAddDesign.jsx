@@ -564,7 +564,7 @@ export default function AdminAddProduct() {
                     value={newCategory.LabelCode}
                     onChange={handleNewCategoryChange}
                     maxLength={5}
-                    minLength={5}
+                    minLength={1}
                     type="text"
                     required="required"
                     placeholder="Only Capitals"

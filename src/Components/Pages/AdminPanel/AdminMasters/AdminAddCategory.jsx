@@ -437,7 +437,7 @@ export default function AdminAddCategory() {
                     onChange={handleNewCategoryChange}
                     type="text"
                     maxLength={5}
-                    minLength={5}
+                    minLength={0}
                   />
                   <label>
                     Parent Category<sup>*</sup>

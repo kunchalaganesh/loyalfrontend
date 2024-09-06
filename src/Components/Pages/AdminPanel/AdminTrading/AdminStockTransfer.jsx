@@ -189,6 +189,8 @@ function AdminStockTransfer() {
                         idKey = 'BoxId';
                     } else if (fromOptionKey === 'BranchName') {
                         idKey = 'BranchId';
+                    } else if (fromOptionKey === 'FirstName') {
+                        idKey = 'EmployeeId';
                     }
 
                     if (idKey) {
@@ -198,9 +200,12 @@ function AdminStockTransfer() {
                         }
                     }
 
-                    if (['DisplayName', 'FirstName'].includes(fromOptionKey)) {
-                        resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0);
+                    if (['DisplayName'].includes(fromOptionKey)) {
+                        resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0 && item.EmployeeId === 0);
                     }
+                    // if (['FirstName'].includes(fromOptionKey)) {
+                    //     resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0);
+                    // }
 
                     if (data.length > 0) {
                         resultdata = resultdata.filter((item2) => !data.some((item) => item.Id === item2.Id));
@@ -916,6 +921,7 @@ function AdminStockTransfer() {
                                     border: "none",
                                     padding: "10px",
                                     borderRadius: "5px",
+                                    cursor: "pointer"
                                 }}
                                 onClick={transferStock}
                             >
@@ -1021,14 +1027,25 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Select Transferred To
                                             </option>
-                                            {(
-                                                formData.StockTransferTypeName.includes("Salesman") ||
-                                                formData.StockTransferTypeName === "Branch To Branch"
-                                                    ? allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id) // Apply filter
-                                                    : allEmployee // No filter
-                                            ).map((x, y) => (
+                                            {/*{(() => {*/}
+                                            {/*    // Destructure necessary data*/}
+                                            {/*    const { StockTransferTypeName } = formData;*/}
+
+                                            {/*    let filteredEmployees = allEmployee;*/}
+                                            {/*    if (StockTransferTypeName.includes("Salesman")) {*/}
+                                            {/*        filteredEmployees = allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id);*/}
+                                            {/*    } else if (StockTransferTypeName === "Branch To Branch") {*/}
+                                            {/*        filteredEmployees = allEmployee.filter((item) => item.BranchName !== allEmployee?.[0]?.BranchName);*/}
+                                            {/*    }*/}
+                                            {/*     return filteredEmployees.map((x, y) => (*/}
+                                            {/*        <option key={y} value={x.Id}>*/}
+                                            {/*            {x.FirstName} {x.LastName}*/}
+                                            {/*        </option>*/}
+                                            {/*    ));*/}
+                                            {/*})()}*/}
+                                            {branchOption.map((x, y) => (
                                                 <option key={y} value={x.Id}>
-                                                    {x.FirstName} {x.LastName}
+                                                    {x.BranchName}
                                                 </option>
                                             ))}
                                         </select>
@@ -1088,14 +1105,22 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Select an option
                                             </option>
-                                            {allEmployee.map((x, y) => (
-                                                <option
-                                                    key={y}
-                                                    value={x.Id}
-                                                >
-                                                    {x.FirstName} {x.LastName}
-                                                </option>
-                                            ))}
+                                            {(() => {
+                                                // Destructure necessary data
+                                                const { StockTransferTypeName } = formData;
+
+                                                let filteredEmployees = allEmployee;
+                                                if (StockTransferTypeName.includes("Salesman")) {
+                                                    filteredEmployees = allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id);
+                                                } else if (StockTransferTypeName === "Branch To Branch") {
+                                                    filteredEmployees = allEmployee.filter((item) => item.BranchName !== allEmployee?.[0]?.BranchName);
+                                                }
+                                                return filteredEmployees.map((x, y) => (
+                                                    <option key={y} value={x.Id}>
+                                                        {x.FirstName} {x.LastName}
+                                                    </option>
+                                                ));
+                                            })()}
                                             <option value="Other">Other</option>
                                         </select>
                                     </Box>

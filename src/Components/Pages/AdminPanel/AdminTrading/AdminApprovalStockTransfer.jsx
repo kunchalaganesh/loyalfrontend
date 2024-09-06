@@ -186,7 +186,7 @@ function AdminApprovalStockTransfer() {
                         <p>{` > `}</p>
                         <p onClick={() => navigate("/stock_transfer_list")}>Stock Transfer List</p>
                         <p>{` > `}</p>
-                        <p style={{ textDecoration: "underline" }}>
+                        <p style={{textDecoration: "underline"}}>
                             <strong>Stock Transfer / Approval</strong>
                         </p>
                     </div>
@@ -267,7 +267,8 @@ function AdminApprovalStockTransfer() {
                                     Reject
                                 </button>
                             </Box>
-                            {(tableData?.TransferByEmployee !== tableData?.ReceivedByEmployee) && <Box
+                            {(tableData?.TransferByEmployee !== tableData?.ReceivedByEmployee || (tableData?.StockTransferTypeName?.includes("Salesman") || tableData?.StockTransferTypeName?.includes("Branch"))) &&
+                            <Box
                                 mx={1}
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
@@ -317,7 +318,8 @@ function AdminApprovalStockTransfer() {
                                                         Code</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Branch
                                                         Name</TableCell>
-                                                    <TableCell sx={{fontWeight: "600"}} align="center">Net Wt</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Net
+                                                        Wt</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}
                                                                align="center">Gross Wt</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}
