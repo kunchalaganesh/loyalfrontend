@@ -11,7 +11,7 @@ import {
     a218,
     a219, a220,
     a221,
-    a222,
+    a222, a241, a242,
 } from "../../../Api/RootApiPath";
 import {useSelector} from "react-redux";
 import {InfinitySpin} from "react-loader-spinner";
@@ -45,6 +45,17 @@ function AllReport() {
     const [filteredSkuKarigarReport, setFilteredSkuKarigarReport] = useState([]);
     const [filteredInventoryReport, setFilteredInventoryReport] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
+    const [allPackets, setAllPackets] = useState([]);
+    const [allBoxes, setAllBoxes] = useState([]);
+    const [formData, setFormData] = useState({
+        Category: 1,
+        ProductType: 0,
+        Design: "",
+        Purity: 0,
+        FromDate: "2024-09-06",
+        ToDate: "2024-09-06",
+    });
+
 
     const fetchAllCategory = async () => {
         const formData = {
@@ -278,6 +289,37 @@ function AllReport() {
         purityName,
         allInventory
     ]);
+    async function filterPackets() {
+
+        const payload = {
+            CategoryId: Number(formData.Category),
+            ProductId: Number(formData.ProductType),
+            Design: formData.Design,
+            PurityId: formData.Purity,
+            ClientCode: clientCode,
+            FromDate: "2024-09-06",
+            ToDate: "2024-09-06",
+        };
+        await fetch(selectedTab === 4 ? a241 : a242, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload),
+        })
+            .then((res) => res.json())
+            .then((response) => {
+                if (selectedTab === 4) {
+                    setAllPackets(response);
+                }
+                else{
+                    setAllBoxes(response);
+                }
+            });
+    }
+    useEffect(() => {
+
+
+        filterPackets();
+    }, [formData]);
 
     const filteredCollection = allCollectionTypes?.filter(
         (product) => product?.ProductId == productTypeIdSelected
@@ -406,6 +448,9 @@ function AllReport() {
         if (selectedTab == 3) {
             fetchAllInventory()
         }
+        if (selectedTab == 4 || selectedTab == 5) {
+            filterPackets();
+        }
     }, [selectedTab]);
 
     useEffect(() => {
@@ -442,6 +487,12 @@ function AllReport() {
             selectedProducts.includes(x.id)
         );
         printStockListAll(filteredStockReport);
+    };
+    const printPacketList = () => {
+        const selectedProductData = allProducts.filter((x) =>
+            selectedProducts.includes(x.id)
+        );
+        printPacketListAll(selectedTab === 4 ? allPackets : allBoxes);
     };
 
     const printSKUList = () => {
@@ -582,7 +633,130 @@ function AllReport() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     }
+    const printPacketListAll = async (data) => {
+        const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const startX = 8;
+        let startY = 20;
+        const lineHeight = 5;
+        const margin = 5;
+        const serialNumberWidth = 20;
+        const columnWidth =
+            (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+
+        const generateHeader = () => {
+            doc.text("Sr No", startX, startY); // Serial Number
+            doc.text("Category", startX - 0.5 + columnWidth, startY);
+            doc.text(selectedTab === 4  ? "Packet" : "Box", startX + 2.1 * columnWidth, startY);
+            doc.text("Op qty", startX + 3.2 * columnWidth, startY);
+            doc.text("op gr wt", startX + 4.2 * columnWidth, startY);
+            doc.text("ope net wt", startX + 5.5 * columnWidth, startY);
+            doc.text("stock in qty", startX + 6.9 * columnWidth, startY);
+            doc.text("stock in gr wt", startX + 8.5 * columnWidth, startY);
+            doc.text("sale qty", startX + 9.9 * columnWidth, startY);
+            doc.text("sale gr wt", startX + 10.8 * columnWidth, startY);
+            doc.text("clo qty", startX + 12 * columnWidth, startY);
+            doc.text("clo gross wt", startX + 12.9 * columnWidth, startY);
+            doc.text("clo net wt", startX + 14.2 * columnWidth, startY);
+        };
+        const totalNetWt = data.reduce(
+            (total, item) => total + (parseFloat(item.NetWt) || 0),
+            0
+        );
+        const totalGrossWt = data.reduce(
+            (total, item) => total + (parseFloat(item.GrossWt) || 0),
+            0
+        );
+        generateHeader();
+
+        let y = startY + lineHeight + margin;
+        data.forEach((item, index) => {
+            if (index > 0 && y + lineHeight > pageHeight - margin) {
+                doc.addPage();
+                startY = 20;
+                generateHeader();
+                y = startY + lineHeight + margin;
+            }
+            const serialNumber = index + 1;
+            doc.text(serialNumber.toString(), startX, y);
+            doc.text(
+                item.Category ? item.Category.substr(0, 8) : "N/A",
+                startX - 0.5 + columnWidth,
+                y
+            );
+            doc.text(
+                (selectedTab === 4)  ? item.PacketName ? item.PacketName : "N/A" : item.BoxName ? item.BoxName : "N/A" ,
+                startX + 2.1 * columnWidth,
+                y
+            );
+            doc.text(
+                item['OpeningQuantity'] || item['OpeningQuantity'] === 0 ? item['OpeningQuantity'].toString() : "N/A",
+                startX + 3.2 * columnWidth,
+                y
+            );
+            doc.text(
+                item['OpeningGrossWeight'] || item['OpeningGrossWeight'] === 0 ? item['OpeningGrossWeight'].toString() : "N/A",
+                startX + 4.2 * columnWidth,
+                y
+            );
+            doc.text(
+                item['OpeningNetWeight'] || item['OpeningNetWeight'] === 0 ? item['OpeningNetWeight'].toString() : "N/A",
+                startX + 5.5 * columnWidth,
+                y
+            );
+            doc.text(
+                item['StockEntryQuantity'] || item['StockEntryQuantity'] === 0 ? item['StockEntryQuantity'].toString() : "N/A",
+                startX + 6.9 * columnWidth,
+                y
+            );
+            doc.text(
+                item['StockEntryGrWt'] || item['StockEntryGrWt'] === 0 ? item['StockEntryGrWt'].toString() : "N/A",
+                startX + 8.5 * columnWidth,
+                y
+            );
+            doc.text(
+                item['SaleQty'] || item['SaleQty'] === 0 ? item['SaleQty'].toString() : "N/A",
+                startX + 9.6 * columnWidth,
+                y
+            );
+            doc.text(
+                item['SaleGrossWt'] || item['SaleGrossWt'] === 0 ? item['SaleGrossWt'].toString() : "N/A",
+                startX + 10.8 * columnWidth,
+                y
+            );
+            doc.text(
+                item['ClosingQty'] || item['ClosingQty'] === 0 ? item['ClosingQty'].toString() : "N/A",
+                startX + 12 * columnWidth,
+                y
+            );
+            doc.text(
+                item['ClosingGrossWeight'] || item['ClosingGrossWeight'] === 0 ? item['ClosingGrossWeight'].toString() : "N/A",
+                startX + 13 * columnWidth,
+                y
+            );
+            doc.text(
+                item['ClosingNetWeight'] || item['ClosingNetWeight'] === 0 ? item['ClosingNetWeight'].toString() : "N/A",
+                startX + 14.3 * columnWidth,
+                y
+            );
+
+            y += lineHeight + margin;
+        });
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+            doc.setPage(i);
+            doc.text(`Page ${i} of ${totalPages}`, pageWidth - 50, pageHeight - 10);
+        }
+
+        const pdfData = doc.output();
+        const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, "_blank");
+    }
     const printSKUListAll = async (data) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -941,6 +1115,8 @@ function AllReport() {
                                     <Tab label="SKU Report"/>
                                     <Tab label="SKU / Karigar Report"/>
                                     <Tab label="Inventory"/>
+                                    <Tab label="Packets"/>
+                                    <Tab label="Boxs"/>
                                 </Tabs>
                             </Box>
                         </Grid>
@@ -1162,6 +1338,165 @@ function AllReport() {
                                                 List</button>)}
                                         {selectedTab === 3 && (
                                             <button onClick={() => printInventoryList()}>Print List</button>)}
+                                        {selectedTab === 4 && (
+                                            <button onClick={() => printInventoryList()}>Print List</button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {(selectedTab === 4 || selectedTab === 5) && (
+                            <div>
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"}
+                                        value={formData.Category}
+                                        onChange={(e) => {
+                                            setCategoryName(e.target.value);
+                                            setFormData({...formData, Category: e.target.value,ProductType: 0,Purity: 0,Design: ""});
+                                            setCurrentPage(1);
+                                        }}
+                                    >
+                                        <option value="">Select Category</option>
+                                        {allCategories.map((x) => {
+                                            return (
+                                                <option value={Number(x.Id)}>
+                                                    {x.CategoryName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"}
+                                        value={formData.ProductType}
+                                        onChange={(e) => {
+                                            setFormData({...formData, ProductType: e.target.value,Design: ""});
+                                            setProductName(e.target.value);
+                                            setCurrentPage(1);
+                                            setCollectionName("");
+                                        }}
+                                    >
+                                        <option value="">Select Product Type</option>
+                                        {filteredProductTypes.map((x) => {
+                                            return (
+                                                <option value={`${parseInt(x.Id)}`}>
+                                                    {x.ProductName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"} value={formData.Design}
+                                        onChange={(e) => {
+                                            setFormData({...formData, Design: e.target.value});
+                                            setCurrentPage(1);
+                                        }}
+                                    >
+                                        <option value="">Select Design</option>
+                                        {filteredCollection.map((x) => {
+                                            return (
+                                                <option value={`${x.DesignName}`}>
+                                                    {x.DesignName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    {selectedTab !== 3 && <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"}
+                                        value={formData.Purity}
+                                        onChange={(e) => {
+                                            setFormData({...formData, Purity: e.target.value});
+                                        }}
+                                    >
+                                        <option value="0">Select Purity</option>
+                                        {filteredPurities.map((x) => {
+                                            return (
+                                                <option value={`${Number(x.Id)}`}>
+                                                    {x.PurityName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>}
+                                </div>
+                                {/*<div style={{display:"flex"}}>*/}
+                                {/*    <div>*/}
+                                {/*        <input*/}
+                                {/*            // style={{cursor: "pointer", margin: "10px 10px 10px 0px"}}*/}
+                                {/*            style={{width: "200px"}}*/}
+                                {/*            type="date"*/}
+                                {/*            className={"input-select"}*/}
+                                {/*            placeholder="From Date"*/}
+                                {/*            value={fromDate}*/}
+                                {/*            onChange={(e) => setFromDate(e.target.value)}*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*    <div>*/}
+                                {/*        <input*/}
+                                {/*            // style={{margin: "10px 10px"}}*/}
+                                {/*            style={{width: "200px",marginLeft: "20px"}}*/}
+                                {/*            type="date"*/}
+                                {/*            className={"input-select"}*/}
+                                {/*            placeholder="To Date"*/}
+                                {/*            value={toDate}*/}
+                                {/*            onChange={(e) => setToDate(e.target.value)}*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                                {/*<div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px"}}>*/}
+                                {/*    <button*/}
+                                {/*        onClick={() => {*/}
+                                {/*            setCategoryName(""),*/}
+                                {/*                setProductName(""),*/}
+                                {/*                setCollectionName(""),*/}
+                                {/*                setPurityName("");*/}
+                                {/*        }}*/}
+                                {/*    >*/}
+                                {/*        Reset*/}
+                                {/*    </button>*/}
+                                {/*    <button onClick={() => printStockList()}>Print List</button>*/}
+                                {/*</div>*/}
+
+
+                                <div className="adminAllProductsFilterDatesBox">
+                                    <input
+                                        style={{cursor: "pointer", margin: "10px 10px 10px 0px"}}
+                                        type="date"
+                                        placeholder="From Date"
+                                        value={formData.FromDate}
+                                        onChange={(e) => setFormData({...formData, FromDate: e.target.value})}
+                                    />
+                                    <input
+                                        style={{margin: "10px 10px"}}
+                                        type="date"
+                                        placeholder="To Date"
+                                        value={formData.ToDate}
+                                        onChange={(e) => setFormData({...formData, ToDate: e.target.value})}
+                                    />
+                                    <div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px",justifyContent: "right"}}>
+                                        <button
+                                            style={{marginRight: "15px"}}
+                                            onClick={() => {
+                                                setCategoryName(""),
+                                                    setProductName(""),
+                                                    setCollectionName(""),
+                                                    setPurityName("");
+                                                setFormData({
+                                                    Category: 1,
+                                                    ProductType: 0,
+                                                    Design: "",
+                                                    Purity: 0,
+                                                    FromDate: "2024-09-06",
+                                                    ToDate: "2024-09-06",
+                                                })
+                                            }}
+                                        >
+                                            Reset
+                                        </button>
+                                        <button onClick={() => printPacketList()}>Print List</button>
                                     </div>
                                 </div>
                             </div>
@@ -1237,6 +1572,23 @@ function AllReport() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">box name</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">branch name</TableCell>
                                     </TableRow>}
+                                    {(selectedTab == 4 || selectedTab == 5) &&
+                                    <TableRow>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Category</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}}
+                                                   align="center">{selectedTab === 4 ? "Packet" : "Box"}</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Opening qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">opening gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">opening net wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">stock in qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">stock in gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">sale qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">sale gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">closing qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">closing gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">closing net wt</TableCell>
+                                    </TableRow>}
                                 </TableHead>
                                 <TableBody>
                                     {
@@ -1286,7 +1638,7 @@ function AllReport() {
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.SKU}</TableCell>
                                             <TableCell
-                                                align="center" >{<td>
+                                                align="center">{<td>
                                                 <table>
                                                     <tbody>
                                                     <tr>
@@ -1351,6 +1703,34 @@ function AllReport() {
                                         </TableRow>
                                     )))
                                 }
+                                    {
+                                        (selectedTab === 4 || selectedTab === 5) && ((selectedTab === 4 ? allPackets : allBoxes)?.map((item, index) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell align="center">{index + 1}</TableCell>
+                                                <TableCell align="center">{item.Category}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedTab === 4 ? item.PacketName : item.BoxName}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.OpeningQuantity}</TableCell>
+
+                                                <TableCell
+                                                    align="center">{item.OpeningGrossWeight}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.OpeningNetWeight}</TableCell>
+                                                <TableCell align="center">{item.StockEntryQuantity}</TableCell>
+                                                <TableCell align="center">{item.StockEntryGrWt}</TableCell>
+                                                <TableCell align="center">{item.SaleQty}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.SaleGrossWt}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.ClosingQty}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.ClosingGrossWeight}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.ClosingNetWeight}</TableCell>
+                                            </TableRow>
+                                        )))
+                                    }
                                 </TableBody>
                             </Table>
                         </TableContainer>

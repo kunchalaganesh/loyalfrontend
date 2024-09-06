@@ -2051,3 +2051,9 @@ export const a239 =
 //Update todays rates
 export const a240 =
     "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDailyRates";
+//filter packets
+export const a241 =
+    "https://testing.loyalstring.co.in/api/Reports/StockReportByPacket";
+//filter box
+export const a242 =
+    "https://testing.loyalstring.co.in/api/Reports/StockReportByBox";
