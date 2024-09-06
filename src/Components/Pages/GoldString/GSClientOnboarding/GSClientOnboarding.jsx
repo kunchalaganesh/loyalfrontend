@@ -258,13 +258,16 @@ export default function GSClientOnboarding() {
         body: formData,
       });
       const data = await response.json();
-      console.log(data, "data");
-      if (data.Message) {
-        // setLoading(false);
-        alert(data.Message);
+      console.log("datataatatatattaattaattatatataatatat");
+      if (data.ErrorMessage) {
+        alert(data.ErrorMessage);
+        console.log("loginnnned")
         // console.log("added", data);
       } else {
+        setLoading(false);
         handleNext();
+        navigate('/adminpanellogin')
+        console.log("notloginnnededdddd")
         // Handle the error if the upload fails
         // console.error("Failed to upload the files.");
       }

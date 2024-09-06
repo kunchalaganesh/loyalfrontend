@@ -189,6 +189,8 @@ function AdminStockTransfer() {
                         idKey = 'BoxId';
                     } else if (fromOptionKey === 'BranchName') {
                         idKey = 'BranchId';
+                    } else if (fromOptionKey === 'FirstName') {
+                        idKey = 'EmployeeId';
                     }
 
                     if (idKey) {
@@ -198,9 +200,12 @@ function AdminStockTransfer() {
                         }
                     }
 
-                    if (['DisplayName', 'FirstName'].includes(fromOptionKey)) {
-                        resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0);
+                    if (['DisplayName'].includes(fromOptionKey)) {
+                        resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0 && item.EmployeeId === 0);
                     }
+                    // if (['FirstName'].includes(fromOptionKey)) {
+                    //     resultdata = resData.filter((item) => item.PacketId === 0 && item.BoxId === 0);
+                    // }
 
                     if (data.length > 0) {
                         resultdata = resultdata.filter((item2) => !data.some((item) => item.Id === item2.Id));
@@ -536,7 +541,8 @@ function AdminStockTransfer() {
         }
         setFormData((list) => ({...list, [name]: value}));
     }
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         const transferData = data.map(item => ({stockId: item.Id}));
         const sourceItem = fromOption.find((item, _) => item[`${fromOptionKey}`] === formData.Source);
         const destinationItem = toOption.find((item, _) => item[`${toOptionKey}`] === formData.Destination);
@@ -547,7 +553,7 @@ function AdminStockTransfer() {
             StockType: selectedValue,
             StockTransferTypeName: formData.TransferType,
             TransferTypeId: (transferType.find((item, _) => item.TransferType === formData.StockTransferTypeName)).Id,
-            TransferByEmployee: formData.TransferByEmployee,
+            TransferByEmployee: String(allEmployee?.[0]?.Id) || "0",
             TransferedToBranch: formData.TransferedToBranch,
             Source: sourceItem ? sourceItem.Id : 0,
             Destination: destinationItem ? destinationItem.Id : 0,
@@ -612,6 +618,7 @@ function AdminStockTransfer() {
             </Box>
             <Box className="adminAddCategoryMainBox">
                 <Box className="adminAddCategoryInnerBox">
+                    <form onSubmit={handleSubmit}>
                     <Box id="adminInvoiceAddedCustomerEdit" className="adminInvoiceAddTitles">
                         <Grid container sx={{
                             display: {xs: "block", md: "flex"},
@@ -622,10 +629,10 @@ function AdminStockTransfer() {
                                 <Grid container sx={{display: "flex", alignItems: "center"}}>
                                     <Grid item xs={12} md={6}>
                                         <Box sx={{display: "flex", alignItems: "center",justifyContent: "left"}}>
-                                            <label style={{width: "160px"}}>Transfer Type :</label>
+                                            <label style={{width: "160px"}}>Transfer Type<sup>*</sup> : </label>
                                             <select className={"input-select"} name={"StockTransferTypeName"}
                                                     onChange={handleInputChangePurchase}
-                                                    value={formData.StockTransferTypeName}>
+                                                    value={formData.StockTransferTypeName} required={"required"}>
                                                 <option value="">
                                                     Choose a Transfer Type
                                                 </option>
@@ -643,10 +650,10 @@ function AdminStockTransfer() {
                                     <Grid item xs={12} md={6}>
                                     <Box sx={{display: "flex", justifyContent: "left", alignItems: "center",my: {xs:"10px",sm:"0px"}}}>
                                         <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
-                                            <label style={{width: "100px", marginRight: "5px", marginLeft: "10px"}}>From
+                                            <label style={{textAlign: "right", marginRight: "5px", marginLeft: "10px"}}>From<sup>*</sup>
                                                 : </label>
-                                            <select className={"input-select"} name={"Source"}
-                                                    onChange={handleInputChangePurchase} value={formData.Source}>
+                                            <select style={{width: "111px"}} className={"input-select"} name={"Source"}
+                                                    onChange={handleInputChangePurchase} value={formData.Source} required={"required"}>
                                                 <option value="">
                                                     From
                                                 </option>
@@ -666,9 +673,9 @@ function AdminStockTransfer() {
                                         </Box>
 
                                         <Box sx={{display: "flex", alignItems: "center"}} mx={1}>
-                                            <label style={{width: "100px", marginLeft: "10px"}}>To : </label>
-                                            <select className={"input-select"} name={"Destination"}
-                                                    onChange={handleInputChangePurchase} value={formData.Destination}>
+                                            <label style={{textAlign: "right",  marginRight: "5px",marginLeft: "10px"}}>To<sup>*</sup> : </label>
+                                            <select style={{width: "111px"}} className={"input-select"} name={"Destination"}
+                                                    onChange={handleInputChangePurchase} value={formData.Destination} required={"required"}>
                                                 <option value="">
                                                     To
                                                 </option>
@@ -785,7 +792,7 @@ function AdminStockTransfer() {
                                             <option value="">
                                                 Choose a Design
                                             </option>
-                                            {(filterData.ProductName && filterData.CategoryName) && allDesign.filter((item) => item.CategoryName === filterData.CategoryName).map((x, y) => (
+                                            {(filterData.ProductName && filterData.CategoryName) && allDesign.filter((item) => item.ProductName === filterData.ProductName).map((x, y) => (
                                                 <option
                                                     key={y}
                                                     value={x.DesignName}
@@ -907,18 +914,19 @@ function AdminStockTransfer() {
                             )}
                         </Grid>
                         <Grid item xs={1} container justifyContent="center" alignItems="center">
-                            <button
+                            <div
                                 style={{
                                     backgroundColor: "grey",
                                     color: "white",
                                     border: "none",
                                     padding: "10px",
                                     borderRadius: "5px",
+                                    cursor: "pointer"
                                 }}
                                 onClick={transferStock}
                             >
-                                Transfer Stock to Another Box &gt;&gt;
-                            </button>
+                                Transfer Stock &gt;&gt;
+                            </div>
                         </Grid>
                         <Grid item xs>
                             <TableContainer
@@ -972,9 +980,9 @@ function AdminStockTransfer() {
                         </Grid>
                     </Grid>
                     <Grid container>
-                        <Grid item xs={formData.ReceivedBy === "Other" ? 12 : 10}
+                        <Grid item
                               sx={{border: "1px solid #ced4da", p: 2, color: "text.secondary"}}>
-                            <Grid container spacing={4}>
+                            <Grid container spacing={3} wrap="nowrap">
                                 <Grid item>
                                     <Box sx={{width: "100%"}}>
                                         <label style={{
@@ -982,13 +990,14 @@ function AdminStockTransfer() {
                                             textAlign: "start",
                                             marginBottom: "5px",
                                             fontSize: "15px"
-                                        }}>Transferred By</label>
-                                        <select
+                                        }}>Transferred By<sup>*</sup></label>
+                                        <select style={{width: "100%",height: "30px"}}
                                             className={"input-select"}
                                             name={"TransferByEmployee"}
                                             onChange={handleInputChangePurchase}
                                             value={formData.TransferByEmployee || allEmployee?.[0]?.Id || ""}
                                             disabled
+                                            required={"required"}
                                         >
                                             <option value="">
                                                 Select Transferred By
@@ -1011,26 +1020,39 @@ function AdminStockTransfer() {
                                             textAlign: "start",
                                             marginBottom: "5px",
                                             fontSize: "15px"
-                                        }}>Transferred To</label>
-                                        <select className={"input-select"} name={"TransferedToBranch"}
+                                        }}>Transferred To<sup>{(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? "*" : null}</sup></label>
+                                        <select style={{width: "100%",height: "30px"}} className={"input-select"} name={"TransferedToBranch"}
                                                 onChange={handleInputChangePurchase}
-                                                value={formData.TransferedToBranch}>
+                                                value={formData.TransferedToBranch}   required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false}>
                                             <option value="">
                                                 Select Transferred To
                                             </option>
-                                            {allEmployee.map((x, y) => (
-                                                <option
-                                                    key={y}
-                                                    value={x.Id}
-                                                >
-                                                    {x.FirstName} {x.LastName}
+                                            {/*{(() => {*/}
+                                            {/*    // Destructure necessary data*/}
+                                            {/*    const { StockTransferTypeName } = formData;*/}
+
+                                            {/*    let filteredEmployees = allEmployee;*/}
+                                            {/*    if (StockTransferTypeName.includes("Salesman")) {*/}
+                                            {/*        filteredEmployees = allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id);*/}
+                                            {/*    } else if (StockTransferTypeName === "Branch To Branch") {*/}
+                                            {/*        filteredEmployees = allEmployee.filter((item) => item.BranchName !== allEmployee?.[0]?.BranchName);*/}
+                                            {/*    }*/}
+                                            {/*     return filteredEmployees.map((x, y) => (*/}
+                                            {/*        <option key={y} value={x.Id}>*/}
+                                            {/*            {x.FirstName} {x.LastName}*/}
+                                            {/*        </option>*/}
+                                            {/*    ));*/}
+                                            {/*})()}*/}
+                                            {branchOption.map((x, y) => (
+                                                <option key={y} value={x.Id}>
+                                                    {x.BranchName}
                                                 </option>
                                             ))}
                                         </select>
                                     </Box>
                                 </Grid>
                                 <Grid item>
-                                    <Box sx={{width: "100%"}}>
+                                    <Box sx={{width: "100%",marginTop: "3px"}}>
                                         <label style={{
                                             display: "block",
                                             textAlign: "start",
@@ -1038,8 +1060,9 @@ function AdminStockTransfer() {
                                             fontSize: "15px"
                                         }}>Total Gross WT</label>
                                         <input
+                                            style={{width: "100%",height: "30px"}}
                                             type="text"
-                                            className="inputstock"
+                                            className={"input-select"}
                                             name={"TotalGrossWT"}
                                             value={formData.TotalGrossWT}
                                             readOnly
@@ -1047,7 +1070,7 @@ function AdminStockTransfer() {
                                     </Box>
                                 </Grid>
                                 <Grid item>
-                                    <Box sx={{width: "100%"}}>
+                                    <Box sx={{width: "100%",marginTop: "3px"}}>
                                         <label style={{
                                             display: "block",
                                             textAlign: "start",
@@ -1055,8 +1078,9 @@ function AdminStockTransfer() {
                                             fontSize: "15px"
                                         }}>Total Net WT</label>
                                         <input
+                                            style={{width: "100%",height: "30px"}}
                                             type="text"
-                                            className="inputstock"
+                                            className={"input-select"}
                                             name={"TotalNetWT"}
                                             value={formData.TotalNetWT}
                                             readOnly
@@ -1070,23 +1094,33 @@ function AdminStockTransfer() {
                                             textAlign: "start",
                                             marginBottom: "5px",
                                             fontSize: "15px"
-                                        }}>Received By</label>
+                                        }}>Received By<sup>{(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? "*" : null}</sup></label>
                                         <select
+                                            style={{width: "100%",height: "30px"}}
                                             className={"input-select"}
                                             name={"ReceivedBy"}
+                                            required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false}
                                             onChange={handleInputChangePurchase}
                                             value={formData.ReceivedBy}>
                                             <option value="">
                                                 Select an option
                                             </option>
-                                            {allEmployee.map((x, y) => (
-                                                <option
-                                                    key={y}
-                                                    value={x.Id}
-                                                >
-                                                    {x.FirstName} {x.LastName}
-                                                </option>
-                                            ))}
+                                            {(() => {
+                                                // Destructure necessary data
+                                                const { StockTransferTypeName } = formData;
+
+                                                let filteredEmployees = allEmployee;
+                                                if (StockTransferTypeName.includes("Salesman")) {
+                                                    filteredEmployees = allEmployee.filter((item) => item.Id !== allEmployee?.[0]?.Id);
+                                                } else if (StockTransferTypeName === "Branch To Branch") {
+                                                    filteredEmployees = allEmployee.filter((item) => item.BranchName !== allEmployee?.[0]?.BranchName);
+                                                }
+                                                return filteredEmployees.map((x, y) => (
+                                                    <option key={y} value={x.Id}>
+                                                        {x.FirstName} {x.LastName}
+                                                    </option>
+                                                ));
+                                            })()}
                                             <option value="Other">Other</option>
                                         </select>
                                     </Box>
@@ -1094,7 +1128,7 @@ function AdminStockTransfer() {
                                 {formData.ReceivedBy === "Other" && (
                                     <>
                                         <Grid item>
-                                            <Box sx={{width: "100%"}}>
+                                            <Box sx={{width: "100%",height: "30px"}}>
                                                 <label
                                                     style={{
                                                         display: "block",
@@ -1103,9 +1137,9 @@ function AdminStockTransfer() {
                                                         fontSize: "15px"
                                                     }}
                                                 >
-                                                    Received By
+                                                    Received By <sup>{(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? "*" : null}</sup>
                                                 </label>
-                                                <input type="text" className="inputstock" name={"ReceivedByEmployee"}
+                                                <input style={{width: "100%"}} type="text"   className={"input-select"} required={(formData.StockTransferTypeName.includes("Salesman") || formData.StockTransferTypeName === "Branch To Branch") ? true : false} name={"ReceivedByEmployee"}
                                                        onChange={handleInputChangePurchase}
                                                        value={formData.ReceivedByEmployee}/>
                                             </Box>
@@ -1124,7 +1158,7 @@ function AdminStockTransfer() {
                                         >
                                             Remark
                                         </label>
-                                        <input type="text" className="inputstock" name={"Remarks"}
+                                        <input style={{width: "100%",height: "30px",marginTop: "3px"}} type="text"  className={"input-select"} name={"Remarks"}
                                                onChange={handleInputChangePurchase} value={formData.Remarks}/>
                                     </Box>
                                 </Grid>
@@ -1135,7 +1169,7 @@ function AdminStockTransfer() {
                     <Box sx={{display: "flex", justifyContent: "end", my: "15px", gap: 2}}
                          className={"adminInvoiceAddProductsOptionsMainPurchaseItems"}>
                         <Box>
-                            <button onClick={handleSubmit}>
+                            <button type={"submit"}>
                                 Save
                             </button>
                         </Box>
@@ -1145,6 +1179,7 @@ function AdminStockTransfer() {
                             </button>
                         </Box>
                     </Box>
+                    </form>
                 </Box>
             </Box>
         </>

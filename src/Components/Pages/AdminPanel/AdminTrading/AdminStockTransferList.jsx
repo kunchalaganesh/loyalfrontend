@@ -178,12 +178,24 @@ function AdminStockTransferList() {
         <>
             <AdminHeading/>
             <Box className="adminMainBodyBox">
-                <AdminBreadCrump
-                    title={"Stock Transfer History"}
-                    companyName={"Loyalstring"}
-                    module={"Trading"}
-                    page={"Stock Transfer History"}
-                />
+                {/*<AdminBreadCrump*/}
+                {/*    title={"Stock Transfer History"}*/}
+                {/*    companyName={"Loyalstring"}*/}
+                {/*    module={"Trading"}*/}
+                {/*    page={"Stock Transfer History"}*/}
+                {/*/>*/}
+                <div className="adminDesktopBreadCrumpMainBox">
+                    <h4>Stock Transfer History</h4>
+                    <div className="adminDesktopBreadCrumpLinks">
+                        <p onClick={() => navigate("/adminhome")}>Loyalstring</p>
+                        <p>{` > `}</p>
+                        <p onClick={() => navigate("/stock_transfer")}>Stock Transfer</p>
+                        <p>{` > `}</p>
+                        <p style={{ textDecoration: "underline" }}>
+                            <strong>Stock Transfer List</strong>
+                        </p>
+                    </div>
+                </div>
             </Box>
             <Box className="adminAddCategoryMainBox">
                 <Box className="adminAddCategoryInnerBox">

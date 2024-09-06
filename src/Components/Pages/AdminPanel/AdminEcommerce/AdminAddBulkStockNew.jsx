@@ -57,6 +57,7 @@ import {IoIosAddCircleOutline, IoMdAddCircleOutline} from "react-icons/io";
 import {CiImport} from "react-icons/ci";
 import {GenerateLabel} from "../../../Other Functions/GenerateLabel";
 import {color} from "chart.js/helpers";
+import {Grid} from "@mui/material";
 
 export default function AdminAddBulkStockNew() {
     const [diamondTemplateId, setDiamondTemplateId] = useState(null)
@@ -78,7 +79,7 @@ export default function AdminAddBulkStockNew() {
     const [description, setDescription] = useState("");
     // const [productTypeId, setProductTypeId] = useState("");
     const [partyTypeId, setPartyTypeId] = useState("");
-    const [boxId, setBoxId] = useState(1);
+    const [boxId, setBoxId] = useState(0);
     const [making_per_gram, setMaking_per_gram] = useState(0);
     const [making_Fixed_Amt, setMaking_Fixed_Amt] = useState(0);
     const [making_Percentage, setMaking_Percentage] = useState(0);
@@ -136,6 +137,7 @@ export default function AdminAddBulkStockNew() {
     const [deleteAll, setDeleteAll] = useState(false);
     const [deleteSelected, setDeleteSelected] = useState(false);
     const [showAllFields, setShowAllFields] = useState(false);
+    const [showAllFields2, setShowAllFields2] = useState(false);
     const [stockType, setStockType] = useState("Labelled");
     const [branch, setBranch] = useState("Home");
     const [lotNumber, setLotNumber] = useState(0);
@@ -2195,8 +2197,9 @@ export default function AdminAddBulkStockNew() {
         (product) => product.CategoryId == baseMetal
     );
     const filteredBoxes = boxData.filter(
-        (product) => product.ProductId == productTypeId
+        (box) => box.BoxId == boxId
     );
+
 
     const handleCheckboxChange = (productId, itemCode) => {
         let updatedCheckedProducts = [...checkedProducts];
@@ -2322,7 +2325,7 @@ export default function AdminAddBulkStockNew() {
 
             setDescription(selectedSku.Description);
             setNetWt(selectedSku.NetWt);
-            setBoxId(1);
+            setBoxId(0);
             setPartyTypeId(selectedSku.VendorId);
             // categoryName = selectedSku.category;
             // productTypeName = selectedSku.productType;
@@ -2385,7 +2388,7 @@ export default function AdminAddBulkStockNew() {
             setGender("");
             setStoneWeight(0);
             setMRP(0);
-            setBoxId(1);
+            setBoxId(0);
             setProductName("");
             setDescription("");
             setSelectedFiles([]);
@@ -3494,11 +3497,51 @@ export default function AdminAddBulkStockNew() {
                                                 // ? handleSubmit
                                             }
                                         >
-                                            <h3
-                                                className="adminAddBulkStockAddedTitle"
-                                                style={{marginBottom: "3rem", width: "97%"}}
-                                            >
-                                                ADD BULK STOCK
+                                            <h3 className="adminAddBulkStockAddedTitle" style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                margin: "0px"
+                                            }}>
+                                                <div style={{width: "97%"}}>ADD BULK STOCK</div>
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <label htmlFor="selectBranch" style={{textAlign: "right"}}>
+                                                        <strong style={{textAlign: "right", color: "white"}}>SELECT
+                                                            BRANCH</strong>
+                                                    </label>
+                                                    <select
+                                                        id="selectBranch"
+                                                        required="required"
+                                                        value={branch}
+                                                        onChange={(e) => setBranch(e.target.value)}
+                                                    >
+                                                        <option value="">Select a branch</option>
+                                                        {branchOption.map((item) => (
+                                                            <option
+                                                                value={item.BranchName}>{item.BranchName}</option>
+                                                        ))}
+                                                    </select>
+                                                    {/*<label htmlFor="selectBranch" style={{textAlign: "right"}}>*/}
+                                                    {/*    <strong style={{textAlign: "right", color: "white"}}>SELECT LOT*/}
+                                                    {/*        NUMBER</strong>*/}
+                                                    {/*</label>*/}
+                                                    {/*<select*/}
+                                                    {/*    id="selectBranch"*/}
+                                                    {/*    // required="required"*/}
+                                                    {/*    style={{margin: "0px"}}*/}
+                                                    {/*    value={lotNumber}*/}
+                                                    {/*    onChange={(e) => setLotNumber(e.target.value)}*/}
+                                                    {/*>*/}
+                                                    {/*    <option value={0}>Select Lot Number</option>*/}
+                                                    {/*    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {*/}
+                                                    {/*        return (*/}
+                                                    {/*            <option value={x.LotNumber}>*/}
+                                                    {/*                {x.LotNumber}*/}
+                                                    {/*            </option>*/}
+                                                    {/*        );*/}
+                                                    {/*    })}*/}
+                                                    {/*</select>*/}
+                                                </div>
                                             </h3>
 
                                             {/* <h4
@@ -3513,214 +3556,206 @@ export default function AdminAddBulkStockNew() {
                         >
                           Add Product
                         </h4>{" "} */}
-                                            <div className="addProductDetailsUpperBox">
-                                                <div
-                                                    // style={{ width: "92%" }}
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="category">
-                                                        <strong>SUPPLIER</strong>
-                                                    </label>
-                                                    <select
-                                                        id="category"
-                                                        required="required"
-                                                        value={partyTypeId}
-                                                        onChange={(e) => {
-                                                            setPartyTypeId(e.target.value)
-                                                            const tempId = partyData.find((event, ind) => event.Id == e.target.value)
-                                                            setDiamondTemplateId(tempId?.DiamondSizeWeightRateTemplateId)
-                                                        }}
-                                                    >
-                                                        <option value="">
-                                                            Select Party / Karigar Name
-                                                        </option>
-                                                        {partyData.map((x, y) => {
-                                                            return (
-                                                                <option key={y} value={parseInt(x.Id)}>
-                                                                    {x.VendorName}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </select>
-                                                    <p>Unlabelled Gold :</p>
+                                            <div className="addProductDetailsUpperBox" style={{marginTop: "3rem",display: "unset",marginLeft: "30px",marginRight: "20px"}}>
+                                                <div>
+                                                    <Grid container xs={12} spacing={4}>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="category" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>SUPPLIER</strong>
+                                                                </label>
+                                                                <select
+                                                                    style={{width: "100%",marginLeft: "0px"}}
+                                                                    id="category"
+                                                                    required="required"
+                                                                    value={partyTypeId}
+                                                                    onChange={(e) => {
+                                                                        setPartyTypeId(e.target.value)
+                                                                        const tempId = partyData.find((event, ind) => event.Id == e.target.value)
+                                                                        setDiamondTemplateId(tempId?.DiamondSizeWeightRateTemplateId)
+                                                                    }}
+                                                                >
+                                                                    <option value="">
+                                                                        Select Party / Karigar Name
+                                                                    </option>
+                                                                    {partyData.map((x, y) => {
+                                                                        return (
+                                                                            <option key={y} value={parseInt(x.Id)}>
+                                                                                {x.VendorName}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="sku" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>SKU</strong>
+                                                                </label>
+                                                                <input
+                                                                    style={{width: "100%",marginLeft: "0px"}}
+                                                                    // style={{ width: "30vw" }}
+                                                                    type="text"
+                                                                    name="skuList"
+                                                                    placeholder="Enter SKU"
+                                                                    value={selectedSkuName}
+                                                                    onInput={handleSkuInputChange}
+                                                                    list="skuList"
+                                                                />
+                                                                <datalist id="skuList">
+                                                                    {allSku.map((sku, index) => (
+                                                                        <option
+                                                                            key={index}
+                                                                            value={`${sku.StockKeepingUnit}`}
+                                                                        />
+                                                                    ))}
+                                                                </datalist>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="selectBranch" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>SELECT LOT NUMBER</strong>
+                                                                </label>
+                                                                <select
+                                                                style={{width: "100%",marginLeft: "0px"}}
+                                                                    id="selectBranch"
+                                                                    // required="required"
+                                                                    value={lotNumber}
+                                                                    onChange={(e) => setLotNumber(e.target.value)}
+                                                                >
+                                                                    <option value={0}>Select Lot Number</option>
+                                                                    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
+                                                                        return (
+                                                                            <option value={x.LotNumber}>
+                                                                                {x.LotNumber}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="invoiceType" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>STOCK TYPE</strong>
+                                                                </label>
+                                                                <select
+                                                                style={{width: "100%",marginLeft: "0px"}}
+                                                                    id="invoiceType"
+                                                                    required="required"
+                                                                    value={stockType}
+                                                                    onChange={(e) => setStockType(e.target.value)}
+                                                                >
+                                                                    <option value="Labelled">Labelled</option>
+                                                                    <option value="Unlabelled">Unlabelled</option>
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid container >
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Diamond :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.VendorName}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null;
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Gold :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    {" "}
+                                                                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.InwardGold}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null; // If no party is found, render nothing
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Silver :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    {" "}
+                                                                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.InwardSilver}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null; // If no party is found, render nothing
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Other :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    {" "}
+                                                                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.VendorName}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null; // If no party is found, render nothing
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                </div>
 
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        {" "}
-                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                                                        <p>{selectedParty.InwardGold}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null; // If no party is found, render nothing
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    // style={{ width: "92%" }}
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="sku">
-                                                        <strong>SKU</strong>
-                                                    </label>
-                                                    <input
-                                                        // style={{ width: "30vw" }}
-                                                        type="text"
-                                                        name="skuList"
-                                                        placeholder="Enter SKU"
-                                                        value={selectedSkuName}
-                                                        onInput={handleSkuInputChange}
-                                                        list="skuList"
-                                                    />
-                                                    <datalist id="skuList">
-                                                        {allSku.map((sku, index) => (
-                                                            <option
-                                                                key={index}
-                                                                value={`${sku.StockKeepingUnit}`}
-                                                            />
-                                                        ))}
-                                                    </datalist>
-                                                    <p>Unlabelled Silver :</p>
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        {" "}
-                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                                                        <p>{selectedParty.InwardSilver}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null; // If no party is found, render nothing
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    // style={{ width: "92%" }}
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="invoiceType">
-                                                        <strong>STOCK TYPE</strong>
-                                                    </label>
-                                                    <select
-                                                        id="invoiceType"
-                                                        required="required"
-                                                        value={stockType}
-                                                        onChange={(e) => setStockType(e.target.value)}
-                                                    >
-                                                        <option value="Labelled">Labelled</option>
-                                                        <option value="Unlabelled">Unlabelled</option>
-                                                    </select>
-                                                    <p>Unlabelled Diamond :</p>
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        <p>{selectedParty.VendorName}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null;
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    style={
-                                                        {
-                                                            // width: "92%",
-                                                            // marginBottom: "20px",
-                                                        }
-                                                    }
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="selectBranch">
-                                                        <strong>SELECT BRANCH</strong>
-                                                    </label>
-                                                    <select
-                                                        id="selectBranch"
-                                                        required="required"
-                                                        value={branch}
-                                                        onChange={(e) => setBranch(e.target.value)}
-                                                    >
-                                                        <option value="">Select a branch</option>
-                                                        {branchOption.map((item) => (
-                                                            <option value={item.BranchName}>{item.BranchName}</option>
-                                                        ))}
-                                                    </select>
-
-                                                    <p>Unlabelled Other :</p>
-                                                    <div>
-                                                        {(() => {
-                                                            const selectedParty = partyData.find(
-                                                                (x) => x.Id === parseInt(partyTypeId)
-                                                            );
-                                                            if (selectedParty) {
-                                                                return (
-                                                                    <div
-                                                                        className="addProductSupplierDetailsBox"
-                                                                        key={selectedParty.Id}
-                                                                    >
-                                                                        {" "}
-                                                                        {/* It's good practice to include a key even if it's not strictly necessary here */}
-                                                                        <p>{selectedParty.VendorName}</p>
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return null; // If no party is found, render nothing
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    style={
-                                                        {
-                                                            // width: "92%",
-                                                            // marginBottom: "20px",
-                                                        }
-                                                    }
-                                                    className="addProductDetailsBox"
-                                                >
-                                                    <label htmlFor="selectBranch">
-                                                        <strong>SELECT LOT NUMBER</strong>
-                                                    </label>
-                                                    <select
-                                                        id="selectBranch"
-                                                        // required="required"
-                                                        value={lotNumber}
-                                                        onChange={(e) => setLotNumber(e.target.value)}
-                                                    >
-                                                        <option value={0}>Select Lot Number</option>
-                                                        {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
-                                                            return (
-                                                                <option value={x.LotNumber}>
-                                                                    {x.LotNumber}
-                                                                </option>
-                                                            );
-                                                        })}
-                                                    </select>
-                                                </div>
                                             </div>
                                             <h4
                                                 style={{width: "95%", marginTop: "30px"}}
@@ -4022,7 +4057,7 @@ export default function AdminAddBulkStockNew() {
                                                                 onChange={(e) => setBoxId(e.target.value)}
                                                             >
                                                                 <option value="">Box</option>
-                                                                {filteredBoxes.map((x, y) => {
+                                                                {boxData.map((x, y) => {
                                                                     return (
                                                                         <option key={y} value={parseInt(x.Id)}>
                                                                             {x.BoxName}
@@ -4271,7 +4306,7 @@ export default function AdminAddBulkStockNew() {
                                                         {/*{addedProducts.length <= 0  ? (*/}
                                                         <div
                                                             style={{
-                                                                justifyContent: "left",
+                                                                justifyContent: "right",
                                                                 marginTop: "20px",
                                                             }}
                                                             className="bulkStockAddProductDetailsItem"
@@ -4431,7 +4466,6 @@ export default function AdminAddBulkStockNew() {
                                                                 })}
                                                             </select>
                                                         </div>
-
                                                         {stockType === "Labelled" ? (
                                                             <div className="bulkStockAddProductDetailsItem">
                                                                 <label htmlFor="boxId" style={{margin: 0}}>
@@ -4444,7 +4478,7 @@ export default function AdminAddBulkStockNew() {
                                                                     onChange={(e) => setBoxId(e.target.value)}
                                                                 >
                                                                     <option value="">Box</option>
-                                                                    {filteredBoxes.map((x, y) => {
+                                                                    {boxData.map((x, y) => {
                                                                         return (
                                                                             <option key={y} value={parseInt(x.Id)}>
                                                                                 {x.BoxName}
@@ -4454,62 +4488,6 @@ export default function AdminAddBulkStockNew() {
                                                                 </select>
                                                             </div>
                                                         ) : null}
-
-                                                        <div className="bulkStockAddProductDetailsItem">
-                                                            <label style={{margin: 0}}>Quantity</label>
-                                                            <input
-                                                                required="required"
-                                                                type="number"
-                                                                value={quantity}
-                                                                onChange={(e) => {
-                                                                    setQuantity(e.target.value);
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        {/* <div className="bulkStockAddProductDetailsItem">
-                              <label style={{ margin: 0 }}>P Name</label>
-                              <input
-                                type="text"
-                                required="required"
-                                value={productName}
-                                onChange={(e) => {
-                                  setProductName(e.target.value);
-                                }}
-                              />
-                            </div> */}
-
-                                                        <div className="bulkStockAddProductDetailsItem">
-                                                            <label htmlFor="grosswt" style={{margin: 0}}>
-                                                                G.Wt
-                                                            </label>
-                                                            {/* <select
-                        id="category"
-                        required="required"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                      >
-                        <option value="">G.Wt</option>
-                      </select> */}
-                                                            <input
-                                                                type="number"
-                                                                id="grosswt"
-                                                                required="required"
-                                                                value={grosswt}
-                                                                onChange={(e) => {
-                                                                    setGrosswt(e.target.value),
-                                                                        e.target.value - parseFloat(stoneWeight) > 0
-                                                                            ? setNetWt(
-                                                                            parseFloat(e.target.value) -
-                                                                            parseFloat(clipWeight) -
-                                                                            parseFloat(stoneWeight)
-                                                                            )
-                                                                            : (setNetWt(0),
-                                                                                setStoneWeight(0),
-                                                                                setClipWeight(0),
-                                                                                setSelectedSkuStones({Id: 0}));
-                                                                }}
-                                                            />
-                                                        </div>
                                                         <div className="bulkStockAddProductDetailsItem">
                                                             <label style={{margin: 0}}>Select Stone</label>
                                                             <select
@@ -4546,90 +4524,176 @@ export default function AdminAddBulkStockNew() {
                                                             </select>
                                                         </div>
                                                         <div className="bulkStockAddProductDetailsItem">
-                                                            <label
-                                                                htmlFor="stoneWeight"
-                                                                style={{margin: 0}}
-                                                            >
-                                                                Clip.Wt
-                                                            </label>
-
+                                                            <label style={{margin: 0}}>Quantity</label>
                                                             <input
+                                                                required="required"
                                                                 type="number"
-                                                                id="clipWeight"
-                                                                value={clipWeight}
+                                                                value={quantity}
                                                                 onChange={(e) => {
-                                                                    // e.target.value <= parseFloat(grosswt)
-                                                                    // ?
-                                                                    setClipWeight(e.target.value),
-                                                                        setNetWt(
-                                                                            (
-                                                                                parseFloat(grosswt) -
-                                                                                parseFloat(stoneWeight) -
-                                                                                parseFloat(e.target.value)
-                                                                            ).toFixed(3)
-                                                                        );
-                                                                    // : null;
-                                                                    // setGrosswt(
-                                                                    //   parseFloat(netWt) + parseFloat(e.target.value)
-                                                                    // );
+                                                                    setQuantity(e.target.value);
                                                                 }}
                                                             />
                                                         </div>
-                                                        <div className="bulkStockAddProductDetailsItem">
-                                                            <label
-                                                                htmlFor="stoneWeight"
-                                                                style={{margin: 0}}
-                                                            >
-                                                                St.Wt
-                                                            </label>
+                                                        {stockType === "Labelled" ? (
+                                                            <div className="bulkStockAddProductDetailsItem" style={{display: "flex"}}>
+                                                                <label style={{margin: 0, cursor: "pointer"}}>
+                                                                    {/* Images {`${selectedFiles.length}`} */}
+                                                                    <BsImages
+                                                                        className="bulkStockAddProductAddImagesIcon"
+                                                                        style={{marginInline: "1rem"}}
+                                                                        size={"2.5rem"}
+                                                                    />
+                                                                    <input
+                                                                        id="images"
+                                                                        style={{display: "none"}}
+                                                                        type="file"
+                                                                        multiple
+                                                                        onChange={handleFileInputChange}
+                                                                    />
+                                                                </label>
+                                                                <label>
+                                                                    {" "}
+                                                                    Images {`${selectedFiles.length}`}
+                                                                </label>
+                                                            </div>
+                                                        ) : null}
+                                                        {/* <div className="bulkStockAddProductDetailsItem">
+                              <label style={{ margin: 0 }}>P Name</label>
+                              <input
+                                type="text"
+                                required="required"
+                                value={productName}
+                                onChange={(e) => {
+                                  setProductName(e.target.value);
+                                }}
+                              />
+                            </div> */}
 
-                                                            <input
-                                                                type="number"
-                                                                id="stoneWeight"
-                                                                value={stoneWeight}
-                                                                onChange={(e) => {
-                                                                    e.target.value <= parseFloat(grosswt)
-                                                                        ? (setStoneWeight(e.target.value),
-                                                                            setNetWt(
-                                                                                (
-                                                                                    parseFloat(grosswt) -
-                                                                                    parseFloat(clipWeight) -
-                                                                                    parseFloat(e.target.value)
-                                                                                ).toFixed(3)
-                                                                            ))
-                                                                        : null;
-                                                                    // setGrosswt(
-                                                                    //   parseFloat(netWt) + parseFloat(e.target.value)
-                                                                    // );
-                                                                }}
-                                                            />
+                                                        <div className="bulkStockAddProductDetailsItem" style={{display: "flex",justifyContent:"center",alignItems:"center"}}>
+                                                            <h5
+                                                                style={{margin: "0px"}}
+                                                                onClick={() => setShowAllFields2(!showAllFields2)}
+                                                            >
+                                                                {!showAllFields2 ? "Show All" : "Show Less"}
+                                                            </h5>
                                                         </div>
-                                                        <div className="bulkStockAddProductDetailsItem">
-                                                            <label htmlFor="netWt" style={{margin: 0}}>
-                                                                Net.Wt
-                                                            </label>
-                                                            {/* <select
-                          id="category"
-                          required="required"
-                          value={category}
-                          onChange={(e) => setCategory(e.target.value)}
-                        >
-                          <option value="">Net.Wt</option>
-                        </select> */}
-                                                            <input
-                                                                type="number"
-                                                                id="netWt"
-                                                                value={netWt}
-                                                                readOnly
-                                                                // onChange={(e) => {
-                                                                //   setNetWt(e.target.value),
-                                                                //     setGrosswt(
-                                                                //       parseFloat(e.target.value) +
-                                                                //         parseFloat(stoneWeight)
-                                                                //     );
-                                                                // }}
-                                                            />
-                                                        </div>
+                                                        {showAllFields2 && (
+                                                            <>
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="grosswt" style={{ margin: 0 }}>G.Wt</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="grosswt"
+                                                                        required
+                                                                        value={grosswt}
+                                                                        onChange={(e) => {
+                                                                            const grossWeightValue = parseFloat(e.target.value);
+                                                                            setGrosswt(grossWeightValue);
+
+                                                                            if (grossWeightValue - parseFloat(stoneWeight) > 0) {
+                                                                                setNetWt(grossWeightValue - parseFloat(clipWeight) - parseFloat(stoneWeight));
+                                                                            } else {
+                                                                                setNetWt(0);
+                                                                                setStoneWeight(0);
+                                                                                setClipWeight(0);
+                                                                                setSelectedSkuStones({ Id: 0 });
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="clipWeight" style={{ margin: 0 }}>Clip.Wt</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="clipWeight"
+                                                                        value={clipWeight}
+                                                                        onChange={(e) => {
+                                                                            const clipWeightValue = parseFloat(e.target.value);
+                                                                            setClipWeight(clipWeightValue);
+                                                                            setNetWt((parseFloat(grosswt) - parseFloat(stoneWeight) - clipWeightValue).toFixed(3));
+                                                                        }}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="stoneWeight" style={{ margin: 0 }}>St.Wt</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="stoneWeight"
+                                                                        value={stoneWeight}
+                                                                        onChange={(e) => {
+                                                                            const stoneWeightValue = parseFloat(e.target.value);
+                                                                            if (stoneWeightValue <= parseFloat(grosswt)) {
+                                                                                setStoneWeight(stoneWeightValue);
+                                                                                setNetWt((parseFloat(grosswt) - parseFloat(clipWeight) - stoneWeightValue).toFixed(3));
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="netWt" style={{ margin: 0 }}>Net.Wt</label>
+                                                                    <input type="number" id="netWt" value={netWt} readOnly />
+                                                                </div>
+
+                                                                {stockType === "Labelled" && (
+                                                                    <>
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label style={{ margin: 0 }}>MRP</label>
+                                                                            <input
+                                                                                type="number"
+                                                                                value={mrp}
+                                                                                onChange={(e) => setMRP(e.target.value)}
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label htmlFor="name" style={{ margin: 0 }}>P.Name</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                id="name"
+                                                                                value={productName}
+                                                                                onChange={(e) => setProductName(e.target.value)}
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label htmlFor="description" style={{ margin: 0 }}>P.Description</label>
+                                                                            <input
+                                                                                style={{ width: "2fr" }}
+                                                                                type="text"
+                                                                                id="description"
+                                                                                value={description}
+                                                                                onChange={(e) => setDescription(e.target.value)}
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label style={{ margin: 0 }}>Gender</label>
+                                                                            <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                                                                                <option value="">Select an option</option>
+                                                                                <option value="Male">Male</option>
+                                                                                <option value="Female">Female</option>
+                                                                                <option value="Unisex">Unisex</option>
+                                                                                <option value="Kids">Kids</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label htmlFor="name" style={{ margin: 0 }}>Making-Percentage</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                id="name"
+                                                                                value={making_Percentage}
+                                                                                onChange={(e) => setMaking_Percentage(e.target.value)}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        )}
+
                                                         {stockType !== "Labelled" ? (
                                                             <div className="bulkStockAddProductDetailsItem">
                                                                 <label style={{margin: 0}}>Fine%</label>
@@ -4673,82 +4737,6 @@ export default function AdminAddBulkStockNew() {
                                                                 />
                                                             </div>
                                                         ) : null}
-                                                        {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
-                                                                <label style={{margin: 0}}>MRP</label>
-                                                                <input
-                                                                    type="number"
-                                                                    value={mrp}
-                                                                    onChange={(e) => {
-                                                                        setMRP(e.target.value);
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        ) : null}
-                                                        {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
-                                                                <label htmlFor="name" style={{margin: 0}}>
-                                                                    P.Name
-                                                                </label>
-                                                                <input
-                                                                    type="text"
-                                                                    id="name"
-                                                                    value={productName}
-                                                                    onChange={(e) =>
-                                                                        setProductName(e.target.value)
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        ) : null}
-                                                        {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
-                                                                <label
-                                                                    htmlFor="description"
-                                                                    style={{margin: 0}}
-                                                                >
-                                                                    P.Description
-                                                                </label>
-                                                                <input
-                                                                    style={{width: "2fr"}}
-                                                                    type="text"
-                                                                    id="description"
-                                                                    value={description}
-                                                                    onChange={(e) =>
-                                                                        setDescription(e.target.value)
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        ) : null}
-                                                        {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
-                                                                <label style={{margin: 0}}>Gender</label>
-                                                                <select
-                                                                    value={gender}
-                                                                    onChange={(e) => setGender(e.target.value)}
-                                                                >
-                                                                    <option value="">Select an option</option>
-                                                                    <option value="Male">Male</option>
-                                                                    <option value="Female">Female</option>
-                                                                    <option value="Unisex">Unisex</option>
-                                                                    <option value="Kids">Kids</option>
-                                                                </select>
-                                                            </div>
-                                                        ) : null}
-                                                        {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
-                                                                <label htmlFor="name" style={{margin: 0}}>
-                                                                    Making-Percentage
-                                                                </label>
-                                                                <input
-                                                                    type="text"
-                                                                    id="name"
-                                                                    value={making_Percentage}
-                                                                    onChange={(e) =>
-                                                                        setMaking_Percentage(e.target.value)
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        ) : null}
                                                         {/* {stockType === "Labelled" ? (
                               <div className="bulkStockAddProductDetailsItem">
                                 <button
@@ -4783,34 +4771,13 @@ export default function AdminAddBulkStockNew() {
 
                               </div>
                             ) : null} */}
-                                                        {stockType === "Labelled" ? (
-                                                            <div className="bulkStockAddProductDetailsItem">
-                                                                <label style={{margin: 0, cursor: "pointer"}}>
-                                                                    {/* Images {`${selectedFiles.length}`} */}
-                                                                    <BsImages
-                                                                        className="bulkStockAddProductAddImagesIcon"
-                                                                        style={{marginInline: "1rem"}}
-                                                                        size={"2.5rem"}
-                                                                    />
-                                                                    <input
-                                                                        id="images"
-                                                                        style={{display: "none"}}
-                                                                        type="file"
-                                                                        multiple
-                                                                        onChange={handleFileInputChange}
-                                                                    />
-                                                                </label>
-                                                                <label>
-                                                                    {" "}
-                                                                    Images {`${selectedFiles.length}`}
-                                                                </label>
-                                                            </div>
-                                                        ) : null}
 
                                                         {addedProducts.length <= 0 ? (
                                                             <div
                                                                 style={{
+                                                                    display:"flex",
                                                                     justifyContent: "left",
+                                                                    alignItems:"center"
                                                                 }}
                                                                 className="bulkStockAddProductDetailsItem"
                                                             >

@@ -475,6 +475,8 @@ export default function AdminAddProduct() {
                     value={newCategory.ShortName}
                     onChange={handleNewCategoryChange}
                     type="text"
+                    maxLength={5}
+                    minLength={0}
                     required="required"
                   />
                   <label>Description</label>
