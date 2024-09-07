@@ -43,6 +43,7 @@ import {useSelector} from "react-redux";
 import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import {allCountriesList} from "../../../Api/CountriesAllList";
+import {allStateList} from "../../../Api/StateList";
 
 export default function AdminAddVendor() {
     const [active, setActive] = useState("List");
@@ -81,6 +82,7 @@ export default function AdminAddVendor() {
     const [allCompaniesList, setAllCompaniesList] = useState([]);
     const [allBranchesList, setAllBranchesList] = useState([]);
     const [allDepartmentsList, setAllDepartmentsList] = useState([]);
+    const [countryStates, setCountryStates] = useState([]);
     const [allRolesList, setAllRolesList] = useState([]);
     const [allCategoriesList, setAllCategoriesList] = useState([]);
     const [allProductsList, setAllProductsList] = useState([]);
@@ -89,7 +91,10 @@ export default function AdminAddVendor() {
     //   let Entryby_Staff_id = parseInt(adminLoggedIn);
     const clientCode = adminLoggedIn.ClientCode;
     const employeeCode = adminLoggedIn.EmployeeCode;
-
+    const states = {
+        US: ["California", "Texas", "Florida", "New York"],
+        IN: allStateList,
+    };
     useEffect(() => {
         window.scroll(0, 0);
     }, []);
@@ -281,10 +286,23 @@ export default function AdminAddVendor() {
 
     useEffect(() => {
         fetchAllProductsList();
+        if (newCategory.Country == "India") {
+            setCountryStates(states.IN);
+        }
     }, []);
     const handleNewCategoryChange = (e) => {
         const {name, value} = e.target;
 
+            if (name == "Country" && value == "India") {
+                setCountryStates(states.IN);
+                setNewCategory({ ...newCategory, Country: value, State: "" });
+            } else if (name == "Country" && value == "United States") {
+                setCountryStates(states.US);
+                setNewCategory({ ...newCategory, Country: value, State: "" });
+            } else {
+                setNewCategory({ ...newCategory, [name]: value });
+                setCountryStates([]);
+            }
         if (name == "AddToCustomer") {
             if (!newCategory.OldEntry) {
                 setNewCategory({
@@ -634,7 +652,21 @@ export default function AdminAddVendor() {
                     type="text"
                     // required="required"
                   />
-
+                    <label>
+                        Country<sup>*</sup>
+                    </label>
+                    <select
+                        name="Country"
+                        required="required"
+                        value={newCategory.Country}
+                        onChange={handleNewCategoryChange}
+                    >
+                        {allCountriesList.map((x, y) => (
+                            <option key={y} value={x}>
+                                {x}
+                            </option>
+                        ))}
+                    </select>
                   <label>
                     State<sup>*</sup>
                   </label>
@@ -644,7 +676,15 @@ export default function AdminAddVendor() {
                     onChange={handleNewCategoryChange}
                     type="text"
                     required="required"
+                    list="statesList"
                   />
+                    <datalist id="statesList">
+                        {countryStates.map((x, index) => (
+                            <option key={index} value={x}>
+                                {x}
+                            </option>
+                        ))}
+                    </datalist>
 
                   <label>City</label>
                   <input
@@ -655,16 +695,14 @@ export default function AdminAddVendor() {
                     // required="required"
                   />
 
-                  <label>
-                    Country<sup>*</sup>
-                  </label>
-                  <input
-                    name="Country"
-                    value={newCategory.Country}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                    required="required"
-                  />
+
+                  {/*<input*/}
+                  {/*  name="Country"*/}
+                  {/*  value={newCategory.Country}*/}
+                  {/*  onChange={handleNewCategoryChange}*/}
+                  {/*  type="text"*/}
+                  {/*  required="required"*/}
+                  {/*/>*/}
 
 
                   <label>Vendor Pan No.</label>

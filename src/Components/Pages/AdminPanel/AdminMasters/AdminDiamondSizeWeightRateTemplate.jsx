@@ -83,7 +83,31 @@ function AdminDiamondSizeWeightRateTemplate(props) {
 
         fetchDiamondAttributes();
     }, []);
+    function getClarityValue(id, shape) {
+        if (id) {
+            const ClaritiesValue = diamondClarities?.find((item) => item.Id == id);
+            return id ? ClaritiesValue?.DiamondValue : "";
+        }
+        if (shape) {
+            const ClaritiesValue = diamondClarities?.find(
+                (item) => item.DiamondValue == shape
+            );
+            return shape ? ClaritiesValue?.Id : "";
+        }
+    }
 
+    function getColorValue(id, shape) {
+        if (id) {
+            const ColoursValue = diamondColours?.find((item) => item.Id == id);
+            return id ? ColoursValue?.DiamondValue : "";
+        }
+        if (shape) {
+            const ColoursValue = diamondColours?.find(
+                (item) => item.DiamondValue == shape
+            );
+            return shape ? ColoursValue?.Id : "";
+        }
+    }
     function getShapeValue(id, shape) {
         if (id) {
             const shapeValue = diamondShapes?.find((item) => item.Id == id);
@@ -130,13 +154,15 @@ function AdminDiamondSizeWeightRateTemplate(props) {
                                 <thead>
                                 <tr>
                                     <th>Sr.No</th>
-                                    <th>Diamond Shape</th>
-                                    <th>Diamond Size</th>
+                                    <th>Dia Shape</th>
+                                    <th>Dia clarity</th>
+                                    <th>Dia color</th>
+                                    <th>Dia Size</th>
                                     <th>Sieve</th>
-                                    <th>Diamond Weight</th>
-                                    <th>Diamond Purchase Rate</th>
+                                    <th>Dia Weight</th>
+                                    <th>Dia Purchase Rate</th>
                                     {/*<th>Diamond Margin</th>*/}
-                                    <th>Diamond Sell Rate</th>
+                                    <th>Dia Sell Rate</th>
                                 </tr>
                                 </thead>
                                 <tbody className={"w-100"}>
@@ -145,6 +171,8 @@ function AdminDiamondSizeWeightRateTemplate(props) {
                                     <tr key={x.id}>
                                         <td>{index + 1}</td>
                                         <td>{getShapeValue(x.DiamondShape)}</td>
+                                        <td>{getClarityValue(x.DiamondClarity)}</td>
+                                        <td>{getColorValue(x.DiamondColor)}</td>
                                         <td>{x.DiamondSize}</td>
                                         <td>{x.Sleve}</td>
                                         <td>{x.DiamondWeight}</td>

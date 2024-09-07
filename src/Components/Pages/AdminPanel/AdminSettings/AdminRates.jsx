@@ -71,6 +71,8 @@ export default function AdminRates() {
             } else {
                 setMessageType("success");
                 setMessageToShow("Rate Updated Successfully");
+                setActive("List")
+                fetchAllPurity();
                 setShowError(true)
             }
         } catch (error) {
@@ -188,7 +190,7 @@ export default function AdminRates() {
                                                         <TableCell>{x.FinePercentage}</TableCell>
                                                         <TableCell>
                                                             <TextField
-                                                                type="number"
+                                                                type="text"
                                                                 value={inputValues[x.Id] || ''}
                                                                 placeholder={x.TodaysRate.toString()}
                                                                 onChange={(e) =>

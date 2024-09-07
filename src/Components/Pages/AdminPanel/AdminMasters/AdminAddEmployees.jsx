@@ -48,7 +48,7 @@ export default function AdminAddEmployees() {
     StreetAddress: "",
     City: "",
     State: "",
-    Country: "",
+    Country: "India",
     AadharNo: "",
     PanNo: "",
     DateOfBirth: "",
@@ -196,6 +196,11 @@ export default function AdminAddEmployees() {
   };
   useEffect(() => {
     fetchAllDepartments();
+  }, []);
+  useEffect(() => {
+    if (newCategory.Country === "India") {
+      setCountryStates(states.IN);
+    }
   }, []);
 
   const fetchAllRoles = async () => {
@@ -505,7 +510,7 @@ export default function AdminAddEmployees() {
                     <th>Account Name</th>
                     <th>Bank AccountNo</th>
                     <th>Branch Name</th>
-                    <th>Ifsc Code</th>
+                    <th>IFSC Code</th>
                     <th>Joining Date</th>
                     <th>Salary</th>
                     {/* <th>User Name</th>
@@ -568,7 +573,7 @@ export default function AdminAddEmployees() {
                 active !== "List" ? "adminCategoryAddCategoryMainBox" : "none"
               }
             >
-              <p>Add New Employee</p>
+              {/*<p>Add New Employee</p>*/}
               <form onSubmit={addNewCategory}>
                 <h4
                   style={{ marginTop: "20px", marginBottom: "20px" }}
@@ -629,13 +634,7 @@ export default function AdminAddEmployees() {
                     onChange={handleNewCategoryChange}
                     type="text"
                   />
-                  <label>City</label>
-                  <input
-                    name="City"
-                    value={newCategory.City}
-                    onChange={handleNewCategoryChange}
-                    type="text"
-                  />
+
                   <label>
                     Country <sup>*</sup>
                   </label>
@@ -670,6 +669,13 @@ export default function AdminAddEmployees() {
                       </option>
                     ))}
                   </datalist>
+                  <label>City</label>
+                  <input
+                      name="City"
+                      value={newCategory.City}
+                      onChange={handleNewCategoryChange}
+                      type="text"
+                  />
                   <label>Aadhar No</label>
                   <input
                     name="AadharNo"
@@ -926,7 +932,7 @@ export default function AdminAddEmployees() {
                     onChange={handleNewCategoryChange}
                     type="text"
                   />
-                  <label>Ifsc Code <sup>*</sup></label>
+                  <label>IFSC Code <sup>*</sup></label>
                   <input
                     name="IfscCode"
                     value={newCategory.IfscCode}

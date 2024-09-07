@@ -17,12 +17,13 @@ import {
 import {useSelector} from "react-redux";
 import {a236, a237} from "../../../Api/RootApiPath";
 import AlertMessage from "../../../Other Functions/AlertMessage";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import moment from "moment";
 import {InfinitySpin} from "react-loader-spinner";
 
 function AdminApprovalStockTransfer() {
     const [tableData, setTableData] = useState([]);
+    const navigate = useNavigate();
     const [filteredData, setFilteredData] = useState([]); // New state for filtered data
     const [selectedRows, setSelectedRows] = useState([]); // Updated to hold multiple selected rows
     const [selectAll, setSelectAll] = useState(false); // State for Select All checkbox
@@ -171,7 +172,6 @@ function AdminApprovalStockTransfer() {
             setSelectAll(false);
         }
     };
-    console.log("looooooooooooooooooooooooooooooooooooog : ",tableData)
     return (
         <>
             <AdminHeading/>
@@ -179,12 +179,18 @@ function AdminApprovalStockTransfer() {
                 {showError ? (
                     <AlertMessage message={messageToShow} type={messageType}/>
                 ) : null}
-                <AdminBreadCrump
-                    title={"Stock Transfer / Approval"}
-                    companyName={"Loyalstring"}
-                    module={"Trading"}
-                    page={"Stock Transfer / Approval"}
-                />
+                <div className="adminDesktopBreadCrumpMainBox">
+                    <h4>Stock Transfer / Approval</h4>
+                    <div className="adminDesktopBreadCrumpLinks">
+                        <p onClick={() => navigate("/adminhome")}>Loyalstring</p>
+                        <p>{` > `}</p>
+                        <p onClick={() => navigate("/stock_transfer_list")}>Stock Transfer List</p>
+                        <p>{` > `}</p>
+                        <p style={{textDecoration: "underline"}}>
+                            <strong>Stock Transfer / Approval</strong>
+                        </p>
+                    </div>
+                </div>
             </Box>
             <Box className="adminAddCategoryMainBox" sx={{width: '100%'}}>
                 <Box className="adminAddCategoryInnerBox" sx={{width: '100%'}}>
@@ -200,7 +206,7 @@ function AdminApprovalStockTransfer() {
                             </Box>
                             <Box display={"flex"} alignItems={"center"} mx={1}>
                                 <Typography sx={{fontWeight: "600"}}>Transfer By :</Typography>
-                                <Typography mx={1}>{tableData?.StockTransferByName}</Typography>
+                                <Typography mx={1}>{tableData?.TransferByEmployee}</Typography>
                             </Box>
                         </Box>
                         <Box>
@@ -261,7 +267,8 @@ function AdminApprovalStockTransfer() {
                                     Reject
                                 </button>
                             </Box>
-                            {(tableData?.TransferByEmployee !== tableData?.ReceivedByEmployee) && <Box
+                            {(tableData?.TransferByEmployee !== tableData?.ReceivedByEmployee || (tableData?.StockTransferTypeName?.includes("Salesman") || tableData?.StockTransferTypeName?.includes("Branch"))) &&
+                            <Box
                                 mx={1}
                                 className="adminInvoiceAddProductsOptionsMainPurchaseItems"
                             >
@@ -305,15 +312,16 @@ function AdminApprovalStockTransfer() {
                                             <TableHead>
                                                 <TableRow>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Sr</TableCell>
-                                                    <TableCell sx={{fontWeight: "600"}} align="center">Metal
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Category
                                                         Name</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Item
                                                         Code</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}} align="center">Branch
                                                         Name</TableCell>
-                                                    <TableCell sx={{fontWeight: "600"}} align="center">NetWt</TableCell>
+                                                    <TableCell sx={{fontWeight: "600"}} align="center">Net
+                                                        Wt</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}
-                                                               align="center">GrossWt</TableCell>
+                                                               align="center">Gross Wt</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}
                                                                align="center">Status</TableCell>
                                                     <TableCell sx={{fontWeight: "600"}}

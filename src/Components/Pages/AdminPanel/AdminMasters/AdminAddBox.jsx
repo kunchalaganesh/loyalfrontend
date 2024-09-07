@@ -513,13 +513,14 @@ export default function AdminAddBox() {
                                         <td>{x.ProductName}</td>
                                         <td>{x.BoxName}</td>
                                         <td>
-                                            {x.PacketIds && x.PacketIds.split(',').length > 0 ? (
-                                                x.PacketIds.split(',').map((item, index) => (
-                                                    <div key={index}>{item.split("-")[1]}</div>
-                                                ))
-                                            ) : (
-                                                "-"
-                                            )}
+                                            {/*{x.PacketIds && x.PacketIds.split(',').length > 0 ? (*/}
+                                            {/*    x.PacketIds.split(',').map((item, index) => (*/}
+                                            {/*        <div key={index}>{item.split("-")[1]}</div>*/}
+                                            {/*    ))*/}
+                                            {/*) : (*/}
+                                            {/*    "-"*/}
+                                            {/*)}*/}
+                                            {x.Packets}
                                         </td>
                                         <td>{x.EmptyWeight}</td>
                                         {/* <td>{x.ProductId}</td>

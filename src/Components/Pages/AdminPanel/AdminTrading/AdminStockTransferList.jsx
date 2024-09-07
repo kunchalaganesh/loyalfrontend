@@ -178,12 +178,24 @@ function AdminStockTransferList() {
         <>
             <AdminHeading/>
             <Box className="adminMainBodyBox">
-                <AdminBreadCrump
-                    title={"Stock Transfer History"}
-                    companyName={"Loyalstring"}
-                    module={"Trading"}
-                    page={"Stock Transfer History"}
-                />
+                {/*<AdminBreadCrump*/}
+                {/*    title={"Stock Transfer History"}*/}
+                {/*    companyName={"Loyalstring"}*/}
+                {/*    module={"Trading"}*/}
+                {/*    page={"Stock Transfer History"}*/}
+                {/*/>*/}
+                <div className="adminDesktopBreadCrumpMainBox">
+                    <h4>Stock Transfer History</h4>
+                    <div className="adminDesktopBreadCrumpLinks">
+                        <p onClick={() => navigate("/adminhome")}>Loyalstring</p>
+                        <p>{` > `}</p>
+                        <p onClick={() => navigate("/stock_transfer")}>Stock Transfer</p>
+                        <p>{` > `}</p>
+                        <p style={{ textDecoration: "underline" }}>
+                            <strong>Stock Transfer List</strong>
+                        </p>
+                    </div>
+                </div>
             </Box>
             <Box className="adminAddCategoryMainBox">
                 <Box className="adminAddCategoryInnerBox">
@@ -252,7 +264,7 @@ function AdminStockTransferList() {
                                     </Box>
                                 </Grid>
                                 <Grid item>
-                                    <Box sx={{display: "flex", alignItems: "center"}}>
+                                    <Box sx={{display: "flex", alignItems: "center",ml: {xs:"10px",sm:"20px",md:"35px"}}}>
                                         <label style={{width: "135px"}}>Branch :</label>
                                         <select className={"input-select"} name={"BranchName"}
                                                 onChange={handleInputChangePurchase}
@@ -265,7 +277,7 @@ function AdminStockTransferList() {
                                     </Box>
                                 </Grid>
                                 <Grid item>
-                                    <Box sx={{display: "flex", alignItems: "center"}}>
+                                    <Box sx={{display: "flex", alignItems: "center",ml: {xs:"10px",sm:"20px",md:"35px"}}}>
                                         <label style={{width: "200px"}}>Transfer Type :</label>
                                         <select className={"input-select"} name={"TransferType"}
                                                 onChange={handleInputChangePurchase}

@@ -436,6 +436,8 @@ export default function AdminAddCategory() {
                     value={newCategory.ShortName}
                     onChange={handleNewCategoryChange}
                     type="text"
+                    maxLength={5}
+                    minLength={0}
                   />
                   <label>
                     Parent Category<sup>*</sup>

@@ -519,6 +519,8 @@ export default function AdminAddPurity() {
                     onChange={handleNewCategoryChange}
                     type="text"
                     required="required"
+                    maxLength={5}
+                    minLength={1}
                   />
                   <label htmlFor="Description">Description</label>
                   <input

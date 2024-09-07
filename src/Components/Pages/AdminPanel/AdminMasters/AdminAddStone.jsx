@@ -66,7 +66,7 @@ export default function AdminAddStone() {
         StonePieces: "1",
         StoneRate: "0",
         StoneAmount: "0",
-        Description: "0",
+        Description: "",
         StoneLessPercent: "100",
 
         OldEntry: false,
@@ -281,12 +281,6 @@ export default function AdminAddStone() {
         fetchAllProductsList();
     }, []);
 
-    console.log(allCategories, "allCategories");
-    console.log(allCompaniesList, "allCompaniesList");
-    console.log(allDepartmentsList, "allDepartmentsList");
-    console.log(allBranchesList, "allBranchesList");
-    console.log(allRolesList, "allRolesList");
-    console.log(allCategoriesList, "allCategoriesList");
 
     const handleNewCategoryChange = (e) => {
         const {name, value} = e.target;
@@ -350,7 +344,7 @@ export default function AdminAddStone() {
                 StonePieces: "1",
                 StoneRate: "0",
                 StoneAmount: "0",
-                Description: "0",
+                Description: "",
                 OldEntry: false,
             });
             if (data.message) {

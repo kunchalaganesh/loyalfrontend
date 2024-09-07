@@ -47,6 +47,7 @@ import {
 } from "../../../Api/RootApiPath";
 import QRCode from "qrcode";
 import jsPDF from "jspdf";
+<<<<<<< HEAD
 import { InfinitySpin } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEdit, AiOutlineFileAdd } from "react-icons/ai";
@@ -98,6 +99,60 @@ export default function AdminAddBulkStockNew() {
   const [fineWastagePerc, setFineWastagePerc] = useState("0");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+=======
+import {InfinitySpin} from "react-loader-spinner";
+import {Link, useNavigate} from "react-router-dom";
+import {AiOutlineEdit, AiOutlineFileAdd} from "react-icons/ai";
+import {BiSave, BiListUl} from "react-icons/bi";
+import {FaFileInvoiceDollar} from "react-icons/fa";
+import {BsImages} from "react-icons/bs";
+import {IoIosAddCircleOutline, IoMdAddCircleOutline} from "react-icons/io";
+import {CiImport} from "react-icons/ci";
+import {GenerateLabel} from "../../../Other Functions/GenerateLabel";
+import {color} from "chart.js/helpers";
+import {Grid} from "@mui/material";
+
+export default function AdminAddBulkStockNew() {
+    const [diamondTemplateId, setDiamondTemplateId] = useState(null)
+    const [qr, setQr] = useState("");
+    const [productName, setProductName] = useState("");
+    const [allProducts, setAllProducts] = useState([]);
+    //   const [categoryId, setCategoryId] = useState("");
+    const [pieces, setPieces] = useState(1);
+    const [huid, setHuid] = useState("");
+    const [netWt, setNetWt] = useState(0);
+    const [size, setSize] = useState(0);
+    const [hallmark, setHallmark] = useState("");
+    const [hallmarkAmount, setHallmarkAmount] = useState("0");
+    const [grosswt, setGrosswt] = useState(0);
+    const [purity, setPurity] = useState("");
+    const [collection, setCollection] = useState("");
+    const [occasion, setOccasion] = useState("");
+    const [gender, setGender] = useState("");
+    const [description, setDescription] = useState("");
+    // const [productTypeId, setProductTypeId] = useState("");
+    const [partyTypeId, setPartyTypeId] = useState("");
+    const [boxId, setBoxId] = useState(0);
+    const [making_per_gram, setMaking_per_gram] = useState(0);
+    const [making_Fixed_Amt, setMaking_Fixed_Amt] = useState(0);
+    const [making_Percentage, setMaking_Percentage] = useState(0);
+    const [making_Fixed_Wastage, setMaking_Fixed_Wastage] = useState(0);
+    const [stoneWeight, setStoneWeight] = useState(0);
+    const [clipWeight, setClipWeight] = useState(0);
+    const [stoneAmount, setStoneAmount] = useState(0);
+    const [weights, setWeights] = useState(0);
+    const [featured, setFeatured] = useState("");
+    const [productCode, setProductCode] = useState("");
+    const [mrp, setMRP] = useState(0);
+    const [itemCode, setItemCode] = useState("");
+    const [itemType, setItemType] = useState("");
+    const [quantity, setQuantity] = useState(1);
+    const [finePerc, setFinePerc] = useState("0");
+    const [wastagePerc, setWastagePerc] = useState("0");
+    const [fineWastagePerc, setFineWastagePerc] = useState("0");
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+>>>>>>> upstream/main
 
   const [category, setCategory] = useState("");
   const [baseMetal, setBaseMetal] = useState("");
@@ -123,6 +178,7 @@ export default function AdminAddBulkStockNew() {
   // const [loadingAdd, setLoadingAdd] = useState(false);
   const [loadingAdd, setLoadingAdd] = useState(true);
 
+<<<<<<< HEAD
   const [goldAlert, setGoldAlert] = useState(false);
   const [barCodeAlert, setBarCodeAlert] = useState(false);
   const [importAlert, setImportAlert] = useState(false);
@@ -140,6 +196,26 @@ export default function AdminAddBulkStockNew() {
   const [branch, setBranch] = useState("Home");
   const [lotNumber, setLotNumber] = useState(0);
   const [packetNumber, setPacketNumber] = useState(0);
+=======
+    const [goldAlert, setGoldAlert] = useState(false);
+    const [barCodeAlert, setBarCodeAlert] = useState(false);
+    const [importAlert, setImportAlert] = useState(false);
+    const [isLooseDiamond, setIsLooseDiamond] = useState(false);
+    const [firebaseData, setFirebaseData] = useState({});
+    const [isMounted, setIsMounted] = useState(false);
+    const [rifdData, setRifdData] = useState([]);
+    const [checkedProducts, setCheckedProducts] = useState([]);
+    const [selectedItemCodes, setSelectedItemCodes] = useState([]);
+    const [allItemCodesArray, setAllItemCodesArray] = useState([]);
+    const [deleteAll, setDeleteAll] = useState(false);
+    const [deleteSelected, setDeleteSelected] = useState(false);
+    const [showAllFields, setShowAllFields] = useState(false);
+    const [showAllFields2, setShowAllFields2] = useState(false);
+    const [stockType, setStockType] = useState("Labelled");
+    const [branch, setBranch] = useState("Home");
+    const [lotNumber, setLotNumber] = useState(0);
+    const [packetNumber, setPacketNumber] = useState(0);
+>>>>>>> upstream/main
 
   // new logic for barcode and tid below
   const [barcodeNumbersArray, setBarcodeNumbersArray] = useState([]);
@@ -2478,6 +2554,7 @@ export default function AdminAddBulkStockNew() {
               status: response.status,
               data,
             }));
+<<<<<<< HEAD
           } else {
             return response.text().then((text) => ({
               status: response.status,
@@ -2496,6 +2573,444 @@ export default function AdminAddBulkStockNew() {
         });
     } else {
       alert("Please select a file.");
+=======
+            const updatedProductsString2 = updatedProductsString.map((product) => {
+                // Filter out properties with null values
+                const filteredProduct = Object.fromEntries(
+                    Object.entries(product).filter(([key, value]) => value !== null)
+                );
+                return filteredProduct;
+            });
+            const createFormData = (data) => {
+                const formData = new FormData();
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        formData.append(key, data[key]);
+                    }
+                }
+                return formData;
+            };
+
+
+// Assuming updatedProductsString2[0] contains the data you want to send
+            const formData = createFormData(updatedProductsString2[0]);
+            // Send the updated products to the edit API endpoint
+            // const formData = new FormData();
+            // formData.append("Data", updatedProductsString2)
+            const response = await fetch(a199, {
+                method: "POST",
+                body: formData,
+            });
+            const rcvdData = await response.json();
+            setHasUnsavedChanges(true);
+            setStockType("Labelled");
+            setAddedProducts([rcvdData]);
+            setAddedProducts([]);
+            alert("Unlabelled Stock Added");
+            scrollToCenter("addBulkProductsBoxTop");
+            //       openLabelInNew(rcvdData.data);
+            //       console.log("addedProducts", addedProducts);
+            //       console.log("updatedProducts", updatedProducts);
+            //       // setUpdatedProducts(rcvdData.data);
+            //       setLoading(false);
+            //     }
+            //   } catch (error) {
+            //     alert(error);
+            //     console.error(error);
+            //     setLoading(false);
+            //   }
+            // };
+            if (rcvdData.status === "error") {
+                setLoading(false);
+                alert(rcvdData.message); // Show error message
+            } else {
+                // console.log("updatedProducts", updatedProducts);
+                setLoading(false);
+            }
+        } catch (error) {
+            alert(error);
+            console.error(error);
+            setLoading(false);
+        }
+    };
+    // console.log("2addedProducts", addedProducts);
+    const filteredProducts = productTypeData.filter(
+        (product) => product.CategoryId == baseMetal
+    );
+    const filteredCollection = collectionTypeData.filter(
+        (product) => product.ProductId == productTypeId
+    );
+    const filteredPurity = purityData.filter(
+        (product) => product.CategoryId == baseMetal
+    );
+    const filteredBoxes = boxData.filter(
+        (box) => box.BoxId == boxId
+    );
+
+
+    const handleCheckboxChange = (productId, itemCode) => {
+        let updatedCheckedProducts = [...checkedProducts];
+        let updatedSelectedItemCodes = [...selectedItemCodes];
+
+        if (updatedCheckedProducts.includes(productId)) {
+            updatedCheckedProducts = updatedCheckedProducts.filter(
+                (id) => id !== productId
+            );
+            updatedSelectedItemCodes = updatedSelectedItemCodes.filter(
+                (code) => code !== itemCode
+            );
+        } else {
+            updatedCheckedProducts.push(productId);
+            updatedSelectedItemCodes.push(itemCode);
+        }
+
+        if (updatedCheckedProducts.length > 0) {
+            setDeleteSelected(true);
+        } else {
+            setDeleteSelected(false);
+        }
+
+        setCheckedProducts(updatedCheckedProducts);
+        setSelectedItemCodes(updatedSelectedItemCodes);
+    };
+
+    const selectedItems = selectedItemCodes.map((itemCode) => ({
+        ItemCode: itemCode,
+    }));
+
+    // console.log("checkedProducts", checkedProducts);
+    // console.log("selectedItemCodes", selectedItemCodes);
+    // console.log("selectedItems", selectedItems);
+
+    const deleteAllProducts = async (itemsToDelete) => {
+        setReadOnly(false);
+        const deletAllItemsList = itemsToDelete.map((x) => {
+            return {...x, ClientCode: clientCode};
+        });
+        // const deletAllItemsList = itemsToDelete.map(x => ({...x, ClientCode: clientCode}));
+
+        try {
+            const response = await fetch(a178, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(deletAllItemsList),
+            });
+
+            const rcvdData = await response.json();
+            // console.log("AllItemsDeleted", rcvdData);
+            if (response.ok) {
+                // Deletion was successful
+                // console.log("Item deleted successfully:", response.message);
+                // alert(rcvdData.message);
+                setSelectedItemCodes([]);
+                setCheckedProducts([]);
+                scrollToCenter("addBulkProductsBoxTop");
+                // You can show an alert or notification here
+                // alert(data.message);
+                if (itemsToDelete == allItemCodesArray) {
+                    setAddedProducts([]);
+                } else {
+                    const updatedAddedProducts = addedProducts.filter((product) => {
+                        return !itemsToDelete.some(
+                            (item) => item.ItemCode === product.ItemCode
+                        );
+                    });
+                    setAddedProducts(updatedAddedProducts);
+                }
+                setDeleteAll(false);
+                setDeleteSelected(false);
+            } else {
+                // Handle the case where deletion failed
+                console.error("Failed to delete item:", response.message);
+
+                // You can show an error message to the user
+                alert("Failed to delete item: " + response.message);
+            }
+        } catch (error) {
+            // Handle any network or fetch API errors
+            console.error("An error occurred:", error);
+
+            // Show an error message to the user
+            // alert("An error occurred while deleting the item.");
+        }
+    };
+    const showAllInputs = () => {
+        setHalfInputs(!halfInputs);
+        const allFields = document.getElementById("bulkStockAddProductDetailsBox");
+        if (halfInputs) {
+            allFields.classList.add("bulkStockAddProductDetailsBoxHalfHeight");
+            allFields.classList.remove("bulkStockAddProductDetailsBoxFullHeight");
+        } else {
+            allFields.classList.remove("bulkStockAddProductDetailsBoxHalfHeight");
+            allFields.classList.add("bulkStockAddProductDetailsBoxFullHeight");
+        }
+    };
+    const [selectedSku, setSelectedSku] = useState([]);
+    const [selectedSkuName, setSelectedSkuName] = useState("");
+    const handleSkuInputChange = (e) => {
+        const {value} = e.target;
+        const uppercaseValue = value.toUpperCase();
+        setSelectedSkuName(uppercaseValue);
+        let selectedSkuItem = [];
+        selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
+        setSelectedSku(selectedSkuItem);
+    };
+
+
+    useEffect(() => {
+        if (selectedSkuName !== "" && selectedSku) {
+            if (selectedSku.WeightCategories) {
+                const parsedWeights = selectedSku.WeightCategories.split(",")
+                    .map(Number)
+                    .filter((num) => !isNaN(num)); // Ensures only valid numbers are included
+                setSelectedweights(parsedWeights);
+            } else {
+                setSelectedweights([]);
+            }
+
+            setDescription(selectedSku.Description);
+            setNetWt(selectedSku.NetWt);
+            setBoxId(0);
+            setPartyTypeId(selectedSku.VendorId);
+            // categoryName = selectedSku.category;
+            // productTypeName = selectedSku.productType;
+            // collectionName = selectedSku.collection;
+            // purityName = selectedSku.purity;
+            setCategory(`${selectedSku.CategoryId}`);
+            setBaseMetal(`${selectedSku.CategoryId}`);
+            setProductType(`${selectedSku.ProductId},${selectedSku.ProductName}`);
+            setCollection(`${selectedSku.DesignId},${selectedSku.DesignName}`);
+            setPurity(`${selectedSku.PurityId},${selectedSku.PurityName}`);
+            // categoryId = selectedSku.categoryId;
+            // productTypeId = selectedSku.productTypeId;
+            // purityId = selectedSku.purityId;
+            // collectionId = selectedSku.collectionId;
+            setSize(selectedSku.Size);
+            setGrosswt(selectedSku.GrossWt);
+            setPieces(selectedSku.Pieces);
+            // setStoneWeight(
+            //   parseFloat(selectedSku.TotalStoneWeight) *
+            //     parseFloat(selectedSku.Pieces)
+            // );
+            setSelectedFiles(selectedSku.Images);
+            // setSelectedFiles(selectedSku.images);
+            setMaking_Percentage(selectedSku.MakingPercentage);
+            setMaking_Fixed_Amt(selectedSku.MakingFixedAmt);
+            setMaking_per_gram(selectedSku.MakingPerGram);
+            setMaking_Fixed_Wastage(selectedSku.MakingFixedWastage);
+            setMRP(selectedSku.MRP);
+            setAllSelectedSkuStones(selectedSku.SKUStoneMain);
+            setAllSelectedSkuDiamonds(selectedSku.Diamonds);
+            if (
+                selectedSku.ClipWeight == 0 ||
+                selectedSku.ClipWeight == "0" ||
+                selectedSku.ClipWeight == "0.00" ||
+                selectedSku.ClipWeight == "0.000"
+            ) {
+                setClipWeight(selectedSku.ClipWeight);
+                setGrossWithClip(false);
+            } else {
+                setClipWeight(selectedSku.ClipWeight);
+
+                setGrossWithClip(true);
+            }
+            const allFilteredPurchaseItemsList = allPurchaseItems.filter(
+                (x) => x.SKUId === selectedSku.Id
+            );
+            setAllFilteredPurchaseItems(allFilteredPurchaseItemsList);
+        } else {
+            setDeleteAll(true);
+            // setPartyTypeId("");
+            setCategory("");
+            setBaseMetal("");
+            setProductType("");
+            setPurity("");
+            setQuantity(1);
+            setCollection("");
+            setGrosswt(0);
+            setNetWt(0);
+            setClipWeight(0);
+            setGender("");
+            setStoneWeight(0);
+            setMRP(0);
+            setBoxId(0);
+            setProductName("");
+            setDescription("");
+            setSelectedFiles([]);
+            setAllFilteredPurchaseItems(allPurchaseItems);
+            setGrossWithClip(false);
+        }
+    }, [selectedSku]);
+
+    useEffect(() => {
+        const allFilteredPurchaseItemsList = allPurchaseItems.filter(
+            (x) => x.VendorId === parseInt(partyTypeId)
+        );
+        setAllFilteredPurchaseItems(allFilteredPurchaseItemsList);
+    }, [partyTypeId]);
+
+    const uploadExcelFile = async () => {
+        if (importFile) {
+            const formData = new FormData();
+            formData.append("file", importFile);
+
+            fetch(a90, {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => {
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        return response.json().then((data) => ({
+                            status: response.status,
+                            data,
+                        }));
+                    } else {
+                        return response.text().then((text) => ({
+                            status: response.status,
+                            data: text,
+                        }));
+                    }
+                })
+                .then(({status, data}) => {
+                    alert("Imported Data");
+                    setShowImportPopup(false);
+                    // Handle success response
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    // Handle errors
+                });
+        } else {
+            alert("Please select a file.");
+        }
+    };
+
+    const handleSelectedSkuStoneChange = (e) => {
+        if (e.target.value !== "") {
+            const selectedStone = allSelectedSkuStones.find(
+                (stone) => stone.Id == e.target.value
+            );
+            setSelectedSkuStones(selectedStone);
+            setStoneWeight(
+                (
+                    parseFloat(selectedStone.StoneMainWeight) *
+                    parseFloat(selectedSku.Pieces)
+                ).toFixed(3)
+            );
+            setNetWt(
+                (
+                    parseFloat(grosswt) -
+                    parseFloat(selectedStone.StoneMainWeight) *
+                    parseFloat(selectedSku.Pieces)
+                ).toFixed(3)
+            );
+            setStoneAmount(
+                (
+                    parseFloat(selectedStone.StoneMainAmount) *
+                    parseFloat(selectedSku.Pieces)
+                ).toFixed(2)
+            );
+        } else {
+            setSelectedSkuStones({Id: 0});
+        }
+    };
+
+    const handleSelectedweights = (e) => {
+        const value = e.target.value;
+
+        if (value !== "") {
+            setWeights(parseFloat(value)); // Set the selected weight
+        } else {
+            setWeights(0); // Set to default if empty value is selected
+        }
+    };
+
+    async function fetchAllStonesList() {
+        const formData = {ClientCode: clientCode};
+        try {
+            const response = await fetch(a146, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+            setAllStonesList(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    async function fetchAllDiamondsList() {
+        const formData = {ClientCode: clientCode};
+        try {
+            const response = await fetch(a153, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await response.json();
+            setAllDiamondsList(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    useEffect(() => {
+        fetchAllStonesList();
+        fetchAllDiamondsList();
+    }, []);
+    useEffect(() => {
+        if (selectedSku) {
+            setAllStonesList(selectedSku.SKUStoneMain)
+        } else {
+            fetchAllStonesList();
+        }
+    }, [selectedSku]);
+    // const handleStoneChange = (index, property, value) => {
+    //   const newStones = newStonesList;
+    //   const selectedStone = allStonesList.find(
+    //     (stone) => stone.StoneName === value
+    //   );
+    //   console.log(selectedStone, "selected Stone");
+    //   console.log(selectedStone, "selected Stone");
+
+    //   if (selectedStone) {
+    //     newStones[index] = {
+    //       ...newStones[index],
+    //       StoneName: selectedStone.StoneName,
+    //       StoneWeight: selectedStone.StoneWeight, // Assuming these fields exist in your stone objects
+    //       StonePieces: selectedStone.StonePieces,
+    //       StoneRate: selectedStone.StoneRate,
+    //       StoneAmount: selectedStone.StoneAmount, // Calculate or pull this value as required
+    //       Description: selectedStone.Description, // Assuming a description field exists
+    //     };
+    //   } else {
+    //     newStones[index] = {
+    //       ...newStones[index],
+    //       [property]: value,
+    //     };
+    //   }
+
+    //   return setNewStonesList(newStones);
+    // };
+    function getShapeValue(id, shape) {
+        if (id) {
+            const shapeValue = allDiamondAttributes.filter((x) => x.DiamondAttribute == "DiamondShape")?.find((item) => item.Id == id);
+            return id ? shapeValue?.DiamondValue : "";
+        }
+        if (shape) {
+            const shapeValue = allDiamondAttributes.filter((x) => x.DiamondAttribute == "DiamondShape")?.find(
+                (item) => item.DiamondValue == shape
+            );
+            return shape ? shapeValue?.Id : "";
+        }
+>>>>>>> upstream/main
     }
   };
 
@@ -3647,6 +4162,7 @@ export default function AdminAddBulkStockNew() {
                 </div>
               ) : null}
 
+<<<<<<< HEAD
               <div>
                 {loadingAdd ? (
                   <div className="adminAddCategoryMainbox addProductMain">
@@ -3667,6 +4183,68 @@ export default function AdminAddBulkStockNew() {
                       >
                         ADD BULK STOCK
                       </h3>
+=======
+                            <div>
+                                {loadingAdd ? (
+                                    <div className="adminAddCategoryMainbox addProductMain">
+                                        <form
+                                            style={{
+                                                marginTop: "10px",
+                                            }}
+                                            onSubmit={
+                                                stockType === "Labelled"
+                                                    ? handleCreateAddedProducts
+                                                    : handleSubmitUnlabelled
+                                                // ? handleSubmit
+                                            }
+                                        >
+                                            <h3 className="adminAddBulkStockAddedTitle" style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                margin: "0px"
+                                            }}>
+                                                <div style={{width: "97%"}}>ADD BULK STOCK</div>
+                                                <div style={{display: "flex", alignItems: "center"}}>
+                                                    <label htmlFor="selectBranch" style={{textAlign: "right"}}>
+                                                        <strong style={{textAlign: "right", color: "white"}}>SELECT
+                                                            BRANCH</strong>
+                                                    </label>
+                                                    <select
+                                                        id="selectBranch"
+                                                        required="required"
+                                                        value={branch}
+                                                        onChange={(e) => setBranch(e.target.value)}
+                                                    >
+                                                        <option value="">Select a branch</option>
+                                                        {branchOption.map((item) => (
+                                                            <option
+                                                                value={item.BranchName}>{item.BranchName}</option>
+                                                        ))}
+                                                    </select>
+                                                    {/*<label htmlFor="selectBranch" style={{textAlign: "right"}}>*/}
+                                                    {/*    <strong style={{textAlign: "right", color: "white"}}>SELECT LOT*/}
+                                                    {/*        NUMBER</strong>*/}
+                                                    {/*</label>*/}
+                                                    {/*<select*/}
+                                                    {/*    id="selectBranch"*/}
+                                                    {/*    // required="required"*/}
+                                                    {/*    style={{margin: "0px"}}*/}
+                                                    {/*    value={lotNumber}*/}
+                                                    {/*    onChange={(e) => setLotNumber(e.target.value)}*/}
+                                                    {/*>*/}
+                                                    {/*    <option value={0}>Select Lot Number</option>*/}
+                                                    {/*    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {*/}
+                                                    {/*        return (*/}
+                                                    {/*            <option value={x.LotNumber}>*/}
+                                                    {/*                {x.LotNumber}*/}
+                                                    {/*            </option>*/}
+                                                    {/*        );*/}
+                                                    {/*    })}*/}
+                                                    {/*</select>*/}
+                                                </div>
+                                            </h3>
+>>>>>>> upstream/main
 
                       {/* <h4
                           id="adminInvoiceAddedCustomerEdit"
@@ -3680,6 +4258,7 @@ export default function AdminAddBulkStockNew() {
                         >
                           Add Product
                         </h4>{" "} */}
+<<<<<<< HEAD
                                             <div className="addProductDetailsUpperBox">
                                                 <div
                                                     // style={{ width: "92%" }}
@@ -3896,6 +4475,217 @@ export default function AdminAddBulkStockNew() {
                         Add Items
                       </h4>
                       {/* <div
+=======
+                                            <div className="addProductDetailsUpperBox" style={{marginTop: "3rem",display: "unset",marginLeft: "30px",marginRight: "20px"}}>
+                                                <div>
+                                                    <Grid container xs={12} spacing={4}>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="category" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>SUPPLIER</strong>
+                                                                </label>
+                                                                <select
+                                                                    style={{width: "100%",marginLeft: "0px"}}
+                                                                    id="category"
+                                                                    required="required"
+                                                                    value={partyTypeId}
+                                                                    onChange={(e) => {
+                                                                        setPartyTypeId(e.target.value)
+                                                                        const tempId = partyData.find((event, ind) => event.Id == e.target.value)
+                                                                        setDiamondTemplateId(tempId?.DiamondSizeWeightRateTemplateId)
+                                                                    }}
+                                                                >
+                                                                    <option value="">
+                                                                        Select Party / Karigar Name
+                                                                    </option>
+                                                                    {partyData.map((x, y) => {
+                                                                        return (
+                                                                            <option key={y} value={parseInt(x.Id)}>
+                                                                                {x.VendorName}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="sku" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>SKU</strong>
+                                                                </label>
+                                                                <input
+                                                                    style={{width: "100%",marginLeft: "0px"}}
+                                                                    // style={{ width: "30vw" }}
+                                                                    type="text"
+                                                                    name="skuList"
+                                                                    placeholder="Enter SKU"
+                                                                    value={selectedSkuName}
+                                                                    onInput={handleSkuInputChange}
+                                                                    list="skuList"
+                                                                />
+                                                                <datalist id="skuList">
+                                                                    {allSku.map((sku, index) => (
+                                                                        <option
+                                                                            key={index}
+                                                                            value={`${sku.StockKeepingUnit}`}
+                                                                        />
+                                                                    ))}
+                                                                </datalist>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="selectBranch" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>SELECT LOT NUMBER</strong>
+                                                                </label>
+                                                                <select
+                                                                style={{width: "100%",marginLeft: "0px"}}
+                                                                    id="selectBranch"
+                                                                    // required="required"
+                                                                    value={lotNumber}
+                                                                    onChange={(e) => setLotNumber(e.target.value)}
+                                                                >
+                                                                    <option value={0}>Select Lot Number</option>
+                                                                    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
+                                                                        return (
+                                                                            <option value={x.LotNumber}>
+                                                                                {x.LotNumber}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid xs={6} md={3} item>
+                                                            <div>
+                                                                <label htmlFor="invoiceType" style={{paddingLeft: "0%",marginLeft: "0%"}}>
+                                                                    <strong style={{color: "black",fontSize: "13px"}}>STOCK TYPE</strong>
+                                                                </label>
+                                                                <select
+                                                                style={{width: "100%",marginLeft: "0px"}}
+                                                                    id="invoiceType"
+                                                                    required="required"
+                                                                    value={stockType}
+                                                                    onChange={(e) => setStockType(e.target.value)}
+                                                                >
+                                                                    <option value="Labelled">Labelled</option>
+                                                                    <option value="Unlabelled">Unlabelled</option>
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid container >
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Diamond :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.VendorName}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null;
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Gold :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    {" "}
+                                                                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.InwardGold}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null; // If no party is found, render nothing
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Silver :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    {" "}
+                                                                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.InwardSilver}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null; // If no party is found, render nothing
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid item xs={6} md={3}>
+                                                            <div style={{display: "flex", alignItems: "center"}}>
+                                                                <p style={{fontSize: "14px"}}>Unlabelled Other :</p>
+                                                                <div>
+                                                                    {(() => {
+                                                                        const selectedParty = partyData.find(
+                                                                            (x) => x.Id === parseInt(partyTypeId)
+                                                                        );
+                                                                        if (selectedParty) {
+                                                                            return (
+                                                                                <div
+                                                                                    className="addProductSupplierDetailsBox"
+                                                                                    key={selectedParty.Id}
+                                                                                >
+                                                                                    {" "}
+                                                                                    {/* It's good practice to include a key even if it's not strictly necessary here */}
+                                                                                    <p style={{fontSize: "14px"}}>{selectedParty.VendorName}</p>
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        return null; // If no party is found, render nothing
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
+                                                </div>
+
+                                            </div>
+                                            <h4
+                                                style={{width: "95%", marginTop: "30px"}}
+                                                id="adminInvoiceAddedCustomerEdit"
+                                                className="adminInvoiceAddTitles"
+                                            >
+                                                Add Items
+                                            </h4>
+                                            {/* <div
+>>>>>>> upstream/main
                           style={{
                             display: "flex",
                             cursor: "pointer",
@@ -4239,6 +5029,7 @@ export default function AdminAddBulkStockNew() {
                                     );
                                 }}
 
+<<<<<<< HEAD
                                 // readOnly
                               />
                             </div>
@@ -4429,6 +5220,67 @@ export default function AdminAddBulkStockNew() {
                             {/*    }}*/}
                             {/*  />*/}
                             {/*</div>*/}
+=======
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label htmlFor="boxId" style={{margin: 0}}>
+                                                                Box
+                                                            </label>
+                                                            <select
+                                                                id="boxId"
+                                                                // required="required"
+                                                                value={boxId}
+                                                                onChange={(e) => setBoxId(e.target.value)}
+                                                            >
+                                                                <option value="">Box</option>
+                                                                {boxData.map((x, y) => {
+                                                                    return (
+                                                                        <option key={y} value={parseInt(x.Id)}>
+                                                                            {x.BoxName}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </select>
+                                                        </div>
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>Sleve</label>
+                                                            <input
+                                                                required="required"
+                                                                type="text"
+                                                                value={diamondSleve}
+                                                                onChange={(e) => {
+                                                                    setDiamondSleve(e.target.value);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>
+                                                                Diamond Weight
+                                                            </label>
+                                                            <input
+                                                                required="required"
+                                                                type="text"
+                                                                value={diamondWeight}
+                                                                onChange={(e) => {
+                                                                    setDiamondWeight(e.target.value);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>Sell Rate</label>
+                                                            <input
+                                                                // required="required"
+                                                                type="text"
+                                                                value={diamondSellRate}
+                                                                onChange={(e) => {
+                                                                    setDiamondSellRate(e.target.value),
+                                                                        setDiamondTotalAmount(
+                                                                            parseFloat(
+                                                                                parseFloat(e.target.value) *
+                                                                                parseInt(diamondPieces)
+                                                                            ).toFixed(2)
+                                                                        );
+                                                                }}
+>>>>>>> upstream/main
 
                             <div className="bulkStockAddProductDetailsItem">
                               <label style={{ margin: 0 }}>Description</label>
@@ -4513,6 +5365,7 @@ export default function AdminAddBulkStockNew() {
                                 Product
                               </label>
 
+<<<<<<< HEAD
                               <select
                                 id="productTypeId"
                                 required="required"
@@ -4566,6 +5419,41 @@ export default function AdminAddBulkStockNew() {
                                 onChange={(e) => setPurity(e.target.value)}
                               >
                                 <option value="">Purity</option>
+=======
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>Description</label>
+                                                            <input
+                                                                // required="required"
+                                                                type="text"
+                                                                value={diamondDescription}
+                                                                onChange={(e) => {
+                                                                    setDiamondDescription(e.target.value);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        {/*{addedProducts.length <= 0  ? (*/}
+                                                        <div
+                                                            style={{
+                                                                justifyContent: "right",
+                                                                marginTop: "20px",
+                                                            }}
+                                                            className="bulkStockAddProductDetailsItem"
+                                                        >
+                                                            {/* <label>Add Product</label> */}
+                                                            <button
+                                                                type="submit"
+                                                                style={{
+                                                                    width: "100px",
+                                                                    marginRight: "10px",
+                                                                }}
+                                                            >
+                                                                <IoIosAddCircleOutline
+                                                                    style={{marginRight: "10px"}}
+                                                                    size={"20px"}
+                                                                />
+                                                                Add
+                                                            </button>
+>>>>>>> upstream/main
 
                                 {filteredPurity.map((x, y) => {
                                   return (
@@ -4628,6 +5516,7 @@ export default function AdminAddBulkStockNew() {
                               </div>
                             ) : null}
 
+<<<<<<< HEAD
                             <div className="bulkStockAddProductDetailsItem">
                               <label style={{ margin: 0 }}>Quantity</label>
                               <input
@@ -4923,6 +5812,302 @@ export default function AdminAddBulkStockNew() {
                               </div>
                             ) : null}
                             {/* {stockType === "Labelled" ? (
+=======
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label htmlFor="PacketId" style={{margin: 0}}>
+                                                                Packet
+                                                            </label>
+                                                            <select
+                                                                id="PacketId"
+                                                                // required="required"
+                                                                value={packetNumber}
+                                                                onChange={(e) =>
+                                                                    setPacketNumber(e.target.value)
+                                                                }
+                                                            >
+                                                                <option value="">Packet</option>
+                                                                {allPacketNumbers.map((x, y) => {
+                                                                    return (
+                                                                        <option key={y} value={parseInt(x.Id)}>
+                                                                            {x.PacketName}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </select>
+                                                        </div>
+                                                        {stockType === "Labelled" ? (
+                                                            <div className="bulkStockAddProductDetailsItem">
+                                                                <label htmlFor="boxId" style={{margin: 0}}>
+                                                                    Box
+                                                                </label>
+                                                                <select
+                                                                    id="boxId"
+                                                                    // required="required"
+                                                                    value={boxId}
+                                                                    onChange={(e) => setBoxId(e.target.value)}
+                                                                >
+                                                                    <option value="">Box</option>
+                                                                    {boxData.map((x, y) => {
+                                                                        return (
+                                                                            <option key={y} value={parseInt(x.Id)}>
+                                                                                {x.BoxName}
+                                                                            </option>
+                                                                        );
+                                                                    })}
+                                                                </select>
+                                                            </div>
+                                                        ) : null}
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>Select Stone</label>
+                                                            <select
+                                                                // required="required"
+                                                                value={
+                                                                    selectedSkuStones ? selectedSkuStones.Id : ""
+                                                                }
+                                                                onChange={handleSelectedSkuStoneChange}
+                                                            >
+                                                                {/* Default option with an empty value */}
+                                                                <option value="">Select An Stone</option>
+                                                                {allSelectedSkuStones.map((stone, index) => (
+                                                                    <option key={index} value={stone.Id}>
+                                                                        {stone.StoneMainName}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>
+                                                                Select Weights
+                                                            </label>
+                                                            <select
+                                                                value={weights ? weights : ""}
+                                                                onChange={handleSelectedweights}
+                                                            >
+                                                                <option value="">Select a weight</option>
+                                                                {selectedweights.map((weight, index) => (
+                                                                    <option key={index} value={weight}>
+                                                                        {weight}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                        <div className="bulkStockAddProductDetailsItem">
+                                                            <label style={{margin: 0}}>Quantity</label>
+                                                            <input
+                                                                required="required"
+                                                                type="number"
+                                                                value={quantity}
+                                                                onChange={(e) => {
+                                                                    setQuantity(e.target.value);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        {stockType === "Labelled" ? (
+                                                            <div className="bulkStockAddProductDetailsItem" style={{display: "flex"}}>
+                                                                <label style={{margin: 0, cursor: "pointer"}}>
+                                                                    {/* Images {`${selectedFiles.length}`} */}
+                                                                    <BsImages
+                                                                        className="bulkStockAddProductAddImagesIcon"
+                                                                        style={{marginInline: "1rem"}}
+                                                                        size={"2.5rem"}
+                                                                    />
+                                                                    <input
+                                                                        id="images"
+                                                                        style={{display: "none"}}
+                                                                        type="file"
+                                                                        multiple
+                                                                        onChange={handleFileInputChange}
+                                                                    />
+                                                                </label>
+                                                                <label>
+                                                                    {" "}
+                                                                    Images {`${selectedFiles.length}`}
+                                                                </label>
+                                                            </div>
+                                                        ) : null}
+                                                        {/* <div className="bulkStockAddProductDetailsItem">
+                              <label style={{ margin: 0 }}>P Name</label>
+                              <input
+                                type="text"
+                                required="required"
+                                value={productName}
+                                onChange={(e) => {
+                                  setProductName(e.target.value);
+                                }}
+                              />
+                            </div> */}
+
+                                                        <div className="bulkStockAddProductDetailsItem" style={{display: "flex",justifyContent:"center",alignItems:"center"}}>
+                                                            <h5
+                                                                style={{margin: "0px"}}
+                                                                onClick={() => setShowAllFields2(!showAllFields2)}
+                                                            >
+                                                                {!showAllFields2 ? "Show All" : "Show Less"}
+                                                            </h5>
+                                                        </div>
+                                                        {showAllFields2 && (
+                                                            <>
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="grosswt" style={{ margin: 0 }}>G.Wt</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="grosswt"
+                                                                        required
+                                                                        value={grosswt}
+                                                                        onChange={(e) => {
+                                                                            const grossWeightValue = parseFloat(e.target.value);
+                                                                            setGrosswt(grossWeightValue);
+
+                                                                            if (grossWeightValue - parseFloat(stoneWeight) > 0) {
+                                                                                setNetWt(grossWeightValue - parseFloat(clipWeight) - parseFloat(stoneWeight));
+                                                                            } else {
+                                                                                setNetWt(0);
+                                                                                setStoneWeight(0);
+                                                                                setClipWeight(0);
+                                                                                setSelectedSkuStones({ Id: 0 });
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="clipWeight" style={{ margin: 0 }}>Clip.Wt</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="clipWeight"
+                                                                        value={clipWeight}
+                                                                        onChange={(e) => {
+                                                                            const clipWeightValue = parseFloat(e.target.value);
+                                                                            setClipWeight(clipWeightValue);
+                                                                            setNetWt((parseFloat(grosswt) - parseFloat(stoneWeight) - clipWeightValue).toFixed(3));
+                                                                        }}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="stoneWeight" style={{ margin: 0 }}>St.Wt</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        id="stoneWeight"
+                                                                        value={stoneWeight}
+                                                                        onChange={(e) => {
+                                                                            const stoneWeightValue = parseFloat(e.target.value);
+                                                                            if (stoneWeightValue <= parseFloat(grosswt)) {
+                                                                                setStoneWeight(stoneWeightValue);
+                                                                                setNetWt((parseFloat(grosswt) - parseFloat(clipWeight) - stoneWeightValue).toFixed(3));
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="bulkStockAddProductDetailsItem">
+                                                                    <label htmlFor="netWt" style={{ margin: 0 }}>Net.Wt</label>
+                                                                    <input type="number" id="netWt" value={netWt} readOnly />
+                                                                </div>
+
+                                                                {stockType === "Labelled" && (
+                                                                    <>
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label style={{ margin: 0 }}>MRP</label>
+                                                                            <input
+                                                                                type="number"
+                                                                                value={mrp}
+                                                                                onChange={(e) => setMRP(e.target.value)}
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label htmlFor="name" style={{ margin: 0 }}>P.Name</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                id="name"
+                                                                                value={productName}
+                                                                                onChange={(e) => setProductName(e.target.value)}
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label htmlFor="description" style={{ margin: 0 }}>P.Description</label>
+                                                                            <input
+                                                                                style={{ width: "2fr" }}
+                                                                                type="text"
+                                                                                id="description"
+                                                                                value={description}
+                                                                                onChange={(e) => setDescription(e.target.value)}
+                                                                            />
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label style={{ margin: 0 }}>Gender</label>
+                                                                            <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                                                                                <option value="">Select an option</option>
+                                                                                <option value="Male">Male</option>
+                                                                                <option value="Female">Female</option>
+                                                                                <option value="Unisex">Unisex</option>
+                                                                                <option value="Kids">Kids</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div className="bulkStockAddProductDetailsItem">
+                                                                            <label htmlFor="name" style={{ margin: 0 }}>Making-Percentage</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                id="name"
+                                                                                value={making_Percentage}
+                                                                                onChange={(e) => setMaking_Percentage(e.target.value)}
+                                                                            />
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        )}
+
+                                                        {stockType !== "Labelled" ? (
+                                                            <div className="bulkStockAddProductDetailsItem">
+                                                                <label style={{margin: 0}}>Fine%</label>
+                                                                <input
+                                                                    type="number"
+                                                                    value={finePerc}
+                                                                    onChange={(e) => {
+                                                                        setFinePerc(e.target.value),
+                                                                            setFineWastagePerc(e.target.value);
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        ) : null}
+                                                        {stockType !== "Labelled" ? (
+                                                            <div className="bulkStockAddProductDetailsItem">
+                                                                <label style={{margin: 0}}>Wastage%</label>
+                                                                <input
+                                                                    type="number"
+                                                                    value={wastagePerc}
+                                                                    onChange={(e) => {
+                                                                        setWastagePerc(e.target.value),
+                                                                            setFineWastagePerc(
+                                                                                parseFloat(finePerc) +
+                                                                                parseFloat(e.target.value)
+                                                                            );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        ) : null}
+                                                        {stockType !== "Labelled" ? (
+                                                            <div className="bulkStockAddProductDetailsItem">
+                                                                <label style={{margin: 0}}>
+                                                                    Fine+Wastage%
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    value={fineWastagePerc}
+                                                                    onChange={(e) => {
+                                                                        setFineWastagePerc(e.target.value);
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        ) : null}
+                                                        {/* {stockType === "Labelled" ? (
+>>>>>>> upstream/main
                               <div className="bulkStockAddProductDetailsItem">
                                 <button
                                   id="bulkStockAddProductImportButton"
@@ -4956,6 +6141,7 @@ export default function AdminAddBulkStockNew() {
 
                               </div>
                             ) : null} */}
+<<<<<<< HEAD
                             {stockType === "Labelled" ? (
                               <div className="bulkStockAddProductDetailsItem">
                                 <label style={{ margin: 0, cursor: "pointer" }}>
@@ -5001,6 +6187,32 @@ export default function AdminAddBulkStockNew() {
                                   />
                                   Add
                                 </button>
+=======
+
+                                                        {addedProducts.length <= 0 ? (
+                                                            <div
+                                                                style={{
+                                                                    display:"flex",
+                                                                    justifyContent: "left",
+                                                                    alignItems:"center"
+                                                                }}
+                                                                className="bulkStockAddProductDetailsItem"
+                                                            >
+                                                                {/* <label>Add Product</label> */}
+                                                                <button
+                                                                    type="submit"
+                                                                    style={{
+                                                                        width: "100px",
+                                                                        marginRight: "10px",
+                                                                    }}
+                                                                >
+                                                                    <IoIosAddCircleOutline
+                                                                        style={{marginRight: "10px"}}
+                                                                        size={"20px"}
+                                                                    />
+                                                                    Add
+                                                                </button>
+>>>>>>> upstream/main
 
                                 <button
                                   id="bulkStockAddProductImportButton"
