@@ -1229,7 +1229,7 @@ export default function AdminPurchaseEntryEdit() {
             );
             setGrandTotal(parseFloat(totalAmountPaying-totalpaid).toFixed(3));
             setTotalPayableAmount(parseFloat(totalAmountPaying).toFixed(3));
-            setPaymentAmount(parseFloat(totalAmountPaying-totalpaid).toFixed(3));
+            setPaymentAmount(Math.abs(parseFloat(totalAmountPaying-totalpaid).toFixed(3)));
 
         } else {
             setAllProdctsNetAmount(0); // Reset the total to 0 when there are no selected products
@@ -1273,7 +1273,7 @@ export default function AdminPurchaseEntryEdit() {
             }
     
             setTotalPayableAmount(newTotalPayableAmount.toFixed(2));
-            setPaymentAmount(remainingAmount.toFixed(2));
+            setPaymentAmount(Math.abs(remainingAmount.toFixed(3)));
             setGrandTotal(newTotalPayableAmount.toFixed(2));
     
             let totalAmountPaying = allSelectedProducts.reduce(

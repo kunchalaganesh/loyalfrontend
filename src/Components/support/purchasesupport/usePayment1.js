@@ -86,8 +86,15 @@ export const addPayment = ({
           ]);
         }
   
-        setGrandTotal((prevTotal) => prevTotal - paymentAmount);
-        setPaymentAmount((prevTotal) => prevTotal - paymentAmount);
+        // setGrandTotal((prevTotal) => prevTotal - paymentAmount);
+        // setPaymentAmount((prevTotal) => prevTotal - paymentAmount);
+
+        setGrandTotal(parseInt(grandTotal) - parseInt(-paymentAmount));
+                // Clear the input fields
+                // setPaymentOptions("Cash");
+                setPaymentAmount(
+                    Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
+                );
   
       } else if (paymentType === "Receive") {
         const newReceivePayment = {
@@ -111,9 +118,19 @@ export const addPayment = ({
             .includes("gold") ? -metalPaymentOption.totalAmount : 0,
         };
         setPayments((prevPayments) => [...prevPayments, newReceivePayment]);
-        setGrandTotal((prevTotal) => parseFloat(prevTotal) - parseFloat(paymentAmount));
-        setPaymentAmount((prevTotal) => parseFloat(prevTotal) - parseFloat(paymentAmount))
+        // setGrandTotal((prevTotal) => parseFloat(prevTotal) - parseFloat(paymentAmount));
+        // setPaymentAmount((prevTotal) => parseFloat(prevTotal) - parseFloat(paymentAmount))
         // setGrandTotal('12000')
+
+
+        setGrandTotal(parseInt(grandTotal) - parseInt(-paymentAmount));
+                // Clear the input fields
+                // setPaymentOptions("Cash");
+                setPaymentAmount(
+                    Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
+                );
+
+
         console.log('check paymentss',newReceivePayment )
       }
   
@@ -168,6 +185,9 @@ export const addPayment = ({
     const newGrandTotal = parseFloat(grandTotal||0) + deletedAmount;
     if (payments[index].mode === "Advance Received") {
       // No additional actions needed
+
+
+      
     } else if (payments[index].mode === "Deduct Advance") {
       setSelectedCustomer({
         ...selectedCustomer,

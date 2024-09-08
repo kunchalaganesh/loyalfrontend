@@ -34,7 +34,7 @@ import StonePopup from '../../../support/purchasesupport/StonePopup.jsx';
 import LooseDiamonds from '../../../support/purchasesupport/LooseDiamonds.jsx';
 import GetApiService from "../../../Api/getapiService";
 import { createOrder } from '../../../Api/postapiservice';
-import { addPayment, deletePayment } from "../../../support/purchasesupport/usePayment";
+import { addPayment, deletePayment } from "../../../support/purchasesupport/usePayment1";
 import ErrorModal from '../../../Other Functions/popup';
 
 
@@ -3380,7 +3380,7 @@ console.log('checking parameter atchange', name);
                         <thead>
                           <tr>
                             <th>ITEM DETAILS</th>
-                            <th>{convertAmount ? 'RATE' : 'F WT + W WT'}</th>
+                            <th>F WT + W WT/RATE</th>
                             <th>GROSS WT</th>
                             <th>NET WT</th>
                             <th>FINE%</th>
@@ -3463,9 +3463,9 @@ console.log('checking parameter atchange', name);
                                 </td>
 
                                 <td>
-              {convertAmount
-                ? `₹${parseFloat(x.MetalRate).toFixed(0)}`
-                : `₹${parseFloat(x.FineWastageWt).toFixed(3)}`}
+              
+                 
+                 `${parseFloat(x.FineWastageWt).toFixed(3)}`/`${parseFloat(x.MetalRate).toFixed(0)}`
             </td>
                                 {/* <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td> */}
 
@@ -3480,11 +3480,12 @@ console.log('checking parameter atchange', name);
 
                                 <td> ₹{parseFloat(x.Making).toFixed(3)}</td>
                                 <td>
-                                  ₹
-                                  {parseFloat(
-                                    parseFloat(x.FinalPrice) 
-                                    +parseFloat(x.TotalGstAmount)
-                                  ).toFixed(3)}
+                                ₹{gstType
+    ? parseFloat(
+        parseFloat(x.FinalPrice) + parseFloat(x.TotalGstAmount)
+      ).toFixed(3)
+    : parseFloat(x.FinalPrice).toFixed(3)}
+                                  
                                 </td>
                               </tr>
                             ))
