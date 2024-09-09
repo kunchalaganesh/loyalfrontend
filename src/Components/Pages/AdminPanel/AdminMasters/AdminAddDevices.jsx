@@ -447,6 +447,7 @@ export default function AdminAddDevices() {
                     Device Activation Date <sup>*</sup>
                   </label>
                   <input
+                      style={{width: "100%"}}
                     name="DeviceActivationDate"
                     value={newCategory.DeviceActivationDate}
                     onChange={handleNewCategoryChange}
@@ -457,6 +458,7 @@ export default function AdminAddDevices() {
                     Device Deactivation Date <sup>*</sup>
                   </label>
                   <input
+                      style={{width: "100%"}}
                     name="DeviceDeactivationDate"
                     value={newCategory.DeviceDeactivationDate}
                     onChange={handleNewCategoryChange}

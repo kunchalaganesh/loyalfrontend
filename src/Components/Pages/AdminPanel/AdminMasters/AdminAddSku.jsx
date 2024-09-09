@@ -37,6 +37,7 @@ import {FaImages} from "react-icons/fa";
 import {RxCross2} from "react-icons/rx";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from "react-icons/io";
+import {Box} from "@mui/material";
 
 export default function AdminAddSku() {
     const [active, setActive] = useState("List");
@@ -1716,9 +1717,9 @@ export default function AdminAddSku() {
                                             style={{gridColumn: "1 span"}}
                                             className="adminSkuAddSkuInnerUpperItemsBox"
                                         >
-                                            <div
-                                                style={{
-                                                    display: "flex",
+                                            <Box
+                                                sx={{
+                                                    display: {sm:"flex"},
                                                     justifyContent: "space-between",
                                                     alignItems: "center",
                                                 }}
@@ -1755,7 +1756,7 @@ export default function AdminAddSku() {
                                                         multiple
                                                     />
                                                 </label>
-                                            </div>
+                                            </Box>
                                         </div>
 
                                         {/* <div
@@ -2629,7 +2630,11 @@ export default function AdminAddSku() {
                                         {newSku.Diamonds.map((diamond, index) => (
                                             <div className="adminSkuAddSkuInnerItemsStoneInnerBox" style={{
                                                 display: 'grid',
-                                                gridTemplateColumns: "repeat(7, 1fr)",
+                                                gridTemplateColumns: {
+                                                    // xs: 'repeat(2, 1fr)',
+                                                    xs: 'repeat(4, 1fr)',
+                                                    lg: 'repeat(7, 1fr)',
+                                                },
                                                 gap: '20px'
                                             }}>
                                                 <div

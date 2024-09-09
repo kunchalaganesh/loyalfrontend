@@ -1233,12 +1233,12 @@ function AllReport() {
                                         },
                                     }}
                                 >
-                                    <Tab label="Stock"/>
-                                    <Tab label="SKU Report"/>
-                                    <Tab label="SKU / Karigar Report"/>
-                                    <Tab label="Labelled Stock"/>
-                                    <Tab label="Packets"/>
-                                    <Tab label="Boxs"/>
+                                    <Tab label="Stock" />
+                                    <Tab label="SKU Report" />
+                                    <Tab label="SKU / Karigar Report" />
+                                    <Tab label="Labelled Stock" />
+                                    <Tab label="Packets" />
+                                    <Tab label="Boxes" />
                                 </Tabs>
                             </Box>
                         </Grid>

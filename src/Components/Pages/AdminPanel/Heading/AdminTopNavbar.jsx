@@ -250,7 +250,7 @@ export default function AdminTopNavbar() {
                 {id: 10, name: "Rates", linkto: "/add_rates"},
                 {id: 11, name: "Collection", linkto: "/add_collection"},
                 {id: 12, name: "Occassion", linkto: "/add_occassion"},
-                {id: 13, name: "Diamond Size/Weight/Rate/Template", linkto: "/"}
+                // {id: 13, name: "Diamond Size/Weight/Rate/Template", linkto: "/"}
 
                 // { id: 11, name: "Party", linkto: "/add_vendor" },
                 // //{ id: 12, name: "Making", linkto: "/adminhome" },
