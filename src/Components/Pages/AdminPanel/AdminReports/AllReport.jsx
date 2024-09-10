@@ -407,14 +407,14 @@ function AllReport() {
             FromDate: "2024-09-06",
             ToDate: "2024-09-06",
         };
-        await fetch(selectedTab === 4 ? a241 : a242, {
+        await fetch(selectedTab === 6 ? a241 : a242, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(payload),
         })
             .then((res) => res.json())
             .then((response) => {
-                if (selectedTab === 4) {
+                if (selectedTab === 6) {
                     setAllPackets(response);
                 }
                 else{
@@ -423,8 +423,6 @@ function AllReport() {
             });
     }
     useEffect(() => {
-
-
         filterPackets();
     }, [formData]);
 
