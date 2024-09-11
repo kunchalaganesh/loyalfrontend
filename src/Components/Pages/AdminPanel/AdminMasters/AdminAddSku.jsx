@@ -1269,9 +1269,9 @@ export default function AdminAddSku() {
     };
     const handleEditData = (data) => {
         const VendorId = data.VendorId || 0;
-        const defaultVendorName = partyData.filter((x) => x.Id == data.VendorId)[0]
-            .VendorName;
-        const defaultVendor = `${VendorId} - ${defaultVendorName}`;
+        // const defaultVendorName = partyData.filter((x) => x.Id == data.VendorId)[0]
+        //     .VendorName;
+        // const defaultVendor = `${VendorId} - ${defaultVendorName}`;
         const selectedVendorsList = data.SKUVendor.map(
             (x) => `${x.VendorName} - ${x.VendorId}`
         );

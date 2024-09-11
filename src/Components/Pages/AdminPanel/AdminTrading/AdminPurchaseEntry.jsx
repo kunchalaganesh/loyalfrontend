@@ -282,7 +282,10 @@ export default function AdminPurchaseEntry() {
   const BranchId = adminLoggedIn.BranchId;
   const EmployeId = adminLoggedIn.EmployeId;
   const employeeCode = adminLoggedIn.EmployeeCode;
+
   const rdPurchaseFormat = parseInt(adminLoggedIn.Clients.RDPurchaseFormat);
+
+  console.log('checking logindata ' ,adminLoggedIn)
 
   const apiService = new GetApiService(clientCode);
 
@@ -344,7 +347,6 @@ export default function AdminPurchaseEntry() {
               break;
             case 8:
               setAllVendorTounche(result.value);
-              
               break;
             case 9:
               setAllDiamondSizeWeightRate(result.value);
@@ -2618,9 +2620,10 @@ console.log('checking parameter atchange', name);
 
 
     const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
+    const qty = purchaseProduct.ClipQuantity || 1
 
-    let totalwt = newStones[index].StoneWeight * newStones[index].StonePieces * skuPieces;
-    let totalpcs = newStones[index].StonePieces * skuPieces;
+    let totalwt = newStones[index].StoneWeight * newStones[index].StonePieces * skuPieces*qty;
+    let totalpcs = newStones[index].StonePieces * skuPieces*qty;
 
     // Correct the assignment
     newStones[index].TotalStoneWt = totalwt;
@@ -3852,13 +3855,26 @@ console.log('checking parameter atchange', name);
                             list="skuList"
                           />
                           <datalist id="skuList">
+  {(selectedCustomer
+    ? allSkuList.filter(sku => 
+        sku.SKUVendor.some(vendor => vendor.VendorId === selectedCustomer.Id)
+      )
+    : allSkuList // If no vendor is selected, show all SKUs
+  ).map((sku, index) => (
+    <option
+      key={index}
+      value={`${sku.StockKeepingUnit}`}
+    />
+  ))}
+</datalist>
+                          {/* <datalist id="skuList">
                             {allSkuList.map((sku, index) => (
                               <option
                                 key={index}
                                 value={`${sku.StockKeepingUnit}`}
                               />
                             ))}
-                          </datalist>
+                          </datalist> */}
                         </div>
                         <div>
                           <th>CATEGORY</th>
@@ -4037,7 +4053,7 @@ console.log('checking parameter atchange', name);
                                 value={purchaseProduct.FinePercent}
                               />
                             </div>
-                            <div>
+                            {/* <div>
                               <th>WASTAGE%</th>
                               <div className="adminPurchaseEntryDollarSignBox">
                                 <MdChangeCircle
@@ -4062,7 +4078,49 @@ console.log('checking parameter atchange', name);
                                   value={purchaseProduct.WastageWt}
                                 />
                               </div>
-                            </div>
+                            </div> */}
+
+
+<div>
+  <th>WASTAGE%</th>
+  <div className="adminPurchaseEntryDollarSignBox">
+    <MdChangeCircle
+      className="adminPurchaseEntryDollarSign"
+      onClick={() => {
+        setFinePure(!finePure);
+        setIscal(true);
+      }}
+      size={"17px"}
+      style={{
+        cursor: "pointer",
+        color: finePure ? "green" : "grey",
+      }}
+    />
+
+    <input
+      name="WastageWt"
+      onChange={handleInputChangePurchase}
+      type="text"
+      value={
+        adminLoggedIn.Designation === "Branch Head"
+          ? "*****" // Show '*****' or 'START' instead of the actual value
+          : purchaseProduct.WastageWt
+      }
+      disabled={adminLoggedIn.Designation === "Branch Head"} // Disable for 'Branch Head'
+    />
+
+    {/* Hidden field to retain functionality if required */}
+    {adminLoggedIn.Designation === "Branch Head" && (
+      <input
+        type="hidden"
+        name="WastageWtHidden"
+        value={purchaseProduct.WastageWt}
+      />
+    )}
+  </div>
+</div>
+
+
 
                             <div>
                               <th>STONE PIECES</th>

@@ -12,13 +12,14 @@ import {
   a163,
   a224,
   a225,
-  a226, a30,
+  a226, a30,a131,
   a95,
   a98,
 } from "../../../Api/RootApiPath";
 import {useSelector} from "react-redux";
 import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+import GetApiService from "../../../Api/getapiService";
 
 export default function AdminAddPacketMaster() {
   const [active, setActive] = useState("List");
@@ -56,6 +57,23 @@ export default function AdminAddPacketMaster() {
   const clientCode = adminLoggedIn.ClientCode;
   const employeeCode = adminLoggedIn.EmployeeCode;
   const employeeId = adminLoggedIn.EmployeeId;
+  const [collectionTypeData, setCollectionTypeData] = useState([]);
+  const [collection, setCollection] = useState("");
+
+  useEffect(() => {
+    const formData = {
+        ClientCode: clientCode,
+    };
+    fetch(a131, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+    })
+        .then((res) => res.json())
+        .then((data) => setCollectionTypeData(data));
+}, []);
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -417,6 +435,13 @@ export default function AdminAddPacketMaster() {
     setNewCategory({...data, OldEntry: true});
     setActive("AddNew");
   };
+
+
+  const filteredCollection = collectionTypeData.filter(
+    (product) => product.ProductId == newCategory.ProductId
+);
+
+
   return (
       <div>
         <AdminHeading/>
@@ -591,24 +616,7 @@ export default function AdminAddPacketMaster() {
                         );
                       })}
                     </select>
-                    <label>SKU</label>
-                    <select
-                        name="SKUId"
-                        value={newCategory.SKUId}
-                        onChange={handleNewCategoryChange}
-                        type="text"
-                    >
-                      <option value={""}>Select an option</option>
-                      ;
-                      {allSkuList.map((x) => {
-                        return (
-                            <>
-                              <option value={x.Id}>{x.StockKeepingUnit}</option>
-                              ;
-                            </>
-                        );
-                      })}
-                    </select>
+                    
                     <label>
                       Category <sup>*</sup>
                     </label>
@@ -656,6 +664,56 @@ export default function AdminAddPacketMaster() {
                             return <option value={x.Id}>{x.ProductName}</option>;
                           })}
                     </select>{" "}
+
+
+                    <label style={{margin: 0}}>Design</label>
+                                                            <select
+                                                                id="collection"
+                                                                required="required"
+                                                                value={collection}
+                                                                onChange={(e) => setCollection(e.target.value)}
+                                                            >
+                                                                <option value="">Design</option>
+                                                                {filteredCollection.map((x, y) => {
+                                                                    return (
+                                                                        <option
+                                                                            key={y}
+                                                                            value={`${parseInt(x.Id)},${
+                                                                                x.DesignName
+                                                                            }`}
+                                                                        >
+                                                                            {x.DesignName}
+                                                                        </option>
+                                                                    );
+                                                                })}
+                                                            </select>
+
+                    <label>SKU</label>
+                    <select
+                        name="SKUId"
+                        value={newCategory.SKUId}
+                        onChange={handleNewCategoryChange}
+                        type="text"
+                    >
+                      <option value={""}>Select an option</option>;
+                      {/* {allSkuList.map((x) => {
+                        return (
+                            <>
+                              <option value={x.Id}>{x.StockKeepingUnit}</option>
+                              ;
+                            </>
+                        );
+                      })} */}
+                      {allSkuList
+    .filter((sku) => {
+      const matchesCategory = !newCategory.CategoryId || sku.CategoryId === parseInt(newCategory.CategoryId); // Filter SKUs by selected category
+      const matchesProduct = !newCategory.ProductId || sku.ProductId === parseInt(newCategory.ProductId); // Filter SKUs by selected product
+      const matchesDesign = !collection || sku.DesignId === parseInt(collection.split(",")[0]) || 0; // Filter SKUs by selected product
+      return matchesCategory && matchesProduct && matchesDesign;
+    }).map((x) => (
+      <option key={x.Id} value={x.Id}>{x.StockKeepingUnit}</option>
+  ))}
+                    </select>
                     <label>
                       Packet Name<sup>*</sup>
                     </label>

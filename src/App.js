@@ -78,6 +78,7 @@ import AdminStockTransfer from "./Components/Pages/AdminPanel/AdminTrading/Admin
 import AdminStockTransferList from "./Components/Pages/AdminPanel/AdminTrading/AdminStockTransferList";
 import AdminApprovalStockTransfer from "./Components/Pages/AdminPanel/AdminTrading/AdminApprovalStockTransfer";
 import AllReport from "./Components/Pages/AdminPanel/AdminReports/AllReport";
+import AdminPurchaseEntryEditn from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryEditn";
 
 function App() {
     const allStates = useSelector((state) => state);
@@ -327,7 +328,7 @@ function App() {
                 <Route path="/add_packet" element={<AdminAddPacketMaster/>}/>
                 <Route
                     path="/purchase_entry_edit"
-                    element={<AdminPurchaseEntryEdit/>}
+                    element={<AdminPurchaseEntryEditn/>}
                 />
                 <Route path="/vendor_tounche" element={<AdminVendorTounche/>}/>
                 <Route

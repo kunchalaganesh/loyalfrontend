@@ -300,13 +300,13 @@ export default function AdminAddStone() {
       (category) => category.StoneName.toLowerCase() === newCategory.StoneName.toLowerCase()
     );
   
-    if (nameExists) {
-      setMessageType("error");
-      setMessageToShow("Stone name already exists.");
-      setShowError(true);
-      setLoading(false);
-      return;
-    }
+    // if (nameExists) {
+    //   setMessageType("error");
+    //   setMessageToShow("Stone name already exists.");
+    //   setShowError(true);
+    //   setLoading(false);
+    //   return;
+    // }
 
         setLoading(true);
         const formData = {

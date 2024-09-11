@@ -479,7 +479,9 @@ export default function AdminAddBulkStockNew() {
             body: JSON.stringify(formData),
         })
             .then((res) => res.json())
-            .then((data) => setPartyData(data));
+            .then((data) =>{ setPartyData(data)
+                console.log('checking party data ', data);
+            });
     }, []);
     useEffect(() => {
         const formData = {
@@ -524,6 +526,8 @@ export default function AdminAddBulkStockNew() {
             });
             const data = await response.json();
             setAllPurchaseItems(data);
+
+            console.log('check all purchased items', data)
             setAllFilteredPurchaseItems(data);
         } catch (error) {
             console.log(error);
@@ -567,6 +571,7 @@ export default function AdminAddBulkStockNew() {
             });
             const data = await response.json();
             setAllSku(data);
+            console.log('checking all skus', data)
         } catch (error) {
             console.log(error);
         }
@@ -1798,6 +1803,24 @@ export default function AdminAddBulkStockNew() {
         // console.log("allItemCodesArray", allItemCodesArray);
     }, [allItemCodesArray]);
 
+    
+    //handle unlabelled gold and silver
+    const handleGold = (e, property) => {
+        const {value}  = e.target;
+
+ setLotNumber(value)
+
+ const gold = 0;
+ 
+ allFilteredPurchaseItems.map((x) => {
+    if (x.LotNumber == value){
+console.log('checking unlabeled ', x)
+    }
+ })
+
+
+    }
+    
     // console.log("allItemCodesArray outside useEffect", allItemCodesArray);
     const handleInputChange = (e, index, property) => {
         const {value} = e.target;
@@ -2309,6 +2332,9 @@ export default function AdminAddBulkStockNew() {
         let selectedSkuItem = [];
         selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
         setSelectedSku(selectedSkuItem);
+
+
+
     };
 
 
@@ -3590,13 +3616,58 @@ export default function AdminAddBulkStockNew() {
                                                                     <option value="">
                                                                         Select Party / Karigar Name
                                                                     </option>
-                                                                    {partyData.map((x, y) => {
+                                                                    {partyData
+          .filter((party) => {
+            // Extract vendorIds from the selected SKU
+            const skuVendorIds = selectedSkuName
+              ? allSku
+                  .filter((sku) => sku.StockKeepingUnit === selectedSkuName)
+                  .flatMap((sku) => sku.SKUVendor.map((skuVendor) => skuVendor.VendorId))
+                  .join(',')
+              : "";
+
+            // Extract vendorIds from the selected Lot Number
+            const lotVendorIds = lotNumber
+              ? allFilteredPurchaseItems
+                  .filter((item) => item.LotNumber
+                   === lotNumber)
+                  .map((item) => item.VendorId
+                  )
+                  .join(',')
+              : "";
+
+              
+
+            // Logic to filter parties based on selected SKU or Lot Number
+            if (!selectedSkuName && !lotNumber) {
+              // If neither SKU nor Lot Number is selected, show all parties
+              return true;
+            } else if (selectedSkuName && !lotNumber) {
+              // If only SKU is selected, filter by SKU vendor IDs
+              return skuVendorIds.split(',').includes(party.Id.toString());
+            } else if (!selectedSkuName && lotNumber) {
+              // If only Lot Number is selected, filter by Lot vendor IDs
+              return lotVendorIds.split(',').includes(party.Id.toString());
+            } else {
+              // If both SKU and Lot Number are selected, filter by both
+              return (
+                skuVendorIds.split(',').includes(party.Id.toString()) &&
+                lotVendorIds.split(',').includes(party.Id.toString())
+              );
+            }
+          })
+          .map((x, y) => (
+            <option key={y} value={parseInt(x.Id)}>
+              {x.VendorName}
+            </option>
+          ))}
+                                                                    {/* {partyData.map((x, y) => {
                                                                         return (
                                                                             <option key={y} value={parseInt(x.Id)}>
                                                                                 {x.VendorName}
                                                                             </option>
                                                                         );
-                                                                    })}
+                                                                    })} */}
                                                                 </select>
                                                             </div>
                                                         </Grid>
@@ -3616,13 +3687,55 @@ export default function AdminAddBulkStockNew() {
                                                                     list="skuList"
                                                                 />
                                                                 <datalist id="skuList">
+                                                                {allSku
+    .filter((sku) => {
+      const lotVendorIds = lotNumber
+        ? allFilteredPurchaseItems
+            .filter((item) => item.LotNumber === lotNumber)
+            .map((item) => item.VendorId)
+            .join(',')
+        : '';
+
+      const partyVendorIds = partyTypeId
+        ? partyData
+            .filter((party) => party.Id === partyTypeId)
+            .map((party) => party.VendorCode)
+            .join(',')
+        : '';
+
+        console.log('checking lots', lotNumber,'   ', lotVendorIds, '   ',allFilteredPurchaseItems)
+
+      // Logic to filter SKUs based on selected party and/or lot number
+      if (!partyTypeId && !lotNumber) {
+        // If neither party nor lot number is selected, show all SKUs
+        return true;
+      } else if (partyTypeId && !lotNumber) {
+        // If only party is selected, filter by party vendor IDs
+        return partyVendorIds.split(',').includes(sku.VendorId.toString());
+      } else if (!partyTypeId && lotNumber) {
+        // If only lot number is selected, filter by lot vendor IDs
+        return lotVendorIds.split(',').includes(sku.VendorId.toString());
+      } else {
+        // If both party and lot number are selected, filter by both vendor IDs
+        return (
+          partyVendorIds.split(',').includes(sku.VendorId.toString()) &&
+          lotVendorIds.split(',').includes(sku.VendorId.toString())
+        );
+      }
+    })
+    .map((sku, index) => (
+      <option key={index} value={`${sku.StockKeepingUnit}`}  />
+    ))}
+    </datalist>
+                                                                {/* <datalist id="skuList">
                                                                     {allSku.map((sku, index) => (
                                                                         <option
                                                                             key={index}
                                                                             value={`${sku.StockKeepingUnit}`}
+                                                                            vendor={sku.vendorId}
                                                                         />
                                                                     ))}
-                                                                </datalist>
+                                                                </datalist> */}
                                                             </div>
                                                         </Grid>
                                                         <Grid xs={6} md={3} item>
@@ -3635,16 +3748,57 @@ export default function AdminAddBulkStockNew() {
                                                                     id="selectBranch"
                                                                     // required="required"
                                                                     value={lotNumber}
-                                                                    onChange={(e) => setLotNumber(e.target.value)}
+                                                                    onChange={(e) => handleGold(e, "lotNumber")}
                                                                 >
                                                                     <option value={0}>Select Lot Number</option>
-                                                                    {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
+                                                                    {allFilteredPurchaseItems
+  .filter((item) => {
+    const selectedPartyVendorIds = partyTypeId
+      ? partyData
+          .filter((party) => party.Id === partyTypeId)
+          .map((party) => party.VendorCode)
+          .join(',')
+      : '';
+
+    const selectedSkuVendorId = selectedSkuName
+      ? allSku
+          .filter((skuItem) => skuItem.StockKeepingUnit === selectedSkuName)
+          .map((skuItem) => skuItem.VendorId)
+          .join(',')
+      : '';
+
+    const itemVendorId = item?.vendorId ? item.vendorId.toString() : '';
+
+    // Logic to filter lotNumbers based on selected party and/or SKU
+    if (!partyTypeId && !selectedSkuName) {
+      // If neither party nor SKU is selected, show all lotNumbers
+      return true;
+    } else if (partyTypeId && !selectedSkuName) {
+      // If only party is selected, filter lotNumbers by party's vendor ID
+      return selectedPartyVendorIds.split(',').includes(itemVendorId);
+    } else if (!partyTypeId && selectedSkuName) {
+      // If only SKU is selected, filter lotNumbers by SKU's vendor ID
+      return selectedSkuVendorId.split(',').includes(itemVendorId);
+    } else {
+      // If both party and SKU are selected, filter lotNumbers by both
+      return (
+        selectedPartyVendorIds.split(',').includes(itemVendorId) &&
+        selectedSkuVendorId.split(',').includes(itemVendorId)
+      );
+    }
+  })
+    .map((x, index) => (
+      <option key={index} value={x.LotNumber}>
+        {x.LotNumber}
+      </option>
+    ))}
+                                                                    {/* {allFilteredPurchaseItems && allFilteredPurchaseItems.map((x) => {
                                                                         return (
                                                                             <option value={x.LotNumber}>
                                                                                 {x.LotNumber}
                                                                             </option>
                                                                         );
-                                                                    })}
+                                                                    })} */}
                                                                 </select>
                                                             </div>
                                                         </Grid>
