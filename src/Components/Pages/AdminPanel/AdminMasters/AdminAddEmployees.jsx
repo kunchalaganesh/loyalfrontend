@@ -792,7 +792,7 @@ export default function AdminAddEmployees() {
                       );
                     })}
                   </select>
-                  <label>Counter <sup>*</sup></label>
+                  <label>Counter </label>
                   {/* <input
                     name="SeatingLocation"
                     value={newCategory.SeatingLocation}
@@ -804,7 +804,6 @@ export default function AdminAddEmployees() {
                     value={newCategory.SeatingLocation}
                     onChange={handleNewCategoryChange}
                     type="text"
-                    required="required"
                   >
                     <option value={""}>Select an option</option>;
                     {allCountersList.map((x) => {
@@ -844,7 +843,7 @@ export default function AdminAddEmployees() {
                       );
                     })}
                   </select>
-                  <label>Reporting To <sup>*</sup></label>
+                  <label>Reporting To </label>
                   {/* <input
                     name="ReportingTo"
                     value={newCategory.ReportingTo}
@@ -856,7 +855,6 @@ export default function AdminAddEmployees() {
                     value={newCategory.ReportingTo}
                     onChange={handleNewCategoryChange}
                     type="text"
-                    required="required"
                   >
                     <option value={""}>Select an option</option>;
                     {allCategories.map((x) => {
@@ -932,12 +930,11 @@ export default function AdminAddEmployees() {
                     onChange={handleNewCategoryChange}
                     type="text"
                   />
-                  <label>IFSC Code <sup>*</sup></label>
+                  <label>IFSC Code</label>
                   <input
                     name="IfscCode"
                     value={newCategory.IfscCode}
                     onChange={handleNewCategoryChange}
-                    required={true}
                     type="text"
                   />
                   <label>Salary</label>

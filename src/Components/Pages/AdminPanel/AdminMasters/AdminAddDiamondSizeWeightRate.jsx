@@ -48,6 +48,7 @@ import {useSelector} from "react-redux";
 import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 import {useNavigate} from "react-router-dom";
+import {Box, Grid} from "@mui/material";
 
 export default function AdminAddDiamondSizeWeightRate() {
     const navigate = useNavigate();
@@ -1017,7 +1018,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     {/* 01 */}
                                     <RiListUnordered/>
                                 </div>
-                                <p>All Diamond Size/Weight/Rate</p>
+                                <p style={{textWrap: "wrap"}}>All Diamond Size/Weight/Rate</p>
                             </div>
 
                             <div
@@ -1062,7 +1063,7 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     {/* 02 */}
                                     <RiPlayListAddLine/>
                                 </div>
-                                <p>Add Diamond Size/Weight/Rate</p>
+                                <p style={{textWrap: "wrap"}}>Add Diamond Size/Weight/Rate</p>
                             </div>
                         </div>
                         <div
@@ -1150,14 +1151,16 @@ export default function AdminAddDiamondSizeWeightRate() {
                                     display: "flex",
                                     justifyContent: "space-between",
                                     alignItems: "center",
+                                    flexWrap: "wrap"
                                 }}
                             >
                                 <p>Add New Diamond Size/Weight/Rate</p>
-                                <div
-                                    style={{
+                                <Box
+                                    sx={{
                                         display: "flex",
                                         justifyContent: "space-between",
                                         alignItems: "center",
+                                        marginBottom: {md: "0px",xs:"20px"}
                                     }}
                                 >
                                     <label className={"me-2"}>Template Name :</label>
@@ -1168,82 +1171,98 @@ export default function AdminAddDiamondSizeWeightRate() {
                                         type="text"
                                         style={{marginLeft: "10px"}}
                                     />
-                                </div>
+                                </Box>
                             </div>
                             <form onSubmit={handleAdd}>
-                                <div
-                                    style={{
-                                        display: "grid",
-                                        // gridTemplateColumns: "repeat(5, 1fr)",
-                                        columnGap: "40px",
-                                        minHeight: "50px",
-                                        gridTemplateColumns: window.innerWidth >= 968 ? "repeat(5, 1fr)" : "repeat(2, 1fr)",
-                                    }}
-                                    className="adminCategoryAddCategoryInnerBox"
-                                >
-                                    <select
-                                        name="DiamondShape"
-                                        value={newCategory.DiamondShape}
-                                        onChange={handleNewCategoryChange}
-                                        required={true}
-                                    >
-                                        <option value={""}>Select Diamond Shape</option>
-                                        {diamondShapes.map((shape) => (
-                                            <option key={shape.Id} value={shape.Id}>
-                                                {shape.DiamondValue}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <select
-                                        name="DiamondClarity"
-                                        value={newCategory.DiamondClarity}
-                                        onChange={handleNewCategoryChange}
-                                    >
-                                        <option value={""}>Select Diamond Clarity</option>
-                                        {diamondClarities.map((clarity) => (
-                                            <option key={clarity.Id} value={clarity.Id}>
-                                                {clarity.DiamondValue}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <select
-                                        name="DiamondColor"
-                                        value={newCategory.DiamondColor}
-                                        onChange={handleNewCategoryChange}
-                                    >
-                                        <option value={""}>Select Diamond Color</option>
-                                        {diamondColors.map((colour) => (
-                                            <option key={colour.Id} value={colour.Id}>
-                                                {colour.DiamondValue}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <select
-                                        name="DiamondCut"
-                                        value={newCategory.DiamondCut}
-                                        onChange={handleNewCategoryChange}
-                                    >
-                                        <option value={""}>Select Diamond Cut</option>
+                                <Box sx={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    flexWrap: "wrap",
+                                    gap: 2,
+                                    '@media (max-width: 600px)': {
+                                        flexDirection: 'column',
+                                        alignItems: 'stretch',
+                                    }
+                                }}>
+                                    <Box sx={{ flexBasis: { xs: '100%', sm: '48%', md: '19%' }, minWidth: { xs: '150px' } }}>
+                                        <select
+                                            name="DiamondShape"
+                                            style={{width: "100%"}}
+                                            value={newCategory.DiamondShape}
+                                            onChange={handleNewCategoryChange}
+                                            required={true}
+                                        >
+                                            <option value={""}>Select Diamond Shape</option>
+                                            {diamondShapes.map((shape) => (
+                                                <option key={shape.Id} value={shape.Id}>
+                                                    {shape.DiamondValue}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Box>
+                                    <Box sx={{ flexBasis: { xs: '100%', sm: '48%', md: '19%' }, minWidth: { xs: '150px' } }}>
+                                        <select
+                                            name="DiamondClarity"
+                                            value={newCategory.DiamondClarity}
+                                            style={{width: "100%"}}
+                                            onChange={handleNewCategoryChange}
+                                        >
+                                            <option value={""}>Select Diamond Clarity</option>
+                                            {diamondClarities.map((clarity) => (
+                                                <option key={clarity.Id} value={clarity.Id}>
+                                                    {clarity.DiamondValue}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Box>
+                                    <Box sx={{ flexBasis: { xs: '100%', sm: '48%', md: '19%' }, minWidth: { xs: '150px' } }}>
+                                        <select
+                                            name="DiamondColor"
+                                            value={newCategory.DiamondColor}
+                                            style={{width: "100%"}}
+                                            onChange={handleNewCategoryChange}
+                                        >
+                                            <option value={""}>Select Diamond Color</option>
+                                            {diamondColors.map((colour) => (
+                                                <option key={colour.Id} value={colour.Id}>
+                                                    {colour.DiamondValue}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Box>
+                                    <Box sx={{ flexBasis: { xs: '100%', sm: '48%', md: '19%' }, minWidth: { xs: '150px' } }}>
+                                        <select
+                                            name="DiamondCut"
+                                            value={newCategory.DiamondCut}
+                                            style={{width: "100%"}}
+                                            onChange={handleNewCategoryChange}
+                                        >
+                                            <option value={""}>Select Diamond Cut</option>
 
-                                        {diamondCuts.map((cut) => (
-                                            <option key={cut.Id} value={cut.Id}>
-                                                {cut.DiamondValue}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <select
-                                        name="SettingType"
-                                        value={newCategory.SettingType}
-                                        onChange={handleNewCategoryChange}
-                                    >
-                                        <option value={""}>Select Setting Type</option>
-                                        {settingTypes.map((setting) => (
-                                            <option key={setting.Id} value={setting.Id}>
-                                                {setting.DiamondValue}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                            {diamondCuts.map((cut) => (
+                                                <option key={cut.Id} value={cut.Id}>
+                                                    {cut.DiamondValue}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Box>
+                                    <Box sx={{ flexBasis: { xs: '100%', sm: '48%', md: '19%' }, minWidth: { xs: '150px' } }}>
+                                        <select
+                                            name="SettingType"
+                                            value={newCategory.SettingType}
+                                            style={{width: "100%"}}
+                                            onChange={handleNewCategoryChange}
+                                        >
+                                            <option value={""}>Select Setting Type</option>
+                                            {settingTypes.map((setting) => (
+                                                <option key={setting.Id} value={setting.Id}>
+                                                    {setting.DiamondValue}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </Box>
+                                </Box>
                                 <div
                                     style={{
                                         gridTemplateColumns: "repeat(4,1fr)",

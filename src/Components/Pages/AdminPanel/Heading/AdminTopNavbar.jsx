@@ -250,7 +250,7 @@ export default function AdminTopNavbar() {
                 {id: 10, name: "Rates", linkto: "/add_rates"},
                 {id: 11, name: "Collection", linkto: "/add_collection"},
                 {id: 12, name: "Occassion", linkto: "/add_occassion"},
-                {id: 13, name: "Diamond Size/Weight/Rate/Template", linkto: "/"}
+                // {id: 13, name: "Diamond Size/Weight/Rate/Template", linkto: "/"}
 
                 // { id: 11, name: "Party", linkto: "/add_vendor" },
                 // //{ id: 12, name: "Making", linkto: "/adminhome" },
@@ -280,7 +280,7 @@ export default function AdminTopNavbar() {
             id: 4,
             name: "Reports",
             items: [
-                {id: 1, name: "Stock", linkto: "/all_Report"},
+                {id: 1, name: "Stock", linkto: "/stock_report"},
                 // {id: 0, name: "SKU Report", linkto: "/admin_sku_report"},
                 // {
                 //     id: 10,

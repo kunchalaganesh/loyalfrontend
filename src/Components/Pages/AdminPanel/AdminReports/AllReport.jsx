@@ -7,11 +7,11 @@ import {
     a128,
     a131,
     a134, a149, a163,
-    a181,
+    a181, a216,
     a218,
     a219, a220,
     a221,
-    a222,
+    a222, a241, a242,
 } from "../../../Api/RootApiPath";
 import {useSelector} from "react-redux";
 import {InfinitySpin} from "react-loader-spinner";
@@ -51,6 +51,17 @@ function AllReport() {
     const [filteredSkuKarigarReport, setFilteredSkuKarigarReport] = useState([]);
     const [filteredInventoryReport, setFilteredInventoryReport] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
+    const [allPackets, setAllPackets] = useState([]);
+    const [allBoxes, setAllBoxes] = useState([]);
+    const [formData, setFormData] = useState({
+        Category: 1,
+        ProductType: 0,
+        Design: "",
+        Purity: 0,
+        FromDate: "2024-09-06",
+        ToDate: "2024-09-06",
+    });
+
 
     const fetchAllCategory = async () => {
         const formData = {
@@ -385,6 +396,35 @@ function AllReport() {
         fromDate,
         toDate
     ]);
+    async function filterPackets() {
+
+        const payload = {
+            CategoryId: Number(formData.Category),
+            ProductId: Number(formData.ProductType),
+            Design: formData.Design,
+            PurityId: formData.Purity,
+            ClientCode: clientCode,
+            FromDate: "2024-09-06",
+            ToDate: "2024-09-06",
+        };
+        await fetch(selectedTab === 6 ? a241 : a242, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload),
+        })
+            .then((res) => res.json())
+            .then((response) => {
+                if (selectedTab === 6) {
+                    setAllPackets(response);
+                }
+                else{
+                    setAllBoxes(response);
+                }
+            });
+    }
+    useEffect(() => {
+        filterPackets();
+    }, [formData]);
 
     const filteredCollection = allCollectionTypes?.filter(
         (product) => product?.ProductId == productTypeIdSelected
@@ -398,7 +438,7 @@ function AllReport() {
         (product) => product?.CategoryId == categoryId
     );
 
-    const fetchDefaultStockReport = async () => {
+    const fetchDefaultCategoryReport = async () => {
         const formData = {
             ClientCode: clientCode,
             FromDate: fromDate,
@@ -419,7 +459,7 @@ function AllReport() {
             ClientCode: clientCode,
             FromDate: fromDate,
             ToDate: toDate,
-            CategoryId: categoryId,
+            CategoryId: categoryId || 1,
             StockType: stockType,
             PurityId: purityTypeIdSelected ? parseInt(purityTypeIdSelected) : 0,
         };
@@ -502,43 +542,27 @@ function AllReport() {
 
     useEffect(() => {
         if (selectedTab == 0) {
-            fetchDefaultStockReport()
+            fetchDefaultCategoryReport()
         }
         if (selectedTab == 1) {
-            fetchAllSkuReport();
+            fetchStockReportByProduct();
         }
         if (selectedTab == 2) {
-            fetchAllSkuKarigarReport()
-        }
-        if (selectedTab == 3) {
-            fetchAllInventory()
-        }
-    }, [selectedTab]);
-
-    useEffect(() => {
-        if (
-            fromDate !== "" &&
-            toDate !== "" &&
-            categoryName == "" &&
-            productName == ""
-        ) {
-            fetchDefaultStockReport();
-        } else if (
-            fromDate !== "" &&
-            toDate !== "" &&
-            categoryName !== "" &&
-            productName == ""
-        ) {
-            fetchStockReportByProduct();
-        } else if (
-            fromDate !== "" &&
-            toDate !== "" &&
-            categoryName !== "" &&
-            productName !== ""
-        ) {
             fetchStockReportByDesign();
         }
-    }, [fromDate, toDate, categoryName, productName, stockType, purityName]);
+        if (selectedTab == 3) {
+            fetchAllSkuReport();
+        }
+        if (selectedTab == 4) {
+            fetchAllSkuKarigarReport()
+        }
+        if (selectedTab == 5) {
+            fetchAllInventory()
+        }
+        if (selectedTab == 6 || selectedTab == 7) {
+            filterPackets();
+        }
+    }, [selectedTab]);
 
     const handleTabChange = (event, newValue) => {
         setSelectedTab(newValue);
@@ -549,6 +573,12 @@ function AllReport() {
             selectedProducts.includes(x.id)
         );
         printStockListAll(filteredStockReport);
+    };
+    const printPacketList = () => {
+        const selectedProductData = allProducts.filter((x) =>
+            selectedProducts.includes(x.id)
+        );
+        printPacketListAll(selectedTab === 4 ? allPackets : allBoxes);
     };
 
     const printSKUList = () => {
@@ -586,10 +616,21 @@ function AllReport() {
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
+        let label = '';
+        if (selectedTab === 0) {
+            label = 'Category';
+        } else if (selectedTab === 1) {
+            label = 'Product';
+        } else if (selectedTab === 2) {
+            label = 'Design';
+        }
+
+        doc.text(label, startX - 0.5 + columnWidth, startY);
+
 
         const generateHeader = () => {
             doc.text("Sr No", startX, startY); // Serial Number
-            doc.text("Category", startX - 0.5 + columnWidth, startY);
+            doc.text(label, startX - 0.5 + columnWidth, startY);
             doc.text("Op qty", startX + 2.1 * columnWidth, startY);
             doc.text("op gr wt", startX + 3 * columnWidth, startY);
             doc.text("ope net wt", startX + 4.2 * columnWidth, startY);
@@ -622,7 +663,13 @@ function AllReport() {
             const serialNumber = index + 1;
             doc.text(serialNumber.toString(), startX, y);
             doc.text(
-                item.Category ? item.Category.substr(0, 8) : "N/A",
+                (selectedTab === 0 && item.Category) ||
+                (selectedTab === 1 && item.Product) ||
+                (selectedTab === 2 && item.Design)
+                    ? ((selectedTab === 0 && item.Category) ||
+                    (selectedTab === 1 && item.Product) ||
+                    (selectedTab === 2 && item.Design)).substr(0, 8)
+                    : "N/A",
                 startX - 0.5 + columnWidth,
                 y
             );
@@ -689,7 +736,130 @@ function AllReport() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     }
+    const printPacketListAll = async (data) => {
+        const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const startX = 8;
+        let startY = 20;
+        const lineHeight = 5;
+        const margin = 5;
+        const serialNumberWidth = 20;
+        const columnWidth =
+            (pageWidth - startX - serialNumberWidth - 10 * margin) / 10;
 
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+
+        const generateHeader = () => {
+            doc.text("Sr No", startX, startY); // Serial Number
+            doc.text("Category", startX - 0.5 + columnWidth, startY);
+            doc.text(selectedTab === 4 ? "Packet" : "Box", startX + 2.1 * columnWidth, startY);
+            doc.text("Op qty", startX + 3.2 * columnWidth, startY);
+            doc.text("op gr wt", startX + 4.2 * columnWidth, startY);
+            doc.text("ope net wt", startX + 5.5 * columnWidth, startY);
+            doc.text("stock in qty", startX + 6.9 * columnWidth, startY);
+            doc.text("stock in gr wt", startX + 8.5 * columnWidth, startY);
+            doc.text("sale qty", startX + 9.9 * columnWidth, startY);
+            doc.text("sale gr wt", startX + 10.8 * columnWidth, startY);
+            doc.text("clo qty", startX + 12 * columnWidth, startY);
+            doc.text("clo gross wt", startX + 12.9 * columnWidth, startY);
+            doc.text("clo net wt", startX + 14.2 * columnWidth, startY);
+        };
+        const totalNetWt = data.reduce(
+            (total, item) => total + (parseFloat(item.NetWt) || 0),
+            0
+        );
+        const totalGrossWt = data.reduce(
+            (total, item) => total + (parseFloat(item.GrossWt) || 0),
+            0
+        );
+        generateHeader();
+
+        let y = startY + lineHeight + margin;
+        data.forEach((item, index) => {
+            if (index > 0 && y + lineHeight > pageHeight - margin) {
+                doc.addPage();
+                startY = 20;
+                generateHeader();
+                y = startY + lineHeight + margin;
+            }
+            const serialNumber = index + 1;
+            doc.text(serialNumber.toString(), startX, y);
+            doc.text(
+                item.Category ? item.Category.substr(0, 8) : "N/A",
+                startX - 0.5 + columnWidth,
+                y
+            );
+            doc.text(
+                (selectedTab === 4) ? item.PacketName ? item.PacketName : "N/A" : item.BoxName ? item.BoxName : "N/A",
+                startX + 2.1 * columnWidth,
+                y
+            );
+            doc.text(
+                item['OpeningQuantity'] || item['OpeningQuantity'] === 0 ? item['OpeningQuantity'].toString() : "N/A",
+                startX + 3.2 * columnWidth,
+                y
+            );
+            doc.text(
+                item['OpeningGrossWeight'] || item['OpeningGrossWeight'] === 0 ? item['OpeningGrossWeight'].toString() : "N/A",
+                startX + 4.2 * columnWidth,
+                y
+            );
+            doc.text(
+                item['OpeningNetWeight'] || item['OpeningNetWeight'] === 0 ? item['OpeningNetWeight'].toString() : "N/A",
+                startX + 5.5 * columnWidth,
+                y
+            );
+            doc.text(
+                item['StockEntryQuantity'] || item['StockEntryQuantity'] === 0 ? item['StockEntryQuantity'].toString() : "N/A",
+                startX + 6.9 * columnWidth,
+                y
+            );
+            doc.text(
+                item['StockEntryGrWt'] || item['StockEntryGrWt'] === 0 ? item['StockEntryGrWt'].toString() : "N/A",
+                startX + 8.5 * columnWidth,
+                y
+            );
+            doc.text(
+                item['SaleQty'] || item['SaleQty'] === 0 ? item['SaleQty'].toString() : "N/A",
+                startX + 9.6 * columnWidth,
+                y
+            );
+            doc.text(
+                item['SaleGrossWt'] || item['SaleGrossWt'] === 0 ? item['SaleGrossWt'].toString() : "N/A",
+                startX + 10.8 * columnWidth,
+                y
+            );
+            doc.text(
+                item['ClosingQty'] || item['ClosingQty'] === 0 ? item['ClosingQty'].toString() : "N/A",
+                startX + 12 * columnWidth,
+                y
+            );
+            doc.text(
+                item['ClosingGrossWeight'] || item['ClosingGrossWeight'] === 0 ? item['ClosingGrossWeight'].toString() : "N/A",
+                startX + 13 * columnWidth,
+                y
+            );
+            doc.text(
+                item['ClosingNetWeight'] || item['ClosingNetWeight'] === 0 ? item['ClosingNetWeight'].toString() : "N/A",
+                startX + 14.3 * columnWidth,
+                y
+            );
+
+            y += lineHeight + margin;
+        });
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+            doc.setPage(i);
+            doc.text(`Page ${i} of ${totalPages}`, pageWidth - 50, pageHeight - 10);
+        }
+
+        const pdfData = doc.output();
+        const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, "_blank");
+    }
     const printSKUListAll = async (data) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -801,7 +971,6 @@ function AllReport() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     };
-
     const printSKU_karigarListAll = async (data) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -904,7 +1073,6 @@ function AllReport() {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         window.open(pdfUrl, "_blank");
     };
-
     const printInventoryListAll = async (data) => {
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -1037,14 +1205,22 @@ function AllReport() {
             </Box>
             <Box className="adminAddCategoryMainBox">
                 <Box className="adminAddCategoryInnerBox">
-                    <Grid container justifyContent={"space-between"} alignItems={"start"}>
-                        <Grid item>
-                            <Box mb={1}>
+                    <Grid
+                        container
+                        justifyContent={{ xs: "center", sm: "space-between" }}
+                        alignItems={"start"}
+                        sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                    >
+                        <Grid item xs={12} sm={8}>
+                            <Box mb={1} sx={{ textAlign: { xs: "center", sm: "left" } }}>
                                 <Tabs
                                     value={selectedTab}
                                     onChange={handleTabChange}
                                     aria-label="stock transfer tabs"
-                                    TabIndicatorProps={{style: {backgroundColor: '#02a8b5'}}}
+                                    TabIndicatorProps={{ style: { backgroundColor: '#02a8b5' } }}
+                                    variant="scrollable"
+                                    scrollButtons="auto"
+                                    allowScrollButtonsMobile
                                     sx={{
                                         '& .MuiTab-root': {
                                             textTransform: 'none',
@@ -1055,22 +1231,27 @@ function AllReport() {
                                         },
                                         '& .Mui-selected': {
                                             color: '#02a8b5',
-                                        }, '& .MuiTabs-indicator': {
+                                        },
+                                        '& .MuiTabs-indicator': {
                                             backgroundColor: '#02a8b5',
                                             color: '#02a8b5',
                                         },
                                     }}
                                 >
-                                    <Tab label="Stock"/>
-                                    <Tab label="SKU Report"/>
-                                    <Tab label="SKU / Karigar Report"/>
-                                    <Tab label="label Stock"/>
+                                    <Tab label="Category" />
+                                    <Tab label="Product" />
+                                    <Tab label="Design" />
+                                    <Tab label="SKU Report" />
+                                    <Tab label="SKU / Karigar Report" />
+                                    <Tab label="Labelled Stock" />
+                                    <Tab label="Packets" />
+                                    <Tab label="Boxes" />
                                 </Tabs>
                             </Box>
                         </Grid>
                     </Grid>
                     <div style={{margin: "20px 0px"}}>
-                        {selectedTab === 0 && (<div
+                        {(selectedTab === 0 || selectedTab === 1 || selectedTab === 2) && (<div
                             >
                                 <div style={{display: "flex", justifyContent: "space-between"}}>
                                     <select
@@ -1103,7 +1284,7 @@ function AllReport() {
                                             );
                                         })}
                                     </select>
-                                    <select
+                                    {selectedTab !== 0 && (<select
                                         style={{margin: "5px 5px"}}
                                         className={"input-select"}
                                         value={productName}
@@ -1121,8 +1302,8 @@ function AllReport() {
                                                 </option>
                                             );
                                         })}
-                                    </select>
-                                    <select
+                                    </select>)}
+                                    {selectedTab !== 0 && selectedTab !== 1 && (<select
                                         style={{margin: "5px 5px"}}
                                         className={"input-select"} value={collectionName}
                                         onChange={(e) => {
@@ -1138,7 +1319,7 @@ function AllReport() {
                                                 </option>
                                             );
                                         })}
-                                    </select>
+                                    </select>)}
                                     <select
                                         style={{margin: "5px 5px"}}
                                         className={"input-select"}
@@ -1172,8 +1353,9 @@ function AllReport() {
                                         value={toDate}
                                         onChange={(e) => setToDate(e.target.value)}
                                     />
-                                    <div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px"}}>
+                                    <div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px",justifyContent: "right"}}>
                                         <button
+                                            style={{margin:"0px 10px"}}
                                             onClick={() => {
                                                 setCategoryName(""),
                                                     setProductName(""),
@@ -1188,7 +1370,7 @@ function AllReport() {
                                 </div>
                             </div>
                         )}
-                        {(selectedTab === 1 || selectedTab === 2 || selectedTab === 3) && (<div
+                        {(selectedTab === 3 || selectedTab === 4 || selectedTab === 5) && (<div
                             >
                                 <div style={{display: "flex", justifyContent: "space-between"}}>
                                     <select
@@ -1245,7 +1427,7 @@ function AllReport() {
                                             );
                                         })}
                                     </select>
-                                    {selectedTab !== 3 && <select
+                                    {selectedTab !== 5 && <select
                                         style={{margin: "5px 5px"}}
                                         className={"input-select"}
                                         value={purityName}
@@ -1263,7 +1445,7 @@ function AllReport() {
                                         })}
                                     </select>
                                     }
-                                    {(selectedTab === 1 || selectedTab === 2) && (<>
+                                    {(selectedTab === 3 || selectedTab === 4) && (<>
                                         <select
                                             style={{margin: "5px 5px"}}
                                             className={"input-select"}
@@ -1301,7 +1483,7 @@ function AllReport() {
                                             })}
                                         </select>
                                     </>)}
-                                    {selectedTab === 3 && (<>
+                                    {selectedTab === 5 && (<>
                                         <input
                                             className={"input-select"}
                                             style={{width: "100%", margin: "5px 5px"}}
@@ -1342,8 +1524,9 @@ function AllReport() {
                                     }
                                 </div>
                                 <div className="adminAllProductsFilterDatesBox">
-                                    <div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px"}}>
+                                    <div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px",justifyContent: "right"}}>
                                         <button
+                                            style={{margin:"0px 10px"}}
                                             onClick={() => {
                                                 setCategoryName(""),
                                                     setProductName(""),
@@ -1356,20 +1539,186 @@ function AllReport() {
                                         {selectedTab === 0 && (
                                             <button onClick={() => printStockList()}>Print
                                                 List</button>)}
-                                        {selectedTab === 1 && (
+                                        {selectedTab === 3 && (
                                             <button onClick={() => printSKUList()}>Print
                                                 List</button>)}
-                                        {selectedTab === 2 && (
+                                        {selectedTab === 4 && (
                                             <button onClick={() => printSKU_karigarList()}>Print
                                                 List</button>)}
-                                        {selectedTab === 3 && (
+                                        {selectedTab === 5 && (
                                             <button onClick={() => printInventoryList()}>Print List</button>)}
+                                        {selectedTab === 6 && (
+                                            <button onClick={() => printInventoryList()}>Print List</button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {(selectedTab === 6 || selectedTab === 7) && (
+                            <div>
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"}
+                                        value={formData.Category}
+                                        onChange={(e) => {
+                                            setCategoryName(e.target.value);
+                                            setFormData({
+                                                ...formData,
+                                                Category: e.target.value,
+                                                ProductType: 0,
+                                                Purity: 0,
+                                                Design: ""
+                                            });
+                                            setCurrentPage(1);
+                                        }}
+                                    >
+                                        <option value="">Select Category</option>
+                                        {allCategories.map((x) => {
+                                            return (
+                                                <option value={Number(x.Id)}>
+                                                    {x.CategoryName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"}
+                                        value={formData.ProductType}
+                                        onChange={(e) => {
+                                            setFormData({...formData, ProductType: e.target.value, Design: ""});
+                                            setProductName(e.target.value);
+                                            setCurrentPage(1);
+                                            setCollectionName("");
+                                        }}
+                                    >
+                                        <option value="">Select Product Type</option>
+                                        {filteredProductTypes.map((x) => {
+                                            return (
+                                                <option value={`${parseInt(x.Id)}`}>
+                                                    {x.ProductName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"} value={formData.Design}
+                                        onChange={(e) => {
+                                            setFormData({...formData, Design: e.target.value});
+                                            setCurrentPage(1);
+                                        }}
+                                    >
+                                        <option value="">Select Design</option>
+                                        {filteredCollection.map((x) => {
+                                            return (
+                                                <option value={`${x.DesignName}`}>
+                                                    {x.DesignName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                    <select
+                                        style={{margin: "5px 5px"}}
+                                        className={"input-select"}
+                                        value={formData.Purity}
+                                        onChange={(e) => {
+                                            setFormData({...formData, Purity: e.target.value});
+                                        }}
+                                    >
+                                        <option value="0">Select Purity</option>
+                                        {filteredPurities.map((x) => {
+                                            return (
+                                                <option value={`${Number(x.Id)}`}>
+                                                    {x.PurityName}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                </div>
+                                {/*<div style={{display:"flex"}}>*/}
+                                {/*    <div>*/}
+                                {/*        <input*/}
+                                {/*            // style={{cursor: "pointer", margin: "10px 10px 10px 0px"}}*/}
+                                {/*            style={{width: "200px"}}*/}
+                                {/*            type="date"*/}
+                                {/*            className={"input-select"}*/}
+                                {/*            placeholder="From Date"*/}
+                                {/*            value={fromDate}*/}
+                                {/*            onChange={(e) => setFromDate(e.target.value)}*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*    <div>*/}
+                                {/*        <input*/}
+                                {/*            // style={{margin: "10px 10px"}}*/}
+                                {/*            style={{width: "200px",marginLeft: "20px"}}*/}
+                                {/*            type="date"*/}
+                                {/*            className={"input-select"}*/}
+                                {/*            placeholder="To Date"*/}
+                                {/*            value={toDate}*/}
+                                {/*            onChange={(e) => setToDate(e.target.value)}*/}
+                                {/*        />*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                                {/*<div className="adminAllLabelledListButtonBox" style={{margin: "10px 10px"}}>*/}
+                                {/*    <button*/}
+                                {/*        onClick={() => {*/}
+                                {/*            setCategoryName(""),*/}
+                                {/*                setProductName(""),*/}
+                                {/*                setCollectionName(""),*/}
+                                {/*                setPurityName("");*/}
+                                {/*        }}*/}
+                                {/*    >*/}
+                                {/*        Reset*/}
+                                {/*    </button>*/}
+                                {/*    <button onClick={() => printStockList()}>Print List</button>*/}
+                                {/*</div>*/}
+                                <div className="adminAllProductsFilterDatesBox">
+                                    <input
+                                        style={{cursor: "pointer", margin: "10px 10px 10px 0px"}}
+                                        type="date"
+                                        placeholder="From Date"
+                                        value={formData.FromDate}
+                                        onChange={(e) => setFormData({...formData, FromDate: e.target.value})}
+                                    />
+                                    <input
+                                        style={{margin: "10px 10px"}}
+                                        type="date"
+                                        placeholder="To Date"
+                                        value={formData.ToDate}
+                                        onChange={(e) => setFormData({...formData, ToDate: e.target.value})}
+                                    />
+                                    <div className="adminAllLabelledListButtonBox"
+                                         style={{margin: "10px 10px", justifyContent: "right"}}>
+                                        <button
+                                            style={{marginRight: "15px"}}
+                                            onClick={() => {
+                                                setCategoryName(""),
+                                                    setProductName(""),
+                                                    setCollectionName(""),
+                                                    setPurityName(""),
+                                                    setCollectionName(''),
+                                                    setSkuName(''),
+                                                    setVendorName(''),
+                                                    setFormData({
+                                                        Category: 1,
+                                                        ProductType: 0,
+                                                        Design: "",
+                                                        Purity: 0,
+                                                        FromDate: "2024-09-06",
+                                                        ToDate: "2024-09-06",
+                                                    })
+                                            }}
+                                        >
+                                            Reset
+                                        </button>
+                                        <button onClick={() => printPacketList()}>Print List</button>
                                     </div>
                                 </div>
                             </div>
                         )}
                     </div>
-
                     {isLoading ? (<>
                             <Box sx={{
                                 height: "80vh",
@@ -1384,10 +1733,14 @@ function AllReport() {
                         <TableContainer sx={{' th, td': {border: '1px solid #ccc'}}}>
                             <Table size="small" sx={{borderRadius: '4px', borderCollapse: 'collapse'}}>
                                 <TableHead>
-                                    {selectedTab == 0 &&
-                                    <TableRow>
+                                    {(selectedTab === 0 || selectedTab === 1 || selectedTab === 2) &&
+                                    (<TableRow>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
-                                        <TableCell sx={{fontWeight: "600"}} align="center">Category</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">
+                                            {selectedTab === 0 && 'Category'}
+                                            {selectedTab === 1 && 'Product'}
+                                            {selectedTab === 2 && 'Design'}
+                                        </TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Opening qty</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">opening gross wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">opening net wt</TableCell>
@@ -1398,8 +1751,8 @@ function AllReport() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">closing qty</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">closing gross wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">closing net wt</TableCell>
-                                    </TableRow>}
-                                    {selectedTab == 1 &&
+                                    </TableRow>)}
+                                    {selectedTab == 3 &&
                                     <TableRow>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">SKU</TableCell>
@@ -1413,7 +1766,7 @@ function AllReport() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">Net Wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Fine Wt</TableCell>
                                     </TableRow>}
-                                    {selectedTab == 2 &&
+                                    {selectedTab == 4 &&
                                     <TableRow>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">SKU</TableCell>
@@ -1421,7 +1774,7 @@ function AllReport() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">Total Stone Wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Total Gross Wt</TableCell>
                                     </TableRow>}
-                                    {selectedTab == 3 &&
+                                    {selectedTab == 5 &&
                                     <TableRow>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Category</TableCell>
@@ -1439,16 +1792,34 @@ function AllReport() {
                                         <TableCell sx={{fontWeight: "600"}} align="center">box name</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">branch name</TableCell>
                                     </TableRow>}
+                                    {(selectedTab == 6 || selectedTab == 7) &&
+                                    <TableRow>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Category</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}}
+                                                   align="center">{selectedTab === 6 ? "Packet" : "Box"}</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Opening qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">opening gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">opening net wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">stock in qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">stock in gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">sale qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">sale gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">closing qty</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">closing gross wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">closing net wt</TableCell>
+                                    </TableRow>}
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        selectedTab === 0 && (filteredStockReport.map((item, index) => (
+                                        (selectedTab === 0 || selectedTab === 1 || selectedTab === 2) && (filteredStockReport.map((item, index) => (
                                             <TableRow key={item.id}>
                                                 <TableCell align="center">{index + 1}</TableCell>
-                                                <TableCell align="center">{item.Category}</TableCell>
+                                                <TableCell align="center">  {selectedTab === 0 && item.Category}
+                                                    {selectedTab === 1 && item.Product}
+                                                    {selectedTab === 2 && item.Design}</TableCell>
                                                 <TableCell
                                                     align="center">{item.OpeningQuantity}</TableCell>
-
                                                 <TableCell
                                                     align="center">{item.OpeningGrossWeight}</TableCell>
                                                 <TableCell
@@ -1467,7 +1838,7 @@ function AllReport() {
                                             </TableRow>
                                         )))
                                     } {
-                                    selectedTab === 1 && (filteredSKUReport.map((item, index) => (
+                                    selectedTab === 3 && (filteredSKUReport.map((item, index) => (
                                         <TableRow key={item.id}>
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.SKU}</TableCell>
@@ -1483,7 +1854,7 @@ function AllReport() {
                                         </TableRow>
                                     )))
                                 } {
-                                    selectedTab === 2 && (filteredSkuKarigarReport.map((item, index) => (
+                                    selectedTab === 4 && (filteredSkuKarigarReport.map((item, index) => (
                                         <TableRow key={item.id}>
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.SKU}</TableCell>
@@ -1533,7 +1904,7 @@ function AllReport() {
                                         </TableRow>
                                     )))
                                 } {
-                                    selectedTab === 3 && (filteredInventoryReport.map((item, index) => (
+                                    selectedTab === 5 && (filteredInventoryReport.map((item, index) => (
                                         <TableRow key={item.id}>
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.CategoryName}</TableCell>
@@ -1553,6 +1924,34 @@ function AllReport() {
                                         </TableRow>
                                     )))
                                 }
+                                    {
+                                        (selectedTab === 6 || selectedTab === 7) && ((selectedTab === 6 ? allPackets : allBoxes)?.map((item, index) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell align="center">{index + 1}</TableCell>
+                                                <TableCell align="center">{item.Category}</TableCell>
+                                                <TableCell
+                                                    align="center">{selectedTab === 6 ? item.PacketName : item.BoxName}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.OpeningQuantity}</TableCell>
+
+                                                <TableCell
+                                                    align="center">{item.OpeningGrossWeight}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.OpeningNetWeight}</TableCell>
+                                                <TableCell align="center">{item.StockEntryQuantity}</TableCell>
+                                                <TableCell align="center">{item.StockEntryGrWt}</TableCell>
+                                                <TableCell align="center">{item.SaleQty}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.SaleGrossWt}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.ClosingQty}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.ClosingGrossWeight}</TableCell>
+                                                <TableCell
+                                                    align="center">{item.ClosingNetWeight}</TableCell>
+                                            </TableRow>
+                                        )))
+                                    }
                                 </TableBody>
                             </Table>
                         </TableContainer>

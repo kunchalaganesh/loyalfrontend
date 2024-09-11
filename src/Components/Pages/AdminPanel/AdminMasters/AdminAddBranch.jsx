@@ -17,6 +17,7 @@ import {
 import { useSelector } from "react-redux";
 import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+import {allStateList} from "../../../Api/StateList";
 
 export default function AdminAddBranch() {
   const [active, setActive] = useState("List");
@@ -173,13 +174,11 @@ export default function AdminAddBranch() {
     // Update the edited data in the state
     setNewCategory({ ...newCategory, [name]: value });
   };
-  console.log(newCategory, "newCategory");
-  console.log(newCategory, "newCategory");
   const addNewCategory = async (e) => {
     e.preventDefault();
     setLoading(true);
     const formData = {
-      BranchCode: newCategory.BranchCode,
+      BranchCode:  newCategory.OldEntry ? String(newCategory.BranchCode) : String(allCategories.length + 1),
       ClientCode: clientCode,
       CompId: newCategory.CompId,
       BranchName: newCategory.BranchName,
@@ -391,7 +390,9 @@ export default function AdminAddBranch() {
                   <input
                     style={{ cursor: "not-allowed" }}
                     name="BranchCode"
-                    value={newCategory.BranchCode}
+                    value={
+                      newCategory.OldEntry ? newCategory.BranchCode : allCategories.length + 1
+                    }
                     readOnly
                     // onChange={handleNewCategoryChange}
                     type="text"
@@ -407,10 +408,10 @@ export default function AdminAddBranch() {
                     type="text"
                     required="required"
                   >
+                    <option value={""}>Select an option</option>;
                     {allCompaniesList.map((x) => {
                       return (
                         <>
-                          <option value={""}>Select an option</option>;
                           <option value={x.Id}>{x.CompName}</option>;
                         </>
                       );
@@ -509,13 +510,22 @@ export default function AdminAddBranch() {
                     type="text"
                   />
 
-                  <label>State</label>
+                  <label>State <sup>*</sup></label>
                   <input
                     name="State"
                     value={newCategory.State}
                     onChange={handleNewCategoryChange}
                     type="text"
+                    required={"required"}
+                    list={"CurrAddState"}
                   />
+                  <datalist id="CurrAddState">
+                    {allStateList.map((x, index) => (
+                        <option key={index} value={x}>
+                          {x}
+                        </option>
+                    ))}
+                  </datalist>
 
                   <label>City</label>
                   <input
