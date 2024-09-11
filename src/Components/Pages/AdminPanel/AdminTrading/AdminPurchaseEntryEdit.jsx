@@ -3,6 +3,14 @@ import AdminHeading from "../Heading/AdminHeading";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import "../../PagesStyles/AdminTrading.css";
 import {
+    a1,
+    a125,
+    a128,
+    a134,
+    a136,
+    a149,
+    a152,
+    a153,
     a154,
     a155,
     a156,

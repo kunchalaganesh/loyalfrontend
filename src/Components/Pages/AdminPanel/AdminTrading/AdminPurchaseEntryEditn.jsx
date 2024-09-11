@@ -62,6 +62,8 @@ import GetApiService from "../../../Api/getapiService";
 import { createOrder } from '../../../Api/postapiservice';
 import { addPayment, deletePayment, handlePaymentOption } from "../../../support/purchasesupport/usePayment1";
 import {handleallitemscal} from "../../../support/purchasesupport/Calculations"
+import Adminpurchasehead from "../../../support/purchasecomponent/purchasehead.jsx"
+
 
 export default function AdminPurchaseEntryEditn() {
     const [allCsData, setAllCsData] = useState([]);
@@ -72,32 +74,17 @@ export default function AdminPurchaseEntryEditn() {
     const [customerMobile, setCustomerMobile] = useState("");
     const [customerEmail, setCustomerEmail] = useState("");
     const [customerAddress, setCustomerAddress] = useState("");
-    const [customerId, setCustomerId] = useState("");
-    const [allProducts, setAllProducts] = useState([]);
     const [labelName, setLabelName] = useState("");
     const [selectedProduct, setSelectedProduct] = useState([]);
-    const [selectedProductPrice, setSelectedProductPrice] = useState(0);
-    const [barcode, setBarcode] = useState("");
-    const [categoryName, setCategoryName] = useState("");
-    const [productName, setProductName] = useState("");
-    const [collectionName, setCollectionName] = useState("");
-    const [purityType, setPurityType] = useState("");
-    const [productQty, setProductQty] = useState("");
     const [allSelectedProducts, setAllSelectedProducts] = useState([]);
     const [showAllFields, setShowAllFields] = useState(false);
     const [allProdctsNetAmount, setAllProdctsNetAmount] = useState(0);
     const [discountAmount, setDiscountAmount] = useState(0);
     const [totalPayableGstAmount, setTotalPayableGstAmount] = useState(0);
     const [totalPayableAmount, setTotalPayableAmount] = useState(0);
-    const [allProdctsGstAmount, setAllProdctsGstAmount] = useState(0);
     const [productsLoading, setProductsLoading] = useState(true);
     const [openEditBox, setOpenEditBox] = useState(false);
     const [openEditProduct, setOpenEditProduct] = useState(null);
-    const [orderId, setOrderId] = useState("");
-    const [orderItemsData, setOrderItemsData] = useState("");
-    const [orderItems, setOrderItems] = useState([]);
-    const [orderCsData, setOrderCsData] = useState([]);
-    const [oldGoldAmount, setOldGoldAmount] = useState(0);
     const [grandTotal, setGrandTotal] = useState(0);
 
     const [totalPayableGold, setTotalPayableGold] = useState(0);
@@ -4162,20 +4149,7 @@ TotalDiamondQty: String(product.TotalDiamondQty || 0) // Add a fallback value of
                         style={{marginBottom: "50px", paddingTop: "0px"}}
                         className="adminAddCategoryInnerBox"
                     >
-                        <div className="invoiceFormDateTimeBox">
-                            <DateTime
-                                dateRcvd={selectedDate ? selectedDate : null}
-                                // showInv={true}
-                                // gstType={gstType}
-                            />
-                            <div className="invoiceFormDateTimeSelectDateBox">
-                                <input
-                                    type="date"
-                                    value={selectedDate}
-                                    onChange={(e) => setSelectedDate(e.target.value)}
-                                />
-                            </div>
-                        </div>
+                       <Adminpurchasehead/>
                         {/* <h4 className="adminInvoiceAddTitles">Add Customer</h4> */}
                         <div
                             style={{marginBottom: "0px"}}
