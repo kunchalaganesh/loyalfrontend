@@ -833,7 +833,9 @@ export default function AdminTopNavbar() {
                                             <p>My Account</p>
                                         </div>
                                         <div className="navbarDesktopAdminProfileDropdownItemsBox">
-                                            <div className="navbarDesktopAdminProfileDropdownIconBox">
+                                            <div className="navbarDesktopAdminProfileDropdownIconBox"
+                                            onClick={() => navigate("/purchase")}
+                                            >
                                                 <FiSettings size={"16px"}/>
                                             </div>
                                             <p>Settings</p>

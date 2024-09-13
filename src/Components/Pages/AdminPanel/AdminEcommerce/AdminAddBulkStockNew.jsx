@@ -2381,6 +2381,7 @@ console.log('checking unlabeled ', x)
             setMaking_Fixed_Wastage(selectedSku.MakingFixedWastage);
             setMRP(selectedSku.MRP);
             setAllSelectedSkuStones(selectedSku.SKUStoneMain);
+            setAllStonesList(selectedSku.SKUStoneMain)
             setAllSelectedSkuDiamonds(selectedSku.Diamonds);
             if (
                 selectedSku.ClipWeight == 0 ||

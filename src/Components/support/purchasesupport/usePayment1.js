@@ -89,11 +89,11 @@ export const addPayment = ({
         // setGrandTotal((prevTotal) => prevTotal - paymentAmount);
         // setPaymentAmount((prevTotal) => prevTotal - paymentAmount);
 
-        setGrandTotal(parseInt(grandTotal) - parseInt(-paymentAmount));
+        setGrandTotal(parseInt(grandTotal) - parseInt(paymentAmount));
                 // Clear the input fields
                 // setPaymentOptions("Cash");
                 setPaymentAmount(
-                    Math.abs(parseInt(grandTotal) - parseInt(-paymentAmount))
+                    parseInt(grandTotal) - parseInt(-paymentAmount)
                 );
   
       } else if (paymentType === "Receive") {

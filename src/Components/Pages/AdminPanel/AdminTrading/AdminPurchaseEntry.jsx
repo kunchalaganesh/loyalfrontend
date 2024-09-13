@@ -3468,7 +3468,7 @@ console.log('checking parameter atchange', name);
                                 <td>
               
                  
-                 `${parseFloat(x.FineWastageWt).toFixed(3)}`/`${parseFloat(x.MetalRate).toFixed(0)}`
+                 {parseFloat(x.FineWastageWt).toFixed(3)}/{parseFloat(x.MetalRate).toFixed(0)}
             </td>
                                 {/* <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td> */}
 

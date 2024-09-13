@@ -80,6 +80,8 @@ import AdminApprovalStockTransfer from "./Components/Pages/AdminPanel/AdminTradi
 import AllReport from "./Components/Pages/AdminPanel/AdminReports/AllReport";
 import AdminPurchaseEntryEditn from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryEditn";
 
+
+
 function App() {
     const allStates = useSelector((state) => state);
     const adminLoggedIn = allStates.reducer1;

@@ -1171,6 +1171,7 @@ export default function AdminAllOrders() {
   useEffect(() => {
     if (orderItems.length > 0) {
       generateFullBillPDF(orderItems, csData);
+      
     } else if (csData.length !== 0) {
       alert("No Items Found in Invoice");
     }
