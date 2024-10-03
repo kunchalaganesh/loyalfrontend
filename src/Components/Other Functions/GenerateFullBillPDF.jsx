@@ -5,6 +5,52 @@ import { numberToIndianWords } from "./numberToIndianWords";
 
 // Krishiv Bill Below
 export const generateFullBillPDF = (x, csData) => {
+  
+
+  // generatenicegold(x, csData);
+
+};
+
+
+
+const generatenicegold =()=>{
+
+  const doc = new jsPDF({
+    orientation: "portrait",
+    format: "a4",
+    // format: [180, 250],
+  });
+
+  doc.setDrawColor(0, 0, 0, 0.3);
+  doc.setFontSize(12);
+  // doc.line(5, 10, 205, 10);
+  doc.setFont("times");
+  if (csData.billType === "false") {
+    doc.text(`${csData.orderType}`, 90, 47.5);
+  } else {
+    doc.text(`${csData.orderType}`, 90, 47.5);
+  }
+
+  doc.setFontSize(10);
+  doc.line(5, 44, 205, 44);
+  doc.line(5, 290, 205, 290);
+  doc.line(5, 44, 5, 290);
+  doc.line(205, 44, 205, 290);
+  doc.line(5, 48, 205, 48);
+  doc.setFont("times");
+
+  doc.text('textinggg')
+
+
+  const pdfBlob = doc.output("blob");
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  window.open(pdfUrl, "_blank");
+
+
+
+}
+
+const generatepdf=()=>{
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
@@ -727,4 +773,4 @@ export const generateFullBillPDF = (x, csData) => {
   const pdfBlob = doc.output("blob");
   const pdfUrl = URL.createObjectURL(pdfBlob);
   window.open(pdfUrl, "_blank");
-};
+}

@@ -1,0 +1,23 @@
+.adminMainBodyBox {
+    margin-bottom: 20px;
+  }
+  
+  .a4-container {
+    width: 210mm; /* A4 Width */
+    height: 297mm; /* A4 Height */
+    border: 1px solid #000;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  
+  .draggable-item {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: grab;
+  }
+  

@@ -24,6 +24,7 @@ export default function AdminPurchaseHead({
   updateCustomerDetails,
   setGstType,
   gstType,
+  from
 }) {
   // Get today's date in 'YYYY-MM-DD' format
   const today = new Date().toISOString().split("T")[0];
@@ -90,7 +91,7 @@ export default function AdminPurchaseHead({
         <input
           type="text"
           readOnly
-          value = {parseInt(purchaseMainBox.LotNumber)}
+          value = {from == 'purchaseentry' ?purchaseMainBox.length + 1 || 0 : parseInt(purchaseMainBox.LotNumber)}
         //   value={purchaseMainBox ? purchaseMainBox.InwardNo : selectedCustomer ? parseInt(selectedCustomer.InwardNo) + 1 : 0}
         />
       </div>

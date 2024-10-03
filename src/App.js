@@ -79,7 +79,8 @@ import AdminStockTransferList from "./Components/Pages/AdminPanel/AdminTrading/A
 import AdminApprovalStockTransfer from "./Components/Pages/AdminPanel/AdminTrading/AdminApprovalStockTransfer";
 import AllReport from "./Components/Pages/AdminPanel/AdminReports/AllReport";
 import AdminPurchaseEntryEditn from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryEditn";
-
+// import AdminBillsettings from "../../../../../Adminuisettings/Billsettings.jsx"
+import AdminBillsettings from "./Components/Pages/AdminPanel/AdminuiSettings/Billsettings";
 
 
 function App() {
@@ -371,6 +372,10 @@ function App() {
                     path="/admin_customer_ledger"
                     element={<AdminCustomerLedger/>}
                 />
+{/* //settings */}
+<Route path="/admin-bill-settings" element={<AdminBillsettings />} />
+
+
             </Routes>
         </div>
     );

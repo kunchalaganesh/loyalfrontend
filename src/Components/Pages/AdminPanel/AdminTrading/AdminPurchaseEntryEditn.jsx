@@ -947,6 +947,8 @@ export default function AdminPurchaseEntryEditn() {
     const { value } = e.target;
     setCustomerName(value); // Update the name input value
 
+    
+
     const selected = allCsData.find((customer) => {
       const fullName = customer.FirmName;
       return fullName.toLowerCase() === value.toLowerCase();
@@ -1942,7 +1944,7 @@ export default function AdminPurchaseEntryEditn() {
   useEffect(() => {
     const fetchDiamondAttributes = async () => {
       const response = await fetch(
-        "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes",
+        "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes",
         {
           method: "POST",
           headers: {
@@ -3105,7 +3107,7 @@ export default function AdminPurchaseEntryEditn() {
       convertAmount
     );
 
-    setPurchaseProduct(calculatedProduct);
+    // setPurchaseProduct(calculatedProduct);
   }, [convertAmount, finePure]);
 
   const addPurchaseProductToList = (selectedProduct) => {
@@ -4276,6 +4278,8 @@ export default function AdminPurchaseEntryEditn() {
               metalPaymentOption={metalPaymentOption}
               setPaymentDescription={setPaymentDescription}
               setGstType={setGstType}
+              setAdvanceAmount={setAdvanceAmount}
+              from={'purchaseentryedit'}
             />
 
             <div className="adminInvoiceMainSaveButtonBox">

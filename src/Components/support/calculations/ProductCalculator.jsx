@@ -9,17 +9,25 @@ class ProductCalculator {
     selectedSkuName,
     finePure,
     convertAmount,
-    gstType
+    gstType,
+    setConvertAmount,
+    setFinePure,
+    userEditedFields
   ) {
     const updatedProduct = { ...purchaseProduct };
 
+    //check fine or gram
+    this.checkfinegram(selectedCustomer, allVendorTounche, setFinePure, purchaseProduct, selectedSku, updatedProduct, allPurities,userEditedFields);
+
+
+
     // Purity and Vendor Tounche Calculations
-    this.calculatePurityAndVendorTounche(
-      updatedProduct,
-      allPurities,
-      allVendorTounche,
-      selectedCustomer
-    );
+    // this.calculatePurityAndVendorTounche(
+    //   updatedProduct,
+    //   allPurities,
+    //   allVendorTounche,
+    //   selectedCustomer
+    // );
 
     // Diamond Calculations
     this.calculateDiamonds(updatedProduct, allDiamondSizeWeightRate);
@@ -31,9 +39,108 @@ class ProductCalculator {
     this.calculateWastageAndFine(updatedProduct, finePure);
 
     // Total Price Calculations
-    this.calculateTotalPrice(updatedProduct, convertAmount, gstType);
+    this.calculateTotalPrice(updatedProduct, convertAmount, gstType, finePure);
 
     return updatedProduct;
+  }
+
+  static checkfinegram(selectedCustomer, allVendorTounche, setFinePure, purchaseProduct, selectedSku, updatedProduct, allPurities,userEditedFields){
+
+    console.log('check point1',  selectedCustomer)
+   
+   
+
+    if (updatedProduct.FinePercent) {
+      if (updatedProduct.FinePercent !== "") {
+        let matchingPurity = allPurities.find(
+          (purity) =>
+            Math.abs(
+              parseFloat(purity.FinePercentage) -
+                parseFloat(updatedProduct.FinePercent)
+            ) <= 0.5
+        );
+        updatedProduct.PurityId = matchingPurity ? matchingPurity.Id : 0;
+      } else {
+        updatedProduct.PurityId = 0;
+      }
+    }
+
+    // Extract VendorId, CategoryId, ProductId, and PurityId from purchaseProduct
+    const { CategoryId: purchaseCategoryId, ProductId: purchaseProductId, PurityId: purchasePurityId } = updatedProduct;
+
+    console.log('check point3',  updatedProduct)
+
+
+    // Extract VendorId from selectedCustomer
+    const vendorId = selectedCustomer?.Id || null;
+
+    console.log('check point2',  vendorId)
+    console.log('check point4',  allVendorTounche)
+
+    // Find matching vendor in allVendorTounche based on VendorId, CategoryId, ProductId, and PurityId
+    const matchingVendor = allVendorTounche.find(vendor => 
+        vendor.VendorId == vendorId && 
+        vendor.CategoryId == purchaseCategoryId && 
+        vendor.ProductId == purchaseProductId &&
+        vendor.PurityId == purchasePurityId
+         &&
+        (selectedSku ? vendor.StockKeepingUnit == selectedSku.StockKeepingUnit : true)
+    );
+
+    let wastagewt = updatedProduct.WastageWt;
+        let MakingPercentage = updatedProduct.MakingPercentage;
+        let MakingFixedAmt = updatedProduct.MakingFixedAmt;
+        let MakingFixedWastage = updatedProduct.MakingFixedWastage;
+        let MakingPerGram = updatedProduct.MakingPerGram;
+
+    if (matchingVendor) {
+        console.log('Match found:', matchingVendor);
+        // Do something with the matching vendor
+        // Example: setConvertAmount(matchingVendor.Amount);
+        
+        
+          // updatedProduct.WastageWt = matchingVendor.WastageWt || 0;
+          // updatedProduct.MakingPercentage = matchingVendor.wastagewt || 0;
+          // updatedProduct.MakingFixedAmt = matchingVendor.MakingFixedAmt || 0;
+          // updatedProduct.MakingFixedWastage = parseFloat(matchingVendor.MakingFixedWastage);
+          // updatedProduct.MakingPerGram = matchingVendor.MakingPerGram || 0;
+       
+
+          if (!userEditedFields.finePure) {
+          setFinePure(matchingVendor.FinePure)
+          }
+          if (!userEditedFields.WastageWt) {
+            updatedProduct.WastageWt = matchingVendor.WastageWt || 0;
+            updatedProduct.MakingPercentage = matchingVendor.wastagewt || 0;
+          }else{
+
+          }
+          if (!userEditedFields.MakingPerGram) {
+            updatedProduct.MakingPerGram = matchingVendor.MakingPerGram || 0;
+          }else{
+
+          }
+          if (!userEditedFields.MakingFixedAmt) {
+            updatedProduct.MakingFixedAmt = matchingVendor.MakingFixedAmt || 0;
+          }else{
+
+          }
+          if (!userEditedFields.MakingFixedWastage) {
+            updatedProduct.MakingFixedWastage = matchingVendor.MakingFixedAmt || 0;
+          }else{
+
+          }
+
+    } else {
+        console.log('No match found.');
+        updatedProduct.WastageWt = wastagewt;
+          updatedProduct.MakingFixedAmt = MakingFixedAmt;
+          updatedProduct.MakingPerGram = MakingPerGram;
+          updatedProduct.MakingPercentage = wastagewt;
+          updatedProduct.MakingFixedWastage = MakingFixedWastage;
+    }
+
+
   }
 
   static calculateDiamonds(updatedProduct, allDiamondSizeWeightRate) {
@@ -130,6 +237,7 @@ class ProductCalculator {
       } else {
         updatedProduct.StoneWt = value;
       }
+      console.log('checking updateproduct ',updatedProduct )
 
       updatedProduct.StonePieces = tpieces;
 
@@ -261,19 +369,17 @@ class ProductCalculator {
     // updatedProduct.TotalItemAmt = parseFloat(totalFineWastageWt).toFixed(3);
 
     // Handle MakingFixedWastage with null check for selectedSku
-    updatedProduct.MakingFixedWastage =
-      updatedProduct.selectedSku && updatedProduct.selectedSkuName !== ""
-        ? parseFloat(
-            updatedProduct.selectedSku.MakingFixedWastage || 0
-          ).toFixed(3)
-        : "0";
+    // updatedProduct.MakingFixedWastage =
+    //   updatedProduct.selectedSku && updatedProduct.selectedSkuName !== ""
+    //     ? parseFloat(
+    //         updatedProduct.selectedSku.MakingFixedWastage || 0
+    //       ).toFixed(3)
+    //     : "0";
   }
 
-  static calculateTotalPrice(updatedProduct, convertAmount, gstType) {
+  static calculateTotalPrice(updatedProduct, convertAmount, gstType, finePure) {
     // Calculate total making charges
-    let totalMakingCharges = this.calculateMakingCharges(updatedProduct);
-    console.log("Total Making Charges:", totalMakingCharges);
-
+   
     const totalDiamondamount = updatedProduct.Diamonds.reduce(
       (acc, diamond) => acc + (parseFloat(diamond.DiamondTotalWeight) || 0),
       0
@@ -282,11 +388,36 @@ class ProductCalculator {
     // Calculate the fine rate
 
     let nnet = 0;
-    if (gstType) {
+    if (!gstType && !finePure) {
       nnet = updatedProduct.NetWt;
-    } else {
-      nnet = updatedProduct.FineWastageWt;
+    } else if(!gstType && finePure) {
+      nnet = updatedProduct.FineWt;
+    }else if(gstType && !finePure){
+      nnet = updatedProduct.NetWt;
+    }else{
+      nnet = updatedProduct.NetWt;
     }
+
+    // let totalMakingCharges = this.calculateMakingCharges(updatedProduct, nnet);
+    let makingPerGram = parseFloat(updatedProduct.MakingPerGram) || 0;
+    let makingPercentage = parseFloat(updatedProduct.WastageWt) || 0;
+    let makingFixedAmt = parseFloat(updatedProduct.MakingFixedAmt) || 0;
+    let makingFixedWastage = parseFloat(updatedProduct.MakingFixedWastage) || 0;
+    let metalRate = parseFloat(updatedProduct.MetalRate) || 0;
+
+    let making1 = parseFloat(makingPerGram)*updatedProduct.NetWt;
+    let making2 = 0;//(nnet/100)*parseFloat(makingPercentage)*metalRate/10
+    if(convertAmount){
+      making2 = (nnet/100)*parseFloat(makingPercentage)*metalRate/10
+      console.log('check here ', making2, '  ', nnet, '  ', makingPercentage, '   ',metalRate );
+    }else{
+      making2 = 0
+    }
+
+    let totalMakingCharges = making1+making2+makingFixedAmt;
+
+    console.log("Total Making Charges:", totalMakingCharges, '   ', convertAmount, '  ',making2);
+
 
     console.log("checking gst  ", gstType, " v", nnet);
 
@@ -301,8 +432,7 @@ class ProductCalculator {
     let hallmarkAmt = parseFloat(updatedProduct.HallmarkAmt || 0);
     let otherrate = stoneAmount + totalDiamondPurchaseAmount + hallmarkAmt;
 
-    let totalRate =
-      parseFloat(fineRate || 0) +
+    let totalRate = parseFloat(fineRate || 0) +
       parseFloat(totalMakingCharges || 0) +
       parseFloat(otherrate || 0);
 
@@ -390,18 +520,23 @@ class ProductCalculator {
     console.log("TotalGstAmount:", updatedProduct.TotalGstAmount);
   }
 
-  static calculateMakingCharges(updatedProduct) {
-    let netWt = parseFloat(updatedProduct.NetWt) || 0;
+  static calculateMakingCharges(updatedProduct, nnet) {
+    
+    // let netWt = parseFloat(updatedProduct.NetWt) || 0;
+
+    console.log('checking netwt ', nnet)
+    
     let makingPerGram = parseFloat(updatedProduct.MakingPerGram) || 0;
-    let makingPercentage = parseFloat(updatedProduct.MakingPercentage) || 0;
+    let makingPercentage = parseFloat(updatedProduct.WastageWt) || 0;
     let makingFixedAmt = parseFloat(updatedProduct.MakingFixedAmt) || 0;
     let makingFixedWastage = parseFloat(updatedProduct.MakingFixedWastage) || 0;
     let metalRate = parseFloat(updatedProduct.MetalRate) || 0;
 
-    let makingCharges1 = netWt * makingPerGram;
-    let makingCharges2 = (netWt * makingPercentage) / 1000;
+    let makingCharges1 = nnet * makingPerGram;
+    // let makingCharges2 = (netWt * makingPercentage) / 1000;
+    let makingCharges2 = ((nnet/100) * makingPercentage) *(metalRate/10);
     let makingCharges3 = makingFixedAmt;
-    let makingCharges4 = (metalRate * makingFixedWastage) / 10;
+    let makingCharges4 = 0;//(metalRate * makingFixedWastage) / 10;
 
     let stoneAmount = parseFloat(updatedProduct.StoneAmount || 0);
     let totalDiamondPurchaseAmount = parseFloat(
@@ -416,23 +551,33 @@ class ProductCalculator {
 
 
   static calculatePrice(purchaseProduct, convertAmount) {
-    let FineRate =
-        (parseFloat(purchaseProduct.FineWastageWt) *
-            parseFloat(purchaseProduct.MetalRate)) /
-        10;
-    let netRate = parseFloat(
-        parseFloat(FineRate) * parseFloat(purchaseProduct.NetWt)
-    ).toFixed(3);
 
-    let makingCharges1 =
-        parseFloat(purchaseProduct.NetWt) *
+
+    //only fine weight take
+
+    // wastege for non invoice item 
+    // finr% 
+
+
+
+
+    let FineRate = (parseFloat(purchaseProduct.FineWt) *parseFloat(purchaseProduct.MetalRate)) /10;
+    
+    let netRate = (parseFloat(purchaseProduct.NetWt) *parseFloat(purchaseProduct.MetalRate)) /10;
+    // parseFloat(parseFloat(FineRate) * parseFloat(purchaseProduct.NetWt)).toFixed(3);
+
+
+    
+    let makingCharges1 = parseFloat(purchaseProduct.NetWt) *
         parseFloat(purchaseProduct.MakingPerGram);
+
     let makingCharges2 =
-        (parseFloat(netRate) * parseFloat(purchaseProduct.MakingPercentage)) /
+        (parseFloat(FineRate) * parseFloat(purchaseProduct.MakingPercentage)) /
         1000;
+
     let makingCharges3 = parseFloat(purchaseProduct.MakingFixedAmt);
-    let makingCharges4 =
-        (parseFloat(purchaseProduct.MetalRate) *
+    
+    let makingCharges4 =(parseFloat(purchaseProduct.MetalRate) *
             parseFloat(purchaseProduct.MakingFixedWastage)) /
         10;
 
@@ -451,6 +596,8 @@ class ProductCalculator {
     let totalRate = parseFloat(
         parseFloat(FineRate) + parseFloat(totalMakingCharges)
     );
+
+    console.log('checkingtotal ', totalRate, totalMakingCharges)
 
     if (convertAmount) {
         purchaseProduct.Making = totalMakingCharges;

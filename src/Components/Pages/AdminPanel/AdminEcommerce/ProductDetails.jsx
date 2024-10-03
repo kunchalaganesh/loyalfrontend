@@ -1130,36 +1130,9 @@ export default function ProductDetails() {
 
         <div className="adminAddCategoryMainBox">
           <div className="adminAddCategoryInnerBox">
-            {/* <h2 style={{ margin: "10px 0" }}>Product details</h2> */}
-            {/* <h4 className="adminInvoiceAddTitles">Add Product</h4> */}
-            {/* <MyPDF
-            name={data.product_Name}
-            grossWt={data.grosswt}
-            stoneWt={data.stoneWeight}
-            netWt={data.netWt}
-            itemCode={data.itemCode}
-            purity={data.purity}
-            pieces={data.pieces}
-            mrp={data.mrp}
-            product_No={data.product_No}
-          /> */}
-            {/* <MyPDF data={data} /> */}
+            
             <div className="adminProductDetailsMainBox">
-              {/* <div className="adminProductDetailImageBox">
-              <img
-                style={{ width: "300px", cursor: "pointer" }}
-                // src={`${s1}${data.ImageList1}`}
-                // src={`${s1}${data.imageList1}`}
-                // src={`${s3}${data.images}`}
-                src={`${s3}/${allImages[0]}`}
-                alt="images"
-                onClick={() => {
-                  setPlaceHolder("Add Image");
-                  setParameter("Images");
-                  updatedetails("image");
-                }}
-              />
-            </div> */}
+              
               <div
                 className="adminProductDetailDetailsBox"
                 style={{ width: "100%" }}
@@ -1548,45 +1521,47 @@ export default function ProductDetails() {
               </div>
               {openEditBox ? (
                 <div
-                  style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    background: "rgba(0, 0, 0, 0.5)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    zIndex: 100000,
-                  }}
-                >
-                  <div
-                    style={{
-                      background: "#fff",
-                      width: "80%",
-                      height: "90%",
-                      overflowY: "auto", // Enable vertical scrolling when content exceeds max-height
-                      padding: "20px",
-                      borderRadius: "8px",
-                      boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        borderBottom: "1px solid rgba(128, 128, 128, 0.3)",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "10px",
-                      }}
-                    >
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 100000,
+      overflow: "hidden", // Ensure no overflow happens
+    }}
+  >
+    <div
+      style={{
+        background: "#fff",
+        width: "80%",
+        maxHeight: "90%", // Set a max height so the modal does not overflow the viewport
+        overflowY: "auto", // Enable scrolling if content exceeds max height
+        padding: "20px",
+        borderRadius: "8px",
+        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+        position: "relative", // Ensure absolute positioned children stay inside the modal
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          borderBottom: "1px solid rgba(128, 128, 128, 0.3)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "10px",
+          position: "sticky", // Make the close button sticky
+          top: 0, // Stick it to the top
+          background: "#fff", // Ensure it doesn't overlap with content
+          zIndex: 10, // Ensure the sticky header stays above other content
+          paddingTop: "10px", // Give some padding to avoid cropping
+        }}
+      >
                       <p>Edit Item</p>
                       <button
                         onClick={closeEditItem}

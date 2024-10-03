@@ -209,8 +209,8 @@ export default function AdminHome() {
             ) : null}
             {/* <AdminFirstLogin /> */}
             <AdminDashboardCategories />
-            <AdminDashboardReports />
-            <AdminLocation />
+            {/* <AdminDashboardReports />
+            <AdminLocation /> */}
           </>
         )}
       </div>

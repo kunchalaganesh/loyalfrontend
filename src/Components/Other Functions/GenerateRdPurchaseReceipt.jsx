@@ -6,11 +6,37 @@ export default function GenerateRdPurchaseReceipt(order, rdPurchaseFormat) {
   console.log("checking trigger", order, rdPurchaseFormat);
   if (rdPurchaseFormat == 2) {
     // Thashna Label Below
-    generateRdPurchaseReceipt1(order);
+    generateRdPurchaseReceipt2(order);
   } else if (rdPurchaseFormat == 1) {
     // Nice Label Below
     generateRdPurchaseReceipt2(order);
   }
+}
+
+
+const generateRdPurchaseReceipttashna = async (order) =>{
+
+  const doc = new jsPDF({
+    orientation: "landscape",
+    format: "a5",
+    // format: [250, 180],
+  });
+  doc.setDrawColor(0, 0, 0);
+  let y = 18; // Adjust starting Y position
+  const columnWidth = 15; // Adjust column widths for A5
+  const contentWidth = 120; // Adjust content width for A5
+  let srNo = 1;
+  let pGSrNo = 1;
+
+  // console.log(x, "x");
+
+  // doc.addPage();
+  doc.setFontSize(16);
+  doc.setFont("times");
+  doc.text(`Purchase`, 90, 10);
+  doc.setFontSize(9);
+  doc.setFont("times");
+
 }
 
 const generateRdPurchaseReceipt1 = async (order) => {

@@ -10,7 +10,11 @@ import logoImage from "../../../Images/loyalStringLogoSmall.png";
 import { useSelector } from "react-redux";
 import { numberToIndianWords } from "../../../Other Functions/numberToIndianWords";
 import { generateFullBillPDF } from "../../../Other Functions/GenerateFullBillPDF";
-import {generateBillInvocePDF, generateBillPDF} from "../../../Other Functions/GenerateBillPDF";
+import {generateBillPDF} from "../../../Other Functions/GenerateBillPDF";
+import GetApiService from "../../../Api/getapiService";
+import { useAdminData } from "../AdminSettings/useAdminData.jsx";
+import { X } from "@mui/icons-material";
+
 
 export default function AdminAllOrders() {
   const [allOrders, setAllOrders] = useState([]);
@@ -24,12 +28,72 @@ export default function AdminAllOrders() {
   const [currentPage, setCurrentPage] = useState(1);
   const [csData, setCsData] = useState([]);
   const [tempOrderList, setTempOrderList] = useState([]);
+  const [allStonesmasterList, setAllStonesmasterList] = useState([]);
+
   const ordersPerPage = 25;
 
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
   //   let Entryby_Staff_id = parseInt(adminLoggedIn);
-  const clientCode = adminLoggedIn.ClientCode;
+  // const clientCode = adminLoggedIn.ClientCode;
+
+  // const invoiceformate = adminLoggedIn.InvoiceFormat;
+
+  const {
+    clientCode,
+    CompanyId,
+    CounterId,
+    BranchId,
+    EmployeId,
+    employeeCode,
+    rdPurchaseFormat,
+    InvoiceFormat
+  } = useAdminData();
+
+
+
+  const apiService = new GetApiService(clientCode);
+  const loadData = async () => {
+
+    try {
+      const apiCalls = [
+        apiService.fetchAllStonesList()
+      ];
+
+      const results = await Promise.allSettled(apiCalls);
+
+      results.forEach((result, index) => {
+        if (result.status === "fulfilled") {
+          // Handle successful response
+          switch (index) {
+            case 0:
+              
+                setAllStonesmasterList(result.value);
+              break;
+            
+            default:
+              break;
+          }
+        } else {
+          // Handle error
+          console.error(
+            `Error loading data for API ${index + 1}:`,
+            result.reason
+          );
+        }
+      });
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }finally {
+        setLoading(false); // Hide the progress bar once API calls are done
+      }
+
+
+  }
+
+  useEffect(() => {
+    loadData();
+  }, [clientCode]);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -1170,10 +1234,12 @@ export default function AdminAllOrders() {
   };
   useEffect(() => {
     if (orderItems.length > 0) {
-      generateFullBillPDF(orderItems, csData);
-      
+      // generateFullBillPDF(orderItems, csData);
+
+      generateBillPDF(orderItems, csData, InvoiceFormat)
+
     } else if (csData.length !== 0) {
-      alert("No Items Found in Invoice");
+      // alert("No Items Found in Invoice");
     }
   }, [orderItems]);
   const totalAmount = "$1000";
@@ -1334,7 +1400,7 @@ export default function AdminAllOrders() {
                         </td>
                         {/* <td>{x.customer_Id}</td> */}
                         {/* NOTE:"Please Uncomment bekow line" */}
-                        <td>{x.firstName + " " + x.lastName}</td>
+                        <td>{x.Customer.FirstName + " " + x.Customer.LastName}</td>
                         <td>
                           ₹{parseInt(x.TotalAmount).toLocaleString("en-IN")}
                         </td>
@@ -1509,10 +1575,11 @@ export default function AdminAllOrders() {
                             style={{ padding: "0px", cursor: "pointer" }}
                             onClick={() => {
                               // showPDFWithId(x.id), setLoading(true);
-                              generateBillInvocePDF(x, x.InvoiceItem);
-                              // console.log("order", [x.tblProduct]);
+                              // generateBillInvocePDF(x, x.InvoiceItem, allStonesmasterList);
+                              console.log("order", x);
+                              generateBillPDF(x.InvoiceItem, x.Customer, InvoiceFormat)
                               setCsData(x);
-                              getAllOrderItems(x.Id);
+                              // getAllOrderItems(x.Id);
                             }}
                           >
                             show bill

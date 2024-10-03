@@ -22,7 +22,7 @@ export default function AdminDashboardCategories() {
             />
           </div>
           <div className="adminDashboardCategoriesInnerDataBox">
-            <h2>268</h2>
+            <h2>0</h2>
             <p>New Customers</p>
           </div>
         </div>
@@ -39,8 +39,8 @@ export default function AdminDashboardCategories() {
             />
           </div>
           <div className="adminDashboardCategoriesInnerDataBox">
-            <h2>8574</h2>
-            <p>Online Orders</p>
+            <h2>0</h2>
+            <p>Online Order1s</p>
           </div>
         </div>
         <div className="adminDashboardCategoriesInnerBox">
@@ -56,7 +56,7 @@ export default function AdminDashboardCategories() {
             />
           </div>
           <div className="adminDashboardCategoriesInnerDataBox">
-            <h2>₹300000</h2>
+            <h2>0</h2>
             <p>Revenue</p>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function AdminDashboardCategories() {
             />
           </div>
           <div className="adminDashboardCategoriesInnerDataBox">
-            <h2>₹10000</h2>
+            <h2>0</h2>
             <p>Daily Average</p>
           </div>
         </div>

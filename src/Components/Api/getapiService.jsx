@@ -38,7 +38,15 @@ import {
     a66,
     a71,
     a74,
+    a140,
     getAllSizeWeightRate,
+    a98,
+    a181,
+    a226,
+    a162,
+    a137,
+    a131,
+    
   } from "../Api/RootApiPath";
   
   class GetApiService {
@@ -123,6 +131,48 @@ import {
     async fetchAllRDPurchaseList() {
       return await this.fetchApi(a159);
     }
+
+    async fetchAllCollection() {
+      return await this.fetchApi(a140);
+    }
+    async fetchAllBranches(){
+      return await this.fetchApi(a98);
+    }
+
+    async fetchAllDesigns(){
+      return await this.fetchApi(a131);
+    }
+
+    async fetchAllBoxs(){
+      return await this.fetchApi(a137);
+    }
+
+    async fetchAllRdPurchaseItems(){
+      return await this.fetchApi(a162);
+    }
+
+    // Specific API methods
+  async fetchAllPacketNumbers() {
+    return await this.fetchApi(a226);
+  }
+
+  async fetchAllSku() {
+    return await this.fetchApi(a163);
+  }
+
+  async fetchAllDiamondSizeWeightRate() {
+    return await this.fetchApi(a191);
+  }
+
+  async fetchAllDiamondAttributes() {
+    return await this.fetchApi(a194);
+  }
+
+  async fetchAllLabelledStock() {
+    return await this.fetchApi(a181);
+  }
+
+
   
     async fetchPurchaseEntryForBill(idRcvd) {
       const formData = { ClientCode: this.clientCode };

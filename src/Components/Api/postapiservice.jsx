@@ -284,6 +284,10 @@ export const createOrder = async (orderDetails) => {
         method: "POST",
         body: formData,
       });
+
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
   
       const data = await response.json();
       return data;

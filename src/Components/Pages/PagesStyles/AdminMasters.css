@@ -131,6 +131,17 @@
 .adminCategoryListMainBox table tbody tr td input:checked {
   accent-color: rgba(2, 168, 181, 0.2);
 }
+
+
+.scrollableTableContainer {
+  max-height: 200px; /* Set a fixed height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  border: 1px solid #ccc; /* Optional: to highlight the scrollable area */
+}
+
+
+
 .adminCategoryAddCategoryMainBox {
   margin-top: 50px;
   text-align: start;

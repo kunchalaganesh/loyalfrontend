@@ -39,7 +39,16 @@ export default function Adminpurchasepaymentbox({
   metalPaymentOption,
   setPaymentDescription,
   setGstType,
+  handleMetalPaymentOption,
+  setAdvanceAmount,
+  setConvertAmount,
+  convertAmount,
+  setIscal,
+  setDiscountAmount,
+  from,
 }) {
+  const checkvalues = () => {};
+
   return (
     <>
       <div
@@ -165,22 +174,34 @@ export default function Adminpurchasepaymentbox({
                         balanceAmount
                       );
 
+                      // Condition for "Receive" payments
                       const isInvalidReceiveAmount =
-                        isReceive && paymentAmt < balanceAmount; // Receive should allow negative values but within the balance
+                        isReceive &&
+                        (paymentAmt > Math.abs(balanceAmount) ||
+                          balanceAmount >= 0); // Payment amount must not exceed balance and balance should be negative
 
+                      // Condition for "Paid" payments
                       const isInvalidPaidAmount =
-                        !isReceive && paymentAmt > balanceAmount ; // Paid should allow positive values, greater than or equal to balance
+                        !isReceive &&
+                        (paymentAmt > balanceAmount || balanceAmount <= 0); // Payment amount must not exceed balance and balance should be positive
 
+                      // Condition to check if cash limit is exceeded
                       const exceedsCashLimit = isCash && paymentAmt > 200000;
 
                       if (isInvalidReceiveAmount) {
-                        alert("Cannot receive more than the balance amount.");
+                        alert(
+                          "Cannot receive more than the balance amount, and the balance should be negative."
+                        );
                       } else if (isInvalidPaidAmount) {
-                        alert("Cannot pay less than the balance amount.");
-                      } else if (exceedsCashLimit) {
-                        alert("Couldn't take more than 200,000 in cash.");
-                      } else {
-                        handleAddPayment();
+                        alert(
+                          "Cannot pay more than the balance amount, and the balance should be positive."
+                        );
+                      }
+                       else if (exceedsCashLimit) {
+                        alert("Cannot accept more than 200,000 in cash.");
+                      }
+                       else {
+                        handleAddPayment(); // Proceed with payment
                       }
                       //   if (
                       //     paymentOptions == "Cash" &&
@@ -455,10 +476,42 @@ export default function Adminpurchasepaymentbox({
                 className="adminInvoiceMainSaveButtonBox"
               >
                 <button
-                  onClick={() =>
-                    // addPayment
-                    handleAddPayment()
-                  }
+                  onClick={() => {
+
+
+                    const isReceive = paymentType === "Receive";
+                    // Condition for "Receive" payments
+                    const isInvalidReceiveAmount =
+                    isReceive &&
+                    (totalPayableGold>0);
+
+                    // Condition for "Paid" payments
+                    const isInvalidPaidAmount =
+                    !isReceive &&
+                    (totalPayableGold < 0); // Payment amount must not exceed balance and balance should be positive
+
+                    if (isInvalidReceiveAmount) {
+                      alert(
+                        "Cannot receive more than the balance amount, and the balance should be negative."
+                      );
+                    } else if (isInvalidPaidAmount) {
+                      alert(
+                        "Cannot pay more than the balance amount, and the balance should be positive."
+                      );
+                    } else {
+                      handleAddPayment(); // Proceed with payment
+                    }
+
+
+                    // Check if totalPayableGold is greater than metalPaymentOption.fineWt
+                    // if (metalPaymentOption.fineWt > totalPayableGold) {
+                    //   console.log("more then expected  ");
+                    //   return; // Exit early if the condition is true
+                    // }
+
+                    // Call the handleAddPayment function if the condition is not met
+                    // handleAddPayment();
+                  }}
                 >
                   Add
                 </button>
@@ -511,7 +564,7 @@ export default function Adminpurchasepaymentbox({
                     value={paymentDescription}
                     onChange={(e) => setPaymentDescription(e.target.value)}
                   />
-                  <label>Amount</label>
+                  <label>Amounttt</label>
                   <div className="adminInviceAddedProductsAmountInputBox">
                     <input
                       style={{
@@ -530,6 +583,8 @@ export default function Adminpurchasepaymentbox({
                         }
                       }}
                       type="number"
+                      // value={paymentAmount}
+                      // onChange={(e) => setPaymentAmount(e.target.value)}
                       value={advanceAmount}
                       onChange={(e) => setAdvanceAmount(e.target.value)}
                     />
@@ -542,20 +597,35 @@ export default function Adminpurchasepaymentbox({
                         }
                       }}
                       onClick={() => {
+                        console.log(
+                          "check advance ",
+                          paymentOptions,
+                          "  ",
+                          totalPaidCashAmount
+                        );
                         if (
-                          paymentOptions == "Cash" &&
-                          totalPaidCashAmount + parseInt(paymentAmount) > 200000
+                          paymentOptions == "Advance Amount" &&
+                          totalPaidCashAmount + parseInt(advanceAmount) <=
+                            200000 && parseInt(advanceAmount) > 0
                         ) {
-                          alert("Could Not Take more than 200000 in Cash");
-                        } else if (
-                          paymentAmount > 200000 &&
-                          paymentOptions == "Cash"
-                        ) {
-                          alert("Could'nt Take more than 200000 in Cash");
-                        } else {
-                          // addPayment();
                           handleAddPayment();
+                        } else {
+                          alert("Could Not Take more less than 0 and than 200000 in Cash");
                         }
+                        // if (
+                        //   paymentOptions == "Cash" &&
+                        //   totalPaidCashAmount + parseInt(paymentAmount) > 200000
+                        // ) {
+                        //   alert("Could Not Take more than 200000 in Cash");
+                        // } else if (
+                        //   paymentAmount > 200000 &&
+                        //   paymentOptions == "Cash"
+                        // ) {
+                        //   alert("Could'nt Take more than 200000 in Cash");
+                        // } else {
+                        //   // addPayment();
+                        //   handleAddPayment();
+                        // }
                       }}
                     >
                       <GiCheckMark />
@@ -596,7 +666,7 @@ export default function Adminpurchasepaymentbox({
                   {/* <div className="adminInviceAddedProductsAmountInputBox"> */}
                   <input
                     type="text"
-                    value={selectedCustomer ? selectedCustomer.advanceAmt : "0"}
+                    value={selectedCustomer ? selectedCustomer.AdvanceAmt : "0"}
                     readOnly
                   />
                   {/* </div> */}
@@ -644,9 +714,9 @@ export default function Adminpurchasepaymentbox({
                       onClick={() => {
                         if (
                           paymentOptions == "Cash" &&
-                          totalPaidCashAmount + parseInt(paymentAmount) > 200000
+                          totalPaidCashAmount + parseInt(paymentAmount) > 200000 && parseInt(advanceAmount) <=  0
                         ) {
-                          alert("Could Not Take more than 200000 in Cash");
+                          alert("Could Not tak 0 or more than 200000 in Cash");
                         } else if (
                           paymentAmount > 200000 &&
                           paymentOptions == "Cash"
