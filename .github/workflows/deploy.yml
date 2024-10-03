@@ -1,0 +1,41 @@
+name: Build and Deploy React App
+
+on:
+  push:
+    branches:
+      - main  # The workflow will run when changes are pushed to the 'main' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code from your repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment (use Node 20.x as per your local environment)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the React app
+      - name: Build the app
+        run: npm run build
+
+      # Step 5: Deploy the build directory to your FTP server
+      - name: Deploy to FTP server
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp  # Use FTP as the protocol
+          port: 21  # Default FTP port is 21
+          local-dir: build  # The build directory that will be deployed
+          server-dir: /home/u152442126/domains/loyalstring.in/public_html/sparklerfid  # Your destination directory on Hostinger
