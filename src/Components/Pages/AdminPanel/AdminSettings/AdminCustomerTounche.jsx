@@ -25,6 +25,12 @@ import {
 import {useSelector} from "react-redux";
 import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+import Stonetounch from "../../../support/customertounchsupport/stones.jsx"
+import GetApiService from "../../../Api/getapiService.jsx"
+
+// src\Components\Api\getapiService.jsx
+
+
 
 export default function AdminCustomerTounche() {
     const [active, setActive] = useState("List");
@@ -75,6 +81,63 @@ export default function AdminCustomerTounche() {
     const BranchId = adminLoggedIn.BranchId;
     const CounterId = adminLoggedIn.CounterId;
     const EmployeeId = adminLoggedIn.EmployeeId;
+    const [allStonesList, setAllStonesList] = useState([]);
+    const [allStonesList1, setAllStonesList1] = useState([]);
+    const [showSKU, setShowSKU] = useState(true);
+
+
+    const apiService = new GetApiService(clientCode);
+
+    const loadData = async () => {
+        setLoading(true);
+        try {
+          const apiCalls = [
+            
+            apiService.fetchAllStonesList()
+            
+          ];
+    
+          const results = await Promise.allSettled(apiCalls);
+    
+          results.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+              // Handle successful response
+              switch (index) {
+                case 0:
+                 
+                  setAllStonesList(result.value);
+
+                  console.log('check stones ',result.value )
+                  setAllStonesList1(result.value)
+                  break;
+                
+                default:
+                  break;
+              }
+            } else {
+              if (index + 1 > 1) {
+                console.error(
+                  `Error loading data for API ${index + 1}:`,
+                  result.reason
+                );
+                handleError(
+                  `Failed to load data for API ${index + 1}: ${result.reason}`
+                );
+              }
+            }
+          });
+        } catch (error) {
+          console.error("Error loading data:", error);
+          handleError("Error loading data. Please try again later.");
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        loadData();
+      }, [clientCode]);
+    
 
     useEffect(() => {
         window.scroll(0, 0);
@@ -374,7 +437,15 @@ export default function AdminCustomerTounche() {
         setNewCategory({...newCategory, [name]: actualValue});
     };
 
-    const addNewCategory = async (e) => {
+    const handleAmountChange = (index, newAmount) => {
+        const updatedStones = [...allStonesList];
+        updatedStones[index].StoneRate = newAmount;
+        setAllStonesList(updatedStones);
+    };
+
+
+
+    const addNewCategoryold = async (e) => {
         e.preventDefault();
         setLoading(true);
         const formData = {
@@ -476,6 +547,143 @@ export default function AdminCustomerTounche() {
             console.error(error);
         }
     };
+
+
+    const addNewCategory = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+    
+        // Prepare the main form data object for CustomerTounch
+        const formData = {
+            CustomerId: parseInt(newCategory.CustomerId),
+            CategoryId: parseInt(newCategory.CategoryId),
+            ProductId: parseInt(newCategory.ProductId),
+            DesignId: parseInt(newCategory.DesignId),
+            ClientCode: clientCode,
+            PurityId: parseInt(newCategory.PurityId),
+            StoneLessPercent: `${newCategory.StoneLessPercent}`,
+            MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
+            MakingPerGram: `${newCategory.MakingPerGram}`,
+            MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
+            MakingPercentage: `${newCategory.MakingPercentage}`,
+            StockKeepingUnit: newCategory.StockKeepingUnit, // This will be filled in dynamically below
+            CompanyId: CompanyId ? CompanyId : 0,
+            CounterId: CounterId ? CounterId : 0,
+            BranchId: BranchId ? BranchId : 0,
+            EmployeeId: EmployeeId ? EmployeeId : 0,
+            DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
+            ...(newCategory.OldEntry ? { Id: newCategory.Id } : {}),
+        };
+    
+        // Prepare the StockKeepingUnit array based on the filtered data
+        let newArray = allSelectedTounche
+            .filter(x => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
+            .map(item => ({
+                ...item,
+                FinePure: newCategory.FinePure,
+                CategoryId: parseInt(newCategory.CategoryId),
+                ProductId: parseInt(newCategory.ProductId),
+                ClientCode: clientCode,
+                PurityId: parseInt(newCategory.PurityId),
+                MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
+                MakingPerGram: `${newCategory.MakingPerGram}`,
+                MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
+                MakingPercentage: `${newCategory.MakingPercentage}`,
+                StockKeepingUnit: item.StockKeepingUnit,
+                CompanyId: CompanyId ? CompanyId : 0,
+                CounterId: CounterId ? CounterId : 0,
+                BranchId: BranchId ? BranchId : 0,
+                EmployeeId: EmployeeId ? EmployeeId : 0,
+                DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
+            }));
+    
+        // Merge formData into newArray, fallback to formData if no newArray items
+        const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
+    
+        // Prepare the CustVendStoneTounch array
+        const CustVendStoneTounch = allStonesList.map(stone => ({
+            CustomerId: parseInt(newCategory.CustomerId),
+            VendorId: stone.VendorId || 0, // Default to 0 if not available
+            StoneId: stone.Id,
+            StoneName: stone.StoneName,
+            StoneWeight: `${stone.StoneWeight}`,
+            StonePieces: `${stone.StonePieces}`,
+            StoneRate: `${stone.StoneRate}`,
+            StoneAmount: `${stone.StoneAmount}`,
+            StoneLessPercent: `${stone.StoneLessPercent}`,
+        }));
+    
+        // Final payload that includes both CustomerTounch and CustVendStoneTounch
+        const payload = {
+            CustomerTounch: newArrayData,
+            CustVendStoneTounch: CustVendStoneTounch,
+        };
+    
+        // Log the final payload for debugging
+        console.log(payload, "Final payload for API");
+    
+        try {
+            // Send the API request
+            const response = await fetch(
+                !newCategory.OldEntry ? a205 : a206,//a205,//a206, // Conditionally choose the API endpoint
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                }
+            );
+    
+            const data = await response.json();
+    
+            // Handle the response and update the UI accordingly
+            if (data.message) {
+                setMessageType("error");
+                setMessageToShow(data.message);
+                setShowError(true);
+                setActive("AddNew");
+            } else {
+                setMessageType("success");
+                setMessageToShow("Category Added Successfully");
+                setShowError(true);
+                fetchAllCategory(); // Re-fetch the updated category list
+                setActive("List");
+                setAllSelectedTounche([]);
+                setAllSelected(false);
+            }
+    
+            // Reset form and state after successful operation
+            setNewCategory({
+                CustomerId: 0,
+                CategoryId: 0,
+                ProductId: 0,
+                DesignId: 0,
+                ClientCode: "",
+                PurityId: 0,
+                StoneLessPercent: "0",
+                MakingFixedAmt: "0",
+                MakingPerGram: "0",
+                MakingFixedWastage: "0",
+                MakingPercentage: "0",
+                StockKeepingUnit: "",
+                CompanyId: 0,
+                CounterId: 0,
+                BranchId: 0,
+                EmployeeId: 0,
+                OldEntry: false,
+                DiamondSizeWeightRateTemplateId: 0,
+            });
+    
+            setLoading(false);
+        } catch (error) {
+            console.error("Error adding new category:", error);
+            setLoading(false);
+        }
+    };
+    
+
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -983,7 +1191,27 @@ export default function AdminCustomerTounche() {
                                         })}
                                     </select>
                                 </div>
-                                <div
+
+
+                                <div style={{ marginTop: "20px" }}>
+    <button 
+        type="button"  // Add this
+        style={{ marginRight: "10px" }} 
+        onClick={() => { setShowSKU(true); }}
+    >
+        SKU
+    </button>
+    <button 
+        type="button"  // Add this
+        onClick={() => { setShowSKU(false); }}
+    >
+        Stones
+    </button>
+</div>
+
+{showSKU ? (
+
+    <div
                                     style={{
                                         overflowX: "auto",
                                         borderTop: "1px solid rgba(0,0,0,0.2)",
@@ -1118,6 +1346,17 @@ export default function AdminCustomerTounche() {
                                         </tbody>
                                     </table>
                                 </div>
+
+): (
+                // Render alternate UI here
+                <div>
+                <Stonetounch stones={allStonesList} onAmountChange={handleAmountChange} />
+                </div>
+            )
+}
+
+
+                                
                                 {!loading ? <button type="submit">Submit</button> : null}
                             </form>
                         </div>

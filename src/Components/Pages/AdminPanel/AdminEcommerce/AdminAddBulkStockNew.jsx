@@ -335,7 +335,7 @@ export default function AdminAddBulkStockNew() {
             case 12:
               setAllLabelledStockData(result.value);
 
-              console.log('checking label  ', result.value)
+              console.log("checking label  ", result.value);
               break;
             case 13:
               setCollectionmainlist(result.value);
@@ -376,18 +376,14 @@ export default function AdminAddBulkStockNew() {
   };
 
   useEffect(() => {
-
     // partyData
     // setFilteredparty(partyData);
     // setFilteredsku(allSku)
 
     let filteredItems = allPurchaseItems;
 
-    
-  
     // Filter based on selected Lot Number, but only if `lotNumber` is not empty
     if (lotNumber && lotNumber !== "0") {
-
       filteredItems = filteredItems.filter(
         (item) => item.LotNumber === lotNumber
       );
@@ -398,22 +394,21 @@ export default function AdminAddBulkStockNew() {
         (item) => item.VendorName == vendorid
       );
 
-      console.log('checking party ',filteredItems )
-      setFilteredparty(fparty)
+      console.log("checking party ", filteredItems);
+      setFilteredparty(fparty);
 
       // Filter based on selected SKU, but only if `selectedSkuName` is not empty
-    if (selectedSkuName && selectedSkuName.trim() !== "") {
-      filteredItems = filteredItems.filter(
-        (item) => item.StockKeepingUnit === selectedSkuName
-      );
-    }
+      if (selectedSkuName && selectedSkuName.trim() !== "") {
+        filteredItems = filteredItems.filter(
+          (item) => item.StockKeepingUnit === selectedSkuName
+        );
+      }
 
-    setFilteredsku(filteredItems)
-    setFilteredparty(filteredItems)
-
-    }else{
-      setFilteredsku(allSku)
-    setFilteredparty(partyData)
+      setFilteredsku(filteredItems);
+      setFilteredparty(filteredItems);
+    } else {
+      setFilteredsku(allSku);
+      setFilteredparty(partyData);
     }
 
     // if (selectedSkuName && selectedSkuName.trim() !== "") {
@@ -428,15 +423,9 @@ export default function AdminAddBulkStockNew() {
     //   );
     // }
 
-    console.log('checking partyTypeId', partyTypeId)
+    console.log("checking partyTypeId", partyTypeId);
     setAllFilteredPurchaseItems(filteredItems);
-
-  }, [
-    partyTypeId,
-    selectedSkuName,
-    lotNumber,
-    allPurchaseItems
-  ]);
+  }, [partyTypeId, selectedSkuName, lotNumber, allPurchaseItems]);
 
   // useEffect(()=>{
 
@@ -674,10 +663,8 @@ export default function AdminAddBulkStockNew() {
   let productTypeName = productType.split(",")[1];
   let collectionId = parseInt(collection.split(",")[0]) || 0;
 
-
   let bid = parseInt(boxType.split(",")[0]) || 0;
   let bname = boxType.split(",")[1];
-
 
   let collectionName = collection.split(",")[1];
   let collectionmainId = 0;
@@ -906,7 +893,7 @@ export default function AdminAddBulkStockNew() {
         setPartyTypeId("");
         setCategory("");
         setProductType("");
-        setBoxType("")
+        setBoxType("");
         setPurity("");
         setQuantity(1);
         setCollection("");
@@ -1072,7 +1059,7 @@ export default function AdminAddBulkStockNew() {
       SKUId: selectedSkuData.Id || 0,
       BlackBeads: "",
       BoxId: bid ? bid : 0,
-      BoxName: bname?bname:"",
+      BoxName: bname ? bname : "",
       Status: "Active",
       CuttingGrossWt: "0",
       CuttingNetWt: "0",
@@ -1192,7 +1179,7 @@ export default function AdminAddBulkStockNew() {
     setPartyTypeId("");
     setCategory("");
     setProductType("");
-    setBoxType("")
+    setBoxType("");
     setPurity("");
     setQuantity(1);
     setCollection("");
@@ -1341,7 +1328,7 @@ export default function AdminAddBulkStockNew() {
         setPartyTypeId("");
         setCategory("");
         setProductType("");
-        setBoxType("")
+        setBoxType("");
         setPurity("");
         setQuantity(1);
         setCollection("");
@@ -1416,29 +1403,32 @@ export default function AdminAddBulkStockNew() {
       const barcodeValue = value.toUpperCase();
       updatedProduct.RFIDCode = barcodeValue; // Set the barcodeNumber property to uppercase
 
+      //     // Check for a match in the allLabelledStockData array
+      // const matchingLabelledProduct = allLabelledStockData.find(
+      //   (item) => item.RFIDCode === barcodeValue
+      // );
 
-      // Check for a match in the allLabelledStockData array
-  const matchingLabelledProduct = allLabelledStockData.find(
-    (item) => item.RFIDCode === barcodeValue
-  );
+      const matchingLabelledProduct = allLabelledStockData.find((item) => {
+        return item.RFIDCode === barcodeValue && item.Status !== "Sold";
+      });
 
-  if (matchingLabelledProduct) {
-    // Show an alert if a match is found
-    alert(`Barcode ${barcodeValue} is already in use for another product.`);
-    updatedProduct.RFIDCode = ""; // Clear the RFIDCode field
-  } else {
-    // If no match is found, proceed with the normal logic
-    const matchingProduct = rifdData.find(
-      (item) => item.BarcodeNumber === barcodeValue
-    );
+      if (matchingLabelledProduct) {
+        // Show an alert if a match is found
+        alert(`Barcode ${barcodeValue} is already in use for another product.`);
+        updatedProduct.RFIDCode = ""; // Clear the RFIDCode field
+      } else {
+        // If no match is found, proceed with the normal logic
+        const matchingProduct = rifdData.find(
+          (item) => item.BarcodeNumber === barcodeValue
+        );
 
-    if (matchingProduct) {
-      updatedProduct.TIDNumber = matchingProduct.TidValue;
-    } else {
-      // If no matching product found, set TIDNumber to null
-      updatedProduct.TIDNumber = null;
-    }
-  }
+        if (matchingProduct) {
+          updatedProduct.TIDNumber = matchingProduct.TidValue;
+        } else {
+          // If no matching product found, set TIDNumber to null
+          updatedProduct.TIDNumber = null;
+        }
+      }
 
       // // Find a matching product in the rifdData array
       // const matchingProduct = rifdData.find(
@@ -1627,9 +1617,12 @@ export default function AdminAddBulkStockNew() {
 
           let totalStoneWeight = 0;
           if (product.Stones.length > 0) {
-            totalStoneWeight = product.Stones.reduce((a, b) => {
-              const stoneWeight = parseFloat(b.StoneWeight) || 0;
-              return a + stoneWeight;
+            totalStoneWeight = product.Stones.reduce((total, stone) => {
+              // Ensure StoneWeight and pieces are valid numbers
+              const stoneWeight = parseFloat(stone.StoneWeight) || 0;
+              const pieces = parseFloat(product.Pieces) || 1; // Default to 1 if pieces is not provided
+          
+              return total + (stoneWeight * pieces);
             }, 0);
           }
 
@@ -1971,7 +1964,7 @@ export default function AdminAddBulkStockNew() {
       setCategory(`${selectedSku.CategoryId}`);
       setBaseMetal(`${selectedSku.CategoryId}`);
       setProductType(`${selectedSku.ProductId},${selectedSku.ProductName}`);
-      setBoxType(`${selectedSku.BoxId},${selectedSku.BoxName}`)
+      setBoxType(`${selectedSku.BoxId},${selectedSku.BoxName}`);
       setCollection(`${selectedSku.DesignId},${selectedSku.DesignName}`);
       setCollectionmain(
         `${selectedSku.CollectionId},${selectedSku.CollectionNameSKU}`
@@ -2021,7 +2014,7 @@ export default function AdminAddBulkStockNew() {
       setCategory("");
       setBaseMetal("");
       setProductType("");
-      setBoxType('')
+      setBoxType("");
 
       setPurity("");
       setQuantity(1);
@@ -3389,15 +3382,13 @@ export default function AdminAddBulkStockNew() {
                                     />
 
                                     <datalist id="skuList">
-                                      {filteredsku.map(
-                                        (sku, index) => (
-                                          <option
-                                            key={index}
-                                            value={`${sku.StockKeepingUnit}`}
-                                            vendor={sku.SKUId}
-                                          />
-                                        )
-                                      )}
+                                      {filteredsku.map((sku, index) => (
+                                        <option
+                                          key={index}
+                                          value={`${sku.StockKeepingUnit}`}
+                                          vendor={sku.SKUId}
+                                        />
+                                      ))}
                                     </datalist>
                                   </div>
                                 </Grid>
@@ -3703,10 +3694,9 @@ export default function AdminAddBulkStockNew() {
                                     setCategory(e.target.value),
                                       setBaseMetal(0),
                                       setProductType(""),
-                                      setBoxType('')
+                                      setBoxType("");
 
-                                      setCollection(""),
-                                      setCollectionmain("");
+                                    setCollection(""), setCollectionmain("");
                                     setPurity(""),
                                       setBoxId(""),
                                       setDiamondSize(""),
@@ -4345,8 +4335,9 @@ export default function AdminAddBulkStockNew() {
                                       // required="required"
                                       // value={boxId}
                                       value={boxType}
-
-                                      onChange={(e) => setBoxType(e.target.value)}
+                                      onChange={(e) =>
+                                        setBoxType(e.target.value)
+                                      }
                                     >
                                       <option value="">Box</option>
                                       {boxData.map((x, y) => {
@@ -4354,8 +4345,8 @@ export default function AdminAddBulkStockNew() {
                                           <option
                                             key={y}
                                             value={`${parseInt(x.Id)},${
-                                            x.BoxName
-                                          }`}
+                                              x.BoxName
+                                            }`}
                                           >
                                             {x.BoxName}
                                           </option>
@@ -5834,314 +5825,67 @@ export default function AdminAddBulkStockNew() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {Array.isArray(addedProducts) && addedProducts?.map((x, index) => (
-                                  <tr key={index}>
-                                    {isLooseDiamond ? (
-                                      <>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondShape}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondClarity}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondColour}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondCut}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondSize}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.Sieve}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondWeight}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.DiamondSellRate}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="number"
-                                            value={x.Quantity}
-                                            onChange={(e) =>
-                                              handleInputChange(
-                                                e,
-                                                index,
-                                                "Quantity"
-                                              )
-                                            }
-                                          />
-                                        </td>
-                                      </>
-                                    ) : (
-                                      <>
-                                        {stockType !== "Labelled" ? (
+                                {Array.isArray(addedProducts) &&
+                                  addedProducts?.map((x, index) => (
+                                    <tr key={index}>
+                                      {isLooseDiamond ? (
+                                        <>
                                           <td>
                                             <input
                                               type="text"
-                                              placeholder={x.Metal}
+                                              placeholder={x.DiamondShape}
                                               readOnly
                                             />
                                           </td>
-                                        ) : null}
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.ProductName}
-                                            readOnly
-                                          />
-                                        </td>
-                                        <td>
-                                          <input
-                                            type="text"
-                                            placeholder={x.PurityName}
-                                            readOnly
-                                          />
-                                        </td>
-                                        {stockType === "Labelled" ? (
                                           <td>
                                             <input
                                               type="text"
-                                              placeholder={x.ItemCode}
-                                              value={x.ItemCode}
+                                              placeholder={x.DiamondClarity}
                                               readOnly
                                             />
                                           </td>
-                                        ) : null}
-                                        {stockType === "Labelled" ? (
                                           <td>
                                             <input
-                                              type="number"
-                                              placeholder={x.GrossWt}
-                                              value={x.GrossWt}
-                                              onChange={(e) =>
-                                                handleInputChange(
-                                                  e,
-                                                  index,
-                                                  "GrossWt"
-                                                )
-                                              }
-                                            />
-                                          </td>
-                                        ) : (
-                                          <td>
-                                            <input
-                                              type="number"
-                                              placeholder={x.TotalGrossWt}
-                                              value={x.TotalGrossWt}
-                                              onChange={(e) =>
-                                                handleInputChange(
-                                                  e,
-                                                  index,
-                                                  "TotalGrossWt"
-                                                )
-                                              }
-                                            />
-                                          </td>
-                                        )}
-                                        {stockType === "Labelled" ? (
-                                          <td>
-                                            <input
-                                              type="number"
-                                              placeholder={x.ClipWeight}
-                                              value={x.ClipWeight}
-                                              onChange={(e) =>
-                                                handleInputChange(
-                                                  e,
-                                                  index,
-                                                  "ClipWeight"
-                                                )
-                                              }
-                                            />
-                                          </td>
-                                        ) : null}
-                                        <td>
-                                          <input
-                                            type="number"
-                                            placeholder={x.TotalStoneWeight}
-                                            value={x.TotalStoneWeight}
-                                            onChange={(e) =>
-                                              handleInputChange(
-                                                e,
-                                                index,
-                                                "TotalStoneWeight"
-                                              )
-                                            }
-                                          />
-                                        </td>
-                                        {stockType === "Labelled" ? (
-                                          <td>
-                                            <button
-                                              onClick={() => {
-                                                setAddedProducts(
-                                                  (prevProducts) =>
-                                                    prevProducts.map(
-                                                      (item, i) =>
-                                                        i === index
-                                                          ? {
-                                                              ...item,
-                                                              Stones: [
-                                                                ...item.Stones,
-                                                                addStone,
-                                                              ],
-                                                            }
-                                                          : item
-                                                    )
-                                                );
-                                                setShowAddStoneBox(true);
-                                                setSelectedProductIndex(index);
-                                              }}
-                                            >
-                                              Stone-{x.Stones.length}
-                                            </button>
-                                          </td>
-                                        ) : null}
-                                        {showDiamondBtn && (
-                                          <td>
-                                            <button
-                                              style={{ display: "flex" }}
-                                              onClick={() => {
-                                                // setAddedProducts((prevProducts) =>
-                                                //     prevProducts.map((product, index) =>
-                                                //         index === selectedProductIndex
-                                                //             ? {...product, Diamonds: [...product.Diamonds, {}]}
-                                                //             : product
-                                                //     )
-                                                // );
-                                                if (x.Diamonds.length === 0) {
-                                                  setAddedProducts(
-                                                    (prevProducts) =>
-                                                      prevProducts.map(
-                                                        (item, i) =>
-                                                          i === index
-                                                            ? {
-                                                                ...item,
-                                                                Diamonds: [
-                                                                  ...item.Diamonds,
-                                                                  addDiamond,
-                                                                ],
-                                                              }
-                                                            : item
-                                                      )
-                                                  );
-                                                }
-                                                setShowAddDiamondBox(true);
-                                                setSelectedProductIndex(index);
-                                              }}
-                                            >
-                                              <IoMdAddCircleOutline
-                                                style={{
-                                                  marginRight: "5px",
-                                                }}
-                                                size={"18px"}
-                                              />
-                                              DIAMOND-{x.Diamonds.length}
-                                            </button>
-                                          </td>
-                                        )}
-                                        {stockType === "Labelled" ? (
-                                          <td>
-                                            <input
-                                              type="number"
-                                              placeholder={x.NetWt}
-                                              value={x.NetWt}
+                                              type="text"
+                                              placeholder={x.DiamondColour}
                                               readOnly
                                             />
                                           </td>
-                                        ) : (
                                           <td>
                                             <input
-                                              type="number"
-                                              placeholder={x.TotalNetWt}
-                                              value={x.TotalNetWt}
+                                              type="text"
+                                              placeholder={x.DiamondCut}
                                               readOnly
                                             />
                                           </td>
-                                        )}
-                                        {stockType === "Labelled" ? (
                                           <td>
                                             <input
-                                              type="number"
-                                              placeholder={x.MakingPerGram}
-                                              value={x.MakingPerGram}
-                                              onChange={(e) =>
-                                                handleInputChange(
-                                                  e,
-                                                  index,
-                                                  "MakingPerGram"
-                                                )
-                                              }
+                                              type="text"
+                                              placeholder={x.DiamondSize}
+                                              readOnly
                                             />
                                           </td>
-                                        ) : null}
-                                        {stockType === "Labelled" ? (
                                           <td>
                                             <input
-                                              type="number"
-                                              placeholder={x.MakingPercentage}
-                                              value={x.MakingPercentage}
-                                              onChange={(e) =>
-                                                handleInputChange(
-                                                  e,
-                                                  index,
-                                                  "MakingPercentage"
-                                                )
-                                              }
+                                              type="text"
+                                              placeholder={x.Sieve}
+                                              readOnly
                                             />
                                           </td>
-                                        ) : null}
-                                        {stockType === "Labelled" ? (
                                           <td>
                                             <input
-                                              type="number"
-                                              placeholder={x.MakingFixedAmt}
-                                              value={x.MakingFixedAmt}
-                                              onChange={(e) =>
-                                                handleInputChange(
-                                                  e,
-                                                  index,
-                                                  "MakingFixedAmt"
-                                                )
-                                              }
+                                              type="text"
+                                              placeholder={x.DiamondWeight}
+                                              readOnly
                                             />
                                           </td>
-                                        ) : null}
-                                        {stockType !== "Labelled" ? (
+                                          <td>
+                                            <input
+                                              type="text"
+                                              placeholder={x.DiamondSellRate}
+                                              readOnly
+                                            />
+                                          </td>
                                           <td>
                                             <input
                                               type="number"
@@ -6155,26 +5899,278 @@ export default function AdminAddBulkStockNew() {
                                               }
                                             />
                                           </td>
-                                        ) : null}
-                                        {stockType !== "Labelled" ? (
+                                        </>
+                                      ) : (
+                                        <>
+                                          {stockType !== "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="text"
+                                                placeholder={x.Metal}
+                                                readOnly
+                                              />
+                                            </td>
+                                          ) : null}
+                                          <td>
+                                            <input
+                                              type="text"
+                                              placeholder={x.ProductName}
+                                              readOnly
+                                            />
+                                          </td>
+                                          <td>
+                                            <input
+                                              type="text"
+                                              placeholder={x.PurityName}
+                                              readOnly
+                                            />
+                                          </td>
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="text"
+                                                placeholder={x.ItemCode}
+                                                value={x.ItemCode}
+                                                readOnly
+                                              />
+                                            </td>
+                                          ) : null}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.GrossWt}
+                                                value={x.GrossWt}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "GrossWt"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.TotalGrossWt}
+                                                value={x.TotalGrossWt}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "TotalGrossWt"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          )}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.ClipWeight}
+                                                value={x.ClipWeight}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "ClipWeight"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : null}
                                           <td>
                                             <input
                                               type="number"
-                                              value={x.Pieces}
+                                              placeholder={x.TotalStoneWeight}
+                                              value={x.TotalStoneWeight}
                                               onChange={(e) =>
                                                 handleInputChange(
                                                   e,
                                                   index,
-                                                  "Pieces"
+                                                  "TotalStoneWeight"
                                                 )
                                               }
                                             />
                                           </td>
-                                        ) : null}
-                                      </>
-                                    )}
-                                  </tr>
-                                ))}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <button
+                                                onClick={() => {
+                                                  setAddedProducts(
+                                                    (prevProducts) =>
+                                                      prevProducts.map(
+                                                        (item, i) =>
+                                                          i === index
+                                                            ? {
+                                                                ...item,
+                                                                Stones: [
+                                                                  ...item.Stones,
+                                                                  addStone,
+                                                                ],
+                                                              }
+                                                            : item
+                                                      )
+                                                  );
+                                                  setShowAddStoneBox(true);
+                                                  setSelectedProductIndex(
+                                                    index
+                                                  );
+                                                }}
+                                              >
+                                                Stone-{x.Stones.length}
+                                              </button>
+                                            </td>
+                                          ) : null}
+                                          {showDiamondBtn && (
+                                            <td>
+                                              <button
+                                                style={{ display: "flex" }}
+                                                onClick={() => {
+                                                  // setAddedProducts((prevProducts) =>
+                                                  //     prevProducts.map((product, index) =>
+                                                  //         index === selectedProductIndex
+                                                  //             ? {...product, Diamonds: [...product.Diamonds, {}]}
+                                                  //             : product
+                                                  //     )
+                                                  // );
+                                                  if (x.Diamonds.length === 0) {
+                                                    setAddedProducts(
+                                                      (prevProducts) =>
+                                                        prevProducts.map(
+                                                          (item, i) =>
+                                                            i === index
+                                                              ? {
+                                                                  ...item,
+                                                                  Diamonds: [
+                                                                    ...item.Diamonds,
+                                                                    addDiamond,
+                                                                  ],
+                                                                }
+                                                              : item
+                                                        )
+                                                    );
+                                                  }
+                                                  setShowAddDiamondBox(true);
+                                                  setSelectedProductIndex(
+                                                    index
+                                                  );
+                                                }}
+                                              >
+                                                <IoMdAddCircleOutline
+                                                  style={{
+                                                    marginRight: "5px",
+                                                  }}
+                                                  size={"18px"}
+                                                />
+                                                DIAMOND-{x.Diamonds.length}
+                                              </button>
+                                            </td>
+                                          )}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.NetWt}
+                                                value={x.NetWt}
+                                                readOnly
+                                              />
+                                            </td>
+                                          ) : (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.TotalNetWt}
+                                                value={x.TotalNetWt}
+                                                readOnly
+                                              />
+                                            </td>
+                                          )}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.MakingPerGram}
+                                                value={x.MakingPerGram}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "MakingPerGram"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : null}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.MakingPercentage}
+                                                value={x.MakingPercentage}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "MakingPercentage"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : null}
+                                          {stockType === "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                placeholder={x.MakingFixedAmt}
+                                                value={x.MakingFixedAmt}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "MakingFixedAmt"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : null}
+                                          {stockType !== "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                value={x.Quantity}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "Quantity"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : null}
+                                          {stockType !== "Labelled" ? (
+                                            <td>
+                                              <input
+                                                type="number"
+                                                value={x.Pieces}
+                                                onChange={(e) =>
+                                                  handleInputChange(
+                                                    e,
+                                                    index,
+                                                    "Pieces"
+                                                  )
+                                                }
+                                              />
+                                            </td>
+                                          ) : null}
+                                        </>
+                                      )}
+                                    </tr>
+                                  ))}
                               </tbody>
                             </table>
                           </div>
@@ -6247,13 +6243,13 @@ export default function AdminAddBulkStockNew() {
 
                         {!hasUnsavedChanges && addedProducts.length > 0 ? (
                           <button
-                            onClick={() => {
+                            onClick={async () => {
+                              // Reset various states
                               setAddedProducts([]);
                               setSelectedSku([]);
                               setSelectedSkuName("");
                               setSelectedSkuStones([]);
                               setAllSelectedSkuStones([]);
-                              // setAllSelectedSkuStones([]);
                               setSelectedFiles([]);
                               setStockType("Labelled");
                               setDeleteAll(false);
@@ -6261,7 +6257,12 @@ export default function AdminAddBulkStockNew() {
                               setStoneWeight(0);
                               setNetWt(0);
                               setClipWeight(0);
-                              fetchAllLabelledStock();
+
+                              // Fetch labelled stock data
+                              const labelledStockResponse =
+                                await apiService.fetchAllLabelledStock();
+                              setAllLabelledStockData(labelledStockResponse); // Update state with labelled stock data
+
                               setGrossWithClip(false);
                               scrollToCenter("addBulkProductsBoxTop");
                             }}

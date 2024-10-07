@@ -1577,7 +1577,7 @@ export default function AdminAllOrders() {
                               // showPDFWithId(x.id), setLoading(true);
                               // generateBillInvocePDF(x, x.InvoiceItem, allStonesmasterList);
                               console.log("order", x);
-                              generateBillPDF(x.InvoiceItem, x.Customer, InvoiceFormat)
+                              generateBillPDF(x.InvoiceItem, x.Customer, InvoiceFormat, x)
                               setCsData(x);
                               // getAllOrderItems(x.Id);
                             }}

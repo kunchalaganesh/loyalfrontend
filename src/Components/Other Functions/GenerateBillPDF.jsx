@@ -4,13 +4,13 @@ import autoTable from 'jspdf-autotable';
 
 
 
-export const generateBillPDF =(invoiceItems,csData, invoiceformate)=>{
+export const generateBillPDF =(invoiceItems,csData, invoiceformate, mainitem)=>{
 
 console.log('labelformatee ',invoiceformate )
 
 
   if(invoiceformate === 6){
-    generateinvoicepdf10(invoiceItems,csData)
+    generateinvoicepdf6(invoiceItems,csData, mainitem)
     return
   }else{
     return;
@@ -164,7 +164,249 @@ const generateDummyData = () => {
 };
 
 
-const generateinvoicepdf10 =(items, customer)=>{
+const generateinvoicepdf6 = (items, customer, mainitem)=>{
+
+  console.log('checking items', items)
+  console.log('checking customer', customer);
+
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+  const dummyData = generateDummyData();
+  const pageHeight = doc.internal.pageSize.height;
+  const pageWidth = doc.internal.pageSize.width;
+  const marginTop = 85;
+  const marginBottom = 40;
+  const rowHeight = 10; // Initial row height
+  const tableHeight = 130; // Fixed table height
+  let currentY = marginTop;
+  const invoicex = pageWidth-60;
+  const invoicey = 60;
+  const customerx = pageWidth-200;
+  const customery = 60;
+  const fotertotalx = pageWidth-70;
+  const fotertotaly = 210;
+
+  const despx = pageWidth-70;
+  const despy = 250;
+
+
+  const invoicenumber = `${items[0].InvoiceId}`;
+  const firstname = `${customer.FirstName}`;
+  const lastname = `${customer.LastName}`;
+  const mobile = `${customer.Mobile}`;
+  const address = `${customer.CurrAddStreet} ${customer.CurrAddTown} ${customer.CurrAddState}`;
+
+  console.log('checkpagewidth  ', pageWidth)
+
+  // Define the column positions
+  const columnPositions = {
+    sr: pageWidth-200,
+    productDetails: pageWidth-185,
+    // pcs: pageWidth-150,
+    hsnCode: pageWidth-150,
+    purity: pageWidth-120,
+    price: pageWidth-90,
+    qty: pageWidth-60,
+    amount: pageWidth-40,
+  };
+
+  // Draw the table structure dynamically
+  const drawTableStructure = () => {
+    // Vertical Lines (for column separators)
+    // doc.line(10, marginTop, 10, marginTop + tableHeight); // Left border
+    Object.values(columnPositions).forEach((pos) => {
+      doc.line(pos, marginTop, pos, marginTop + tableHeight); // Column separators
+    });
+    doc.line(pageWidth - 10, marginTop, pageWidth - 10, marginTop + tableHeight); // Right border
+  };
+
+  const drawTableHeader = () => {
+    doc.setFontSize(10);
+    doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
+    currentY += 5;
+    
+    // Draw the header text
+    doc.text('Sr.', columnPositions.sr+2, currentY);
+    doc.text('Product Details', columnPositions.productDetails+2, currentY);
+    // doc.text('Pcs', columnPositions.pcs+2, currentY);
+    doc.text('HSN Code', columnPositions.hsnCode+2, currentY);
+    doc.text('Purity', columnPositions.purity+2, currentY);
+    // doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
+    // doc.text('Net Wt', columnPositions.netWt+2, currentY);
+    doc.text('Price', columnPositions.price+2, currentY);
+    doc.text('Qty', columnPositions.qty+2, currentY);
+    // doc.text('Rate / gm', columnPositions.rate+2, currentY);
+    doc.text('Total', columnPositions.amount+2, currentY);
+    
+    currentY += 5;
+    doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header bottom line
+    currentY += 5;
+
+    doc.line(columnPositions.sr, marginTop + tableHeight, pageWidth - 10, marginTop + tableHeight); // Table header top line
+  };
+
+  const totalAmount = Number(mainitem.TotalAmount) || 0;
+  const gstAmount = Number(mainitem.GST) || 0;
+  const receivedAmount = Number(mainitem.ReceivedAmount) || 0;
+  
+  // Calculate CGST, SGST, total invoice amount, and balance amount
+  const cgst = (totalAmount * 1.5) / 100; // CGST @1.5%
+  const total = totalAmount + gstAmount; // Total Invoice Amount
+  const bal = total - receivedAmount; // Balance Amount
+  
+  // Format amounts to two decimal places for better precision
+  const formatAmount = (amount) => amount.toFixed(2);
+  
+  const drawFooter = () => {
+    // Taxable Amount
+    doc.text(`Taxable Amount : ${formatAmount(totalAmount)}`, fotertotalx, fotertotaly + 10);
+  
+    // CGST and SGST (assuming both are calculated similarly)
+    doc.text(`CGST @ 1.5% : ${formatAmount(cgst)}`, fotertotalx, fotertotaly + 15);
+    doc.text(`SGST @ 1.5% : ${formatAmount(cgst)}`, fotertotalx, fotertotaly + 20);
+  
+    // IGST (3% assumed)
+    doc.text(`IGST @ 3% : ${formatAmount(gstAmount)}`, fotertotalx, fotertotaly + 25);
+  
+    // Total Invoice Amount
+    doc.text(`Total Invoice Amount : ${formatAmount(total)}`, fotertotalx, fotertotaly + 30);
+  
+    // Amount Received
+    doc.text(`Amount Received : ${formatAmount(receivedAmount)}`, fotertotalx, fotertotaly + 35);
+  
+    // Balance Amount (Handle negative balance if any)
+    const balanceText = bal >= 0 ? formatAmount(bal) : `-${formatAmount(Math.abs(bal))}`;
+    doc.text(`Balance Amount : ${balanceText}`, fotertotalx, fotertotaly + 40);
+
+
+    const thankYouText = "Thank You For Your Business, God Bless Keep Buying";
+    doc.setFontSize(20);
+    
+    // Calculate the text width to center it
+    const textWidth = doc.getTextWidth(thankYouText);
+    const centerX = (pageWidth - textWidth) / 2; // Calculate the x position for center alignment
+    
+    // Draw the centered text
+    doc.text(thankYouText, centerX, fotertotaly + 50);
+    doc.setFontSize(10);
+    doc.text('Declaration :', customerx, fotertotaly + 55);
+    const declarationText = "I declare that this invoice shows the actual price of the goods described and that all particulars are true and correct, I received ornament in good condition";
+const splitText = doc.splitTextToSize(declarationText, 80); // Adjust 180 to the width you want
+doc.setFontSize(12);
+doc.text(splitText, customerx, fotertotaly + 60);
+
+doc.setFontSize(10);
+doc.text('For Mewar Jewellery House Pvt Ltd', fotertotalx, fotertotaly + 60);
+
+
+doc.text('Authorised Signatory', fotertotalx, fotertotaly + 80);
+
+
+    // doc.text('HSN/SAC: 7108', 14, currentY + 10);
+    // doc.text('Taxable Amount: 47801.60', 14, currentY + 15);
+    // doc.text('CGST @ 1.50%: 717.02', 14, currentY + 20);
+    // doc.text('SGST @ 1.50%: 717.02', 14, currentY + 25);
+    // doc.text('IGST: 0.00', 14, currentY + 30);
+    // doc.text('Round Off: 0.36', 14, currentY + 35);
+    // doc.setFontSize(12);
+    // doc.text('Grand Total: 49236.00', 160, currentY + 35);
+    // doc.setFontSize(10);
+    // doc.text('For Manan Softwares', 160, currentY + 45);
+    // doc.text('Authorised Signatory', 160, currentY + 50);
+  };
+
+  const drawTableRows = () => {
+    items.forEach((item, index) => {
+      // Determine text lines and adjust currentY for each row
+      const productDetailsLines = doc.splitTextToSize(item.ProductName, columnPositions.amount - columnPositions.productDetails - 5); // Adjust width as needed
+      const rowCount = Math.max(
+        productDetailsLines.length,
+        1 // To ensure there's at least one row
+      );
+
+      if (currentY + (rowCount * rowHeight) > pageHeight - marginBottom - tableHeight) {
+        doc.addPage(); // Add a new page if needed
+        currentY = marginTop;
+        drawTableHeader();
+        drawTableStructure();
+      }
+
+      // Draw row data
+      doc.text(`${index + 1}`, columnPositions.sr+2, currentY);
+      productDetailsLines.forEach((line, lineIndex) => {
+        doc.text(line, columnPositions.productDetails+2, currentY + (lineIndex * rowHeight));
+      });
+      // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
+      doc.text('7113', columnPositions.hsnCode+2, currentY);
+      doc.text(item.Purity|| '7113', columnPositions.purity+2, currentY);
+      doc.text(item.NetWt, columnPositions.price+2, currentY);
+      doc.text( '1', columnPositions.qty+2, currentY);
+      doc.text(item.TotalAmount || '0', columnPositions.amount+2, currentY);
+
+      // Update currentY based on the row count
+      currentY += rowCount * rowHeight; // Adjust currentY based on the number of lines
+    });
+  };
+
+
+  // Set Header Text
+  doc.setFont("whitecraftlight", "italic");
+  doc.setFontSize(40);
+  doc.setTextColor(204, 85, 0); // Color for outline
+  doc.setLineWidth(0.3);
+  doc.text("KEVALI", 80, 20);
+
+  doc.setFont("sanserif", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(0, 0, 0);
+    doc.text("92.5 Silver Jewellery", 78, 26);
+
+    doc.setFont("sanserif", "normal");
+    doc.setFontSize(18);
+    doc.text("Signature Of Eternal Elegance", 70, 33);
+
+    doc.setFont("sanserif", "normal");
+    doc.setFontSize(8);
+    doc.text("(A Brand by Mewar Jewellery House pvt. ltd.)", 80, 37);
+
+
+  // Start generating the PDF
+  doc.text("TAX INVOICE", 90, 45);
+  doc.setFontSize(10);
+  doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey-5)
+  doc.text("Invoice No :-", invoicex, invoicey)
+  doc.text(invoicenumber, invoicex+20, invoicey)
+  doc.text("Date :-",invoicex, invoicey+5);
+
+  doc.text("Invoice To", customerx, customery)
+
+  doc.text("Customer Name :-", customerx, customery+5)
+  doc.text(`${firstname} ${lastname}`, customerx+28, customery+5);
+  doc.text("Mobile No :-",customerx, customery+10);
+  doc.text(`${mobile}`, customerx+28, customery+10);
+  doc.text("Address :-",customerx, customery+15);
+  doc.text(`${address}`, customerx+28, customery+15);
+
+  drawTableHeader();
+  drawTableStructure();
+  drawTableRows();
+
+  // Add the footer to the last page
+  drawFooter();
+
+  // Open the PDF
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+
+}
+
+const generateinvoicepdf12 =(items, customer)=>{
 
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -231,17 +473,27 @@ const generateinvoicepdf10 =(items, customer)=>{
   };
 
   const drawFooter = () => {
-    doc.text('HSN/SAC: 7108', 14, currentY + 10);
-    doc.text('Taxable Amount: 47801.60', 14, currentY + 15);
-    doc.text('CGST @ 1.50%: 717.02', 14, currentY + 20);
-    doc.text('SGST @ 1.50%: 717.02', 14, currentY + 25);
-    doc.text('IGST: 0.00', 14, currentY + 30);
-    doc.text('Round Off: 0.36', 14, currentY + 35);
-    doc.setFontSize(12);
-    doc.text('Grand Total: 49236.00', 160, currentY + 35);
-    doc.setFontSize(10);
-    doc.text('For Manan Softwares', 160, currentY + 45);
-    doc.text('Authorised Signatory', 160, currentY + 50);
+    doc.text('Taxable Amount', fotertotalx, fotertotaly + 10);
+    doc.text('CGST@1.5%', fotertotalx, fotertotaly + 15);
+    doc.text('SGST@1.5%', fotertotalx, fotertotaly + 20);
+    doc.text('IGST@  3%', fotertotalx, fotertotaly + 25);
+    doc.text('Total Invoice Amount', fotertotalx, fotertotaly + 30);
+    doc.text('Amount Received', fotertotalx, fotertotaly + 35);
+    doc.text('Balance Amount', fotertotalx, fotertotaly + 40);
+    doc.text('Taxable Amount', 2, fotertotaly + 45);
+
+
+    // doc.text('HSN/SAC: 7108', 14, currentY + 10);
+    // doc.text('Taxable Amount: 47801.60', 14, currentY + 15);
+    // doc.text('CGST @ 1.50%: 717.02', 14, currentY + 20);
+    // doc.text('SGST @ 1.50%: 717.02', 14, currentY + 25);
+    // doc.text('IGST: 0.00', 14, currentY + 30);
+    // doc.text('Round Off: 0.36', 14, currentY + 35);
+    // doc.setFontSize(12);
+    // doc.text('Grand Total: 49236.00', 160, currentY + 35);
+    // doc.setFontSize(10);
+    // doc.text('For Manan Softwares', 160, currentY + 45);
+    // doc.text('Authorised Signatory', 160, currentY + 50);
   };
 
   const drawTableRows = () => {
@@ -292,7 +544,7 @@ const generateinvoicepdf10 =(items, customer)=>{
   drawTableRows();
 
   // Add the footer to the last page
-  // drawFooter();
+  drawFooter();
 
   // Open the PDF
   const pdfData = doc.output("datauristring");

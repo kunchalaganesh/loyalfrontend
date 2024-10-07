@@ -573,20 +573,34 @@ export default function AdminInvoice() {
       });
       const data = await response.json();
       if (!data.Message) {
-        const modifiedProducts = data.map((product) => {
-          // Add a new property, modify existing properties, or both
-          return {
-            ...product,
-            sell: true,
-            purchase: false,
-            unlabel: false,
-            order: false,
-            wholesale: false,
-            FinePercent: 0,
-            WastagePercent: 0,
-          };
-        });
+        // const modifiedProducts = data.map((product) => {
+        //   // Add a new property, modify existing properties, or both
+        //   return {
+        //     ...product,
+        //     sell: true,
+        //     purchase: false,
+        //     unlabel: false,
+        //     order: false,
+        //     wholesale: false,
+        //     FinePercent: 0,
+        //     WastagePercent: 0,
+        //   };
+        // });
 
+        const modifiedProducts = data
+  .filter((product) => product.Status !== "Sold") // Filter out products with "Status": "Sold"
+  .map((product) => {
+    return {
+      ...product,
+      sell: true,
+      purchase: false,
+      unlabel: false,
+      order: false,
+      wholesale: false,
+      FinePercent: 0,
+      WastagePercent: 0,
+    };
+  });
         setAllProducts(modifiedProducts);
       }
       console.log(data, "Rcvd data");

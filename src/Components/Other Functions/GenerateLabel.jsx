@@ -1727,39 +1727,31 @@ const generatelabel9 = async (products) => {
     if (MRP == 0 || MRP === "") {
       // doc.text(`${itemCode}`, 2, 3);
 
-      doc.text(`${ProductName}`, 1.5, 3.7);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 1.5, 5.8);
-      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 1.5, 7.8);
-      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 1.5, 9.8);
+      doc.text(`${ProductName}`, 2, 3.7);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
+      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
+      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
      
-      doc.text(`${ItemCode}`, 25,10);
-      doc.text(`${Description}`, 25,12);
-      doc.text(`${TotalStoneAmount}`, 32,5);
+      doc.text(`${ItemCode}`, 30,10);
+      doc.text(`${Description}`, 30,12);
+      doc.text(`${TotalStoneAmount}`, 38,5);
 
       
       
     } else {
-      doc.text(`${ItemCode}`, 1.5, 3.7);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 1.5, 5.8);
-      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 1.5, 7.8);
-      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 1.5, 9.8);
+      doc.text(`${ProductName}`, 2, 3.7);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
+      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
+      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
      
-      doc.text(`${RFIDCode}`, 14.5,9.8);
-      doc.text(`MKG: ${parseInt(MakingPercentage)} %`, 14.5, 5.8);
-      doc.text(`St A: ${parseFloat(TotalStoneAmount).toFixed(3)}`, 14.5, 7.8);
-      // doc.text(`MRP`, 17, 10);
-      // doc.text(`${ItemCode}`, 3, 4);
-      doc.text(`${PurityName}`, 14.5, 3.7);
-      doc.text(`Size ${Size}`, 14.5, 12);
-
-      //   doc.text(`${purity}`, 34, 4);
-      //   doc.text(`${category_Name}`, 12, 7);
-      //   doc.text(`${size ? size : ""}`, 12, 10);
+      doc.text(`${ItemCode}`, 30,10);
+      doc.text(`${Description}`, 30,12);
+      doc.text(`${TotalStoneAmount}`, 38,5);
     }
 
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(ItemCode);
-      doc.addImage(qrCodeDataUrl, "JPEG", 25, 1, imageWidth, imageHeight);
+      doc.addImage(qrCodeDataUrl, "JPEG", 30, 1, imageWidth, imageHeight);
       console.log(qrCodeDataUrl, "qrCodeDataUrl");
     } catch (error) {
       console.error(error);

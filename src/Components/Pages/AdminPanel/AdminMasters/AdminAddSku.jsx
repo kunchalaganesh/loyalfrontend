@@ -31,6 +31,7 @@ import {
   a72,
   a89,
   s1,
+  a194
 } from "../../../Api/RootApiPath";
 import { useSelector } from "react-redux";
 import { RiListUnordered, RiPlayListAddLine } from "react-icons/ri";
@@ -360,7 +361,7 @@ export default function AdminAddSku() {
   useEffect(() => {
     const fetchDiamondAttributes = async () => {
       const response = await fetch(
-        "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes",
+        a194,
         {
           method: "POST",
           headers: {
@@ -1411,7 +1412,7 @@ export default function AdminAddSku() {
         ClientCode: clientCode,
       };
       const response = await fetch(
-        "https://dev.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate",
+        a191,
         {
           method: "POST",
           headers: {

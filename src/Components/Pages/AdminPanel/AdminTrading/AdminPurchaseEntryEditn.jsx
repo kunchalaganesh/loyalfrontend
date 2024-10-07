@@ -36,7 +36,7 @@ import {
   a65,
   a66,
   a71,
-  a74,
+  a74
 } from "../../../Api/RootApiPath";
 import { AiOutlineEdit, AiOutlinePlusSquare } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
@@ -1944,7 +1944,7 @@ export default function AdminPurchaseEntryEditn() {
   useEffect(() => {
     const fetchDiamondAttributes = async () => {
       const response = await fetch(
-        "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes",
+        a194,
         {
           method: "POST",
           headers: {
