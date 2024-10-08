@@ -1571,6 +1571,43 @@ export default function AdminAddBulkStockNew() {
     return higherWeights.length > 0 ? higherWeights[0] : null;
   }
 
+
+  // Function to find the closest weight category based on the GrossWt
+function findClosestWeightCategory(grossWt, weightCategoriesArray) {
+  // Sort weight categories in ascending order
+  weightCategoriesArray.sort((a, b) => a - b);
+
+  // Initialize closest category with the first element
+  let closestCategory = weightCategoriesArray[0];
+
+  // Loop through each category to find the closest
+  for (let i = 0; i < weightCategoriesArray.length; i++) {
+      let currentCategory = weightCategoriesArray[i];
+
+      // If the grossWt is less than or equal to the current category, assign it
+      if (grossWt <= currentCategory) {
+          closestCategory = currentCategory;
+          break;
+      }
+
+      // If the grossWt is slightly higher, find the closest match based on distance
+      if (grossWt > currentCategory) {
+          if (i < weightCategoriesArray.length - 1) {
+              const nextCategory = weightCategoriesArray[i + 1];
+
+              if (grossWt <= nextCategory) {
+                  closestCategory = (grossWt - currentCategory) <= (nextCategory - grossWt)
+                      ? currentCategory
+                      : nextCategory;
+                  break;
+              }
+          }
+      }
+  }
+
+  return closestCategory;
+}
+
   const handleEditProducts = async () => {
     setLoading(true);
     setReadOnly(false);
@@ -1632,6 +1669,25 @@ export default function AdminAddBulkStockNew() {
               ? parseFloat(totalStoneWeight).toFixed(3)
               : product.TotalStoneWeight;
 
+
+              // Determine the nearest weight category based on the product's GrossWt
+    let weightCategory = "";
+    if (selectedSkuName !== "" && selectedSku) {
+        let wt = selectedSku.WeightCategories;
+        if (wt) {
+
+          if(!WeightCategory){
+            // Split weight categories string into an array of numbers
+            const weightCategoriesArray = wt.split(',').map(Number);
+
+            // Find the closest weight category
+            const grossWt = parseFloat(product.GrossWt);
+            weightCategory = findClosestWeightCategory(grossWt, weightCategoriesArray);
+        }else{
+          weightCategory = product.WeightCategory
+        }
+      }
+    }
           return {
             ...product,
             GrossWt: !grossWithClip
@@ -1644,6 +1700,7 @@ export default function AdminAddBulkStockNew() {
             TotalStoneWeight: totalStoneWeight,
             NetWt: product.NetWt.toString(),
             ClipWeight: product.ClipWeight.toString(),
+            WeightCategory :weightCategory
           };
         });
 
@@ -4257,7 +4314,7 @@ export default function AdminAddBulkStockNew() {
                                     }
                                   >
                                     <option value="">Collection</option>
-                                    {collectionmainlist.map((x, y) => {
+                                    {Array.isArray(collectionmainlist) && collectionmainlist.map((x, y) => {
                                       return (
                                         <option
                                           key={y}

@@ -16,6 +16,8 @@ import {
 import {useSelector} from "react-redux";
 import {InfinitySpin} from "react-loader-spinner";
 import jsPDF from "jspdf";
+import { ClipLoader } from "react-spinners";
+import ErrorModal from "../../../Other Functions/popup";
 
 function AllReport() {
     const allStates = useSelector((state) => state);
@@ -53,6 +55,9 @@ function AllReport() {
     const [allProducts, setAllProducts] = useState([]);
     const [allPackets, setAllPackets] = useState([]);
     const [allBoxes, setAllBoxes] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false); // Modal visibility state
     const [formData, setFormData] = useState({
         Category: 1,
         ProductType: 0,
@@ -398,14 +403,17 @@ function AllReport() {
     ]);
     async function filterPackets() {
 
+        const today = new Date();
+const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY-MM-DD'
+
         const payload = {
             CategoryId: Number(formData.Category),
             ProductId: Number(formData.ProductType),
             Design: formData.Design,
             PurityId: formData.Purity,
             ClientCode: clientCode,
-            FromDate: "2024-09-06",
-            ToDate: "2024-09-06",
+            FromDate: formattedDate,
+            ToDate: formattedDate,
         };
         await fetch(selectedTab === 6 ? a241 : a242, {
             method: "POST",
@@ -541,6 +549,7 @@ function AllReport() {
     };
 
     useEffect(() => {
+        setLoading(true)
         if (selectedTab == 0) {
             fetchDefaultCategoryReport()
         }
@@ -562,6 +571,7 @@ function AllReport() {
         if (selectedTab == 6 || selectedTab == 7) {
             filterPackets();
         }
+        setLoading(false)
     }, [selectedTab]);
 
     const handleTabChange = (event, newValue) => {
@@ -1195,6 +1205,30 @@ function AllReport() {
     return (
         <>
             <AdminHeading/>
+
+
+            {loading ? (
+        // Show spinner while loading
+        <div className="spinner-container">
+          <ClipLoader size={50} color={"#123abc"} loading={loading} />
+          <p>Loading data...</p>
+        </div>
+      ) : (
+
+            <div>
+
+            <ErrorModal
+            isOpen={showModal}
+            onRequestClose={() => {
+              setShowModal(false); // Close the modal
+              navigate("/adminhome"); // Redirect to /adminhome
+            }}
+            onReload={null} // Pass reload function
+            message={errorMessage}
+          />
+
+
+
             <Box className="adminMainBodyBox">
                 <AdminBreadCrump
                     title={"Stock Transfer History"}
@@ -1610,7 +1644,7 @@ function AllReport() {
                                             setCurrentPage(1);
                                         }}
                                     >
-                                        <option value="">Select Design</option>
+                                        <option value="">Select Designnn</option>
                                         {filteredCollection.map((x) => {
                                             return (
                                                 <option value={`${x.DesignName}`}>
@@ -1909,7 +1943,7 @@ function AllReport() {
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.CategoryName}</TableCell>
                                             <TableCell align="center">{item.ProductName}</TableCell>
-                                            <TableCell align="center">{item.DesignName}</TableCell>
+                                            <TableCell align="center">{item.Design}</TableCell>
                                             <TableCell align="center">{item.SKU}</TableCell>
                                             <TableCell align="center">{item.ItemCode}</TableCell>
                                             <TableCell align="center">{item.RFIDCode}</TableCell>
@@ -1958,6 +1992,9 @@ function AllReport() {
                     }
                 </Box>
             </Box>
+            </div>
+
+        )}
         </>
     )
 }
