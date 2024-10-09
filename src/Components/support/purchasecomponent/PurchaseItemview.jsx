@@ -24,7 +24,8 @@ export default function AdminPurchseitemview({
   setConvertAmount,
   setFinePure,
   setSelectedSkuName,
-  selectedSkuName
+  selectedSkuName,
+  setIsitemedit
 }) {
 
 
@@ -116,6 +117,7 @@ export default function AdminPurchseitemview({
                                         x.DiamondSettingType
                                       ),
                                     });
+                                    setIsitemedit(false)
                                     setActive("Purchase");
                                     console.log("Active state is now Purchase");
                                       setConvertAmount(x.ConvertAmount);

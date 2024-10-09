@@ -128,6 +128,7 @@ export default function AdminPurchaseEntry() {
   const [userEditedFields, setUserEditedFields] = useState({});
   const [issubmit, setIssubmit] = useState(false);
   const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [isitemedit, setIsitemedit] = useState(true);
 
   const getTodaysDateInHTMLFormat = () => {
     const today = new Date();
@@ -459,6 +460,7 @@ export default function AdminPurchaseEntry() {
   useEffect(() => {
     console.log(selectedSku, " checking selectedsku");
 
+    if(isitemedit){
     if (selectedSku && selectedSkuName) {
       
       // setAllStonesList(selectedSku.SKUStoneMain);
@@ -681,7 +683,9 @@ export default function AdminPurchaseEntry() {
       });
     }
     setIscal(true);
-  }, [selectedSku, selectedSkuName]);
+  }
+    
+  }, [selectedSku, selectedSkuName, isitemedit]);
 
   // console.log(allPurities, "allPurities");
 
@@ -2393,6 +2397,7 @@ export default function AdminPurchaseEntry() {
 
   const addPurchaseProductToList = (selectedProduct) => {
     setAllSelectedProducts((prevItems) => [...prevItems, selectedProduct]);
+    // setIsitemedit(false);
     resetproduct()
   };
 
@@ -2486,6 +2491,7 @@ export default function AdminPurchaseEntry() {
     console.log("here");
     setConvertAmount(false);
     setFinePure(false);
+    setIsitemedit(true)
     // setSelectedSkuName("");
     // setSelectedSku([]);
 
@@ -3304,6 +3310,7 @@ export default function AdminPurchaseEntry() {
                     setFinePure={setFinePure}
                     setSelectedSkuName={setSelectedSkuName}
                     selectedSkuName={selectedSkuName}
+                    setIsitemedit= {setIsitemedit}
                   />
                 ) : active === "Purchase" ? (
                   <div className="adminPurchaseInvoiceAddProductsOptionsMainPurchaseBox">
