@@ -21,6 +21,8 @@ import {
 import {useSelector} from "react-redux";
 import {RiListUnordered, RiPlayListAddLine} from "react-icons/ri";
 import AlertMessage from "../../../Other Functions/AlertMessage";
+import GetApiService from "../../../Api/getapiService.jsx"
+import Stonetounch from "../../../support/customertounchsupport/stones.jsx"
 
 export default function AdminVendorTounche() {
     const [active, setActive] = useState("List");
@@ -60,6 +62,7 @@ export default function AdminVendorTounche() {
         EmployeeId: 0,
         OldEntry: false,
         DiamondSizeWeightRateTemplateId: 0,
+        Stones:[]
     });
     const [allCompaniesList, setAllCompaniesList] = useState([]);
     const [allBranchesList, setAllBranchesList] = useState([]);
@@ -67,6 +70,7 @@ export default function AdminVendorTounche() {
     const [allRolesList, setAllRolesList] = useState([]);
     const [allSelectedTounche, setAllSelectedTounche] = useState([]);
     const [allSelected, setAllSelected] = useState(false);
+    const [showSKU, setShowSKU] = useState(true);
 
     const allStates = useSelector((state) => state);
     const adminLoggedIn = allStates.reducer1;
@@ -77,10 +81,92 @@ export default function AdminVendorTounche() {
     const BranchId = adminLoggedIn.BranchId;
     const CounterId = adminLoggedIn.CounterId;
     const EmployeeId = adminLoggedIn.EmployeeId;
+    const [allStonesList, setAllStonesList] = useState([]);
 
     useEffect(() => {
         window.scroll(0, 0);
     }, []);
+
+
+    const apiService = new GetApiService(clientCode);
+
+    const loadData = async () => {
+        setLoading(true);
+        try {
+          const apiCalls = [
+            
+            apiService.fetchAllStonesList()
+            
+          ];
+    
+          const results = await Promise.allSettled(apiCalls);
+    
+          results.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+              // Handle successful response
+              switch (index) {
+                case 0:
+                 
+                const fetchedStones = result.value;
+
+                // Convert the fetched stones to the required structure
+                const formattedStones = fetchedStones.map(stone => ({
+                  CustomerId: 0,  // Keep CustomerId as 0
+                  VendorId: 0,    // Keep VendorId as 0 for now, will change later
+                  StoneId: stone.Id,
+                  StoneName: stone.StoneName,
+                  StoneWeight: stone.StoneWeight,
+                  StonePieces: stone.StonePieces,
+                  StoneRate: stone.StoneRate,
+                  StoneAmount: stone.StoneAmount,
+                  StoneLessPercent: stone.StoneLessPercent
+                }));
+    
+                console.log('Converted stones:', formattedStones);
+    
+                // Set the new category with the converted stones
+                setNewCategory(prevCategory => ({
+                  ...prevCategory,
+                  Stones: formattedStones,  // Set the converted stones here
+                }));
+    
+                setAllStonesList(formattedStones);
+
+
+
+                  break;
+                
+                default:
+                  break;
+              }
+            } else {
+              if (index + 1 > 1) {
+                console.error(
+                  `Error loading data for API ${index + 1}:`,
+                  result.reason
+                );
+                // handleError(
+                //   `Failed to load data for API ${index + 1}: ${result.reason}`
+                // );
+              }
+            }
+          });
+        } catch (error) {
+          console.error("Error loading data:", error);
+        //   handleError("Error loading data. Please try again later.");
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        loadData();
+      }, [clientCode]);
+    
+
+
+
+
 
     const fetchAllCategory = async () => {
         const formData = {
@@ -397,6 +483,10 @@ export default function AdminVendorTounche() {
             DiamondSizeWeightRateTemplateId: parseInt(
                 newCategory.DiamondSizeWeightRateTemplateId
             ),
+            Stones: newCategory.Stones.map((stone) => ({
+            ...stone,
+            VendorId: parseInt(newCategory.VendorId) // Update VendorId for each stone
+        })),
             ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
         };
         let newArray = allSelectedTounche
@@ -423,6 +513,10 @@ export default function AdminVendorTounche() {
                     DiamondSizeWeightRateTemplateId: parseInt(
                         newCategory.DiamondSizeWeightRateTemplateId
                     ),
+                    Stones: newCategory.Stones.map((stone) => ({
+                        ...stone,
+                        VendorId: parseInt(newCategory.VendorId), // Set VendorId for each stone
+                    })),
                 };
             });
 
@@ -463,6 +557,7 @@ export default function AdminVendorTounche() {
                 FinePure: false,
                 OldEntry: false,
                 DiamondSizeWeightRateTemplateId: 0,
+                Stones:[]
             });
             if (data.message) {
                 // alert(data.message);
@@ -605,6 +700,18 @@ export default function AdminVendorTounche() {
         const matchedObject = templateData?.find((item) => item?.templateID === e);
         return matchedObject ? matchedObject.templateName : null;
     };
+
+    const handleAmountChange = (index, newRate) => {
+        // Update the stone rate at the specified index
+        setNewCategory((prevCategory) => {
+          const updatedStones = [...prevCategory.Stones];
+          updatedStones[index].StoneRate = newRate;
+          return {
+            ...prevCategory,
+            Stones: updatedStones,
+          };
+        });
+      };
 
     return (
         <div>
@@ -893,6 +1000,24 @@ export default function AdminVendorTounche() {
                                         })}
                                     </select>
                                 </div>
+
+                                <div style={{ marginTop: "20px" }}>
+    <button 
+        type="button"  // Add this
+        style={{ marginRight: "10px" }} 
+        onClick={() => { setShowSKU(true); }}
+    >
+        SKU
+    </button>
+    <button 
+        type="button"  // Add this
+        onClick={() => { setShowSKU(false); }}
+    >
+        Stones
+    </button>
+</div>
+{showSKU ? (
+
                                 <div
                                     style={{
                                         overflowX: "auto",
@@ -1021,6 +1146,15 @@ export default function AdminVendorTounche() {
                                         </tbody>
                                     </table>
                                 </div>
+                            ): (
+                // Render alternate UI here
+                <div>
+                <Stonetounch stones={newCategory.Stones} onAmountChange={handleAmountChange} />
+                </div>
+            )
+}
+
+
                                 {!loading ? <button type="submit">Submit</button> : null}
                             </form>
                         </div>

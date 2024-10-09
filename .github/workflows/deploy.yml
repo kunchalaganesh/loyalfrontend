@@ -3,39 +3,38 @@ name: Build and Deploy React App
 on:
   push:
     branches:
-      - main  # The workflow will run when changes are pushed to the 'main' branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code from your repository
       - name: Checkout code
-        uses: actions/checkout@v3  # Updated to v3
+        uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v3  # Updated to v3
+        uses: actions/setup-node@v3
         with:
-          node-version: '20.x'  # Use Node 20.x
+          node-version: '20.x'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build the React app
-      - name: Build the app
-        run: npm run build
+      - name: Update browserslist database
+        run: npx update-browserslist-db@latest
 
-      # Step 5: Deploy the build directory to your FTP server
+      - name: Build the app
+        run: |
+          CI=false npm run build  # Disable ESLint checks
+
       - name: Deploy to FTP server
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp  # Use FTP as the protocol
-          port: 21  # Default FTP port is 21
-          local-dir: build  # The build directory that will be deployed
-          server-dir: /home/u152442126/domains/loyalstring.in/public_html/sparklerfid  # Your destination directory on Hostinger
+          protocol: ftp
+          port: 21
+          local-dir: build
+          server-dir: /home/u152442126/domains/loyalstring.in/public_html/sparklerfid

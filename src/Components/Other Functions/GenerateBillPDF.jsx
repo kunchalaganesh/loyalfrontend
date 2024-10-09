@@ -6,13 +6,14 @@ import autoTable from 'jspdf-autotable';
 
 export const generateBillPDF =(invoiceItems,csData, invoiceformate, mainitem)=>{
 
-console.log('labelformatee ',invoiceformate )
+console.log('labelformatee ',invoiceItems )
 
 
   if(invoiceformate === 6){
-    generateinvoicepdf6(invoiceItems,csData, mainitem)
+    generateinvoicepdf7(invoiceItems,csData, mainitem)
     return
-  }else{
+  }else if(invoiceformate === 7) {
+    generateinvoicepdf6(invoiceItems,csData, mainitem)
     return;
   }
 
@@ -404,7 +405,303 @@ doc.text('Authorised Signatory', fotertotalx, fotertotaly + 80);
     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
   );
 
+
 }
+
+
+
+const generateinvoicepdf7 = (items, customer, mainitem)=>{
+
+
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
+
+  // Draw a horizontal line
+  doc.line(0, 35, 210, 35); // From (10, 50) to (200, 50)
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(0, 0, 0);
+  doc.text("GOLD SALE", 90, 43);
+
+  // First column data
+  const firstColumn = [
+    { label: "Name", value: "" },
+    { label: "Address", value: "" },
+    { label: "Mobile", value: "" },
+    { label: "Pan/Adhar", value: "" },
+  ];
+
+  // Second column data
+  const secondColumn = [
+    { label: "Invoice No:", value: "" },
+    { label: "Date:", value: "" },
+    { label: "GSTIN No:", value: "" },
+    { label: "GSTIN Type:", value: "" },
+  ];
+
+  // Set table starting position and dimensions
+  const startX = 5;
+  const startY = 45;
+  const cellWidth = 80;
+  const cellHeight = 10;
+
+  doc.setLineWidth(0.3);
+  doc.rect(startX, startY, 200, 40);
+
+  // Define custom widths for each column
+  const columnWidths = {
+    Item: 18.18,
+    "HSN": 10.18,
+    "Purity": 15.18,
+    "Qty": 15.18,
+    "Gr wt": 18.18,
+    "Stone wt": 23.18,
+    "Net wt": 18.18,
+    "St amt": 18.18,
+    "Rate/gm": 18.18,
+    "Making/gm": 21.18,
+    Amount: 24.18,
+  };
+
+  const columnArray = [
+    "Item",
+    "HSN",
+    "Purity",
+    "Qty",
+    "Gr wt",
+    "Stone wt",
+    "Net wt",
+    "St amt",
+    "Rate/gm",
+    "Making/gm",
+    "Amount",
+  ];
+
+  // Calculate the starting X position for each column
+  let currentX = 5;
+  const tableWidth = 200; // Total width for the table
+
+  // Draw the table header and vertical lines, and center the text in each column
+  columnArray.forEach((title, index) => {
+    const columnWidth = columnWidths[title] || 20; // Default to 20mm if not specified
+
+    // Calculate the position to center the text in the column
+    // const textX = currentX + columnWidth / 2 - doc.getTextWidth(title) / 2;
+
+    const textX = currentX + 1;
+    const cellY = 90; // Adjusted Y position to place text within the cell
+
+    // Draw the centered text inside the cells
+    doc.setFontSize(11);
+    doc.setFont("sanserif", "bold");
+    doc.text(title, textX, cellY); // Centered text in the cell
+
+    // Draw the vertical line for each column
+    if (index !== 0) {
+      doc.line(currentX, 85, currentX, 170); // Vertical line from header to the bottom of the table
+    }
+
+    currentX += columnWidth; // Move to the next column position
+  });
+
+  // Draw the bottom line of the header row
+  doc.rect(5, 85, tableWidth, 10); // Header bottom line
+
+  // Body (you can add data here as needed)
+  firstColumn.forEach((row, index) => {
+    const ypos = startY + (index + 0.7) * cellHeight;
+
+    doc.setFontSize(10);
+    doc.setFont("sanserif", "bold");
+    doc.text(`${row.label} :`, startX + 2, ypos);
+    doc.text(row.value, startX + cellWidth / 2, ypos); // Centered within the first column
+  });
+
+  secondColumn.forEach((row, index) => {
+    const ypos = startY + (index + 0.7) * cellHeight;
+
+    doc.setFontSize(10);
+    doc.setFont("sanserif", "bold");
+    doc.text(`${row.label} `, 60 + cellWidth + 2, ypos); // Left padding of 2 in the second column
+    doc.text(row.value, startX + (cellWidth * 4) / 2, ypos); // Centered within the second column
+  });
+
+  // Draw the outer table border (adjust height to fit the table content)
+  doc.rect(5, 85, tableWidth, 85);
+
+  const overallStatsTable = ["Item", "Net wt", "Gross wt", "Amount"];
+
+  let currentX2 = 5;
+  const tableWidth2 = 100;
+
+  const ColumnCount = overallStatsTable.length;
+  const ColumnWidth = tableWidth2 / ColumnCount;
+
+  // Draw the table header and vertical lines, and center the text in each column
+  overallStatsTable.forEach((title, index) => {
+    const textX = currentX2 + ColumnWidth / 2 - doc.getTextWidth(title) / 2;
+    const cellY = 180; // Starting Y position for the table header
+
+    // Draw the centered text inside the cells
+    doc.setFontSize(10);
+    doc.text(title, textX, cellY); // Centered text in the cell
+
+    // // Draw vertical lines for the columns
+    if (index !== 0) {
+      doc.line(currentX2, 175, currentX2, 195); // Vertical line from header to bottom
+    }
+
+    // Move to the next column position
+    currentX2 += ColumnWidth;
+  });
+
+  // Draw the outer border of the table (header + empty cells)
+  doc.rect(5, 175, tableWidth2, 10 + cellHeight); // Table outer border
+
+  // Draw the horizontal line between the header row and the empty cells for values
+  doc.line(5, 177 + 10, 5 + tableWidth2, 177 + 10);
+
+  //draw cash table
+  doc.setFont("sanserif", "bold");
+
+  // Now create a second section with two columns: "Cash" and its amount
+  const cashSectionX = 5; // Starting X position for the cash section
+  const cashSectionY = 199;
+  const cashCellWidth = 50; // Width of each column for the cash table
+
+  // Draw the "Cash" label cell
+  doc.setFontSize(10);
+  doc.setFont("sanserif", "bold");
+  doc.text(
+    "Cash",
+    cashSectionX + cashCellWidth / 2 - doc.getTextWidth("Cash") / 2,
+    cashSectionY + 7
+  ); // Center text in the first column
+
+  // Draw the "Cash" amount cell
+  doc.text(
+    "",
+    cashSectionX +
+      cashCellWidth +
+      cashCellWidth / 2 -
+      doc.getTextWidth("1000") / 2,
+    cashSectionY + 7
+  ); // Center text in the second column
+
+  // Draw the outer border of the cash and amount cells
+  doc.rect(cashSectionX, cashSectionY, cashCellWidth, 10); // Border for "Cash" label
+  doc.rect(cashSectionX + cashCellWidth, cashSectionY, cashCellWidth, 10); // Border for the amount
+
+  //detailed table
+
+ // First column labels for gross amount, taxes, and discounts
+const leftColumn = [
+{ label: "Gross Amount", value: "" },
+{ label: "CGST 1.5%", value: "" },
+{ label: "SGST 1.5%", value: "" },
+{ label: "IGST 3%", value: "" },
+{ label: "Hallmarking Amount", value: "" },
+{ label: "Purchase Amount (-)", value: "" },
+{ label: "RO/Discount (-)", value: "" },
+{ label: "Net Amount", value: "" },
+];
+
+// Dummy values for the right column
+const rightColumnValues = ["", "", "", "", "", "", "", ""];
+
+// Set table starting position and dimensions
+const startX4 = 135; // Starting X position for the table
+const startY4 = 175; // Starting Y position for the table
+const tableWidth4 = 70; // Table width
+const tableHeight4 = 80; // Table height (adjust based on number of rows)
+const cellHeight4 = 10; // Height for each cell row
+const verticalLineX = startX4 + tableWidth4 / 2; // X position for the center vertical line
+
+doc.setLineWidth(0.3);
+doc.rect(startX4, startY4, tableWidth4, tableHeight4); // Outer table border
+
+// Draw vertical line at the center
+doc.line(verticalLineX, startY4, verticalLineX, startY4 + tableHeight4); // Vertical line splitting the table
+
+// Fill in the left column labels and right column dummy values
+leftColumn.forEach((row, index) => {
+const ypos = startY4 + (index + 1) * cellHeight4 - 3; // Y position for the text
+
+// Draw left side labels
+doc.setFontSize(10);
+doc.setFont("sanserif", "bold");
+doc.text(`${row.label}`, startX4 + 2, ypos);
+
+// Draw right side dummy values
+const rightValue = rightColumnValues[index];
+doc.setFont("sanserif", "normal");
+doc.text(`${rightValue}`, verticalLineX + 2, ypos); // Right side column values
+
+// Draw horizontal line after each cell
+doc.line(startX4, ypos + 3, startX4 + tableWidth4, ypos + 3); // Horizontal line across the row
+});
+
+
+  
+ 
+  
+
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(10);
+  doc.text("Billng By - Admin", 100, 220);
+
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(10);
+  doc.text(
+    "note:- we declare that this invoice shows actual price of the good described ",
+    5,
+    240
+  );
+
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(10);
+  doc.text("and that all particulars are true and correct", 5, 245);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("Customer Sign", 10, 285);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("(Saturday Closed )", 70, 285);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("Thank You !", 70, 290);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("For Mundlik Jewellers", 150, 285);
+
+  // Generate the PDF and open it in a new window
+  // const pdfData = doc.output("datauristring");
+  // const newWindow = window.open();
+  // newWindow.document.write(
+  //   <iframe width='100%' height='100%' src='${pdfData}'></iframe>
+  // );
+
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+
+
+}
+
+
+
+
+
 
 const generateinvoicepdf12 =(items, customer)=>{
 

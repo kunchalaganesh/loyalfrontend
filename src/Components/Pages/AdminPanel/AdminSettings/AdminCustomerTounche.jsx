@@ -64,6 +64,7 @@ export default function AdminCustomerTounche() {
         EmployeeId: 0,
         OldEntry: false,
         DiamondSizeWeightRateTemplateId: 0,
+        Stones:[]
     });
     const [allCompaniesList, setAllCompaniesList] = useState([]);
     const [allBranchesList, setAllBranchesList] = useState([]);
@@ -438,14 +439,15 @@ export default function AdminCustomerTounche() {
     };
 
     const handleAmountChange = (index, newAmount) => {
-        const updatedStones = [...allStonesList];
+        const updatedStones = [...newCategory.Stones];
         updatedStones[index].StoneRate = newAmount;
-        setAllStonesList(updatedStones);
+
+        setNewCategory((prev) => ({ ...prev, Stones: updatedStones }));
     };
 
 
 
-    const addNewCategoryold = async (e) => {
+    const addNewCategory = async (e) => {
         e.preventDefault();
         setLoading(true);
         const formData = {
@@ -466,6 +468,7 @@ export default function AdminCustomerTounche() {
             BranchId: BranchId ? BranchId : 0,
             EmployeeId: EmployeeId ? EmployeeId : 0,
             DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
+
             ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
         };
         let newArray = allSelectedTounche.filter(
@@ -494,6 +497,8 @@ export default function AdminCustomerTounche() {
         });
         // const newArrayData = [...newArray, formData];
         const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
+        
+        
         console.log(newArrayData, "rkjhjigh hemnfadjkfyhadi mafbahidgfhe f")
         try {
             const response = await fetch(
@@ -531,6 +536,7 @@ export default function AdminCustomerTounche() {
                 EmployeeId: 0,
                 OldEntry: false,
                 DiamondSizeWeightRateTemplateId: 0,
+                Stones: []
             });
             if (data.message) {
                 setMessageType("error");
@@ -549,7 +555,7 @@ export default function AdminCustomerTounche() {
     };
 
 
-    const addNewCategory = async (e) => {
+    const addNewCategoryold1 = async (e) => {
         e.preventDefault();
         setLoading(true);
     
@@ -576,26 +582,28 @@ export default function AdminCustomerTounche() {
         };
     
         // Prepare the StockKeepingUnit array based on the filtered data
-        let newArray = allSelectedTounche
-            .filter(x => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
-            .map(item => ({
-                ...item,
-                FinePure: newCategory.FinePure,
-                CategoryId: parseInt(newCategory.CategoryId),
-                ProductId: parseInt(newCategory.ProductId),
-                ClientCode: clientCode,
-                PurityId: parseInt(newCategory.PurityId),
-                MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
-                MakingPerGram: `${newCategory.MakingPerGram}`,
-                MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
-                MakingPercentage: `${newCategory.MakingPercentage}`,
-                StockKeepingUnit: item.StockKeepingUnit,
-                CompanyId: CompanyId ? CompanyId : 0,
-                CounterId: CounterId ? CounterId : 0,
-                BranchId: BranchId ? BranchId : 0,
-                EmployeeId: EmployeeId ? EmployeeId : 0,
-                DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
-            }));
+        // let newArray = allSelectedTounche
+        //     .filter(x => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
+        //     .map(item => ({
+        //         ...item,
+        //         FinePure: newCategory.FinePure,
+        //         CategoryId: parseInt(newCategory.CategoryId),
+        //         ProductId: parseInt(newCategory.ProductId),
+        //         ClientCode: clientCode,
+        //         PurityId: parseInt(newCategory.PurityId),
+        //         MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
+        //         MakingPerGram: `${newCategory.MakingPerGram}`,
+        //         MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
+        //         MakingPercentage: `${newCategory.MakingPercentage}`,
+        //         StockKeepingUnit: item.StockKeepingUnit,
+        //         CompanyId: CompanyId ? CompanyId : 0,
+        //         CounterId: CounterId ? CounterId : 0,
+        //         BranchId: BranchId ? BranchId : 0,
+        //         EmployeeId: EmployeeId ? EmployeeId : 0,
+        //         DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
+        //     }));
+
+        let newArray = newCategory.Stones;
     
         // Merge formData into newArray, fallback to formData if no newArray items
         const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
@@ -673,6 +681,7 @@ export default function AdminCustomerTounche() {
                 EmployeeId: 0,
                 OldEntry: false,
                 DiamondSizeWeightRateTemplateId: 0,
+                Stones: []
             });
     
             setLoading(false);
@@ -898,6 +907,7 @@ export default function AdminCustomerTounche() {
                                         EmployeeId: 0,
                                         OldEntry: false,
                                         DiamondSizeWeightRateTemplateId: 0,
+                                        Stones:[]
                                     });
                                 }}
                                 className={
@@ -1350,7 +1360,7 @@ export default function AdminCustomerTounche() {
 ): (
                 // Render alternate UI here
                 <div>
-                <Stonetounch stones={allStonesList} onAmountChange={handleAmountChange} />
+                <Stonetounch stones={newCategory.Stones} onAmountChange={handleAmountChange} />
                 </div>
             )
 }

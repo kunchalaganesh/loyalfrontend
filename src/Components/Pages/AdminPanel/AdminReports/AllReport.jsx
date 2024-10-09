@@ -1644,7 +1644,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                             setCurrentPage(1);
                                         }}
                                     >
-                                        <option value="">Select Designnn</option>
+                                        <option value="">Select Design</option>
                                         {filteredCollection.map((x) => {
                                             return (
                                                 <option value={`${x.DesignName}`}>
@@ -1877,7 +1877,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.SKU}</TableCell>
                                             <TableCell align="center">{item.ItemName}</TableCell>
-                                            <TableCell align="center">-</TableCell>
+                                            <TableCell align="center">{item.Quantity}</TableCell>
                                             <TableCell align="center">{item.TotalWeight}</TableCell>
                                             <TableCell align="center">{item.PackingWeight}</TableCell>
                                             <TableCell align="center">{item.GrossWeight}</TableCell>
@@ -1934,7 +1934,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                             <TableCell
                                                 align="center">{item.TotalStoneWeight}</TableCell>
                                             <TableCell
-                                                align="center">-</TableCell>
+                                                align="center">{item.TotalPlaneWeight}</TableCell>
                                         </TableRow>
                                     )))
                                 } {

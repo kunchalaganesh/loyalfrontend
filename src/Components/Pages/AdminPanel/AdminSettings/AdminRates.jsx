@@ -9,7 +9,8 @@ import moment from "moment";
 import {Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@mui/material";
 import AlertMessage from "../../../Other Functions/AlertMessage";
 
-export default function AdminRates() {
+export default function 
+AdminRates() {
     const [inputValues, setInputValues] = useState({});
     const [active, setActive] = useState("List");
     const [purityData, setPurityData] = useState([]);
