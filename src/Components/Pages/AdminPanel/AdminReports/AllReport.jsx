@@ -1824,7 +1824,8 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                         <TableCell sx={{fontWeight: "600"}} align="center">MRP</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">packet name</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">box name</TableCell>
-                                        <TableCell sx={{fontWeight: "600"}} align="center">branch name</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Vendor name</TableCell>
+                                        {/* <TableCell sx={{fontWeight: "600"}} align="center">branch name</TableCell> */}
                                     </TableRow>}
                                     {(selectedTab == 6 || selectedTab == 7) &&
                                     <TableRow>
@@ -1943,7 +1944,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center">{item.CategoryName}</TableCell>
                                             <TableCell align="center">{item.ProductName}</TableCell>
-                                            <TableCell align="center">{item.Design}</TableCell>
+                                            <TableCell align="center">{item.DesignName}</TableCell>
                                             <TableCell align="center">{item.SKU}</TableCell>
                                             <TableCell align="center">{item.ItemCode}</TableCell>
                                             <TableCell align="center">{item.RFIDCode}</TableCell>
@@ -1954,7 +1955,9 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                             <TableCell align="center">{item.MRP}</TableCell>
                                             <TableCell align="center">{item.PacketName}</TableCell>
                                             <TableCell align="center">{item.BoxName}</TableCell>
-                                            <TableCell align="center">{item.BranchName}</TableCell>
+                                            <TableCell align="center">{item.VendorName}</TableCell>
+                                            
+                                            {/* <TableCell align="center">{item.BranchName}</TableCell> */}
                                         </TableRow>
                                     )))
                                 }
