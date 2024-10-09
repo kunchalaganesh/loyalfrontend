@@ -182,6 +182,7 @@ export default function AdminVendorTounche() {
         const data = await response.json();
         try {
             if (data.length > 0) {
+                console.log('check mainitems ', data)
                 setAllCategories(data);
             } else {
                 setActive("addNew");
@@ -523,7 +524,7 @@ export default function AdminVendorTounche() {
         const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
         try {
             const response = await fetch(
-                !newCategory.OldEntry ? a179 : a180,
+                !newCategory.OldEntry ? a179 : a179, // update a180 add a179
                 // a96,
                 {
                     method: "POST",
@@ -584,7 +585,58 @@ export default function AdminVendorTounche() {
 
     const handleEditData = (data) => {
         console.log(data, "editData");
-        setNewCategory({...data, OldEntry: true});
+        
+    // Create a Set to keep track of existing StoneIds in data.Stones
+    const existingStoneIds = new Set(data.Stones.map(stone => stone.StoneId));
+
+    // Create a Set to keep track of StoneIds already added from allStonesList
+    const addedStoneIds = new Set();
+
+    // Loop through allStonesList and check for duplicates
+    allStonesList.forEach(item => {
+        // Check if the item already exists in data.Stones based on StoneId
+        if (!existingStoneIds.has(item.StoneId) && !addedStoneIds.has(item.StoneId)) {
+            const newStone = {
+                CustomerId: 0,               // Keep CustomerId as 0
+                VendorId: 0,                 // Keep VendorId as 0 for now
+                StoneId: item.StoneId,
+                StoneName: item.StoneName,
+                StoneWeight: item.StoneWeight,
+                StonePieces: item.StonePieces,
+                StoneRate: item.StoneRate,
+                StoneAmount: item.StoneAmount,
+                StoneLessPercent: item.StoneLessPercent
+            };
+
+            // Add the new stone to data.Stones
+            data.Stones.push(newStone);
+
+            // Add StoneId to addedStoneIds to prevent future duplicates in this iteration
+            addedStoneIds.add(item.StoneId);
+        }
+    });
+
+    console.log('Updated Stones:', data.Stones); // Log the updated stones
+
+    // Update data with the new Stones array and set the new category
+    setNewCategory({
+        ...data,
+        Stones: data.Stones, // Use the updated stones
+        OldEntry: true
+        // Add other properties here as needed
+    });
+
+
+    // console.log('checking stones  ',updatedStones )
+    // // Update data with the new Stones array and set the new category
+    // setNewCategory({
+    //     ...data,
+    //     Stones: updatedStones,
+    //     OldEntry: true
+    // });
+
+
+        // setNewCategory({...data, OldEntry: true});
         setActive("AddNew");
     };
 

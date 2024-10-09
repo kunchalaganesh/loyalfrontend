@@ -21,6 +21,7 @@ export default function AdminPanelLogin() {
   const [currentStep, setCurrentStep] = useState(1);
   const [otpInput, setOtpInput] = useState("");
   const [otpRcvd, setOtpRcvd] = useState("");
+  const [ldata, setLdata] = useState('');
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -71,6 +72,7 @@ export default function AdminPanelLogin() {
   } else isAuthenticated = false;
 
   const handleLogin = async (e) => {
+    isAuthenticated = false;
     e.preventDefault();
     const formData = {
       Username: username,
@@ -98,13 +100,15 @@ export default function AdminPanelLogin() {
           // if(!data.Employee.Clients.EmailForOTP){
           //   alert("Email for otp not there");
           // }else{
-          // setCurrentStep(2);
-          // handleSendOtp(data.Employee.Clients.EmailForOTP);
+          setCurrentStep(2);
+          handleSendOtp(data.Employee.Clients.EmailForOTP);
+          setLdata(data)
           // }
           // }
           // setPlayVideo(true);
-          loggedIn(data.Employee);
-          navigate("/adminhome");
+          // herecommented?
+          // loggedIn(data.Employee);
+          // navigate("/adminhome");
         }
       }
     } catch (error) {
@@ -159,7 +163,8 @@ export default function AdminPanelLogin() {
   const handleEmployeeValid = () => {
     if (otpInput !== "" && otpRcvd !== "") {
       if (parseInt(otpInput) === parseInt(otpRcvd)) {
-        loggedIn(employeeDetails);
+        // loggedIn(employeeDetails);
+        loggedIn(ldata.Employee);
         navigate("/adminhome");
       } else {
         alert("Incorrect OTP");

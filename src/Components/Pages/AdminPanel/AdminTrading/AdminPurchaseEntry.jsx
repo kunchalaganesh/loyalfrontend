@@ -2247,7 +2247,7 @@ export default function AdminPurchaseEntry() {
 
   useEffect(() => {
     if (iscal) {
-      console.log("checking calculationsss", iscal);
+      console.log("checking calculationsss", purchaseProduct);
       const updatedProduct = ProductCalculator.calculateAll(
         purchaseProduct,
         allDiamondSizeWeightRate,
@@ -3326,6 +3326,7 @@ export default function AdminPurchaseEntry() {
                                 value={selectedSkuName}
                                 onInput={handleSkuInputChange}
                                 list="skuList"
+                                autoComplete="off"
                               />
                               <datalist id="skuList">
                                 {(selectedCustomer
