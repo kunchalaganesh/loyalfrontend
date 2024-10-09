@@ -37,4 +37,4 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: build/
-          server-dir: /home/u152442126/domains/loyalstring.in/public_html/sparklerfid
+          server-dir: /home/u152442126/domains/loyalstring.in/public_html/sparklerfid/
