@@ -1437,12 +1437,14 @@ export default function AdminPurchaseEntry() {
 
       if (!response.ok) {
         setIssubmit(false);
+        setIsitemedit(true)
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log("Success:", data);
       setIssubmit(false);
+      setIsitemedit(true)
       if (payments.length > 0) {
         addAllSelectedPayments(rcvdId);
       } else {
@@ -1452,6 +1454,7 @@ export default function AdminPurchaseEntry() {
         );
 
         GenerateRdPurchaseReceipt(orderResponse, rdPurchaseFormat);
+        setIsitemedit(true)
         // fetchPurchaseEntryForBill(rcvdId);
         resetAllFields();
       }
@@ -1889,6 +1892,7 @@ export default function AdminPurchaseEntry() {
 
         GenerateRdPurchaseReceipt(orderResponse, rdPurchaseFormat);
         // fetchPurchaseEntryForBill(rcvdId);
+        setIsitemedit(true)
         resetAllFields();
 
         window.scrollTo(0, 0);

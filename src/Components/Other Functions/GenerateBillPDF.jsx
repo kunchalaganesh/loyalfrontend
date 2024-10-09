@@ -1,49 +1,41 @@
-import {jsPDF} from "jspdf";
-import autoTable from 'jspdf-autotable';
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
+export const generateBillPDF = (
+  invoiceItems,
+  csData,
+  invoiceformate,
+  mainitem
+) => {
+  console.log("labelformatee ", invoiceItems);
 
-
-
-export const generateBillPDF =(invoiceItems,csData, invoiceformate, mainitem)=>{
-
-console.log('labelformatee ',invoiceItems )
-
-
-  if(invoiceformate === 1){
-    generateinvoicepdf1(invoiceItems,csData, mainitem)
-    return
-  }else if(invoiceformate === 2) {
-    generateinvoicepdf2(invoiceItems,csData, mainitem)
+  if (invoiceformate === 1) {
+    generateinvoicepdf1(invoiceItems, csData, mainitem);
+    return;
+  } else if (invoiceformate === 2) {
+    generateinvoicepdf2(invoiceItems, csData, mainitem);
+    return;
+  } else if (invoiceformate === 3) {
+    generateinvoicepdf3(invoiceItems, csData, mainitem);
+    return;
+  } else if (invoiceformate === 4) {
+    generateinvoicepdf4(invoiceItems, csData, mainitem);
+    return;
+  } else if (invoiceformate === 5) {
+    generateinvoicepdf5(invoiceItems, csData, mainitem);
+    return;
+  } else if (invoiceformate === 6) {
+    generateinvoicepdf6(invoiceItems, csData, mainitem);
+    return;
+  } else if (invoiceformate === 7) {
+    generateinvoicepdf7(invoiceItems, csData, mainitem);
     return;
   }
-  else if(invoiceformate === 3) {
-    generateinvoicepdf3(invoiceItems,csData, mainitem)
-    return;
-  }
-  else if(invoiceformate === 4) {
-    generateinvoicepdf4(invoiceItems,csData, mainitem)
-    return;
-  }
-  else if(invoiceformate === 5) {
-    generateinvoicepdf5(invoiceItems,csData, mainitem)
-    return;
-  }
-  else if(invoiceformate === 6) {
-    generateinvoicepdf6(invoiceItems,csData, mainitem)
-    return;
-  }
-  else if(invoiceformate === 7) {
-    generateinvoicepdf7(invoiceItems,csData, mainitem)
-    return;
-  }
-
-  
-
 
   const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
   });
 
   // GSTIN & Invoice Header
@@ -75,7 +67,7 @@ console.log('labelformatee ',invoiceItems )
   doc.text("Pcs", 54, 80); // Adjusted width
   doc.text("Purity", 64, 80);
   doc.text("Gross Wt", 84, 80); // Adjusted for text width
-  doc.text("Net Wt", 104, 80);  // Adjusted for text width
+  doc.text("Net Wt", 104, 80); // Adjusted for text width
   doc.text("Rate / gm", 124, 80); // Adjusted for text width
   doc.text("Amount", 144, 80);
   doc.text("Labour Rate", 164, 80); // Adjusted for header width
@@ -87,11 +79,11 @@ console.log('labelformatee ',invoiceItems )
   doc.line(10, 90, 200, 90); // Table header bottom line
 
   // Draw Column Separators
-  doc.line(10, 85, 10, 150);  // Left border, extended for half-page height
-  doc.line(20, 85, 20, 150);  // After Sr
-  doc.line(50, 85, 50, 150);  // After Product Details
-  doc.line(60, 85, 60, 150);  // After Pcs
-  doc.line(80, 85, 80, 150);  // After Purity
+  doc.line(10, 85, 10, 150); // Left border, extended for half-page height
+  doc.line(20, 85, 20, 150); // After Sr
+  doc.line(50, 85, 50, 150); // After Product Details
+  doc.line(60, 85, 60, 150); // After Pcs
+  doc.line(80, 85, 80, 150); // After Purity
   doc.line(100, 85, 100, 150); // After Gross Wt
   doc.line(120, 85, 120, 150); // After Net Wt
   doc.line(140, 85, 140, 150); // After Rate / gm
@@ -137,28 +129,46 @@ console.log('labelformatee ',invoiceItems )
   // Save the PDF
   // doc.save("invoice.pdf");
 
-
-    const pdfData = doc.output("datauristring");
+  const pdfData = doc.output("datauristring");
   const newWindow = window.open();
   newWindow.document.write(
     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
   );
-
-}
+};
 
 const generateDummyData = () => {
   const items = [];
   const productNames = [
-    "Gold Ring", "Diamond Necklace", "Silver Bracelet", 
-    "Platinum Earrings", "Emerald Pendant", "Ruby Brooch", 
-    "Sapphire Ring", "Topaz Necklace", "Aquamarine Bracelet", 
-    "Citrine Earrings", "Tanzanite Pendant", "Opal Brooch", 
-    "Peridot Ring", "Garnet Necklace", "Amethyst Bracelet", 
-    "Moonstone Earrings", "Lapis Lazuli Pendant", "Tourmaline Brooch", 
-    "Onyx Ring", "Jade Necklace", "Coral Bracelet", 
-    "Zircon Earrings", "Malachite Pendant", "Tiger's Eye Brooch", 
-    "Amber Ring", "Iolite Necklace", "Chrysoprase Bracelet", 
-    "Kyanite Earrings", "Spinel Pendant", "Alexandrite Brooch"
+    "Gold Ring",
+    "Diamond Necklace",
+    "Silver Bracelet",
+    "Platinum Earrings",
+    "Emerald Pendant",
+    "Ruby Brooch",
+    "Sapphire Ring",
+    "Topaz Necklace",
+    "Aquamarine Bracelet",
+    "Citrine Earrings",
+    "Tanzanite Pendant",
+    "Opal Brooch",
+    "Peridot Ring",
+    "Garnet Necklace",
+    "Amethyst Bracelet",
+    "Moonstone Earrings",
+    "Lapis Lazuli Pendant",
+    "Tourmaline Brooch",
+    "Onyx Ring",
+    "Jade Necklace",
+    "Coral Bracelet",
+    "Zircon Earrings",
+    "Malachite Pendant",
+    "Tiger's Eye Brooch",
+    "Amber Ring",
+    "Iolite Necklace",
+    "Chrysoprase Bracelet",
+    "Kyanite Earrings",
+    "Spinel Pendant",
+    "Alexandrite Brooch",
   ];
 
   for (let i = 0; i < 30; i++) {
@@ -172,7 +182,7 @@ const generateDummyData = () => {
 
     items.push({
       ProductName: productNames[productIndex],
-      Quantity: '1',
+      Quantity: "1",
       HSNCode: hsnCode,
       GrossWt: grossWt,
       NetWt: netWt,
@@ -184,35 +194,32 @@ const generateDummyData = () => {
   return items;
 };
 
-
-const generateinvoicepdf6 = (items, customer, mainitem)=>{
-
-  console.log('checking items', items)
-  console.log('checking customer', customer);
+const generateinvoicepdf6 = (items, customer, mainitem) => {
+  console.log("checking items", items);
+  console.log("checking customer", customer);
 
   const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
   });
   const dummyData = generateDummyData();
   const pageHeight = doc.internal.pageSize.height;
   const pageWidth = doc.internal.pageSize.width;
-  const marginTop = 85;
+  const marginTop = 80;
   const marginBottom = 40;
   const rowHeight = 10; // Initial row height
-  const tableHeight = 130; // Fixed table height
+  const tableHeight = 120; // Fixed table height
   let currentY = marginTop;
-  const invoicex = pageWidth-60;
+  const invoicex = pageWidth - 60;
   const invoicey = 60;
-  const customerx = pageWidth-200;
+  const customerx = pageWidth - 200;
   const customery = 60;
-  const fotertotalx = pageWidth-70;
-  const fotertotaly = 210;
+  const fotertotalx = pageWidth - 70;
+  const fotertotaly = 195;
 
-  const despx = pageWidth-70;
+  const despx = pageWidth - 70;
   const despy = 250;
-
 
   const invoicenumber = `${items[0].InvoiceId}`;
   const firstname = `${customer.FirstName}`;
@@ -220,18 +227,18 @@ const generateinvoicepdf6 = (items, customer, mainitem)=>{
   const mobile = `${customer.Mobile}`;
   const address = `${customer.CurrAddStreet} ${customer.CurrAddTown} ${customer.CurrAddState}`;
 
-  console.log('checkpagewidth  ', pageWidth)
+  console.log("checkpagewidth  ", pageWidth);
 
   // Define the column positions
   const columnPositions = {
-    sr: pageWidth-200,
-    productDetails: pageWidth-185,
+    sr: pageWidth - 200,
+    productDetails: pageWidth - 185,
     // pcs: pageWidth-150,
-    hsnCode: pageWidth-150,
-    purity: pageWidth-120,
-    price: pageWidth-90,
-    qty: pageWidth-60,
-    amount: pageWidth-40,
+    hsnCode: pageWidth - 150,
+    purity: pageWidth - 120,
+    price: pageWidth - 90,
+    qty: pageWidth - 60,
+    amount: pageWidth - 40,
   };
 
   // Draw the table structure dynamically
@@ -241,114 +248,152 @@ const generateinvoicepdf6 = (items, customer, mainitem)=>{
     Object.values(columnPositions).forEach((pos) => {
       doc.line(pos, marginTop, pos, marginTop + tableHeight); // Column separators
     });
-    doc.line(pageWidth - 10, marginTop, pageWidth - 10, marginTop + tableHeight); // Right border
+    doc.line(
+      pageWidth - 10,
+      marginTop,
+      pageWidth - 10,
+      marginTop + tableHeight
+    ); // Right border
   };
 
   const drawTableHeader = () => {
     doc.setFontSize(10);
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
     currentY += 5;
-    
+
     // Draw the header text
-    doc.text('Sr.', columnPositions.sr+2, currentY);
-    doc.text('Product Details', columnPositions.productDetails+2, currentY);
+    doc.text("Sr.", columnPositions.sr + 2, currentY);
+    doc.text("Product Details", columnPositions.productDetails + 2, currentY);
     // doc.text('Pcs', columnPositions.pcs+2, currentY);
-    doc.text('HSN Code', columnPositions.hsnCode+2, currentY);
-    doc.text('Purity', columnPositions.purity+2, currentY);
+    doc.text("HSN Code", columnPositions.hsnCode + 2, currentY);
+    doc.text("Purity", columnPositions.purity + 2, currentY);
     // doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
     // doc.text('Net Wt', columnPositions.netWt+2, currentY);
-    doc.text('Price', columnPositions.price+2, currentY);
-    doc.text('Qty', columnPositions.qty+2, currentY);
+    doc.text("Price", columnPositions.price + 2, currentY);
+    doc.text("Qty", columnPositions.qty + 2, currentY);
     // doc.text('Rate / gm', columnPositions.rate+2, currentY);
-    doc.text('Total', columnPositions.amount+2, currentY);
-    
+    doc.text("Total", columnPositions.amount + 2, currentY);
+
     currentY += 5;
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header bottom line
     currentY += 5;
 
-    doc.line(columnPositions.sr, marginTop + tableHeight, pageWidth - 10, marginTop + tableHeight); // Table header top line
+    doc.line(
+      columnPositions.sr,
+      marginTop + tableHeight,
+      pageWidth - 10,
+      marginTop + tableHeight
+    ); // Table header top line
   };
 
   const totalAmount = Number(mainitem.TotalAmount) || 0;
   const gstAmount = Number(mainitem.GST) || 0;
   const receivedAmount = Number(mainitem.ReceivedAmount) || 0;
-  
+
   // Calculate CGST, SGST, total invoice amount, and balance amount
   const cgst = (totalAmount * 1.5) / 100; // CGST @1.5%
   const total = totalAmount + gstAmount; // Total Invoice Amount
   const bal = total - receivedAmount; // Balance Amount
-  
+
   // Format amounts to two decimal places for better precision
   const formatAmount = (amount) => amount.toFixed(2);
-  
+
   const drawFooter = () => {
     // Taxable Amount
-    doc.text(`Taxable Amount : ${formatAmount(totalAmount)}`, fotertotalx, fotertotaly + 10);
-  
-    // CGST and SGST (assuming both are calculated similarly)
-    doc.text(`CGST @ 1.5% : ${formatAmount(cgst)}`, fotertotalx, fotertotaly + 15);
-    doc.text(`SGST @ 1.5% : ${formatAmount(cgst)}`, fotertotalx, fotertotaly + 20);
-  
-    // IGST (3% assumed)
-    doc.text(`IGST @ 3% : ${formatAmount(gstAmount)}`, fotertotalx, fotertotaly + 25);
-  
-    // Total Invoice Amount
-    doc.text(`Total Invoice Amount : ${formatAmount(total)}`, fotertotalx, fotertotaly + 30);
-  
-    // Amount Received
-    doc.text(`Amount Received : ${formatAmount(receivedAmount)}`, fotertotalx, fotertotaly + 35);
-  
-    // Balance Amount (Handle negative balance if any)
-    const balanceText = bal >= 0 ? formatAmount(bal) : `-${formatAmount(Math.abs(bal))}`;
-    doc.text(`Balance Amount : ${balanceText}`, fotertotalx, fotertotaly + 40);
+    doc.text(
+      `Taxable Amount : ${formatAmount(totalAmount)}`,
+      fotertotalx,
+      fotertotaly + 10
+    );
 
+    // CGST and SGST (assuming both are calculated similarly)
+    doc.text(
+      `CGST @ 1.5% : ${formatAmount(cgst)}`,
+      fotertotalx,
+      fotertotaly + 15
+    );
+    doc.text(
+      `SGST @ 1.5% : ${formatAmount(cgst)}`,
+      fotertotalx,
+      fotertotaly + 20
+    );
+
+    // IGST (3% assumed)
+    doc.text(
+      `IGST @ 3% : ${formatAmount(gstAmount)}`,
+      fotertotalx,
+      fotertotaly + 25
+    );
+
+    // Total Invoice Amount
+    doc.text(
+      `Total Invoice Amount : ${formatAmount(total)}`,
+      fotertotalx,
+      fotertotaly + 30
+    );
+
+    // Amount Received
+    doc.text(
+      `Amount Received : ${formatAmount(receivedAmount)}`,
+      fotertotalx,
+      fotertotaly + 35
+    );
+
+    // Balance Amount (Handle negative balance if any)
+    const balanceText =
+      bal >= 0 ? formatAmount(bal) : `-${formatAmount(Math.abs(bal))}`;
+    doc.text(`Balance Amount : ${balanceText}`, fotertotalx, fotertotaly + 40);
 
     const thankYouText = "Thank You For Your Business, God Bless Keep Buying";
     doc.setFontSize(20);
-    
+
     // Calculate the text width to center it
     const textWidth = doc.getTextWidth(thankYouText);
     const centerX = (pageWidth - textWidth) / 2; // Calculate the x position for center alignment
-    
+
     // Draw the centered text
     doc.text(thankYouText, centerX, fotertotaly + 50);
     doc.setFontSize(10);
-    doc.text('Declaration :', customerx, fotertotaly + 55);
-    const declarationText = "I declare that this invoice shows the actual price of the goods described and that all particulars are true and correct, I received ornament in good condition";
-const splitText = doc.splitTextToSize(declarationText, 80); // Adjust 180 to the width you want
-doc.setFontSize(12);
-doc.text(splitText, customerx, fotertotaly + 60);
+    doc.text("Declaration :", customerx, fotertotaly + 55);
+    const declarationText =
+      "I declare that this invoice shows the actual price of the goods described and that all particulars are true and correct, I received ornament in good condition";
+    const splitText = doc.splitTextToSize(declarationText, 80); // Adjust 180 to the width you want
+    doc.setFontSize(12);
+    doc.text(splitText, customerx, fotertotaly + 60);
 
-doc.setFontSize(10);
-doc.text('For Mewar Jewellery House Pvt Ltd', fotertotalx, fotertotaly + 60);
+    doc.setFontSize(10);
+    doc.text(
+      "For Mewar Jewellery House Pvt Ltd",
+      fotertotalx,
+      fotertotaly + 60
+    );
 
+    doc.text("Authorised Signatory", fotertotalx, fotertotaly + 80);
+    
+    doc.line(customerx, fotertotaly + 85, fotertotalx + 60, fotertotaly + 85);
 
-doc.text('Authorised Signatory', fotertotalx, fotertotaly + 80);
+    const ctext ="1st foor 2nd cross vasanthappa thota Banglore-560032"
+    const splitText1 = doc.splitTextToSize(ctext, 80); // Adjust 180 to the width you want
+    doc.text(splitText1, customerx, fotertotaly + 90);
+    const stext ="Contact Us : 08023333409/08091515409  @kevali.in/kevali.in"
+    const splitText2 = doc.splitTextToSize(stext, 80); // Adjust 180 to the width you want
+    doc.text(splitText2, fotertotalx, fotertotaly + 90);
 
-
-    // doc.text('HSN/SAC: 7108', 14, currentY + 10);
-    // doc.text('Taxable Amount: 47801.60', 14, currentY + 15);
-    // doc.text('CGST @ 1.50%: 717.02', 14, currentY + 20);
-    // doc.text('SGST @ 1.50%: 717.02', 14, currentY + 25);
-    // doc.text('IGST: 0.00', 14, currentY + 30);
-    // doc.text('Round Off: 0.36', 14, currentY + 35);
-    // doc.setFontSize(12);
-    // doc.text('Grand Total: 49236.00', 160, currentY + 35);
-    // doc.setFontSize(10);
-    // doc.text('For Manan Softwares', 160, currentY + 45);
-    // doc.text('Authorised Signatory', 160, currentY + 50);
   };
 
   const drawTableRows = () => {
     items.forEach((item, index) => {
       // Determine text lines and adjust currentY for each row
-      const productDetailsLines = doc.splitTextToSize(item.ProductName, columnPositions.amount - columnPositions.productDetails - 5); // Adjust width as needed
+      const productDetailsLines = doc.splitTextToSize(
+        item.ProductName,
+        columnPositions.amount - columnPositions.productDetails - 5
+      ); // Adjust width as needed
       const rowCount = Math.max(
         productDetailsLines.length,
         1 // To ensure there's at least one row
       );
 
-      if (currentY + (rowCount * rowHeight) > pageHeight - marginBottom - tableHeight) {
+      if (currentY + (rowCount + rowHeight) > pageHeight - marginBottom) {
         doc.addPage(); // Add a new page if needed
         currentY = marginTop;
         drawTableHeader();
@@ -356,22 +401,25 @@ doc.text('Authorised Signatory', fotertotalx, fotertotaly + 80);
       }
 
       // Draw row data
-      doc.text(`${index + 1}`, columnPositions.sr+2, currentY);
+      doc.text(`${index + 1}`, columnPositions.sr + 2, currentY);
       productDetailsLines.forEach((line, lineIndex) => {
-        doc.text(line, columnPositions.productDetails+2, currentY + (lineIndex * rowHeight));
+        doc.text(
+          line,
+          columnPositions.productDetails + 2,
+          currentY + lineIndex * rowHeight
+        );
       });
       // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
-      doc.text('7113', columnPositions.hsnCode+2, currentY);
-      doc.text(item.Purity|| '7113', columnPositions.purity+2, currentY);
-      doc.text(item.NetWt, columnPositions.price+2, currentY);
-      doc.text( '1', columnPositions.qty+2, currentY);
-      doc.text(item.TotalAmount || '0', columnPositions.amount+2, currentY);
+      doc.text("7113", columnPositions.hsnCode + 2, currentY);
+      doc.text(item.Purity || "7113", columnPositions.purity + 2, currentY);
+      doc.text(item.NetWt, columnPositions.price + 2, currentY);
+      doc.text("1", columnPositions.qty + 2, currentY);
+      doc.text(item.TotalAmount || "0", columnPositions.amount + 2, currentY);
 
       // Update currentY based on the row count
       currentY += rowCount * rowHeight; // Adjust currentY based on the number of lines
     });
   };
-
 
   // Set Header Text
   doc.setFont("whitecraftlight", "italic");
@@ -381,35 +429,34 @@ doc.text('Authorised Signatory', fotertotalx, fotertotaly + 80);
   doc.text("KEVALI", 80, 20);
 
   doc.setFont("sanserif", "bold");
-    doc.setFontSize(18);
-    doc.setTextColor(0, 0, 0);
-    doc.text("92.5 Silver Jewellery", 78, 26);
+  doc.setFontSize(18);
+  doc.setTextColor(0, 0, 0);
+  doc.text("92.5 Silver Jewellery", 78, 26);
 
-    doc.setFont("sanserif", "normal");
-    doc.setFontSize(18);
-    doc.text("Signature Of Eternal Elegance", 70, 33);
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(18);
+  doc.text("Signature Of Eternal Elegance", 70, 33);
 
-    doc.setFont("sanserif", "normal");
-    doc.setFontSize(8);
-    doc.text("(A Brand by Mewar Jewellery House pvt. ltd.)", 80, 37);
-
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(8);
+  doc.text("(A Brand by Mewar Jewellery House pvt. ltd.)", 80, 37);
 
   // Start generating the PDF
   doc.text("TAX INVOICE", 90, 45);
   doc.setFontSize(10);
-  doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey-5)
-  doc.text("Invoice No :-", invoicex, invoicey)
-  doc.text(invoicenumber, invoicex+20, invoicey)
-  doc.text("Date :-",invoicex, invoicey+5);
+  doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey - 5);
+  doc.text("Invoice No :-", invoicex, invoicey);
+  doc.text(invoicenumber, invoicex + 20, invoicey);
+  doc.text("Date :-", invoicex, invoicey + 5);
 
-  doc.text("Invoice To", customerx, customery)
+  doc.text("Invoice To", customerx, customery);
 
-  doc.text("Customer Name :-", customerx, customery+5)
-  doc.text(`${firstname} ${lastname}`, customerx+28, customery+5);
-  doc.text("Mobile No :-",customerx, customery+10);
-  doc.text(`${mobile}`, customerx+28, customery+10);
-  doc.text("Address :-",customerx, customery+15);
-  doc.text(`${address}`, customerx+28, customery+15);
+  doc.text("Customer Name :-", customerx, customery + 5);
+  doc.text(`${firstname} ${lastname}`, customerx + 28, customery + 5);
+  doc.text("Mobile No :-", customerx, customery + 10);
+  doc.text(`${mobile}`, customerx + 28, customery + 10);
+  doc.text("Address :-", customerx, customery + 15);
+  doc.text(`${address}`, customerx + 28, customery + 15);
 
   drawTableHeader();
   drawTableStructure();
@@ -424,15 +471,9 @@ doc.text('Authorised Signatory', fotertotalx, fotertotaly + 80);
   newWindow.document.write(
     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
   );
+};
 
-
-}
-
-
-
-const generateinvoicepdf7 = (items, customer, mainitem)=>{
-
-
+const generateinvoicepdf7 = (items, customer, mainitem) => {
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -475,9 +516,9 @@ const generateinvoicepdf7 = (items, customer, mainitem)=>{
   // Define custom widths for each column
   const columnWidths = {
     Item: 18.18,
-    "HSN": 10.18,
-    "Purity": 15.18,
-    "Qty": 15.18,
+    HSN: 10.18,
+    Purity: 15.18,
+    Qty: 15.18,
     "Gr wt": 18.18,
     "Stone wt": 23.18,
     "Net wt": 18.18,
@@ -618,57 +659,52 @@ const generateinvoicepdf7 = (items, customer, mainitem)=>{
 
   //detailed table
 
- // First column labels for gross amount, taxes, and discounts
-const leftColumn = [
-{ label: "Gross Amount", value: "" },
-{ label: "CGST 1.5%", value: "" },
-{ label: "SGST 1.5%", value: "" },
-{ label: "IGST 3%", value: "" },
-{ label: "Hallmarking Amount", value: "" },
-{ label: "Purchase Amount (-)", value: "" },
-{ label: "RO/Discount (-)", value: "" },
-{ label: "Net Amount", value: "" },
-];
+  // First column labels for gross amount, taxes, and discounts
+  const leftColumn = [
+    { label: "Gross Amount", value: "" },
+    { label: "CGST 1.5%", value: "" },
+    { label: "SGST 1.5%", value: "" },
+    { label: "IGST 3%", value: "" },
+    { label: "Hallmarking Amount", value: "" },
+    { label: "Purchase Amount (-)", value: "" },
+    { label: "RO/Discount (-)", value: "" },
+    { label: "Net Amount", value: "" },
+  ];
 
-// Dummy values for the right column
-const rightColumnValues = ["", "", "", "", "", "", "", ""];
+  // Dummy values for the right column
+  const rightColumnValues = ["", "", "", "", "", "", "", ""];
 
-// Set table starting position and dimensions
-const startX4 = 135; // Starting X position for the table
-const startY4 = 175; // Starting Y position for the table
-const tableWidth4 = 70; // Table width
-const tableHeight4 = 80; // Table height (adjust based on number of rows)
-const cellHeight4 = 10; // Height for each cell row
-const verticalLineX = startX4 + tableWidth4 / 2; // X position for the center vertical line
+  // Set table starting position and dimensions
+  const startX4 = 135; // Starting X position for the table
+  const startY4 = 175; // Starting Y position for the table
+  const tableWidth4 = 70; // Table width
+  const tableHeight4 = 80; // Table height (adjust based on number of rows)
+  const cellHeight4 = 10; // Height for each cell row
+  const verticalLineX = startX4 + tableWidth4 / 2; // X position for the center vertical line
 
-doc.setLineWidth(0.3);
-doc.rect(startX4, startY4, tableWidth4, tableHeight4); // Outer table border
+  doc.setLineWidth(0.3);
+  doc.rect(startX4, startY4, tableWidth4, tableHeight4); // Outer table border
 
-// Draw vertical line at the center
-doc.line(verticalLineX, startY4, verticalLineX, startY4 + tableHeight4); // Vertical line splitting the table
+  // Draw vertical line at the center
+  doc.line(verticalLineX, startY4, verticalLineX, startY4 + tableHeight4); // Vertical line splitting the table
 
-// Fill in the left column labels and right column dummy values
-leftColumn.forEach((row, index) => {
-const ypos = startY4 + (index + 1) * cellHeight4 - 3; // Y position for the text
+  // Fill in the left column labels and right column dummy values
+  leftColumn.forEach((row, index) => {
+    const ypos = startY4 + (index + 1) * cellHeight4 - 3; // Y position for the text
 
-// Draw left side labels
-doc.setFontSize(10);
-doc.setFont("sanserif", "bold");
-doc.text(`${row.label}`, startX4 + 2, ypos);
+    // Draw left side labels
+    doc.setFontSize(10);
+    doc.setFont("sanserif", "bold");
+    doc.text(`${row.label}`, startX4 + 2, ypos);
 
-// Draw right side dummy values
-const rightValue = rightColumnValues[index];
-doc.setFont("sanserif", "normal");
-doc.text(`${rightValue}`, verticalLineX + 2, ypos); // Right side column values
+    // Draw right side dummy values
+    const rightValue = rightColumnValues[index];
+    doc.setFont("sanserif", "normal");
+    doc.text(`${rightValue}`, verticalLineX + 2, ypos); // Right side column values
 
-// Draw horizontal line after each cell
-doc.line(startX4, ypos + 3, startX4 + tableWidth4, ypos + 3); // Horizontal line across the row
-});
-
-
-  
- 
-  
+    // Draw horizontal line after each cell
+    doc.line(startX4, ypos + 3, startX4 + tableWidth4, ypos + 3); // Horizontal line across the row
+  });
 
   doc.setFont("sanserif", "normal");
   doc.setFontSize(10);
@@ -714,21 +750,13 @@ doc.line(startX4, ypos + 3, startX4 + tableWidth4, ypos + 3); // Horizontal line
   newWindow.document.write(
     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
   );
+};
 
-
-}
-
-
-
-
-
-
-const generateinvoicepdf12 =(items, customer)=>{
-
+const generateinvoicepdf12 = (items, customer) => {
   const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
   });
   const dummyData = generateDummyData();
   const pageHeight = doc.internal.pageSize.height;
@@ -738,23 +766,23 @@ const generateinvoicepdf12 =(items, customer)=>{
   const rowHeight = 10; // Initial row height
   const tableHeight = 130; // Fixed table height
   let currentY = marginTop;
-  const invoicex = pageWidth-50;
+  const invoicex = pageWidth - 50;
   const invoicey = 60;
-  const customerx = pageWidth-page;
+  const customerx = pageWidth - page;
   const customery = 60;
 
-  console.log('checkpagewidth  ', pageWidth)
+  console.log("checkpagewidth  ", pageWidth);
 
   // Define the column positions
   const columnPositions = {
-    sr: pageWidth-200,
-    productDetails: pageWidth-190,
-    pcs: pageWidth-150,
-    hsnCode: pageWidth-140,
-    grossWt: pageWidth-120,
-    netWt: pageWidth-90,
-    rate: pageWidth-60,
-    amount: pageWidth-40,
+    sr: pageWidth - 200,
+    productDetails: pageWidth - 190,
+    pcs: pageWidth - 150,
+    hsnCode: pageWidth - 140,
+    grossWt: pageWidth - 120,
+    netWt: pageWidth - 90,
+    rate: pageWidth - 60,
+    amount: pageWidth - 40,
   };
 
   // Draw the table structure dynamically
@@ -764,41 +792,50 @@ const generateinvoicepdf12 =(items, customer)=>{
     Object.values(columnPositions).forEach((pos) => {
       doc.line(pos, marginTop, pos, marginTop + tableHeight); // Column separators
     });
-    doc.line(pageWidth - 10, marginTop, pageWidth - 10, marginTop + tableHeight); // Right border
+    doc.line(
+      pageWidth - 10,
+      marginTop,
+      pageWidth - 10,
+      marginTop + tableHeight
+    ); // Right border
   };
 
   const drawTableHeader = () => {
     doc.setFontSize(10);
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
     currentY += 5;
-    
+
     // Draw the header text
-    doc.text('Sr.', columnPositions.sr+2, currentY);
-    doc.text('Product Details', columnPositions.productDetails+2, currentY);
-    doc.text('Pcs', columnPositions.pcs+2, currentY);
-    doc.text('HSN Code', columnPositions.hsnCode+2, currentY);
-    doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
-    doc.text('Net Wt', columnPositions.netWt+2, currentY);
-    doc.text('Rate / gm', columnPositions.rate+2, currentY);
-    doc.text('Amount', columnPositions.amount+2, currentY);
-    
+    doc.text("Sr.", columnPositions.sr + 2, currentY);
+    doc.text("Product Details", columnPositions.productDetails + 2, currentY);
+    doc.text("Pcs", columnPositions.pcs + 2, currentY);
+    doc.text("HSN Code", columnPositions.hsnCode + 2, currentY);
+    doc.text("Gross Wt", columnPositions.grossWt + 2, currentY);
+    doc.text("Net Wt", columnPositions.netWt + 2, currentY);
+    doc.text("Rate / gm", columnPositions.rate + 2, currentY);
+    doc.text("Amount", columnPositions.amount + 2, currentY);
+
     currentY += 5;
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header bottom line
     currentY += 5;
 
-    doc.line(columnPositions.sr, marginTop + tableHeight, pageWidth - 10, marginTop + tableHeight); // Table header top line
+    doc.line(
+      columnPositions.sr,
+      marginTop + tableHeight,
+      pageWidth - 10,
+      marginTop + tableHeight
+    ); // Table header top line
   };
 
   const drawFooter = () => {
-    doc.text('Taxable Amount', fotertotalx, fotertotaly + 10);
-    doc.text('CGST@1.5%', fotertotalx, fotertotaly + 15);
-    doc.text('SGST@1.5%', fotertotalx, fotertotaly + 20);
-    doc.text('IGST@  3%', fotertotalx, fotertotaly + 25);
-    doc.text('Total Invoice Amount', fotertotalx, fotertotaly + 30);
-    doc.text('Amount Received', fotertotalx, fotertotaly + 35);
-    doc.text('Balance Amount', fotertotalx, fotertotaly + 40);
-    doc.text('Taxable Amount', 2, fotertotaly + 45);
-
+    doc.text("Taxable Amount", fotertotalx, fotertotaly + 10);
+    doc.text("CGST@1.5%", fotertotalx, fotertotaly + 15);
+    doc.text("SGST@1.5%", fotertotalx, fotertotaly + 20);
+    doc.text("IGST@  3%", fotertotalx, fotertotaly + 25);
+    doc.text("Total Invoice Amount", fotertotalx, fotertotaly + 30);
+    doc.text("Amount Received", fotertotalx, fotertotaly + 35);
+    doc.text("Balance Amount", fotertotalx, fotertotaly + 40);
+    doc.text("Taxable Amount", 2, fotertotaly + 45);
 
     // doc.text('HSN/SAC: 7108', 14, currentY + 10);
     // doc.text('Taxable Amount: 47801.60', 14, currentY + 15);
@@ -816,13 +853,19 @@ const generateinvoicepdf12 =(items, customer)=>{
   const drawTableRows = () => {
     items.forEach((item, index) => {
       // Determine text lines and adjust currentY for each row
-      const productDetailsLines = doc.splitTextToSize(item.ProductName, columnPositions.amount - columnPositions.productDetails - 5); // Adjust width as needed
+      const productDetailsLines = doc.splitTextToSize(
+        item.ProductName,
+        columnPositions.amount - columnPositions.productDetails - 5
+      ); // Adjust width as needed
       const rowCount = Math.max(
         productDetailsLines.length,
         1 // To ensure there's at least one row
       );
 
-      if (currentY + (rowCount * rowHeight) > pageHeight - marginBottom - tableHeight) {
+      if (
+        currentY + rowCount * rowHeight >
+        pageHeight - marginBottom - tableHeight
+      ) {
         doc.addPage(); // Add a new page if needed
         currentY = marginTop;
         drawTableHeader();
@@ -830,16 +873,20 @@ const generateinvoicepdf12 =(items, customer)=>{
       }
 
       // Draw row data
-      doc.text(`${index + 1}`, columnPositions.sr+2, currentY);
+      doc.text(`${index + 1}`, columnPositions.sr + 2, currentY);
       productDetailsLines.forEach((line, lineIndex) => {
-        doc.text(line, columnPositions.productDetails+2, currentY + (lineIndex * rowHeight));
+        doc.text(
+          line,
+          columnPositions.productDetails + 2,
+          currentY + lineIndex * rowHeight
+        );
       });
-      doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
-      doc.text(item.HSNCode || '0', columnPositions.hsnCode+2, currentY);
-      doc.text(item.GrossWt, columnPositions.grossWt+2, currentY);
-      doc.text(item.NetWt, columnPositions.netWt+2, currentY);
-      doc.text(item.MetalRate || '0', columnPositions.rate+2, currentY);
-      doc.text(item.TotalAmount || '0', columnPositions.amount+2, currentY);
+      doc.text(item.Quantity || "1", columnPositions.pcs + 2, currentY);
+      doc.text(item.HSNCode || "0", columnPositions.hsnCode + 2, currentY);
+      doc.text(item.GrossWt, columnPositions.grossWt + 2, currentY);
+      doc.text(item.NetWt, columnPositions.netWt + 2, currentY);
+      doc.text(item.MetalRate || "0", columnPositions.rate + 2, currentY);
+      doc.text(item.TotalAmount || "0", columnPositions.amount + 2, currentY);
 
       // Update currentY based on the row count
       currentY += rowCount * rowHeight; // Adjust currentY based on the number of lines
@@ -849,12 +896,12 @@ const generateinvoicepdf12 =(items, customer)=>{
   // Start generating the PDF
   doc.text("TAX INVOICE", 90, 50);
   doc.setFontSize(10);
-  doc.text("Invoice No :-", invoicex, invoicey)
-  doc.text("Date :-",invoicex, invoicey+5);
+  doc.text("Invoice No :-", invoicex, invoicey);
+  doc.text("Date :-", invoicex, invoicey + 5);
 
-  doc.text("Customer Name :-", customerx, customery)
-  doc.text("Mobile No :-",customerx, customery+5);
-  doc.text("Address :-",customerx, customery+5);
+  doc.text("Customer Name :-", customerx, customery);
+  doc.text("Mobile No :-", customerx, customery + 5);
+  doc.text("Address :-", customerx, customery + 5);
 
   drawTableHeader();
   drawTableStructure();
@@ -869,14 +916,9 @@ const generateinvoicepdf12 =(items, customer)=>{
   newWindow.document.write(
     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
   );
+};
 
-}
-
-
-
-
-
-const generatepdf2 = (csData, invoiceItems) =>{
+const generatepdf2 = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
@@ -909,12 +951,20 @@ const generatepdf2 = (csData, invoiceItems) =>{
     doc.line(5, y + 22, 115, y + 22);
     doc.text(label, 6, y);
     doc.setFont("times", "bold");
-    doc.text(`${customer.FirstName || ""} ${customer.LastName || ""}`, 6, y + 4);
+    doc.text(
+      `${customer.FirstName || ""} ${customer.LastName || ""}`,
+      6,
+      y + 4
+    );
     doc.setFont("times", "normal");
     doc.text(`${customer.CurrAddStreet || "Street"}`, 6, y + 8);
     doc.text(`${customer.CurrAddTown || "Town"}`, 6, y + 12);
     doc.text(`Gst No. - ${customer.GstNo || "Gst No."}`, 6, y + 16);
-    doc.text(`${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`, 6, y + 20);
+    doc.text(
+      `${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`,
+      6,
+      y + 20
+    );
   };
 
   if (csData) {
@@ -927,7 +977,6 @@ const generatepdf2 = (csData, invoiceItems) =>{
     doc.text(`Invoice No - ${csData?.invoiceNo || ""}`, 120, y);
     // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
     doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 120, y + 4);
-
 
     y += 27; // Adjust y position
 
@@ -983,11 +1032,14 @@ const generatepdf2 = (csData, invoiceItems) =>{
     let OtherCharges = 0;
     let NetCharges = 0;
     let HallmarkCharges = 0;
-    const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
+    const productName =
+      item.ProductName.length > 15
+        ? `${item.ProductName.substring(0, 15)}...`
+        : item.ProductName;
     doc.text(srNo.toString(), 6, y);
     doc.text(`${item.Purity || ""} ${productName || ""}`, 15, y);
     doc.text(`${item.HSNCode || "-"}`, 70, y);
-    doc.text(`${item.Quantity !== 'undefined' ? item.Quantity : "-"}`, 85, y);
+    doc.text(`${item.Quantity !== "undefined" ? item.Quantity : "-"}`, 85, y);
     doc.text(`${item.Purity || "-"}`, 95, y);
     doc.text(`${item.GrossWt || "-"}`, 105, y);
     doc.text(`${item.NetWt || "-"}`, 117, y);
@@ -998,47 +1050,55 @@ const generatepdf2 = (csData, invoiceItems) =>{
     } else {
       doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
       doc.text(
-          parseFloat(
-              (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
-          )?.toFixed(2),
-          145,
-          y
+        parseFloat(
+          (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+        )?.toFixed(2),
+        145,
+        y
       );
-      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+      OtherCharges = Number(
+        (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+      );
     }
 
     doc.text(
-        parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-        )?.toFixed(2),
-        160,
-        y
+      parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      )?.toFixed(2),
+      160,
+      y
     );
     NetCharges += parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+      parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-    )
+    );
     doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    ) : parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    )
-    Total += totalAmount
+    HallmarkCharges += parseFloat(
+      item.HallmarkAmount ? item.HallmarkAmount : 0
+    );
+    totalAmount =
+      item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
+        ? parseFloat(item.MRP ? item.MRP : 0) +
+            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        : parseFloat(
+            parseFloat(parseFloat(item.MetalRate) / 10) *
+              parseFloat(item.NetWt) +
+              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+          );
+    Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
+    totalQuantity +=
+      parseFloat(item.Quantity !== "undefined" ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -1100,10 +1160,10 @@ const generatepdf2 = (csData, invoiceItems) =>{
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`CGST 1.5%:`, 155, y + 10);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${(Number(csData?.GST) / 2 || 0)?.toFixed(2)}`, 185, y + 15);
     doc.text(`SGST 1.5%:`, 155, y + 15);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 15);
-    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${(Number(csData?.GST) / 2 || 0)?.toFixed(2)}`, 185, y + 15);
   } else {
     doc.text(`Sales Amount:`, 155, y);
     doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
@@ -1111,13 +1171,21 @@ const generatepdf2 = (csData, invoiceItems) =>{
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`IGST 3%:`, 155, y + 10);
     // doc.text(`${payableGst?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${(Number(csData?.GST))?.toFixed(2)}`, 185, y + 10);
+    doc.text(`${Number(csData?.GST)?.toFixed(2)}`, 185, y + 10);
   }
 
   doc.text(`Purchase Amount (-):`, 155, y + 15);
-  doc.text(`${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`, 185, y + 15);
+  doc.text(
+    `${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`,
+    185,
+    y + 15
+  );
   doc.text(`Received Amount:`, 155, y + 20);
-  doc.text(`${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`, 185, y + 20);
+  doc.text(
+    `${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`,
+    185,
+    y + 20
+  );
   doc.text(`Balance Amount:`, 155, y + 25);
   // doc.text(
   //   `${(Number(csData?.TotalAmount||0) - Number(csData?.receivedAmt||0))?.toFixed(2)}`,
@@ -1136,7 +1204,6 @@ const generatepdf2 = (csData, invoiceItems) =>{
   // doc.setFontSize(10);
   // doc.text("Authorised Signatory", 160, y + 55);
 
-
   let footerY = doc.internal.pageSize.height - 50;
   doc.setFontSize(9);
   // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
@@ -1148,26 +1215,26 @@ const generatepdf2 = (csData, invoiceItems) =>{
   doc.text("Terms And Conditions :- ", 10, footerY);
   doc.setFont("times", "normal");
   doc.text(
-      `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
-      10,
-      footerY + 5
+    `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
+    10,
+    footerY + 5
   );
   doc.text(`to Rule 138(14) of the CGST Rules.`, 10, footerY + 9);
   doc.text(
-      `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
-      10,
-      footerY + 13
+    `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
+    10,
+    footerY + 13
   );
   doc.text(
-      `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
-      10,
-      footerY + 17
+    `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
+    10,
+    footerY + 17
   );
   doc.text(`Hallmark Charges is Rs 45 Per Piece`, 10, footerY + 21);
   doc.text(
-      `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
-      10,
-      footerY + 25
+    `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
+    10,
+    footerY + 25
   );
   doc.setFont("times", "bold");
   doc.setFontSize(10);
@@ -1178,12 +1245,9 @@ const generatepdf2 = (csData, invoiceItems) =>{
 
   // Save PDF
   doc.save(`Invoice-${csData?.invoiceNo}.pdf`);
+};
 
-}
-
-
-
-const generatepdf1 = (csData, invoiceItems) =>{
+const generatepdf1 = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
@@ -1216,12 +1280,20 @@ const generatepdf1 = (csData, invoiceItems) =>{
     doc.line(5, y + 22, 115, y + 22);
     doc.text(label, 6, y);
     doc.setFont("times", "bold");
-    doc.text(`${customer.FirstName || ""} ${customer.LastName || ""}`, 6, y + 4);
+    doc.text(
+      `${customer.FirstName || ""} ${customer.LastName || ""}`,
+      6,
+      y + 4
+    );
     doc.setFont("times", "normal");
     doc.text(`${customer.CurrAddStreet || "Street"}`, 6, y + 8);
     doc.text(`${customer.CurrAddTown || "Town"}`, 6, y + 12);
     doc.text(`Gst No. - ${customer.GstNo || "Gst No."}`, 6, y + 16);
-    doc.text(`${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`, 6, y + 20);
+    doc.text(
+      `${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`,
+      6,
+      y + 20
+    );
   };
 
   if (csData) {
@@ -1234,7 +1306,6 @@ const generatepdf1 = (csData, invoiceItems) =>{
     doc.text(`Invoice No - ${csData?.invoiceNo || ""}`, 120, y);
     // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
     doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 120, y + 4);
-
 
     y += 27; // Adjust y position
 
@@ -1291,11 +1362,14 @@ const generatepdf1 = (csData, invoiceItems) =>{
     let OtherCharges = 0;
     let NetCharges = 0;
     let HallmarkCharges = 0;
-    const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
+    const productName =
+      item.ProductName.length > 15
+        ? `${item.ProductName.substring(0, 15)}...`
+        : item.ProductName;
     doc.text(srNo.toString(), 6, y);
     doc.text(`${item.Purity || ""} ${productName || ""}`, 15, y);
     doc.text(`${item.HSNCode || "-"}`, 70, y);
-    doc.text(`${item.Quantity !== 'undefined' ? item.Quantity : "-"}`, 85, y);
+    doc.text(`${item.Quantity !== "undefined" ? item.Quantity : "-"}`, 85, y);
     doc.text(`${item.Purity || "-"}`, 95, y);
     doc.text(`${item.GrossWt || "-"}`, 105, y);
     doc.text(`${item.NetWt || "-"}`, 117, y);
@@ -1306,47 +1380,55 @@ const generatepdf1 = (csData, invoiceItems) =>{
     } else {
       doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
       doc.text(
-          parseFloat(
-              (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
-          )?.toFixed(2),
-          145,
-          y
+        parseFloat(
+          (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+        )?.toFixed(2),
+        145,
+        y
       );
-      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+      OtherCharges = Number(
+        (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+      );
     }
 
     doc.text(
-        parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-        )?.toFixed(2),
-        160,
-        y
+      parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      )?.toFixed(2),
+      160,
+      y
     );
     NetCharges += parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+      parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-    )
+    );
     doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    ) : parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    )
-    Total += totalAmount
+    HallmarkCharges += parseFloat(
+      item.HallmarkAmount ? item.HallmarkAmount : 0
+    );
+    totalAmount =
+      item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
+        ? parseFloat(item.MRP ? item.MRP : 0) +
+            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        : parseFloat(
+            parseFloat(parseFloat(item.MetalRate) / 10) *
+              parseFloat(item.NetWt) +
+              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+          );
+    Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
+    totalQuantity +=
+      parseFloat(item.Quantity !== "undefined" ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -1408,10 +1490,10 @@ const generatepdf1 = (csData, invoiceItems) =>{
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`CGST 1.5%:`, 155, y + 10);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${(Number(csData?.GST) / 2 || 0)?.toFixed(2)}`, 185, y + 15);
     doc.text(`SGST 1.5%:`, 155, y + 15);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 15);
-    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${(Number(csData?.GST) / 2 || 0)?.toFixed(2)}`, 185, y + 15);
   } else {
     doc.text(`Sales Amount:`, 155, y);
     doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
@@ -1419,13 +1501,21 @@ const generatepdf1 = (csData, invoiceItems) =>{
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`IGST 3%:`, 155, y + 10);
     // doc.text(`${payableGst?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${(Number(csData?.GST))?.toFixed(2)}`, 185, y + 10);
+    doc.text(`${Number(csData?.GST)?.toFixed(2)}`, 185, y + 10);
   }
 
   doc.text(`Purchase Amount (-):`, 155, y + 15);
-  doc.text(`${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`, 185, y + 15);
+  doc.text(
+    `${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`,
+    185,
+    y + 15
+  );
   doc.text(`Received Amount:`, 155, y + 20);
-  doc.text(`${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`, 185, y + 20);
+  doc.text(
+    `${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`,
+    185,
+    y + 20
+  );
   doc.text(`Balance Amount:`, 155, y + 25);
   // doc.text(
   //   `${(Number(csData?.TotalAmount||0) - Number(csData?.receivedAmt||0))?.toFixed(2)}`,
@@ -1444,7 +1534,6 @@ const generatepdf1 = (csData, invoiceItems) =>{
   // doc.setFontSize(10);
   // doc.text("Authorised Signatory", 160, y + 55);
 
-
   let footerY = doc.internal.pageSize.height - 50;
   doc.setFontSize(9);
   // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
@@ -1456,26 +1545,26 @@ const generatepdf1 = (csData, invoiceItems) =>{
   doc.text("Terms And Conditions :- ", 10, footerY);
   doc.setFont("times", "normal");
   doc.text(
-      `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
-      10,
-      footerY + 5
+    `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
+    10,
+    footerY + 5
   );
   doc.text(`to Rule 138(14) of the CGST Rules.`, 10, footerY + 9);
   doc.text(
-      `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
-      10,
-      footerY + 13
+    `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
+    10,
+    footerY + 13
   );
   doc.text(
-      `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
-      10,
-      footerY + 17
+    `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
+    10,
+    footerY + 17
   );
   doc.text(`Hallmark Charges is Rs 45 Per Piece`, 10, footerY + 21);
   doc.text(
-      `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
-      10,
-      footerY + 25
+    `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
+    10,
+    footerY + 25
   );
   doc.setFont("times", "bold");
   doc.setFontSize(10);
@@ -1486,12 +1575,9 @@ const generatepdf1 = (csData, invoiceItems) =>{
 
   // Save PDF
   doc.save(`Invoice-${csData?.invoiceNo}.pdf`);
+};
 
-}
-
-
-
-const generatepdf = (csData, invoiceItems) =>{
+const generatepdf = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
@@ -1524,12 +1610,20 @@ const generatepdf = (csData, invoiceItems) =>{
     doc.line(5, y + 22, 115, y + 22);
     doc.text(label, 6, y);
     doc.setFont("times", "bold");
-    doc.text(`${customer.FirstName || ""} ${customer.LastName || ""}`, 6, y + 4);
+    doc.text(
+      `${customer.FirstName || ""} ${customer.LastName || ""}`,
+      6,
+      y + 4
+    );
     doc.setFont("times", "normal");
     doc.text(`${customer.CurrAddStreet || "Street"}`, 6, y + 8);
     doc.text(`${customer.CurrAddTown || "Town"}`, 6, y + 12);
     doc.text(`Gst No. - ${customer.GstNo || "Gst No."}`, 6, y + 16);
-    doc.text(`${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`, 6, y + 20);
+    doc.text(
+      `${customer.CurrAddState || ""} ${customer.CurrAddPincode || "Pan No. "}`,
+      6,
+      y + 20
+    );
   };
 
   if (csData) {
@@ -1542,7 +1636,6 @@ const generatepdf = (csData, invoiceItems) =>{
     doc.text(`Invoice No - ${csData?.invoiceNo || ""}`, 120, y);
     // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
     doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 120, y + 4);
-
 
     y += 27; // Adjust y position
 
@@ -1598,11 +1691,14 @@ const generatepdf = (csData, invoiceItems) =>{
     let OtherCharges = 0;
     let NetCharges = 0;
     let HallmarkCharges = 0;
-    const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
+    const productName =
+      item.ProductName.length > 15
+        ? `${item.ProductName.substring(0, 15)}...`
+        : item.ProductName;
     doc.text(srNo.toString(), 6, y);
     doc.text(`${item.Purity || ""} ${productName || ""}`, 15, y);
     doc.text(`${item.HSNCode || "-"}`, 70, y);
-    doc.text(`${item.Quantity !== 'undefined' ? item.Quantity : "-"}`, 85, y);
+    doc.text(`${item.Quantity !== "undefined" ? item.Quantity : "-"}`, 85, y);
     doc.text(`${item.Purity || "-"}`, 95, y);
     doc.text(`${item.GrossWt || "-"}`, 105, y);
     doc.text(`${item.NetWt || "-"}`, 117, y);
@@ -1613,47 +1709,55 @@ const generatepdf = (csData, invoiceItems) =>{
     } else {
       doc.text(item.MetalRate ? item.MetalRate : "-", 130, y);
       doc.text(
-          parseFloat(
-              (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
-          )?.toFixed(2),
-          145,
-          y
+        parseFloat(
+          (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+        )?.toFixed(2),
+        145,
+        y
       );
-      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+      OtherCharges = Number(
+        (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+      );
     }
 
     doc.text(
-        parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-        )?.toFixed(2),
-        160,
-        y
+      parseFloat(
+        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      )?.toFixed(2),
+      160,
+      y
     );
     NetCharges += parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+      parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-    )
+    );
     doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    ) : parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    )
-    Total += totalAmount
+    HallmarkCharges += parseFloat(
+      item.HallmarkAmount ? item.HallmarkAmount : 0
+    );
+    totalAmount =
+      item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
+        ? parseFloat(item.MRP ? item.MRP : 0) +
+            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        : parseFloat(
+            parseFloat(parseFloat(item.MetalRate) / 10) *
+              parseFloat(item.NetWt) +
+              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+          );
+    Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
+    totalQuantity +=
+      parseFloat(item.Quantity !== "undefined" ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -1715,10 +1819,10 @@ const generatepdf = (csData, invoiceItems) =>{
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`CGST 1.5%:`, 155, y + 10);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${(Number(csData?.GST) / 2 || 0)?.toFixed(2)}`, 185, y + 15);
     doc.text(`SGST 1.5%:`, 155, y + 15);
     // doc.text(`${(payableGst / 2)?.toFixed(2)}`, 185, y + 15);
-    doc.text(`${((Number(csData?.GST) / 2 || 0))?.toFixed(2)}`, 185, y + 15);
+    doc.text(`${(Number(csData?.GST) / 2 || 0)?.toFixed(2)}`, 185, y + 15);
   } else {
     doc.text(`Sales Amount:`, 155, y);
     doc.text(`${totalSaleAmount?.toFixed(2)}`, 185, y);
@@ -1726,13 +1830,21 @@ const generatepdf = (csData, invoiceItems) =>{
     doc.text(`${csData?.offer || 0}`, 185, y + 5);
     doc.text(`IGST 3%:`, 155, y + 10);
     // doc.text(`${payableGst?.toFixed(2)}`, 185, y + 10);
-    doc.text(`${(Number(csData?.GST))?.toFixed(2)}`, 185, y + 10);
+    doc.text(`${Number(csData?.GST)?.toFixed(2)}`, 185, y + 10);
   }
 
   doc.text(`Purchase Amount (-):`, 155, y + 15);
-  doc.text(`${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`, 185, y + 15);
+  doc.text(
+    `${parseFloat(csData?.UrdPurchaseAmt || 0)?.toFixed(2)}`,
+    185,
+    y + 15
+  );
   doc.text(`Received Amount:`, 155, y + 20);
-  doc.text(`${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`, 185, y + 20);
+  doc.text(
+    `${parseFloat(csData?.ReceivedAmount || 0)?.toFixed(2)}`,
+    185,
+    y + 20
+  );
   doc.text(`Balance Amount:`, 155, y + 25);
   // doc.text(
   //   `${(Number(csData?.TotalAmount||0) - Number(csData?.receivedAmt||0))?.toFixed(2)}`,
@@ -1751,7 +1863,6 @@ const generatepdf = (csData, invoiceItems) =>{
   // doc.setFontSize(10);
   // doc.text("Authorised Signatory", 160, y + 55);
 
-
   let footerY = doc.internal.pageSize.height - 50;
   doc.setFontSize(9);
   // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
@@ -1763,26 +1874,26 @@ const generatepdf = (csData, invoiceItems) =>{
   doc.text("Terms And Conditions :- ", 10, footerY);
   doc.setFont("times", "normal");
   doc.text(
-      `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
-      10,
-      footerY + 5
+    `Note: - No Eway Bill is required to be Generated as the Goods covered under this Invoice are Exempted as per Serial No. 4/5 to the Annexure `,
+    10,
+    footerY + 5
   );
   doc.text(`to Rule 138(14) of the CGST Rules.`, 10, footerY + 9);
   doc.text(
-      `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
-      10,
-      footerY + 13
+    `Consumer can get the purity of the Hallmarked Jewellery / Artifacts verified from any of the BIS recognized A & H Center`,
+    10,
+    footerY + 13
   );
   doc.text(
-      `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
-      10,
-      footerY + 17
+    `List of BIS recognized A & H center along with address and contact details is available on the webiste "www.bis.gov.in"`,
+    10,
+    footerY + 17
   );
   doc.text(`Hallmark Charges is Rs 45 Per Piece`, 10, footerY + 21);
   doc.text(
-      `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
-      10,
-      footerY + 25
+    `This Bill includes Labour Charges, Hallmark Charges, Stone/Beads/Mina and other Charges `,
+    10,
+    footerY + 25
   );
   doc.setFont("times", "bold");
   doc.setFontSize(10);
@@ -1793,20 +1904,17 @@ const generatepdf = (csData, invoiceItems) =>{
 
   // Save PDF
   doc.save(`Invoice-${csData?.invoiceNo}.pdf`);
-
-}
-
+};
 
 // export default generateBillPDF;
-
 
 export const generateBillInvocePDF123 = (csData, invoiceItems) => {
   const doc = new jsPDF({
     orientation: "portrait",
     format: "a4",
   });
-  console.log(csData, "sjdshjdhsjhdjs")
-  console.log(invoiceItems, "sjdshjdhsjhdjs")
+  console.log(csData, "sjdshjdhsjhdjs");
+  console.log(invoiceItems, "sjdshjdhsjhdjs");
   let Total = 0;
   doc.setDrawColor(0, 0, 0, 0.3);
   doc.setFontSize(12);
@@ -1815,7 +1923,7 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
   doc.setFontSize(18);
   doc.setTextColor(0, 0, 139);
   doc.setFont("times", "bold");
-  doc.text("TAX INVOICE", 105, 20, {align: "center"});
+  doc.text("TAX INVOICE", 105, 20, { align: "center" });
   // if (csData?.billType === "false") {
   //   doc.text(`${csData?.orderType}`, 90, 47.5);
   // } else {
@@ -1843,10 +1951,18 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     // doc.line(5, y + 22, 115, y + 22);
     doc.text(label, 6, y);
     doc.setFont("times", "bold");
-    doc.text(`${customer.FirstName || ""} ${customer.LastName || ""}`, 6, y + 4);
+    doc.text(
+      `${customer.FirstName || ""} ${customer.LastName || ""}`,
+      6,
+      y + 4
+    );
     doc.setFont("times", "normal");
     doc.text(`${customer.CurrAddStreet || "add"}`, 6, y + 8);
-    doc.text(`${customer.CurrAddState} & ${customer.CurrAddPincode}`, 6, y + 22);
+    doc.text(
+      `${customer.CurrAddState} & ${customer.CurrAddPincode}`,
+      6,
+      y + 22
+    );
     doc.text(`GST No. - ${customer.GstNo || ""}`, 6, y + 26);
     doc.text(`Pan No. - ${customer.PanNo || ""}`, 6, y + 30);
     doc.text(`Mob No. - ${customer.Mobile || ""}`, 6, y + 34);
@@ -1863,14 +1979,12 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     doc.setTextColor(0, 0, 0);
     // renderAddress("add ", csData?.Customer, y + 12);
 
-
     doc.text(`Invoice No - ${csData?.InvoiceNo || ""}`, 109, y);
     // doc.text(`Invoice Date - ${new Date(csData?.createdOn).toLocaleDateString("en-GB")}`, 120, y + 4);
     doc.text(`Invoice Date - ${csData?.InvoiceDate || ""}`, 109, y + 6);
     doc.text(`Terms - C.O.D`, 109, y + 10);
     doc.text(`Our GST No. - 27BCPPV7154N1ZI`, 109, y + 30);
     doc.text(`Pan No. - BCPPV7154N`, 109, y + 34);
-
 
     y += 16; // Adjust y position
     // Buyer (Bill to)
@@ -1929,7 +2043,10 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     let OtherCharges = 0;
     let NetCharges = 0;
     let HallmarkCharges = 0;
-    const productName = item.ProductName.length > 15 ? `${item.ProductName.substring(0, 15)}...` : item.ProductName;
+    const productName =
+      item.ProductName.length > 15
+        ? `${item.ProductName.substring(0, 15)}...`
+        : item.ProductName;
     doc.text(srNo.toString(), 6, y);
     doc.text(`${productName || ""}`, 15, y);
     doc.text(`${item.HSNCode || "-"}`, 114, y);
@@ -1950,7 +2067,9 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
       //     145,
       //     y
       // );
-      OtherCharges = Number((parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt));
+      OtherCharges = Number(
+        (parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt)
+      );
     }
 
     // doc.text(
@@ -1963,28 +2082,34 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     //     y
     // );
     NetCharges += parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
+      parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
         parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
         parseFloat(item.StoneAmount ? item.StoneAmount : 0)
-    )
+    );
     // doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
-    HallmarkCharges += parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0)
-    totalAmount = (item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0") ? (parseFloat(item.MRP ? item.MRP : 0) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    ) : parseFloat(
-        parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-    )
-    Total += totalAmount
+    HallmarkCharges += parseFloat(
+      item.HallmarkAmount ? item.HallmarkAmount : 0
+    );
+    totalAmount =
+      item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
+        ? parseFloat(item.MRP ? item.MRP : 0) +
+            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        : parseFloat(
+            parseFloat(parseFloat(item.MetalRate) / 10) *
+              parseFloat(item.NetWt) +
+              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+          );
+    Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
     // doc.text(`${item.Amount || "-"}`, 160, y);
     // doc.text(`${item.HallmarkAmount || "-"}`, 175, y);
     doc.text(`${totalAmount || "-"}`, 190, y);
 
-    totalQuantity += parseFloat(item.Quantity !== 'undefined' ? item.Quantity : 0) || 0;
+    totalQuantity +=
+      parseFloat(item.Quantity !== "undefined" ? item.Quantity : 0) || 0;
     totalGrossWt += parseFloat(item.GrossWt) || 0;
     totalNetWt += parseFloat(item.NetWt) || 0;
     // totalStoneAmount += parseFloat(item.StoneAmount) || 0;
@@ -1999,16 +2124,15 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     y += 8;
   });
 
-  doc.text("CGST", 15, y + 52)
-  doc.text("SGST", 15, y + 56)
+  doc.text("CGST", 15, y + 52);
+  doc.text("SGST", 15, y + 56);
   doc.setFont("times", "bold");
-  doc.text("IGST", 90, y + 60)
-  doc.text("3.0%", 130, y + 60)
-  doc.text("DISCOUNT", 90, y + 64)
-  doc.text("R / d", 90, y + 68)
+  doc.text("IGST", 90, y + 60);
+  doc.text("3.0%", 130, y + 60);
+  doc.text("DISCOUNT", 90, y + 64);
+  doc.text("R / d", 90, y + 68);
   // doc.line(5, y - 3, 205, y - 3);
   doc.setFont("times", "normal");
-
 
   // doc.setFont("times", "bold");
   // doc.text("Total", 10, y);
@@ -2043,7 +2167,9 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
 
   // Summary
   const totalSaleAmount = invoiceItems.reduce((total, product) => {
-    return total + parseFloat((parseFloat(product.TotalAmount) * 100) / 103 || 0);
+    return (
+      total + parseFloat((parseFloat(product.TotalAmount) * 100) / 103 || 0)
+    );
   }, 0);
 
   const payableGst = totalSaleAmount * 0.03;
@@ -2091,7 +2217,6 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
   // doc.setFontSize(10);
   // doc.text("Authorised Signatory", 160, y + 55);
 
-
   let footerY = doc.internal.pageSize.height - 50;
   doc.setFontSize(9);
   // doc.text("Raja Bazar, P.O. Jatni-752050, Khordha (Odisha)", 10, footerY);
@@ -2100,19 +2225,23 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
   // doc.text("Customer Signature", 10, footerY);
   doc.setFont("times", "bold");
   doc.line(5, footerY - 60, 205, footerY - 60);
-  doc.text("TOTAL", 90, footerY - 56)
+  doc.text("TOTAL", 90, footerY - 56);
   doc.text(csData.TotalAmount, 182, footerY - 56);
 
   doc.line(5, footerY - 54, 205, footerY - 54);
-  doc.text("Amount Chargeable (in words): ", 7, footerY - 50)
-  doc.text("Rs.", 7, footerY - 46)
+  doc.text("Amount Chargeable (in words): ", 7, footerY - 50);
+  doc.text("Rs.", 7, footerY - 46);
   doc.line(5, footerY - 44, 205, footerY - 44);
-  doc.text("Company's Bank details", 140, footerY - 40)
-  doc.text("Bank Name : Indusind bank", 140, footerY - 36)
-  doc.text("Branch : BKC Branch", 140, footerY - 32)
-  doc.text("A/c No: 255024002400", 140, footerY - 28)
-  doc.text("IFSC CODE : INDB0000342", 140, footerY - 24)
-  doc.text("Corporate Office : DIAGLITER 1003, 10th Floor, D Square, Dadabhai Road, Vile Parle (West), Mumbai - 400056", 10, footerY);
+  doc.text("Company's Bank details", 140, footerY - 40);
+  doc.text("Bank Name : Indusind bank", 140, footerY - 36);
+  doc.text("Branch : BKC Branch", 140, footerY - 32);
+  doc.text("A/c No: 255024002400", 140, footerY - 28);
+  doc.text("IFSC CODE : INDB0000342", 140, footerY - 24);
+  doc.text(
+    "Corporate Office : DIAGLITER 1003, 10th Floor, D Square, Dadabhai Road, Vile Parle (West), Mumbai - 400056",
+    10,
+    footerY
+  );
   doc.text("Mo. No. 9152011005", 10, footerY + 4);
   doc.text("FOR DIAGLITER", 140, footerY + 18);
   doc.setFont("times", "normal");
@@ -2150,16 +2279,16 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
   doc.save(`Invoice-${csData?.InvoiceNo}.pdf`);
 };
 
-
-
-export const generateBillInvocePDF = (csData, invoiceItems, allStonesmasterList) => {
-  generatenicegold(csData, invoiceItems, allStonesmasterList)
+export const generateBillInvocePDF = (
+  csData,
+  invoiceItems,
+  allStonesmasterList
+) => {
+  generatenicegold(csData, invoiceItems, allStonesmasterList);
 };
 
-
-
 const generatenicegold = (csData, invoiceItems, allStonesmasterList) => {
-  console.log('checking all stones ', allStonesmasterList);
+  console.log("checking all stones ", allStonesmasterList);
 
   const doc = new jsPDF({
     orientation: "portrait", // Can also try "landscape" for more horizontal space
@@ -2172,7 +2301,9 @@ const generatenicegold = (csData, invoiceItems, allStonesmasterList) => {
   doc.text("INVOICE", 105, 20, { align: "center" });
 
   // Get unique stone names/types from the allStonesmasterList
-  const stoneTypes = [...new Set(allStonesmasterList.map((stone) => stone.StoneName))];
+  const stoneTypes = [
+    ...new Set(allStonesmasterList.map((stone) => stone.StoneName)),
+  ];
 
   // Main table header (first row)
   const mainHeader = [
@@ -2180,8 +2311,8 @@ const generatenicegold = (csData, invoiceItems, allStonesmasterList) => {
     { title: "Particular", dataKey: "particular", rowSpan: 2 },
     { title: "Gross Wt", dataKey: "grossWt", rowSpan: 2 },
     { title: "Net Wt", dataKey: "netWt", rowSpan: 2 },
-    ...stoneTypes.map((stoneName) => ({ title: stoneName, colSpan: 1 })), 
-    ...stoneTypes.map((stoneName) => ({ title: stoneName, colSpan: 1 })), 
+    ...stoneTypes.map((stoneName) => ({ title: stoneName, colSpan: 1 })),
+    ...stoneTypes.map((stoneName) => ({ title: stoneName, colSpan: 1 })),
     // { title: "Stone Wt", dataKey: "stoneWt", colSpan: stoneTypes.length }, // Subheader for stone weights
     // { title: "Stone Amt", dataKey: "stoneAmt", colSpan: stoneTypes.length }, // Subheader for stone amounts
   ];
@@ -2204,33 +2335,37 @@ const generatenicegold = (csData, invoiceItems, allStonesmasterList) => {
 
     // Add the stone weight for each stone type
     stoneTypes.forEach((stoneName) => {
-      const matchingStone = allStonesmasterList.find((stone) => stone.StoneName === stoneName);
+      const matchingStone = allStonesmasterList.find(
+        (stone) => stone.StoneName === stoneName
+      );
       row.push(matchingStone ? matchingStone.StoneWeight : "0"); // Stone Weight
     });
 
     // Add the stone amount for each stone type
     stoneTypes.forEach((stoneName) => {
-      const matchingStone = allStonesmasterList.find((stone) => stone.StoneName === stoneName);
+      const matchingStone = allStonesmasterList.find(
+        (stone) => stone.StoneName === stoneName
+      );
       row.push(matchingStone ? matchingStone.StoneAmount : "0"); // Stone Amount
     });
 
     return row;
   });
 
-  console.log('check rows ', rows);
+  console.log("check rows ", rows);
 
   // Add table with dynamic subheader
   autoTable(doc, {
     head: [
-      mainHeader.map(col => col.title),  // First row (main header)
-      subHeader.map(col => col.title)    // Second row (subheader for stone types)
+      mainHeader.map((col) => col.title), // First row (main header)
+      subHeader.map((col) => col.title), // Second row (subheader for stone types)
     ],
     body: rows,
     columnStyles: {
-      0: { cellWidth: 25 },    // Design column width
-      1: { cellWidth: 30 },    // Particular column width
-      2: { cellWidth: 20 },    // Gross Wt column width
-      3: { cellWidth: 20 },    // Net Wt column width
+      0: { cellWidth: 25 }, // Design column width
+      1: { cellWidth: 30 }, // Particular column width
+      2: { cellWidth: 20 }, // Gross Wt column width
+      3: { cellWidth: 20 }, // Net Wt column width
       // Dynamic stone width columns
       ...stoneTypes.reduce((acc, _, index) => {
         acc[4 + index] = { cellWidth: 15 }; // Dynamic stone weight column
@@ -2243,12 +2378,9 @@ const generatenicegold = (csData, invoiceItems, allStonesmasterList) => {
       textColor: "#000",
     },
     margin: { top: 30 }, // Adjust margin to avoid overlap with the title
-    theme: 'grid' // Add grid lines for better alignment visibility
+    theme: "grid", // Add grid lines for better alignment visibility
   });
 
   // Save the PDF with a dynamic invoice number if available
   doc.save(`Invoice-${csData?.invoiceNo || "Default"}.pdf`);
 };
-
-
-
