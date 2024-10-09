@@ -9,11 +9,31 @@ export const generateBillPDF =(invoiceItems,csData, invoiceformate, mainitem)=>{
 console.log('labelformatee ',invoiceItems )
 
 
-  if(invoiceformate === 6){
-    generateinvoicepdf7(invoiceItems,csData, mainitem)
+  if(invoiceformate === 1){
+    generateinvoicepdf1(invoiceItems,csData, mainitem)
     return
-  }else if(invoiceformate === 7) {
+  }else if(invoiceformate === 2) {
+    generateinvoicepdf2(invoiceItems,csData, mainitem)
+    return;
+  }
+  else if(invoiceformate === 3) {
+    generateinvoicepdf3(invoiceItems,csData, mainitem)
+    return;
+  }
+  else if(invoiceformate === 4) {
+    generateinvoicepdf4(invoiceItems,csData, mainitem)
+    return;
+  }
+  else if(invoiceformate === 5) {
+    generateinvoicepdf5(invoiceItems,csData, mainitem)
+    return;
+  }
+  else if(invoiceformate === 6) {
     generateinvoicepdf6(invoiceItems,csData, mainitem)
+    return;
+  }
+  else if(invoiceformate === 7) {
+    generateinvoicepdf7(invoiceItems,csData, mainitem)
     return;
   }
 
