@@ -16,5 +16,7 @@ export const useAdminData = () => {
     employeeCode: adminLoggedIn.EmployeeCode,
     rdPurchaseFormat: parseInt(adminLoggedIn.Clients?.RDPurchaseFormat),
     InvoiceFormat: parseInt(adminLoggedIn.Clients?.InvoiceFormat),
+    employeename :adminLoggedIn.FirstName,
+    employeid :adminLoggedIn.EmployeeId
   };
 };

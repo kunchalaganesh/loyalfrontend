@@ -1676,7 +1676,7 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
         let wt = selectedSku.WeightCategories;
         if (wt) {
 
-          if(!WeightCategory){
+          if(!product.WeightCategory){
             // Split weight categories string into an array of numbers
             const weightCategoriesArray = wt.split(',').map(Number);
 

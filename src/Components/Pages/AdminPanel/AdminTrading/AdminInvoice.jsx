@@ -167,7 +167,9 @@ export default function AdminInvoice() {
     EmployeId,
     employeeCode,
     rdPurchaseFormat,
-    InvoiceFormat
+    InvoiceFormat,
+    employeename,
+    employeid
   } = useAdminData();
 
 
@@ -2110,9 +2112,11 @@ export default function AdminInvoice() {
         // )}`,
         // Price: `${parseFloat(totalPayableAmount).toFixed(2)}`,
         // TotalAmount: `${Math.ceil(totalPayableAmount).toFixed(2)}`,
-        Billedby: `${selectedCashierEmployee}`,
+        // Billedby: `${selectedCashierEmployee}`,
+        Billedby: `${selectedCashierEmployee || employeename}`,
+
         SaleType: "Sale",
-        Soldby: `${selectedSalesEmployee}`,
+        Soldby: `${selectedSalesEmployee || employeename}`,
         PaymentMode: `${paymentsString}`,
         UrdPurchaseAmt: `${parseFloat(oldGoldAmount).toFixed(3)}`,
         GST: `${parseFloat(totalPayableGstAmount).toFixed(3)}`,
@@ -2170,6 +2174,10 @@ export default function AdminInvoice() {
       };
 
       console.log(formData, "FORMDATA FOR ORDER");
+
+      // createOrderItems('1', '');
+
+      
       const response = await fetch(a201, {
         method: "POST",
         headers: {
@@ -2181,6 +2189,7 @@ export default function AdminInvoice() {
       const orderData = rcvdData;
       // setOrderId(orderData.id);
       setOrderCsData(rcvdData);
+      
       console.log(rcvdData, "1st hit", orderCsData);
       // createOrderItems(rcvdData.data.id);
       if (rcvdData.status === "error") {
