@@ -194,7 +194,7 @@ const generateDummyData = () => {
   return items;
 };
 
-const generateinvoicepdf6 = (items, customer, mainitem) => {
+const generateinvoicepdf6 = async (items, customer, mainitem) => {
   console.log("checking items", items);
   console.log("checking customer", customer);
 
@@ -221,7 +221,8 @@ const generateinvoicepdf6 = (items, customer, mainitem) => {
   const despx = pageWidth - 70;
   const despy = 250;
 
-  const invoicenumber = `${items[0].InvoiceId}`;
+  const invoicenumber = `${mainitem.InvoiceNo}`;
+  const invoicedate = `${mainitem.InvoiceDate}`
   const firstname = `${customer.FirstName}`;
   const lastname = `${customer.LastName}`;
   const mobile = `${customer.Mobile}`;
@@ -255,6 +256,8 @@ const generateinvoicepdf6 = (items, customer, mainitem) => {
       marginTop + tableHeight
     ); // Right border
   };
+
+  
 
   const drawTableHeader = () => {
     doc.setFontSize(10);
@@ -411,8 +414,8 @@ const generateinvoicepdf6 = (items, customer, mainitem) => {
       });
       // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
       doc.text("7113", columnPositions.hsnCode + 2, currentY);
-      doc.text(item.Purity || "7113", columnPositions.purity + 2, currentY);
-      doc.text(item.NetWt, columnPositions.price + 2, currentY);
+      doc.text(item.Purity || "NA", columnPositions.purity + 2, currentY);
+      doc.text(item.NetAmount || "0", columnPositions.price + 2, currentY);
       doc.text("1", columnPositions.qty + 2, currentY);
       doc.text(item.TotalAmount || "0", columnPositions.amount + 2, currentY);
 
@@ -421,33 +424,66 @@ const generateinvoicepdf6 = (items, customer, mainitem) => {
     });
   };
 
-  // Set Header Text
-  doc.setFont("whitecraftlight", "italic");
-  doc.setFontSize(40);
-  doc.setTextColor(204, 85, 0); // Color for outline
-  doc.setLineWidth(0.3);
-  doc.text("KEVALI", 80, 20);
+  // // Set Header Text
+  // doc.setFont("whitecraftlight", "italic");
+  // doc.setFontSize(40);
+  // doc.setTextColor(204, 85, 0); // Color for outline
+  // doc.setLineWidth(0.3);
+  // doc.text("KEVALI", 80, 20);
 
-  doc.setFont("sanserif", "bold");
-  doc.setFontSize(18);
-  doc.setTextColor(0, 0, 0);
-  doc.text("92.5 Silver Jewellery", 78, 26);
+  // doc.setFont("sanserif", "bold");
+  // doc.setFontSize(18);
+  // doc.setTextColor(0, 0, 0);
+  // doc.text("92.5 Silver Jewellery", 78, 26);
 
-  doc.setFont("sanserif", "normal");
-  doc.setFontSize(18);
-  doc.text("Signature Of Eternal Elegance", 70, 33);
+  // doc.setFont("sanserif", "normal");
+  // doc.setFontSize(18);
+  // doc.text("Signature Of Eternal Elegance", 70, 33);
 
-  doc.setFont("sanserif", "normal");
-  doc.setFontSize(8);
-  doc.text("(A Brand by Mewar Jewellery House pvt. ltd.)", 80, 37);
+  // doc.setFont("sanserif", "normal");
+  // doc.setFontSize(8);
+  // doc.text("(A Brand by Mewar Jewellery House pvt. ltd.)", 80, 37);
+ 
+  const getImageBase64 = (imagePath) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = imagePath; // This path should point to the public folder image
+      img.crossOrigin = "Anonymous";  // Ensure CORS issues don't block loading
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL('image/jpeg');  // Convert to Base64
+        resolve(dataURL);
+      };
+      img.onerror = (err) => reject(err);
+    });
+  };
+
+  try {
+    // Get the Base64 string of the image
+    const imageBase64 = await getImageBase64('/images/pdfimages/6.jpg'); // Adjust path accordingly
+
+    // Add the image to the PDF at specified coordinates (x, y, width, height)
+    const x = (pageWidth - 40) / 2;
+
+    doc.addImage(imageBase64, 'JPEG', x, 2, 40, 40);
+
+  } catch (error) {
+    console.error("Error loading image:", error);
+  }
+
 
   // Start generating the PDF
-  doc.text("TAX INVOICE", 90, 45);
+  doc.text("TAX INVOICE", 90, 49);
   doc.setFontSize(10);
   doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey - 5);
   doc.text("Invoice No :-", invoicex, invoicey);
   doc.text(invoicenumber, invoicex + 20, invoicey);
-  doc.text("Date :-", invoicex, invoicey + 5);
+  // doc.text("Date :-", invoicex, invoicey + 5);
+  doc.text(`Date :- ${invoicedate}`, invoicex, invoicey + 5);
 
   doc.text("Invoice To", customerx, customery);
 
