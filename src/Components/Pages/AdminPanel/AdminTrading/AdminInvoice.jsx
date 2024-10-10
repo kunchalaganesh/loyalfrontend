@@ -2077,8 +2077,16 @@ export default function AdminInvoice() {
           ? "unlabelled"
           : "wholesale",
         LabelledStockId: x.sell ? x.Id : 0,
+        totalGstAmount: `${x.totalGstAmount}`
       };
     });
+
+    // const newAllSelectedProducts = newAllSelectedProducts.map(product => ({
+    //   ...product,
+    //   totalGstAmount: product.totalGstAmount?.toString() || "0", // Convert totalGstAmount to string
+    //   Quantity: product.Quantity?.toString() || "0", // Ensure Quantity is also a string if required
+    //   GSTAmount: product.GSTAmount?.toString() || "0" // Ensure GSTAmount is a string if required
+    // }));
 
     const totalGrossWt = allSelectedProducts.reduce(
       (a, b) => a + parseFloat(b.GrossWt ? b.GrossWt : 0).toFixed(3),
@@ -2174,6 +2182,8 @@ export default function AdminInvoice() {
       };
 
       console.log(formData, "FORMDATA FOR ORDER");
+
+      console.log('checking itemdetails ', newAllSelectedProducts);
 
       // createOrderItems('1', '');
 

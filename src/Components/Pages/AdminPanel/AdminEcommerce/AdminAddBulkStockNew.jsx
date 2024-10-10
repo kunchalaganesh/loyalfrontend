@@ -927,6 +927,65 @@ export default function AdminAddBulkStockNew() {
 
   const handleCreateAddedProducts = (e) => {
     e.preventDefault();
+
+    let updatedStonesList = [...allStonesList];
+
+  // Loop through each item in allStonesListmain
+  allStonesListmain.forEach((mainStone) => {
+    const foundInAllStones = updatedStonesList.find((stoneMain) =>
+      stoneMain.SKUStoneItem.some(
+        (stoneItem) =>
+          stoneItem.StoneName === mainStone.StoneName &&
+          stoneItem.StoneWeight === mainStone.StoneWeight &&
+          stoneItem.StonePieces === mainStone.StonePieces
+      )
+    );
+
+    // If mainStone is not found in any item of allStonesList, add it
+    if (!foundInAllStones) {
+      const newStoneMain = {
+        Id: null, // You may assign a new Id or use the one from mainStone
+        StoneMainName: mainStone.StoneName, // This could be set according to your data model
+        StoneMainWeight: mainStone.StoneWeight,
+        StoneMainPieces: mainStone.StonePieces,
+        StoneMainRate: mainStone.StoneRate,
+        StoneMainAmount: mainStone.StoneAmount,
+        StoneMainDescription: mainStone.Description,
+        SKUStoneItem: [
+          {
+            Id: mainStone.Id,
+            StoneName: mainStone.StoneName,
+            StoneWeight: mainStone.StoneWeight,
+            StonePieces: mainStone.StonePieces,
+            StoneRate: mainStone.StoneRate,
+            StoneAmount: mainStone.StoneAmount,
+            Description: mainStone.Description,
+            ClientCode: mainStone.ClientCode,
+            SKUStoneMainId: mainStone.Id,
+            StoneMasterId: null, // Set appropriate value
+            SKUId: mainStone.Id, // Set appropriate value
+            CompanyId: mainStone.CompanyId,
+            CounterId: mainStone.CounterId,
+            BranchId: mainStone.BranchId,
+            EmployeeId: mainStone.EmployeeId,
+            Status: mainStone.Status,
+            StoneLessPercent: mainStone.StoneLessPercent,
+          },
+        ],
+      };
+      
+      // Push the missing stone to allStonesList
+      updatedStonesList.push(newStoneMain);
+    }
+  });
+
+  // Update the state with the new stones list
+  setAllStonesList(updatedStonesList);
+
+    console.log('check allstones ', allStonesList);
+    console.log('check mainstone ', allStonesListmain);
+
+
     setReadOnly(true);
     let totalStoneAmount =
       selectedSkuStones && selectedSkuStones.length > 0
@@ -2046,6 +2105,8 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
       setMaking_Fixed_Wastage(selectedSku.MakingFixedWastage);
       setMRP(selectedSku.MRP);
       setAllSelectedSkuStones(selectedSku.SKUStoneMain);
+
+
       setAllStonesList(selectedSku.SKUStoneMain);
       setAllSelectedSkuDiamonds(selectedSku.Diamonds);
       if (
@@ -2089,7 +2150,7 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
       setSelectedFiles([]);
       // setAllFilteredPurchaseItems(allPurchaseItems);
       setGrossWithClip(false);
-      setAllStonesList(allStonesList);
+      setAllStonesList(allStonesListmain);
     }
   }, [selectedSku]);
 
