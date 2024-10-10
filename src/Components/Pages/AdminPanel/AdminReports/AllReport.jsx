@@ -1798,7 +1798,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                         <TableCell sx={{fontWeight: "600"}} align="center"> Stone Pcs</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Stone Wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Net Wt</TableCell>
-                                        <TableCell sx={{fontWeight: "600"}} align="center">Fine Wt</TableCell>
+                                        <TableCell sx={{fontWeight: "600"}} align="center">Fine Wt+W WT</TableCell>
                                     </TableRow>}
                                     {selectedTab == 4 &&
                                     <TableRow>
