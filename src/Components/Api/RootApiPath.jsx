@@ -6,47 +6,47 @@ import { useNavigate } from "react-router-dom";
 export const a1 =
     // "https://sunshineteam.in/loyalstring/api_ls_customerall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/GetAllCustomer";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/GetAllCustomer";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/GetAllCustomer";
 
 //   Customer List As per Customer Login Id (POST)
 export const a2 =
     // "https://sunshineteam.in/loyalstring/api_ls_customerasperloginid_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/CustomerByLoginId";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/CustomerByLoginId";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/CustomerByLoginId";
 //   Customer Details as per Customer id (POST)
 
 export const a3 =
     // "https://sunshineteam.in/loyalstring/api_ls_customerasperuserid_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/GetCustomerById";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/GetCustomerById";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/GetCustomerById";
 
 //   Add Customer (POST)
 export const a4 =
     // "https://sunshineteam.in/loyalstring/api_ls_customer_insert.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/AddCustomer";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/AddCustomer";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/AddCustomer";
 
 //   Update Customer with AnyField except Customer_id and Data (POST)
 export const a5 =
     // "https://sunshineteam.in/loyalstring/api_ls_customer_update.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/UpdateCustomer";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/UpdateCustomer";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/UpdateCustomer";
 //   Add Staff (POST)
 export const a6 =
     // "https://sunshineteam.in/loyalstring/api_ls_staff_insert.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/Staff/AddStaff";
-    "https://testing.loyalstring.co.in/api/Staff/AddStaff";
+    "https://dev.loyalstring.co.in/api/Staff/AddStaff";
 //   Add Category (POST)
 export const a7 =
     // "https://sunshineteam.in/loyalstring/api_ls_category_insert.php  ";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/InsertCategory";
-    "https://testing.loyalstring.co.in/api/ProductMaster/InsertCategory";
+    "https://dev.loyalstring.co.in/api/ProductMaster/InsertCategory";
 //   Add Product (POST)
 export const a8 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/InsertProduct";
     // "https://sunshineteam.in/loyalstring/api_ls_product_insert.php";
-    "https://testing.loyalstring.co.in/api/ProductMaster/InsertProduct";
-// "https://testing.loyalstring.co.in/api/ProductMaster/InsertBulkProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/InsertProduct";
+// "https://dev.loyalstring.co.in/api/ProductMaster/InsertBulkProduct";
 
 //   Add Wishlist (POST)
 export const a9 =
@@ -56,7 +56,7 @@ export const a9 =
 export const a10 =
     // "https://sunshineteam.in/loyalstring/api_ls_order_insert.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/Orders/InsertOrders";
-    "https://testing.loyalstring.co.in/api/Orders/InsertOrders";
+    "https://dev.loyalstring.co.in/api/Orders/InsertOrders";
 
 export const a11 =
     "https://sunshineteam.in/loyalstring/api_ls_rating_insert.php";
@@ -66,13 +66,13 @@ export const a11 =
 export const a12 =
     // "https://sunshineteam.in/loyalstring/api_ls_rates_insert.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/Orders/InsertRates";
-    "https://testing.loyalstring.co.in/api/Orders/InsertRates";
+    "https://dev.loyalstring.co.in/api/Orders/InsertRates";
 // Add Rates to Category (POST)
 
 export const a13 =
     // "https://sunshineteam.in/loyalstring/api_ls_ratestoday_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/Orders/ratestodaybycategory";
-    "https://testing.loyalstring.co.in/api/Orders/ratestodaybycategory";
+    "https://dev.loyalstring.co.in/api/Orders/ratestodaybycategory";
 
 // Get Todays Rate as per Category (POST)
 export const a14 =
@@ -85,342 +85,342 @@ export const a15 = "https://sunshineteam.in/loyalstring/api_ls_rating_data.php";
 export const a16 =
     // "https://sunshineteam.in/loyalstring/api_ls_productall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/GetfetchAllProduct";
-    // "https://testing.loyalstring.co.in/api/ProductMaster/GetfetchAllProduct";
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetuniqiueAllProduct";
+    // "https://dev.loyalstring.co.in/api/ProductMaster/GetfetchAllProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetuniqiueAllProduct";
 // Get All Product Information (GET)
 
 export const a17 =
     // "https://sunshineteam.in/loyalstring/api_ls_productbyproductid_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchProductById";
-    "https://testing.loyalstring.co.in/api/ProductMaster/fetchProductById";
+    "https://dev.loyalstring.co.in/api/ProductMaster/fetchProductById";
 // Get Product Inforation as per Product Id (POST)
 
 export const a18 =
     // "https://sunshineteam.in/loyalstring/api_ls_categoryall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllCategory";
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCategory";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllCategory";
 // Get All Categories (GET)
 
 export const a19 =
     // "https://sunshineteam.in/loyalstring/api_ls_ratestodayallcategories_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/Orders/fetchTodayRates";
-    "https://testing.loyalstring.co.in/api/Orders/fetchTodayRates";
+    "https://dev.loyalstring.co.in/api/Orders/fetchTodayRates";
 // Get All Rates of today of all categories (GET)
 
 export const a20 =
     // "https://sunshineteam.in/loyalstring/api_ls_producttypeall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllProductType";
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllProductMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllProductMaster";
 // Get All ProductTypes (GET)
 
 export const a21 =
     // "https://sunshineteam.in/loyalstring/api_ls_producttype_insert.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/InsertProductType";
-    "https://testing.loyalstring.co.in/api/ProductMaster/InsertProductType";
+    "https://dev.loyalstring.co.in/api/ProductMaster/InsertProductType";
 // Insert ProductType (POST)
 
 export const a22 =
     // "https://sunshineteam.in/loyalstring/api_ls_purityall_data.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/fetchAllPurity";
-    "https://testing.loyalstring.co.in/api/ProductMaster/fetchAllPurity";
+    "https://dev.loyalstring.co.in/api/ProductMaster/fetchAllPurity";
 // Get All Purity data (GET)
 
 export const a23 =
     // "https://sunshineteam.in/loyalstring/api_ls_purity_insert.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/InsertPurity";
-    "https://testing.loyalstring.co.in/api/ProductMaster/InsertPurity";
+    "https://dev.loyalstring.co.in/api/ProductMaster/InsertPurity";
 // Insert Purity data (POST)
 
 export const a24 =
     // "https://sunshineteam.in/loyalstring/api_ls_product_update.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/UpdateProduct";
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateProduct";
 // Update Product data (POST)
 
 export const a25 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/UpdatePassword";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/UpdatePassword";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/UpdatePassword";
 // Update Password
 
 export const a26 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/UpdateImage";
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateImage";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateImage";
 // Update Images
 
 export const a27 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/AddPartyMaster";
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddPartyMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddPartyMaster";
 // Add Supplier Details
 
 export const a28 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/GetAllPartyMaster";
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllPartyMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllPartyMaster";
 // Get Supplier Details
 
 export const a29 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/AddBoxMaster";
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddBoxMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddBoxMaster";
 // Add Box Details
 
 export const a30 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/GetAllBoxMaster";
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllBoxMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllBoxMaster";
 // Get Box Details
 
 export const a31 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/BulkUpdateProduct";
-    "https://testing.loyalstring.co.in/api/ProductMaster/BulkUpdateProduct";
-// "https://testing.loyalstring.co.in/api/ProductMaster/BulkEditProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/BulkUpdateProduct";
+// "https://dev.loyalstring.co.in/api/ProductMaster/BulkEditProduct";
 // Update Bulk Products
 
 export const a32 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/AddCollection";
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddCollection";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddCollection";
 // Insert Collection
 
 export const a33 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/GetAllCollection";
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCollection";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllCollection";
 // Get Collection
 
 export const a34 =
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/ProductMaster/UpdateCollection";
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateCollection";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateCollection";
 // Update Collection
 
 export const a35 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateCategory";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateCategory";
 // Update Category
 
 export const a36 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateProductType";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateProductType";
 // Update ProductType
 
 export const a37 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdatePurity";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdatePurity";
 // Update ProductType
 
 export const a38 =
-    "https://testing.loyalstring.co.in/api/Orders/fetchAllOrders";
+    "https://dev.loyalstring.co.in/api/Orders/fetchAllOrders";
 // fetch all order
 
 export const a39 =
-    "https://testing.loyalstring.co.in/api/Orders/UpdateOrders";
+    "https://dev.loyalstring.co.in/api/Orders/UpdateOrders";
 // Update orders
 
 export const a40 =
     // "https://sunshineteam.in/loyalstring/api_ls_customer_update.php";
     // "https://jewellerywebapplication20230518130808.azurewebsites.net/api/CustomerDetails/UpdateCustomer";
-    "https://testing.loyalstring.co.in/api/CustomerDetails/UpdateCustomers";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/UpdateCustomers";
 // Update Customer all fields
 
 export const a41 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetfetchAllProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetfetchAllProduct";
 // Get All Products
 
 export const a42 =
-    "https://testing.loyalstring.co.in/api/CustomerDetails/GetOtp";
+    "https://dev.loyalstring.co.in/api/CustomerDetails/GetOtp";
 // Get All Products
 
 export const a43 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllRFID";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllRFID";
 // Get All Barcode and Tid
 
 export const a44 =
-    "https://testing.loyalstring.co.in/api/device/GetAllProduct";
+    "https://dev.loyalstring.co.in/api/device/GetAllProduct";
 // Get All Data from external
 
 export const a45 =
-    "https://testing.loyalstring.co.in/api/Orders/DownloadPDF";
+    "https://dev.loyalstring.co.in/api/Orders/DownloadPDF";
 // Download pdf with Img
 
 export const a46 =
-    "https://testing.loyalstring.co.in/api/Orders/PrintPDF";
+    "https://dev.loyalstring.co.in/api/Orders/PrintPDF";
 //  Download pdf without Img
 
 export const a47 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/deleteProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/deleteProduct";
 // Delete Product with itemcode
 
 export const a48 =
-    "https://testing.loyalstring.co.in/api/Orders/CreateOrder";
+    "https://dev.loyalstring.co.in/api/Orders/CreateOrder";
 // Create Order Multiple
 
 export const a49 =
-    "https://testing.loyalstring.co.in/api/Orders/CreateOrderItem";
+    "https://dev.loyalstring.co.in/api/Orders/CreateOrderItem";
 // Create Order Items Multiple
 
 export const a50 =
-    "https://testing.loyalstring.co.in/api/Orders/AllOrderItemsByOrderId";
+    "https://dev.loyalstring.co.in/api/Orders/AllOrderItemsByOrderId";
 // Get Order Items By Order id
 
 export const a51 =
-    "https://testing.loyalstring.co.in/api/Orders/DownloadInvoice";
+    "https://dev.loyalstring.co.in/api/Orders/DownloadInvoice";
 // Download Invoice
 
 export const a52 =
-    // "https://testing.loyalstring.co.in/api/Orders/AllOrderItemsByOrderId";
-    "https://testing.loyalstring.co.in/api/orders/Getfetchordersbyid";
+    // "https://dev.loyalstring.co.in/api/Orders/AllOrderItemsByOrderId";
+    "https://dev.loyalstring.co.in/api/orders/Getfetchordersbyid";
 // Get All Order Items
 
 export const a53 =
-    "https://testing.loyalstring.co.in/api/Orders/CreateURDPurchase";
+    "https://dev.loyalstring.co.in/api/Orders/CreateURDPurchase";
 // Add Purchase Items
 
 export const a54 =
-    "https://testing.loyalstring.co.in/api/Orders/GetAllURDPurchase";
+    "https://dev.loyalstring.co.in/api/Orders/GetAllURDPurchase";
 // Get All Purchase Items
 
 export const a55 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/InsertUnlabledProducts";
+    "https://dev.loyalstring.co.in/api/ProductMaster/InsertUnlabledProducts";
 // Add Unlabelled Items
 
 export const a56 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
 // Get All Unlabelled Items
 
 export const a57 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/BulkUpdateUnLabeledProduct";
+    "https://dev.loyalstring.co.in/api/ProductMaster/BulkUpdateUnLabeledProduct";
 // Update Unlabelled Items
 
 export const a58 =
-    "https://testing.loyalstring.co.in/api/Staff/AddSalesTeam";
+    "https://dev.loyalstring.co.in/api/Staff/AddSalesTeam";
 // Add New Employees
 
 export const a59 =
-    "https://testing.loyalstring.co.in/api/Staff/GetAllSaleTeam";
+    "https://dev.loyalstring.co.in/api/Staff/GetAllSaleTeam";
 // Get All Employee
 
 export const a60 =
-    "https://testing.loyalstring.co.in/api/Staff/UpdateSalesTeam";
+    "https://dev.loyalstring.co.in/api/Staff/UpdateSalesTeam";
 // Edit Employee
 
 export const a61 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetActiveAllUnLabeledProducts";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetActiveAllUnLabeledProducts";
 // Get Active Unlabel Products
 
 export const a62 =
-    "https://testing.loyalstring.co.in/api/device/Login";
+    "https://dev.loyalstring.co.in/api/device/Login";
 // Admin Panel Token Login
 
 export const a63 =
-    "https://testing.loyalstring.co.in/api/Orders/CreateCreditNote";
+    "https://dev.loyalstring.co.in/api/Orders/CreateCreditNote";
 // Apply Credit Note
 
 export const a64 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdatePartyMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdatePartyMaster";
 // Update Supplier
 
 export const a65 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/CreateRDPurchase";
+    "https://dev.loyalstring.co.in/api/RDPurchase/CreateRDPurchase";
 // Add Purchase Main Box
 
 export const a66 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/CreateRDPurchaseItem";
+    "https://dev.loyalstring.co.in/api/RDPurchase/CreateRDPurchaseItem";
 // Add Purchase Items
 
 export const a67 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/GetAllRDPurchase";
+    "https://dev.loyalstring.co.in/api/RDPurchase/GetAllRDPurchase";
 // Get All Rd Purchase
 
 export const a68 =
-    "https://testing.loyalstring.co.in/api/StyleMaster/GetAllStones";
+    "https://dev.loyalstring.co.in/api/StyleMaster/GetAllStones";
 // Get All Stones
 
 export const a69 =
-    "https://testing.loyalstring.co.in/api/StyleMaster/AddStone";
+    "https://dev.loyalstring.co.in/api/StyleMaster/AddStone";
 // Add New Stone
 
 export const a70 =
-    "https://testing.loyalstring.co.in/api/StyleMaster/UpdateStone";
+    "https://dev.loyalstring.co.in/api/StyleMaster/UpdateStone";
 // // Update Stone
 //
 export const a71 =
-    "https://testing.loyalstring.co.in/api/StyleMaster/GetAllSkuList";
+    "https://dev.loyalstring.co.in/api/StyleMaster/GetAllSkuList";
 // Get ALL Sku
 
 export const a72 =
-    "https://testing.loyalstring.co.in/api/StyleMaster/AddSKUMaster";
+    "https://dev.loyalstring.co.in/api/StyleMaster/AddSKUMaster";
 // Add Sku
 
 export const a73 =
-    "https://testing.loyalstring.co.in/api/Orders/GetAllPaymentMode";
+    "https://dev.loyalstring.co.in/api/Orders/GetAllPaymentMode";
 // Get All Payments
 
 export const a74 =
-    "https://testing.loyalstring.co.in/api/Orders/CreatePaymentMode";
+    "https://dev.loyalstring.co.in/api/Orders/CreatePaymentMode";
 // Add New Payment
 
 export const a75 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/PartyLedgerBySupplierId";
+    "https://dev.loyalstring.co.in/api/RDPurchase/PartyLedgerBySupplierId";
 // Get PartyLedger By SupplierId
 
 export const a76 =
-    "https://testing.loyalstring.co.in/api/Orders/UpdateOrder";
+    "https://dev.loyalstring.co.in/api/Orders/UpdateOrder";
 // Update Customer Order Main Box
 
 export const a77 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/UpdateRDPurchase";
+    "https://dev.loyalstring.co.in/api/RDPurchase/UpdateRDPurchase";
 // Update RD Purchase Main Box
 
 export const a78 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/UpdateRDPurchaseBalance";
+    "https://dev.loyalstring.co.in/api/RDPurchase/UpdateRDPurchaseBalance";
 // Update RD Purchase Main Box Balance
 
 export const a79 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateBoxMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateBoxMaster";
 // Update Box Master
 
 export const a80 =
-    "https://testing.loyalstring.co.in/api/Orders/CreateDebitNote";
+    "https://dev.loyalstring.co.in/api/Orders/CreateDebitNote";
 // Create Debit Note
 
 export const a81 =
-    "https://testing.loyalstring.co.in/api/Orders/updateOrderItem";
+    "https://dev.loyalstring.co.in/api/Orders/updateOrderItem";
 // Update Order Items
 
 export const a82 =
-    "https://testing.loyalstring.co.in/api/Orders/LabeledStockReport";
+    "https://dev.loyalstring.co.in/api/Orders/LabeledStockReport";
 // Get Labelled Stock Report
 
 export const a83 =
-    "https://testing.loyalstring.co.in/api/Orders/ExchangeOrderItem";
+    "https://dev.loyalstring.co.in/api/Orders/ExchangeOrderItem";
 // Return Order Items
 
 export const a84 =
-    "https://testing.loyalstring.co.in/api/Orders/GetAllCreditNote";
+    "https://dev.loyalstring.co.in/api/Orders/GetAllCreditNote";
 // Get All Credit Note
 
 export const a85 =
-    "https://testing.loyalstring.co.in/api/Orders/GetAllDebitNote";
+    "https://dev.loyalstring.co.in/api/Orders/GetAllDebitNote";
 // Get All Debit Note
 
 export const a86 =
-    "https://testing.loyalstring.co.in/api/Orders/UpdateOrder";
+    "https://dev.loyalstring.co.in/api/Orders/UpdateOrder";
 // Update Order Main Box
 
 export const a87 =
-    "https://testing.loyalstring.co.in/api/Orders/GetAllOrderItems";
+    "https://dev.loyalstring.co.in/api/Orders/GetAllOrderItems";
 // Get All Order Items
 
 export const a88 =
-    "https://testing.loyalstring.co.in/api/RDPurchase/GetAllRDPurchaseItem";
+    "https://dev.loyalstring.co.in/api/RDPurchase/GetAllRDPurchaseItem";
 // Get All RD Purchase Items
 
 export const a89 =
-    "https://testing.loyalstring.co.in/api/StyleMaster/UpdateSKUMaster";
+    "https://dev.loyalstring.co.in/api/StyleMaster/UpdateSKUMaster";
 // Update Sku
 
 export const a90 =
-    "https://testing.loyalstring.co.in/api/Orders/UploadExcel";
+    "https://dev.loyalstring.co.in/api/Orders/UploadExcel";
 // Upload Excel
 
 export const a91 =
-    "https://testing.loyalstring.co.in/api/Orders/DeletePaymentMode";
+    "https://dev.loyalstring.co.in/api/Orders/DeletePaymentMode";
 // Delete Payment
 
 export const a92 =
-    "https://testing.loyalstring.co.in/api/Orders/ReturnAdvancePayment";
+    "https://dev.loyalstring.co.in/api/Orders/ReturnAdvancePayment";
 // Return Advance to customer
 
 // GOLD STRING APIS BELOW
@@ -428,566 +428,566 @@ export const a92 =
 // GOLD STRING APIS BELOW
 
 export const a93 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddClientOnboarding";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddClientOnboarding";
 // Gold String Add New client
 
 export const a94 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/ClientOnboardingLogin";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/ClientOnboardingLogin";
 // Gold String Client Login
 
 export const a95 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllCompanyDetails";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllCompanyDetails";
 // Get ALL Company Details
 
 export const a96 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateCompanyInfo";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateCompanyInfo";
 // Update Company Details
 
 export const a97 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddCompanyDetails";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddCompanyDetails";
 // Add Company Details
 
 export const a98 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllBranchMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllBranchMaster";
 // Get ALL Branch Details
 
 export const a99 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateBranchMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateBranchMaster";
 // Update Branch Details
 
 export const a100 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddBranchMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddBranchMaster";
 // Add Branch Details
 
 export const a101 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllCounters";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllCounters";
 // Get ALL Counter Details
 
 export const a102 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateCounter";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateCounter";
 // Update Counter Details
 
 export const a103 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddCounter";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddCounter";
 // Add Counter Details
 
 export const a104 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllDepartment";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllDepartment";
 // Get ALL Department Details
 
 export const a105 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateDepartment";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateDepartment";
 // Update Department Details
 
 export const a106 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddDepartment";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddDepartment";
 // Add Department Details
 
 export const a107 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllRoles";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllRoles";
 // Get ALL Roles Details
 
 export const a108 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateRoles";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateRoles";
 // Update Roles Details
 
 export const a109 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddRoles";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddRoles";
 // Add Roles Details
 
 export const a110 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllEmployee";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllEmployee";
 // Get ALL Employees Details
 
 export const a111 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateEmployee";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateEmployee";
 // Update Employees Details
 
 export const a112 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddEmployee";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddEmployee";
 // Add Employees Details
 
 export const a113 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllBankMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllBankMaster";
 // Get ALL Banks Details
 
 export const a114 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateBankMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateBankMaster";
 // Update Banks Details
 
 export const a115 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddBankMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddBankMaster";
 // Add Banks Details
 
 // export const a116 =
-//   "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllBankMaster";
+//   "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllBankMaster";
 // // Get ALL devices Details
 
 // export const a117 =
-//   "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateBankMaster";
+//   "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateBankMaster";
 // // Update devices Details
 
 // export const a118 =
-//   "https://testing.loyalstring.co.in/api/ClientOnboarding/AddBankMaster";
+//   "https://dev.loyalstring.co.in/api/ClientOnboarding/AddBankMaster";
 // // Add devices Details
 
 export const a119 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllTaxMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllTaxMaster";
 // Get ALL Tax Details
 
 export const a120 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateTaxMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateTaxMaster";
 // Update Tax Details
 
 export const a121 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddTaxMaster";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddTaxMaster";
 // Add Tax Details
 
 export const a122 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllRateConversion";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllRateConversion";
 // Get ALL Rate Conversion Details
 
 export const a123 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateRateConversion";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateRateConversion";
 // Update Rate Conversion Details
 
 export const a124 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddRateConversion";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddRateConversion";
 // Add Rate Conversion Details
 
 export const a125 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCategory";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllCategory";
 // Get ALL Category Details
 
 export const a126 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateCategoryMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateCategoryMaster";
 // Update Category Details
 
 export const a127 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddCategoryMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddCategoryMaster";
 // Add Category Details
 
 export const a128 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllProductMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllProductMaster";
 // Get ALL Product Details
 
 export const a129 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateProductMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateProductMaster";
 // Update Product Details
 
 export const a130 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddProductMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddProductMaster";
 // Add Product Details
 
 export const a131 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDesign";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDesign";
 // Get ALL Design Details
 
 export const a132 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDesign";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateDesign";
 // Update Design Details
 
 export const a133 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddDesign";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddDesign";
 // Add Design Details
 
 export const a134 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllPurity";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllPurity";
 // Get ALL Purity Details
 
 export const a135 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdatePurityMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdatePurityMaster";
 // Update Purity Details
 
 export const a136 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddPurityMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddPurityMaster";
 // Add Purity Details
 
 export const a137 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllBoxMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllBoxMaster";
 // Get ALL Box Details
 
 export const a138 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateBoxMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateBoxMaster";
 // Update Box Details
 
 export const a139 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddBoxMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddBoxMaster";
 // Add Box Details
 
 export const a140 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCollection";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllCollection";
 // Get ALL Collection Details
 
 export const a141 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateCollection";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateCollection";
 // Update Collection Details
 
 export const a142 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddCollection";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddCollection";
 // Add Collection Details
 
 export const a143 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllOccassion";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllOccassion";
 // Get ALL Occassion Details
 
 export const a144 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateOccassion";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateOccassion";
 // Update Occassion Details
 
 export const a145 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddOccassion";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddOccassion";
 // Add Occassion Details
 
 export const a146 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllStoneMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllStoneMaster";
 // // Get ALL Stone Master
 
 export const a147 =
-"https://testing.loyalstring.co.in/api/ProductMaster/UpdateStoneMaster";
-    // "https://testing.loyalstring.co.in/api/ProductMaster/UpdateStoneMaster";
+"https://dev.loyalstring.co.in/api/ProductMaster/UpdateStoneMaster";
+    // "https://dev.loyalstring.co.in/api/ProductMaster/UpdateStoneMaster";
 // // Update Stone Master
 
 export const a148 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddStoneMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddStoneMaster";
 // // Add Stone Master
 export const a149 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllPartyDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllPartyDetails";
 // Get ALL Party Details
 
 export const a150 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdatePartyDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdatePartyDetails";
 // Update Party Details
 
 export const a151 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddPartyDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddPartyDetails";
 // Add Party Details
 
 export const a152 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllStoneDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllStoneDetails";
 // Get All Stones Details
 
 export const a153 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondMaster";
 // Get All Diamonds Master
 
 export const a154 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddRdPurchase";
+    "https://dev.loyalstring.co.in/api/Invoice/AddRdPurchase";
 // Add RD Purchase Main Box
 
 export const a155 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddRdPurchaseItem";
+    "https://dev.loyalstring.co.in/api/Invoice/AddRdPurchaseItem";
 // Add RD Purchase Items
 
 export const a156 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddPaymentMode";
+    "https://dev.loyalstring.co.in/api/Invoice/AddPaymentMode";
 // Add Payment Mode
 
 export const a157 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddPurchaseStoneDetails";
+    "https://dev.loyalstring.co.in/api/Invoice/AddPurchaseStoneDetails";
 // Add Purchase Stone Details
 
 export const a158 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddPurchaseDiamondDetails";
+    "https://dev.loyalstring.co.in/api/Invoice/AddPurchaseDiamondDetails";
 // Add Purchase Diamond Details
 
 export const a159 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllRDPurchase";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllRDPurchase";
 // GET All RD Purchase Main Box
 export const a160 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllURDPurchase";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllURDPurchase";
 // GET All URD_Purchase Main Box
 
 export const a161 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetRDPurchaseById";
+    "https://dev.loyalstring.co.in/api/Invoice/GetRDPurchaseById";
 // GET RD Purchase Main Box by ID
 
 export const a162 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllRDPurchaseItem";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllRDPurchaseItem";
 // GET All RD Purchase Items
 
 export const a163 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllSKU";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllSKU";
 // GET All SKU List
 
 export const a164 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetRDPurchaseItemByPurchaseId";
+    "https://dev.loyalstring.co.in/api/Invoice/GetRDPurchaseItemByPurchaseId";
 // GET All Purchase Items by id
 
 export const a165 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllPaymentMode";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllPaymentMode";
 // GET All Payments
 
 export const a166 =
-    "https://testing.loyalstring.co.in/api/Invoice/UpdateRDPurchase";
+    "https://dev.loyalstring.co.in/api/Invoice/UpdateRDPurchase";
 // Update Rd Main Box
 
 export const a167 =
-    "https://testing.loyalstring.co.in/api/Invoice/UpdatePaymentMode";
+    "https://dev.loyalstring.co.in/api/Invoice/UpdatePaymentMode";
 // Update Payments
 
 export const a168 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddSKU";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddSKU";
 // Add Sku
 
 export const a169 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateSKU";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateSKU";
 // Update Sku
 
 export const a170 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllPurchaseLot";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllPurchaseLot";
 // Get All Purchase lot
 
 export const a171 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddPurchaseLot";
+    "https://dev.loyalstring.co.in/api/Invoice/AddPurchaseLot";
 // Add Purchase lot
 
 export const a172 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/VerifyEmailAddress";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/VerifyEmailAddress";
 //Send Otp
 
 export const a173 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/GetAllCustomer";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/GetAllCustomer";
 //Fetch All Customers
 
 export const a174 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllVendorTounch";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllVendorTounch";
 //Fetch All Vendor Tounche
 
 export const a175 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllRFID";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllRFID";
 //Fetch All RFID Data
 
 export const a176 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddLabeledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddLabeledStock";
 //Add Labelled Stock
 
 export const a177 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateLabeledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateLabeledStock";
 //Update Labelled Stock
 
 export const a178 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/DeleteLabeledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/DeleteLabeledStock";
 //Delete Labelled Stock
 
 export const a179 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddVendorTounch";
+    "https://dev.loyalstring.co.in/api/Invoice/AddVendorTounch";
 //Add Vendor Tounche
 
 export const a180 =
-    "https://testing.loyalstring.co.in/api/Invoice/UpdateVendorTounch";
+    "https://dev.loyalstring.co.in/api/Invoice/UpdateVendorTounch";
 //Update Vendor Tounche
 
 export const a181 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllLabeledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllLabeledStock";
 //Get All Labelled Stock
 
 export const a182 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondDetails";
 //Get All Diamond Master
 
 export const a183 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddDiamondDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddDiamondDetails";
 //Add Diamond Master
 
 export const a184 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDiamondDetails";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateDiamondDetails";
 //Update Diamond Master
 
 export const a185 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
 //Get All Unlabelled Stock
 
 export const a186 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddUnlabelledStock";
 //Add Unlabelled Stock
 
 export const a187 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateUnlabelledStock";
 //Update Unlabelled Stock
 
 export const a188 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllInvoice";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllInvoice";
 //Get All Invoice
 
 export const a189 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/AddCustomer";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/AddCustomer";
 //Add Customer
 
 export const a190 =
-    "https://testing.loyalstring.co.in/api/ClientOnboarding/UpdateCustomer";
+    "https://dev.loyalstring.co.in/api/ClientOnboarding/UpdateCustomer";
 //Update Customer
 
 export const a191 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetDiamondSizeWeightRateTemplate";
 //Get All Diamond Size Weight Rate
 export const getAllSizeWeightRate =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondSizeWeightRate";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondSizeWeightRate";
 
 export const a192 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddDiamondSizeWeightRate";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddDiamondSizeWeightRate";
 //Add Diamond Size Weight Rate
 
 export const a193 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDiamondSizeWeightRate";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateDiamondSizeWeightRate";
 //Update Diamond Size Weight Rate
 
 export const a194 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllDiamondAttributes";
 //Get All Diamond Attributes
 
 export const a195 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddDiamondAttributes";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddDiamondAttributes";
 //Add Diamond Attributes
 
 export const a196 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDiamondAttributes";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateDiamondAttributes";
 //Update Diamond Attributes
 
 export const a197 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStock";
 //Get All Unlabelled Stock
 
 export const a198 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddUnlabelledStock";
 //Add Unlabelled Stock
 
 export const a199 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateUnlabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateUnlabelledStock";
 //Update Unlabelled Stock
 
 export const a200 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetLabeledStockById";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetLabeledStockById";
 //Get Labelled Stock By Id
 
 export const a201 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddInvoice";
+    "https://dev.loyalstring.co.in/api/Invoice/AddInvoice";
 //Add Invoice
 
 export const a202 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetInvoiceById";
+    "https://dev.loyalstring.co.in/api/Invoice/GetInvoiceById";
 //Get Invoice By Id
 
 export const a203 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/PaireCustomerVendorId";
+    "https://dev.loyalstring.co.in/api/ProductMaster/PaireCustomerVendorId";
 //Pair Customer VendorId
 
 export const a204 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllCustomerTounch";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllCustomerTounch";
 //Get All Customer Tounche
 
 export const a205 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddCustomerTounch";
+    "https://dev.loyalstring.co.in/api/Invoice/AddCustomerTounch";
 //Add Customer Tounche
 
 export const a206 =
-    "https://testing.loyalstring.co.in/api/Invoice/UpdateCustomerTounch";
+    "https://dev.loyalstring.co.in/api/Invoice/UpdateCustomerTounch";
 //Update Customer Tounche
 
 export const a207 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCustomerSlab";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllCustomerSlab";
 //Get All Customer Slab
 
 export const a208 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddCustomerSlab";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddCustomerSlab";
 //Add Customer Slab
 
 export const a209 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateCustomerSlab";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateCustomerSlab";
 //Update Customer Slab
 
 export const a210 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllRateOfInterest";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllRateOfInterest";
 //Get All Rate Of Interest
 
 export const a211 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddRateOfInterest";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddRateOfInterest";
 //Add Rate Of Interest
 
 export const a212 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateRateOfInterest";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateRateOfInterest";
 //Update Rate Of Interest
 
 export const a213 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllCreditPeriod";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllCreditPeriod";
 //Get All Credit Period
 
 export const a214 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddCreditPeriod";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddCreditPeriod";
 //Add Credit Period
 
 export const a215 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateCreditPeriod";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateCreditPeriod";
 //Update Credit Period
 
 export const a216 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetStockReport";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetStockReport";
 
 export const a217 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/InsertLabelledStock";
+    "https://dev.loyalstring.co.in/api/ProductMaster/InsertLabelledStock";
 //Add Bulk Stock New
 
 export const a218 =
-    "https://testing.loyalstring.co.in/api/Reports/StockReportByCategory";
+    "https://dev.loyalstring.co.in/api/Reports/StockReportByCategory";
 //Get Stock Report Default
 
 export const a219 =
-    "https://testing.loyalstring.co.in/api/Reports/StockReportByProduct";
+    "https://dev.loyalstring.co.in/api/Reports/StockReportByProduct";
 //Get Stock Report for Products
 
 export const a220 =
-    "https://testing.loyalstring.co.in/api/Reports/StockReportByDesign";
+    "https://dev.loyalstring.co.in/api/Reports/StockReportByDesign";
 //Get Stock Report for Design
 
 export const a221 =
-    "https://testing.loyalstring.co.in/api/Reports/SKUVendorwiseReport";
+    "https://dev.loyalstring.co.in/api/Reports/SKUVendorwiseReport";
 //Get SKU Vendor wise Report
 
 export const a222 =
-    "https://testing.loyalstring.co.in/api/Reports/SKUStockReport";
+    "https://dev.loyalstring.co.in/api/Reports/SKUStockReport";
 //Get SKU Vendor wise Report
 
 export const a223 =
-    "https://testing.loyalstring.co.in/api/Invoice/MakePayment";
+    "https://dev.loyalstring.co.in/api/Invoice/MakePayment";
 // Update RD Purchase Main Box Balance
 
 export const a224 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddPacketMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddPacketMaster";
 // Add Packet Master
 
 export const a225 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdatePacketMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdatePacketMaster";
 // Update Packet Master
 
 export const a226 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllPacketMaster";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllPacketMaster";
 // Get All Packet Master
 
 export const a227 =
-    "https://testing.loyalstring.co.in/api/RFIDdevice/GetAllRFIDdevice";
+    "https://dev.loyalstring.co.in/api/RFIDdevice/GetAllRFIDdevice";
 // Get All RFID device
 
 export const a228 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllCreditNote";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllCreditNote";
 // Get All Credit Note
 
 export const a229 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddCreditNote";
+    "https://dev.loyalstring.co.in/api/Invoice/AddCreditNote";
 // Add Credit Note
 
 export const a230 =
-    "https://testing.loyalstring.co.in/api/Invoice/GetAllDebitNote";
+    "https://dev.loyalstring.co.in/api/Invoice/GetAllDebitNote";
 // Get All Debit Note
 
 export const a231 =
-    "https://testing.loyalstring.co.in/api/Invoice/AddDebitNote";
+    "https://dev.loyalstring.co.in/api/Invoice/AddDebitNote";
 
 
 // Add Debit Note
 
 // export const s1 = `http://localhost:3000/demo/Images/`;
 // export const s1 = `https://mkgharejewellers.com/demo/Images/`;
-export const s1 = `https://testing.loyalstring.co.in/images`;
+export const s1 = `https://dev.loyalstring.co.in/images`;
 // export const s1 = `https://goldkarizma.com/demo/Images/`;
 
 //For Local Images
@@ -1002,7 +1002,7 @@ export const s2 = `https://mkgharejewellers.com/contactdetails`;
 export const s3 =
     // "https://product123.blob.core.windows.net/images";
     "https://jewellerywebapplications.blob.core.windows.net/images";
-// "https://testing.loyalstring.co.in/api/RDPurchase/GetAllRDPurchase";
+// "https://dev.loyalstring.co.in/api/RDPurchase/GetAllRDPurchase";
 
 
 export const paymentApi = "http://localhost:5000";
@@ -1010,47 +1010,47 @@ export const paymentApi = "http://localhost:5000";
 // export const paymentApi = "https://goldkarizma.com/nodjs";
 
 // adminadddiamondsizeweightrate post api
-export const postAdminadddiamondsizeweightrate = `https://testing.loyalstring.co.in/api/ProductMaster/SaveDiamondSizeWeightRateTemplate`;
+export const postAdminadddiamondsizeweightrate = `https://dev.loyalstring.co.in/api/ProductMaster/SaveDiamondSizeWeightRateTemplate`;
 
 
 
 //Get Stock Transfer Type
 export const a232 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetStockTransferTypes";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetStockTransferTypes";
 
 // Filter labeled stock
 export const a233 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllLabeledStockByFilter";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllLabeledStockByFilter";
 
 // Filter unlabeled stock
 export const a234 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStockByFilter";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllUnlabelledStockByFilter";
 
 // add stock transfer
 export const a235 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/AddStockTransfer";
+    "https://dev.loyalstring.co.in/api/ProductMaster/AddStockTransfer";
 
 //get all stock transfers
 export const a236 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/GetAllStockTransfers";
+    "https://dev.loyalstring.co.in/api/ProductMaster/GetAllStockTransfers";
 
 //add Approve Stock Transfer
 export const a237 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/ApproveStockTransfer";
+    "https://dev.loyalstring.co.in/api/ProductMaster/ApproveStockTransfer";
 //add device
 export const a238 =
-    "https://testing.loyalstring.co.in/api/RFIDdevice/AddRFIDdevice";
+    "https://dev.loyalstring.co.in/api/RFIDdevice/AddRFIDdevice";
 
 //Update device
 export const a239 =
-    "https://testing.loyalstring.co.in/api/RFIDdevice/UpdateRFIDdevice";
+    "https://dev.loyalstring.co.in/api/RFIDdevice/UpdateRFIDdevice";
 //Update todays rates
 export const a240 =
-    "https://testing.loyalstring.co.in/api/ProductMaster/UpdateDailyRates";
+    "https://dev.loyalstring.co.in/api/ProductMaster/UpdateDailyRates";
 //filter packets
 export const a241 =
-    "https://testing.loyalstring.co.in/api/Reports/StockReportByPacket";
+    "https://dev.loyalstring.co.in/api/Reports/StockReportByPacket";
 //filter box
 export const a242 =
-    "https://testing.loyalstring.co.in/api/Reports/StockReportByBox";
+    "https://dev.loyalstring.co.in/api/Reports/StockReportByBox";
 

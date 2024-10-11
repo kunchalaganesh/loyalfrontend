@@ -36,7 +36,7 @@ class ProductCalculator {
     this.calculateNetWeight(updatedProduct, selectedSku);
 
     // Wastage and Fine Calculations
-    this.calculateWastageAndFine(updatedProduct, finePure);
+    this.calculateWastageAndFine(updatedProduct, finePure, convertAmount);
 
     // Total Price Calculations
     this.calculateTotalPrice(updatedProduct, convertAmount, gstType, finePure);
@@ -348,7 +348,7 @@ class ProductCalculator {
     }
   }
 
-  static calculateWastageAndFine(updatedProduct, finePure) {
+  static calculateWastageAndFine(updatedProduct, finePure, convertAmount) {
     // Calculate fineWeight based on FineWt if provided, otherwise 0
 
     let fineWeight = parseFloat(updatedProduct.FineWt || 0);
@@ -359,9 +359,17 @@ class ProductCalculator {
           parseFloat(updatedProduct.NetWt || 0)) /
         100
       : (parseFloat(updatedProduct.WastageWt || 0) * fineWeight) / 100;
+      let makingPercentage = parseFloat(updatedProduct.MakingFixedWastage) || 0;
+let making2 = 0;
+      if(!convertAmount){
+        making2 = parseFloat(makingPercentage)
+        console.log('check here ' );
+      }else{
+        making2 = 0
+      }
 
     // Calculate total fine + wastage weight
-    let totalFineWastageWt = parseFloat(fineWeight) + parseFloat(wastageWeight);
+    let totalFineWastageWt = parseFloat(fineWeight) + parseFloat(wastageWeight)+making2;
 
     // Update the product properties
     updatedProduct.FineWt = parseFloat(fineWeight).toFixed(3);

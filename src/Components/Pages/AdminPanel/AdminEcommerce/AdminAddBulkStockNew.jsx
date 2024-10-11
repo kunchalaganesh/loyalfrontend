@@ -406,6 +406,8 @@ export default function AdminAddBulkStockNew() {
 
       setFilteredsku(filteredItems);
       setFilteredparty(filteredItems);
+      setPartyTypeId(filteredItems[0].Id)
+
     } else {
       setFilteredsku(allSku);
       setFilteredparty(partyData);
