@@ -318,6 +318,8 @@ export default function AdminAddBulkStockNew() {
               setAllPurchaseItems(result.value);
               setAllFilteredPurchaseItems(result.value);
 
+
+
               break;
             case 8:
               setAllPacketNumbers(result.value);
@@ -369,6 +371,38 @@ export default function AdminAddBulkStockNew() {
   useEffect(() => {
     loadData();
   }, [clientCode]);
+
+
+  // Function to get unique Lot Numbers
+const getUniqueLotNumbers = (items) => {
+  const lotSet = new Set(); // Set to store unique lot numbers
+  return items.filter((item) => {
+    if (!lotSet.has(item.LotNumber)) {
+      lotSet.add(item.LotNumber); // Add lot number to set if it's unique
+      return true; // Keep this item in the filtered array
+    }
+    return false; // Ignore duplicate lot numbers
+  });
+};
+
+// Assuming `allFilteredPurchaseItems` is already available
+const uniqueLotNumbers = getUniqueLotNumbers(allFilteredPurchaseItems);
+
+const handleLotInputChange = (e) => {
+  const value = e.target.value;
+  setLotInputValue(value);
+
+  if (value === "") {
+    // If the input is cleared, show all lot numbers
+    setFilteredLotNumbers(uniqueLotNumbers);
+  } else {
+    // Filter the uniqueLotNumbers based on the user's input
+    const filtered = uniqueLotNumbers.filter((lot) =>
+      lot.LotNumber.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredLotNumbers(filtered);
+  }
+};
 
   const handleError = (message) => {
     setErrorMessage(message);
@@ -2071,6 +2105,27 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
         setSelectedweights([]);
       }
 
+      const matchingCollection = collectionmainlist.find(
+        (collectionObj) => collectionObj.Collection.Id === selectedSku.CollectionId
+      );
+
+      const matchingCollection1 = collectionmainlist.find(
+        (collectionObj) => collectionObj.Collection.Id == selectedSku.CollectionId
+      );
+
+      console.log('checking sku ', matchingCollection, '  ', matchingCollection1)
+
+      if (matchingCollection) {
+        // Set the CollectionName to the selected collection's name
+        setCollectionmain(
+          `${parseInt(matchingCollection.Collection.Id)},${matchingCollection.Collection.CollectionName}`
+        );
+      } else {
+        // Handle case where no matching collection is found
+        setCollectionmain(`${selectedSku.CollectionId}, No Collection Found`);
+      }
+
+
       setDescription(selectedSku.Description);
       setNetWt(selectedSku.NetWt);
       setBoxId(0);
@@ -2084,9 +2139,9 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
       setProductType(`${selectedSku.ProductId},${selectedSku.ProductName}`);
       setBoxType(`${selectedSku.BoxId},${selectedSku.BoxName}`);
       setCollection(`${selectedSku.DesignId},${selectedSku.DesignName}`);
-      setCollectionmain(
-        `${selectedSku.CollectionId},${selectedSku.CollectionNameSKU}`
-      );
+      // setCollectionmain(
+      //   `${selectedSku.CollectionId},${selectedSku.CollectionNameSKU}`
+      // );
       setPurity(`${selectedSku.PurityId},${selectedSku.PurityName}`);
       // categoryId = selectedSku.categoryId;
       // productTypeId = selectedSku.productTypeId;
@@ -3546,8 +3601,8 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
                                         Select Lot Number
                                       </option>
 
-                                      {allFilteredPurchaseItems &&
-                                        allFilteredPurchaseItems.map((x) => {
+                                      {uniqueLotNumbers &&
+                                        uniqueLotNumbers.map((x) => {
                                           return (
                                             <option value={x.LotNumber}>
                                               {x.LotNumber}
@@ -3596,39 +3651,7 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
                                 </Grid>
                               </Grid>
                               <Grid container>
-                                <Grid item xs={6} md={3}>
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <p style={{ fontSize: "14px" }}>
-                                      Unlabelled Diamond :
-                                    </p>
-                                    <div>
-                                      {(() => {
-                                        const selectedParty = partyData.find(
-                                          (x) => x.Id === parseInt(partyTypeId)
-                                        );
-                                        if (selectedParty) {
-                                          return (
-                                            <div
-                                              className="addProductSupplierDetailsBox"
-                                              key={selectedParty.Id}
-                                            >
-                                              <p style={{ fontSize: "14px" }}>
-                                                {selectedParty.VendorName}
-                                              </p>
-                                            </div>
-                                          );
-                                        }
-                                        return null;
-                                      })()}
-                                    </div>
-                                  </div>
-                                </Grid>
-                                <Grid item xs={6} md={3}>
+                              <Grid item xs={6} md={3}>
                                   <div
                                     style={{
                                       display: "flex",
@@ -3662,6 +3685,8 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
                                     </div>
                                   </div>
                                 </Grid>
+
+                                
                                 <Grid item xs={6} md={3}>
                                   <div
                                     style={{
@@ -3696,6 +3721,45 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
                                     </div>
                                   </div>
                                 </Grid>
+
+
+                                <Grid item xs={6} md={3}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <p style={{ fontSize: "14px" }}>
+                                      Unlabelled Diamond :
+                                    </p>
+                                    <div>
+                                      {(() => {
+                                        const selectedParty = partyData.find(
+                                          (x) => x.Id === parseInt(partyTypeId)
+                                        );
+                                        if (selectedParty) {
+                                          return (
+                                            <div
+                                              className="addProductSupplierDetailsBox"
+                                              key={selectedParty.Id}
+                                            >
+                                              <p style={{ fontSize: "14px" }}>
+                                                {selectedParty.InwardSilver}
+                                              </p>
+                                            </div>
+                                          );
+                                        }
+                                        return null;
+                                      })()}
+                                    </div>
+                                  </div>
+                                </Grid>
+
+
+                                
+
+
                                 <Grid item xs={6} md={3}>
                                   <div
                                     style={{
@@ -3720,7 +3784,7 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
                                               {" "}
                                               {/* It's good practice to include a key even if it's not strictly necessary here */}
                                               <p style={{ fontSize: "14px" }}>
-                                                {selectedParty.VendorName}
+                                                {selectedParty.InwardSilver}
                                               </p>
                                             </div>
                                           );

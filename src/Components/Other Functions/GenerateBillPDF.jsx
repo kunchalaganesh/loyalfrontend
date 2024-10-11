@@ -272,10 +272,10 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     doc.text("Purity", columnPositions.purity + 2, currentY);
     // doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
     // doc.text('Net Wt', columnPositions.netWt+2, currentY);
-    doc.text("Price", columnPositions.price + 2, currentY);
+    doc.text("Taxable Amt", columnPositions.price + 2, currentY);
     doc.text("Qty", columnPositions.qty + 2, currentY);
     // doc.text('Rate / gm', columnPositions.rate+2, currentY);
-    doc.text("Total", columnPositions.amount + 2, currentY);
+    doc.text("Total+GST", columnPositions.amount + 2, currentY);
 
     currentY += 5;
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header bottom line

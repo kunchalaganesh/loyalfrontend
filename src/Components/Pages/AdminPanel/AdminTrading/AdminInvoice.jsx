@@ -2109,6 +2109,65 @@ export default function AdminInvoice() {
     // Determine the date to send
     const dateToSend = selectedDate || getTodaysDateInHTMLFormat();
 
+
+    const paymentsList = payments.map((payment) => {
+      let item = {
+        ClientCode: clientCode,
+        PaymentSource: "Sale Bill",
+        Description: payment.paymentDescription,
+        PaymentModeType: `${payment.mode}`,
+        CreditDebit: "Credit",
+        Amount: `${payment.amount}`,
+        // TransactionType: `${payment.paymentType}`,
+        TransactionType: "Receive",
+        VendorId: 0,
+        InvoiceNumber: "",
+        CustomerId: parseInt(customerId),
+        BillType: "sale",
+        PaymentVisibility: "Active",
+        FinancialYear: `${currentYear}`,
+        Branch: "Home",
+        CompanyId: CompanyId ? CompanyId : 0,
+        CounterId: CounterId ? CounterId : 0,
+        BranchId: BranchId ? BranchId : 0,
+        EmployeId: EmployeId ? EmployeId : 0,
+        // FineGold: `${payment.fineGold}`,
+        // FineSilver: `${payment.fineSilver}`,
+        // SilverRate: `${payment.silverRate}`,
+        // GoldRate: `${payment.goldRate}`,
+        // SilverAmount: `${payment.goldAmount}`,
+        // GoldAmount: `${payment.silverAmount}`,
+        // OldGoldGrosswt: `${payment.fineGold}`,
+        // OldSilverGrosswt: `${payment.fineSilver}`,
+        FineGold: "0",
+
+        FineSilver: "0",
+        FineOtherMetal: "0",
+        GoldRate: "0",
+        SilverRate: "0",
+        OtherMetalRate: "0",
+        GoldAmount: "0",
+        SilverAmount: "0",
+        OtherMetalAmount: "0",
+        OldGoldGrosswt: "0",
+        OldSilverGrosswt: "0",
+        OtherMetalGrossWt: "0",
+        GoldPurity: "",
+        SilverPurity: "",
+        OtherMetalPurity: "",
+        PurchaseOrderId: 0,
+        OrderId: 0,
+        InvoiceId: 0,
+        RDPurchaseId: 0,
+        CustomerName: `${selectedCustomer.FirstName} ${selectedCustomer.LastName}`,
+        VendorName: "",
+        InwardNo: "0",
+        Status: "Sold",
+      };
+
+      return item;
+    });
+
     try {
       const formData = {
         ClientCode: clientCode,
@@ -2179,6 +2238,7 @@ export default function AdminInvoice() {
           : "Tax Invoice",
 
         InvoiceItem: newAllSelectedProducts,
+        Payments : paymentsList
       };
 
       console.log(formData, "FORMDATA FOR ORDER");
@@ -2208,7 +2268,7 @@ export default function AdminInvoice() {
       } else {
         // setLoading(false);
         console.log(rcvdData, "InvoiceCreated");
-        addAllSelectedPayments(rcvdData, rcvdData.InvoiceItem, rcvdData.Id);
+        // addAllSelectedPayments(rcvdData, rcvdData.InvoiceItem, rcvdData.Id);
         // createOrderItems(rcvdData.id, rcvdData);
       }
     } catch (error) {

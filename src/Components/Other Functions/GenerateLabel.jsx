@@ -2,220 +2,7 @@ import React from "react";
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 
-// SK Khandre And Krishiv Label Below
 
-// export const GenerateLabel = (products) => {
-//   const doc = new jsPDF({
-//     // format: [26, 12],
-//     format: [28, 12],
-//     orientation: "landscape",
-//   });
-
-//   const fontSize = 7;
-//   const imageHeight = 7;
-//   const imageWidth = 7;
-
-//   for (let i = 0; i < products.length; i++) {
-//     const {
-//       collection,
-//       grosswt,
-//       stoneWeight,
-//       netWt,
-//       stoneAmount,
-//       itemCode,
-//       purity,
-//       mrp,
-//       product_No,
-//       pieces,
-//       description,
-//       barcodeNumber,
-//     } = products[i];
-
-//     if (i > 0) {
-//       doc.addPage(); // Add a new page for each product after the first one
-//     }
-//     doc.setFontSize(fontSize);
-//     doc.setFont("helvetica", "bold");
-//     // {
-//     //   collection.length > 20
-//     //     ? doc.text(`${collection.substr(0, 26)}`, 1, 3)
-//     //     : doc.text(`${collection}`, 1, 3);
-//     // }
-
-//     if (mrp == 0 || mrp === "") {
-//       // doc.text(`${itemCode}`, 2, 3);
-//       doc.text(`G.Wt: ${parseFloat(grosswt).toFixed(3)}`, 2, 3);
-//       doc.text(`S.Wt: ${parseFloat(stoneWeight).toFixed(3)}`, 2, 6);
-//       doc.text(`N.Wt: ${parseFloat(netWt).toFixed(3)}`, 2, 9);
-//       // doc.text(`S.Wt: ${parseFloat(stoneWeight).toFixed(3)}`, 4, 8);
-//       // doc.text(`${parseFloat(stoneAmount).toFixed(2)}`, 20, 8);
-//       doc.text(`Pcs:${pieces}`, 19, 11.5);
-//       // doc.text(`${product_No}`, 4, 11.5);
-//       doc.text(`${itemCode}`, 18, 6);
-//       doc.text(`${purity}`, 21, 3);
-//       doc.setFontSize(7);
-//       {
-//         barcodeNumber
-//           ? doc.text(`${barcodeNumber}`, 2, 11.5)
-//           : doc.text("", 2, 11.5);
-//       }
-//       // doc.setFontSize(5);
-//       // const maxLineLength = 27;
-//       // const descriptionLine1 = description.substring(0, maxLineLength);
-//       // const descriptionLine2 = description.substring(
-//       //   maxLineLength,
-//       //   maxLineLength * 2
-//       // );
-
-//       // doc.text(descriptionLine1, 4, 10);
-//       // doc.text(descriptionLine2, 4, 11.5);
-//     } else {
-//       doc.text(`G.Wt: ${parseFloat(grosswt).toFixed(3)}`, 2, 3);
-//       doc.text(`MRP: ${parseFloat(mrp)}`, 2, 6);
-//       doc.text(`Pcs:${pieces}`, 19, 11.5);
-//       doc.text(`${itemCode}`, 18, 6);
-//       // doc.text(`${product_No}`, 4, 11.5);
-//       // doc.text(`${product_No}`, 4, 11.5);
-//       // doc.text(`${itemCode}`, 3, 3);
-//       doc.text(`${purity}`, 21, 3);
-//       {
-//         barcodeNumber
-//           ? doc.text(`${barcodeNumber}`, 2, 11.5)
-//           : doc.text("", 2, 11.5);
-//       }
-//     }
-
-//     try {
-//       // const qrCodeDataUrl = await QRCode.toDataURL(itemCode);
-//       // doc.addImage(qrCodeDataUrl, "JPEG", 3, 3, imageWidth, imageHeight);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-
-//   const pdfData = doc.output("datauristring");
-//   const newWindow = window.open();
-//   newWindow.document.write(
-//     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
-//   );
-// };
-
-// Kalamandir Label Below
-// export const GenerateLabel = async (products) => {
-//   const doc = new jsPDF({
-//     // format: [26, 12],
-//     format: [81, 12],
-//     orientation: "landscape",
-//   });
-
-//   const fontSize = 6;
-//   const imageHeight = 12;
-//   const imageWidth = 12;
-
-//   for (let i = 0; i < products.length; i++) {
-//     const {
-//       collection,
-//       GrossWt,
-//       TotalStoneWeight,
-//       NetWt,
-//       TotalStoneAmount,
-//       ItemCode,
-//       PurityName,
-//       MRP,
-//       product_No,
-//       Pieces,
-//       Description,
-//       RFIDCode,
-//       category_Name,
-//       Size,
-//       SKU,
-//       ProductTitle,
-//       OccassionName,
-//     } = products[i];
-
-//     if (i > 0) {
-//       doc.addPage(); // Add a new page for each product after the first one
-//     }
-//     doc.setFontSize(fontSize);
-//     doc.setFont("helvetica", "bold");
-//     // doc.line(26, 0, 26, 12);
-//     // {
-//     //   collection.length > 20
-//     //     ? doc.text(`${collection.substr(0, 26)}`, 1, 3)
-//     //     : doc.text(`${collection}`, 1, 3);
-//     // }
-
-//     if (MRP == 0 || MRP === "") {
-//       // doc.text(`${itemCode}`, 2, 3);
-//       doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 30, 3);
-//       doc.text(`${OccassionName}`, 30, 6);
-//       doc.text(`OW: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 30, 9);
-//       doc.text(`NW: ${parseFloat(NetWt).toFixed(3)}`, 43, 3);
-//       doc.text(`${SKU}`, 30, 11.5);
-
-//       // doc.text(`S.Wt: ${parseFloat(stoneWeight).toFixed(3)}`, 4, 8);
-//       // doc.text(`${parseFloat(stoneAmount).toFixed(2)}`, 20, 8);
-//       doc.text(`PCS:${Pieces}`, 48, 11.5);
-//       // doc.text(`NO MRP ITEM`, 48, 11.5);
-//       // doc.text(`${product_No}`, 4, 11.5);
-//       doc.text(`${ItemCode}`, 13, 3);
-//       doc.text(`${PurityName}`, 23, 3);
-//       // doc.text(`${ProductTitle}`, 13, 6);
-//       // doc.text(`${Description}`, 20, 6);
-//       doc.text(`${Size ? Size : ""}`, 13, 9);
-//       doc.setFontSize(7);
-//       {
-//         RFIDCode ? doc.text(`${RFIDCode}`, 30, 10) : doc.text("", 30, 10);
-//       }
-//       // doc.setFontSize(5);
-//       // const maxLineLength = 27;
-//       // const descriptionLine1 = description.substring(0, maxLineLength);
-//       // const descriptionLine2 = description.substring(
-//       //   maxLineLength,
-//       //   maxLineLength * 2
-//       // );
-
-//       // doc.text(descriptionLine1, 4, 10);
-//       // doc.text(descriptionLine2, 4, 11.5);
-//     } else {
-//       doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 30, 4);
-//       doc.text(`${SKU}`, 30, 7);
-//       doc.text(`MRP: ${parseFloat(MRP).toFixed(0)}/-`, 30, 10);
-//       doc.text(`NW: ${parseFloat(NetWt).toFixed(3)}`, 43, 4);
-//       // doc.text(`S.Wt: ${parseFloat(stoneWeight).toFixed(3)}`, 4, 8);
-//       // doc.text(`${parseFloat(stoneAmount).toFixed(2)}`, 20, 8);
-//       // doc.text(`PCS:${Pieces}`, 48, 10);
-//       doc.text(`MRP ITEM`, 48, 10);
-//       // doc.text(`${product_No}`, 4, 11.5);
-//       doc.text(`${ItemCode}`, 13, 4);
-//       doc.text(`${ProductTitle}`, 13, 7);
-//       doc.text(`${Description}`, 20, 7);
-//       doc.text(`${OccassionName}`, 23, 4);
-
-//       //   doc.text(`${purity}`, 34, 4);
-//       //   doc.text(`${category_Name}`, 12, 7);
-//       //   doc.text(`${size ? size : ""}`, 12, 10);
-//       doc.setFontSize(7);
-//       {
-//         barcodeNumber ? doc.text(`${RFIDCode}`, 30, 10) : doc.text("", 30, 10);
-//       }
-//     }
-
-//     try {
-//       const qrCodeDataUrl = await QRCode.toDataURL(ItemCode);
-//       doc.addImage(qrCodeDataUrl, "JPEG", 1, 0, imageWidth, imageHeight);
-//       console.log(qrCodeDataUrl, "qrCodeDataUrl");
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-
-//   const pdfData = doc.output("datauristring");
-//   const newWindow = window.open();
-//   newWindow.document.write(
-//     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
-//   );
-// };
 
 export const GenerateLabel = async (products, labelFormat) => {
   console.log("checking labelformate12 ", labelFormat);
@@ -241,6 +28,10 @@ export const GenerateLabel = async (products, labelFormat) => {
     generatelabel8(products);
   }else if(labelFormat == 9){
     generatelabel9(products);
+  }else if(labelFormat == 10){
+    generatelabel10(products);
+  }else if(labelFormat == 11){
+    generatelabel11(products);
   }
 };
 
@@ -1752,6 +1543,257 @@ const generatelabel9 = async (products) => {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(ItemCode);
       doc.addImage(qrCodeDataUrl, "JPEG", 30, 1, imageWidth, imageHeight);
+      console.log(qrCodeDataUrl, "qrCodeDataUrl");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+};
+
+
+const generatelabel10 = async (products) => {
+  const doc = new jsPDF({
+    // format: [27, 14],
+    format: [81, 12],
+    orientation: "landscape",
+  });
+
+  const fontSize = 5.5;
+  const imageHeight = 7;
+  const imageWidth = 7;
+
+  for (let i = 0; i < products.length; i++) {
+    const {
+      GrossWt,
+      ItemCode,
+      PurityName,
+      MRP,
+      RFIDCode,
+      CategoryName,
+      Size,
+      SKU,
+      ProductTitle,
+      OccassionName,
+      NetWt,
+      TotalStoneWeight,
+      TotalStoneAmount,
+      MakingPerGram,
+      MakingPercentage,
+      ProductName,
+      Description
+    } = products[i];
+
+    if (i > 0) {
+      doc.addPage(); // Add a new page for each product after the first one
+    }
+    doc.setFontSize(fontSize);
+    doc.setFont("helvetica", "bold");
+
+    if (MRP == 0 || MRP === "") {
+      // doc.text(`${itemCode}`, 2, 3);
+
+      doc.text(`${ProductName}`, 2, 3.7);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
+      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
+      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
+     
+      doc.text(`${ItemCode}`, 30,10);
+      doc.text(`${Description}`, 30,12);
+      doc.text(`${TotalStoneAmount}`, 38,5);
+
+      
+      
+    } else {
+      doc.text(`${ProductName}`, 2, 3.7);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
+      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
+      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
+     
+      doc.text(`${ItemCode}`, 30,10);
+      doc.text(`${Description}`, 30,12);
+      doc.text(`${TotalStoneAmount}`, 38,5);
+    }
+
+    try {
+      const qrCodeDataUrl = await QRCode.toDataURL(ItemCode);
+      doc.addImage(qrCodeDataUrl, "JPEG", 30, 1, imageWidth, imageHeight);
+      console.log(qrCodeDataUrl, "qrCodeDataUrl");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+};
+
+
+const generatelabel11 = async (products) => {
+  const doc = new jsPDF({
+    // format: [27, 14],
+    format: [85, 15],
+    orientation: "landscape",
+  });
+
+  const fontSize = 5.5;
+  const imageHeight = 7;
+  const imageWidth = 7;
+
+
+  const leftx = 3;
+  const lefty = 3;
+  const middlex = 18;
+  const middley = 1.5;
+
+  const rightx = 50;
+  const righty = 2;
+
+   // Dummy stone array
+   const stones1 = [
+    { StoneName: "Diamond", StoneWeight: 0.5 },
+    { StoneName: "Ruby", StoneWeight: 1.0 },
+    { StoneName: "Sapphire", StoneWeight: 0.75 },
+    { StoneName: "Emerald", StoneWeight: 0.4 },
+    { StoneName: "Opal", StoneWeight: 0.6 },
+    { StoneName: "Topaz", StoneWeight: 0.9 },
+    { StoneName: "Topaz", StoneWeight: 0.9 },
+    { StoneName: "Topaz", StoneWeight: 0.9 },
+    { StoneName: "Topaz", StoneWeight: 0.9 },
+    { StoneName: "Topaz", StoneWeight: 0.9 },
+    { StoneName: "Topaz", StoneWeight: 0.9 },
+    // You can add more stones as needed
+  ];
+
+
+  for (let i = 0; i < products.length; i++) {
+    const {
+      GrossWt,
+      ItemCode,
+      PurityName,
+      MRP,
+      RFIDCode,
+      CategoryName,
+      Size,
+      SKU,
+      ProductTitle,
+      OccassionName,
+      NetWt,
+      TotalStoneWeight,
+      TotalStoneAmount,
+      MakingPerGram,
+      MakingPercentage,
+      ProductName,
+      Description,
+      Stones
+    } = products[i];
+
+    if (i > 0) {
+      doc.addPage(); // Add a new page for each product after the first one
+    }
+    doc.setFontSize(fontSize);
+    doc.setFont("helvetica", "bold");
+
+    if (MRP == 0 || MRP === "") {
+
+
+      doc.text(`G :  ${GrossWt}`, leftx, lefty)
+      doc.text(`L :  ${TotalStoneWeight}`, leftx, lefty+2.5)
+      doc.text(`N :  ${NetWt}`, leftx, lefty+5)
+      doc.text(`R :  ${TotalStoneAmount}`, leftx, lefty+7.5)
+      doc.text(`${SKU}`, leftx, lefty+10)
+
+
+      doc.text(`${ItemCode}`, middlex, middley+8.5)
+      doc.text(`${RFIDCode||''}`, middlex, middley+10.5)
+
+
+        // Adding stones array (first fill 5 stones, then wrap around)
+        let stoneX = rightx; // Starting point for stones
+        let stoneY = righty;
+        const stoneWrapOffset = 18; // Offset for wrapping stones to the left of the previous
+  
+        for (let j = 0; j < Stones.length; j++) {
+          if (j < 5) {
+            // Place the first 5 stones in a row
+            doc.text(
+  `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
+              stoneX,
+              stoneY + j * 2.5
+            );
+          } else {
+            // Wrap remaining stones to the left side of the previous ones
+            doc.text(
+  `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
+              stoneX - stoneWrapOffset, // Move left
+              stoneY + (j - 5) * 2.5
+            );
+          }
+        }
+
+
+
+
+      // doc.text(`${itemCode}`, 2, 3);
+
+      // doc.text(`${ProductName}`, 2, 3.7);
+      // doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
+      // doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
+      // doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
+     
+      // doc.text(`${ItemCode}`, 30,10);
+      // doc.text(`${Description}`, 30,12);
+      // doc.text(`${TotalStoneAmount}`, 38,5);
+
+      
+      
+    } else {
+      doc.text(`G :  ${GrossWt}`, leftx, lefty)
+      doc.text(`L :  ${TotalStoneWeight}`, leftx, lefty+2.5)
+      doc.text(`N :  ${NetWt}`, leftx, lefty+5)
+      doc.text(`R :  ${TotalStoneAmount}`, leftx, lefty+7.5)
+      doc.text(`${SKU}`, leftx, lefty+10)
+
+
+      doc.text(`${ItemCode}`, middlex, middley+8.5)
+      doc.text(`${RFIDCode||''}`, middlex, middley+10.5)
+
+
+        // Adding stones array (first fill 5 stones, then wrap around)
+        let stoneX = rightx; // Starting point for stones
+        let stoneY = righty;
+        const stoneWrapOffset = 18; // Offset for wrapping stones to the left of the previous
+  
+        for (let j = 0; j < Stones.length; j++) {
+          if (j < 5) {
+            // Place the first 5 stones in a row
+            doc.text(
+  `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
+              stoneX,
+              stoneY + j * 2.5
+            );
+          } else {
+            // Wrap remaining stones to the left side of the previous ones
+            doc.text(
+  `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
+              stoneX - stoneWrapOffset, // Move left
+              stoneY + (j - 5) * 2.5
+            );
+          }
+        }
+    }
+
+    try {
+      const qrCodeDataUrl = await QRCode.toDataURL(ItemCode);
+      doc.addImage(qrCodeDataUrl, "JPEG", middlex, middley, imageWidth, imageHeight);
       console.log(qrCodeDataUrl, "qrCodeDataUrl");
     } catch (error) {
       console.error(error);
