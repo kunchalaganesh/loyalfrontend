@@ -1651,14 +1651,14 @@ const generatelabel11 = async (products) => {
 
   const leftx = 3;
   const lefty = 3;
-  const middlex = 18;
+  const middlex = 13;
   const middley = 1.5;
 
-  const rightx = 50;
+  const rightx = 37;
   const righty = 2;
 
    // Dummy stone array
-   const stones1 = [
+   const Stones = [
     { StoneName: "Diamond", StoneWeight: 0.5 },
     { StoneName: "Ruby", StoneWeight: 1.0 },
     { StoneName: "Sapphire", StoneWeight: 0.75 },
@@ -1693,7 +1693,7 @@ const generatelabel11 = async (products) => {
       MakingPercentage,
       ProductName,
       Description,
-      Stones
+      // Stones
     } = products[i];
 
     if (i > 0) {
@@ -1719,7 +1719,7 @@ const generatelabel11 = async (products) => {
         // Adding stones array (first fill 5 stones, then wrap around)
         let stoneX = rightx; // Starting point for stones
         let stoneY = righty;
-        const stoneWrapOffset = 18; // Offset for wrapping stones to the left of the previous
+        const stoneWrapOffset = 12; // Offset for wrapping stones to the left of the previous
   
         for (let j = 0; j < Stones.length; j++) {
           if (j < 5) {

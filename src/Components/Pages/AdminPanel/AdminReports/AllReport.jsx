@@ -1765,6 +1765,33 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                             </Box>
                         </>) :
                         <TableContainer sx={{' th, td': {border: '1px solid #ccc'}}}>
+
+                        {selectedTab === 5 && (
+
+                            <Box sx={{ padding: 2 }}>
+                            <b>Total Total Items:</b> {filteredInventoryReport.length} <br />
+<b>Total Total Grosswt:</b> {filteredInventoryReport.reduce((acc, item) => acc + parseFloat(item.GrossWt), 0).toFixed(3)} <br />
+<b>Total Total Stone Wt:</b> {filteredInventoryReport.reduce((acc, item) => acc + parseFloat(item.TotalStoneWeight), 0).toFixed(3)} <br />
+
+<b>Total Total Net Wt:</b> {filteredInventoryReport.reduce((acc, item) => acc + parseFloat(item.NetWt), 0).toFixed(3)} <br />
+<b>Total Total Clip Wt:</b> {filteredInventoryReport.reduce((acc, item) => acc + parseFloat(item.ClipWeight), 0).toFixed(3)} <br />
+<b>Total Total Tag Wt:</b> {filteredInventoryReport.reduce((acc, item) => acc + parseFloat(item.TagWeight), 0).toFixed(3)} <br />
+
+      </Box>
+    )}
+    {selectedTab === 1 && (
+      <Box sx={{ padding: 2 }}>
+        <b>Total Stock In Qty:</b> {filteredStockReport.reduce((acc, item) => acc + item.StockEntryQuantity, 0)} <br />
+        <b>Total Stock In Gross Wt:</b> {filteredStockReport.reduce((acc, item) => acc + item.StockEntryGrWt, 0)}
+      </Box>
+    )}
+    {selectedTab === 2 && (
+      <Box sx={{ padding: 2 }}>
+        <b>Total Sale Qty:</b> {filteredStockReport.reduce((acc, item) => acc + item.SaleQty, 0)} <br />
+        <b>Total Sale Gross Wt:</b> {filteredStockReport.reduce((acc, item) => acc + item.SaleGrossWeight, 0)}
+      </Box>
+    )}
+
                             <Table size="small" sx={{borderRadius: '4px', borderCollapse: 'collapse'}}>
                                 <TableHead>
                                     {(selectedTab === 0 || selectedTab === 1 || selectedTab === 2) &&
@@ -1809,6 +1836,9 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                         <TableCell sx={{fontWeight: "600"}} align="center">Total Gross Wt</TableCell>
                                     </TableRow>}
                                     {selectedTab == 5 &&
+
+
+                                        
                                     <TableRow>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Category</TableCell>
@@ -1833,6 +1863,9 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                         <TableCell sx={{fontWeight: "600"}} align="center">Category</TableCell>
                                         <TableCell sx={{fontWeight: "600"}}
                                                    align="center">{selectedTab === 6 ? "Packet" : "Box"}</TableCell>
+                                                   <TableCell sx={{fontWeight: "600"}} align="center">Total Wt</TableCell>
+                                                   <TableCell sx={{fontWeight: "600"}}
+                                                   align="center">{selectedTab === 6 ? "Packet Wt" : "Box Wt"}</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Opening qty</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">opening gross wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">opening net wt</TableCell>
@@ -1968,6 +2001,13 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                                 <TableCell align="center">{item.Category}</TableCell>
                                                 <TableCell
                                                     align="center">{selectedTab === 6 ? item.PacketName : item.BoxName}</TableCell>
+
+<TableCell
+                                                    align="center">{selectedTab === 6 ? item.TotalGrossWeight : item.TotalGrossWeight}</TableCell>
+                                                
+                                                <TableCell
+                                                    align="center">{selectedTab === 6 ? item.PacketWeight : item.BoxWeight}</TableCell>
+
                                                 <TableCell
                                                     align="center">{item.OpeningQuantity}</TableCell>
 
