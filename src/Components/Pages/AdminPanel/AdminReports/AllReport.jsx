@@ -1779,18 +1779,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
 
       </Box>
     )}
-    {selectedTab === 1 && (
-      <Box sx={{ padding: 2 }}>
-        <b>Total Stock In Qty:</b> {filteredStockReport.reduce((acc, item) => acc + item.StockEntryQuantity, 0)} <br />
-        <b>Total Stock In Gross Wt:</b> {filteredStockReport.reduce((acc, item) => acc + item.StockEntryGrWt, 0)}
-      </Box>
-    )}
-    {selectedTab === 2 && (
-      <Box sx={{ padding: 2 }}>
-        <b>Total Sale Qty:</b> {filteredStockReport.reduce((acc, item) => acc + item.SaleQty, 0)} <br />
-        <b>Total Sale Gross Wt:</b> {filteredStockReport.reduce((acc, item) => acc + item.SaleGrossWeight, 0)}
-      </Box>
-    )}
+    
 
                             <Table size="small" sx={{borderRadius: '4px', borderCollapse: 'collapse'}}>
                                 <TableHead>
