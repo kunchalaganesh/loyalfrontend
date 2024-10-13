@@ -209,14 +209,14 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
   const marginTop = 80;
   const marginBottom = 40;
   const rowHeight = 10; // Initial row height
-  const tableHeight = 120; // Fixed table height
+  const tableHeight = 100; // Fixed table height
   let currentY = marginTop;
   const invoicex = pageWidth - 60;
   const invoicey = 60;
   const customerx = pageWidth - 200;
   const customery = 60;
   const fotertotalx = pageWidth - 70;
-  const fotertotaly = 195;
+  const fotertotaly = 180;
 
   const despx = pageWidth - 70;
   const despy = 250;
@@ -348,7 +348,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     doc.text(`Balance Amount : ${balanceText}`, fotertotalx, fotertotaly + 40);
 
     const thankYouText = "Thank You For Your Business, God Bless Keep Buying";
-    doc.setFontSize(20);
+    doc.setFontSize(18);
 
     // Calculate the text width to center it
     const textWidth = doc.getTextWidth(thankYouText);
@@ -361,7 +361,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     const declarationText =
       "I declare that this invoice shows the actual price of the goods described and that all particulars are true and correct, I received ornament in good condition";
     const splitText = doc.splitTextToSize(declarationText, 80); // Adjust 180 to the width you want
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.text(splitText, customerx, fotertotaly + 60);
 
     doc.setFontSize(10);
@@ -371,16 +371,17 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
       fotertotaly + 60
     );
 
-    doc.text("Authorised Signatory", fotertotalx, fotertotaly + 80);
+    doc.text("Authorised Signatory", fotertotalx, fotertotaly + 86);
+    doc.text("Customer Signatory", customerx, fotertotaly + 86);
     
-    doc.line(customerx, fotertotaly + 85, fotertotalx + 60, fotertotaly + 85);
+    doc.line(customerx, fotertotaly + 90, fotertotalx + 60, fotertotaly + 90);
 
-    const ctext ="1st foor 2nd cross vasanthappa thota Banglore-560032"
+    const ctext ="1st foor 2nd cross Vasanthappa Thota Banglore-560032"
     const splitText1 = doc.splitTextToSize(ctext, 80); // Adjust 180 to the width you want
-    doc.text(splitText1, customerx, fotertotaly + 90);
+    doc.text(splitText1, customerx, fotertotaly + 95);
     const stext ="Contact Us : 08023333409/08091515409  @kevali.in/kevali.in"
     const splitText2 = doc.splitTextToSize(stext, 80); // Adjust 180 to the width you want
-    doc.text(splitText2, fotertotalx, fotertotaly + 90);
+    doc.text(splitText2, fotertotalx, fotertotaly + 95);
 
   };
 
@@ -509,7 +510,409 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
   );
 };
 
+
+
+
 const generateinvoicepdf7 = (items, customer, mainitem) => {
+ 
+  const {
+    InvoiceNo,
+    InvoiceDate,
+    ProductName,
+    HSNCode,
+    Purity,
+    Qty,
+    GrossWt,
+    StoneWt,
+    NetWt,
+    StoneAmount,
+    MakingPerGram,
+    TotalAmount,
+    GST} = mainitem
+ 
+ 
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
+
+  // Draw a horizontal line
+  doc.line(0, 35, 210, 35); // From (10, 50) to (200, 50)
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(0, 0, 0);
+  doc.text("GOLD SALE", 90, 43);
+
+  let pan;
+  let adhar;
+  let mobile;
+  let address;
+
+  customer.PanNo;
+  customer.AadharNo;
+
+  if (customer.PanNo) {
+    pan = customer.PanNo;
+  } else {
+    pan = "NA";
+  }
+
+  if (customer.AadharNo) {
+    adhar = customer.AadharNo;
+  } else {
+    adhar = "NA";
+  }
+
+  if (customer.Mobile) {
+    mobile = customer.Mobile;
+  } else {
+    mobile = "NA";
+  }
+
+  if (customer.CurrAddStreet) {
+    address = customer.CurrAddStreet;
+  } else {
+    address = "NA";
+  }
+
+  // First column data
+  const firstColumn = [
+    { label: "Name", value: `${customer.FirstName}` },
+    { label: "Address", value: `${address}` },
+    { label: "Mobile", value: `${mobile}` },
+    { label: "Pan/Adhar", value: `${pan} / ${adhar}` },
+  ];
+
+  // Second column data
+  const secondColumn = [
+    { label: "Invoice No:", value: `${InvoiceNo}` },
+    { label: "Date:", value: `${InvoiceDate}` },
+    { label: "GSTIN No:", value: "27ABXPM4841M1ZS" },
+    { label: "GSTIN Type:", value: "CGST + SGST + IGST" },
+  ];
+
+  // Set table starting position and dimensions
+  const startX = 5;
+  const startY = 45;
+  const cellWidth = 80;
+  const cellHeight = 10;
+
+  doc.setLineWidth(0.3);
+  doc.rect(startX, startY, 200, 40);
+
+  // Define custom widths for each column
+  const columnWidths = {
+    Item: 36.18,
+    HSN: 16.18,
+    Purity: 13.18,
+    Qty: 12.18,
+    "Gr wt": 15.18,
+    "Stone wt": 17.18,
+    "Net wt": 15.18,
+    "St amt": 15.18,
+    "Rate/gm": 18.18,
+    "Making/gm": 21.18,
+    Amount: 20.18,
+  };
+
+  const columnArray = [
+    "Item",
+    "HSN",
+    "Purity",
+    "Qty",
+    "Gr wt",
+    "Stone wt",
+    "Net wt",
+    "St amt",
+    "Rate/gm",
+    "Making/gm",
+    "Amount",
+  ];
+
+  // Calculate the starting X position for each column
+  let currentX = 5;
+  const tableWidth = 200; // Total width for the table
+
+  // Draw the table header and vertical lines, and center the text in each column
+  columnArray.forEach((title, index) => {
+    const columnWidth = columnWidths[title] || 20; // Default to 20mm if not specified
+
+    // Calculate the position to center the text in the column
+    // const textX = currentX + columnWidth / 2 - doc.getTextWidth(title) / 2;
+
+    const textX = currentX + 1;
+    const cellY = 90; // Adjusted Y position to place text within the cell
+
+    // Draw the centered text inside the cells
+    doc.setFontSize(11);
+    doc.setFont("sanserif", "bold");
+    doc.text(title, textX, cellY); // Centered text in the cell
+
+    // Draw the vertical line for each column
+    if (index !== 0) {
+      doc.line(currentX, 85, currentX, 170); // Vertical line from header to the bottom of the table
+    }
+
+    currentX += columnWidth; // Move to the next column position
+  });
+
+  // Draw the bottom line of the header row
+  doc.rect(5, 85, tableWidth, 10); // Header bottom line
+
+  // Body (you can add data here as needed)
+  firstColumn.forEach((row, index) => {
+    const ypos = startY + (index + 0.7) * cellHeight;
+
+    doc.setFontSize(10);
+    doc.setFont("sanserif", "bold");
+    doc.text(`${row.label} :`, startX + 2, ypos);
+    doc.text(row.value, startX + cellWidth / 2, ypos); // Centered within the first column
+  });
+
+  secondColumn.forEach((row, index) => {
+    const ypos = startY + (index + 0.7) * cellHeight;
+
+    doc.setFontSize(10);
+    doc.setFont("sanserif", "bold");
+    doc.text(`${row.label}`, 60 + cellWidth + 2, ypos); // Left padding of 2 in the second column
+    doc.text(row.value, startX + (cellWidth * 4) / 2, ypos); // Centered within the second column
+  });
+
+  // Draw the outer table border (adjust height to fit the table content)
+  doc.rect(5, 85, tableWidth, 85);
+
+  const overallStatsTable = ["Item", "Net wt", "Gross wt", "Amount"];
+
+  let currentX2 = 5;
+  const tableWidth2 = 100;
+
+  const ColumnCount = overallStatsTable.length;
+  const ColumnWidth = tableWidth2 / ColumnCount;
+
+  // Draw the table header and vertical lines, and center the text in each column
+  overallStatsTable.forEach((title, index) => {
+    const textX = currentX2 + ColumnWidth / 2 - doc.getTextWidth(title) / 2;
+    const cellY = 180; // Starting Y position for the table header
+
+    // Draw the centered text inside the cells
+    doc.setFontSize(10);
+    doc.text(title, textX, cellY); // Centered text in the cell
+
+    // // Draw vertical lines for the columns
+    if (index !== 0) {
+      doc.line(currentX2, 175, currentX2, 195); // Vertical line from header to bottom
+    }
+
+    // Move to the next column position
+    currentX2 += ColumnWidth;
+  });
+
+  // Draw the outer border of the table (header + empty cells)
+  doc.rect(5, 175, tableWidth2, 10 + cellHeight); // Table outer border
+
+  // Draw the horizontal line between the header row and the empty cells for values
+  doc.line(5, 177 + 10, 5 + tableWidth2, 177 + 10);
+
+
+  
+
+  const TableData = [
+    {
+      Item: `${ProductName}`,
+      HSN: `${HSNCode}`,
+      Purity: `${Purity}`,
+      Qty: `${1}`,
+      "Gr wt": `${GrossWt}`,
+      "Stone wt": `${StoneWt}`,
+      "Net wt": `${NetWt}`,
+      "St amt": `${StoneAmount}`,
+      "Rate/gm": `${0}`,
+      "Making/gm": `${MakingPerGram}`,
+      Amount: `${TotalAmount}`,
+    },
+  ];
+
+  //draw table body
+  let bodyY = 100;
+  // Populate table body with items data
+  items.forEach((rowData) => {
+    currentX = 5;
+
+    // Map response fields to table columns
+    const row = {
+      Item: rowData.ProductName || "N/A",
+      HSN: rowData.HSNCode || "N/A",
+      Purity: rowData.Purity || "N/A",
+      Qty:  "1",
+      "Gr wt": rowData.GrossWt || "N/A",
+      "Stone wt": rowData.TotalStoneWeight || "N/A",
+      "Net wt": rowData.NetWt || "N/A",
+      "St amt": rowData.TotalStoneAmount || "N/A",
+      "Rate/gm": rowData.MetalRate || "N/A",
+      "Making/gm": rowData.MakingPerGram || "N/A",
+      Amount: rowData.TotalAmount || "N/A",
+    };
+
+    columnArray.forEach((col) => {
+      const columnWidth = columnWidths[col] || 20;
+      doc.setFontSize(10);
+      doc.setFont("Sanserif", "normal");
+      doc.text(`${row[col]}`, currentX + 1, bodyY);
+      currentX += columnWidth;
+    });
+
+    bodyY += 10; // Move to the next row
+  });
+
+  //draw cash table
+  doc.setFont("sanserif", "bold");
+
+  // Now create a second section with two columns: "Cash" and its amount
+  const cashSectionX = 5; // Starting X position for the cash section
+  const cashSectionY = 199;
+  const cashCellWidth = 50; // Width of each column for the cash table
+
+  // Draw the "Cash" label cell
+  doc.setFontSize(10);
+  doc.setFont("sanserif", "bold");
+  doc.text(
+    "Cash",
+    cashSectionX + cashCellWidth / 2 - doc.getTextWidth("Cash") / 2,
+    cashSectionY + 7
+  ); // Center text in the first column
+
+  // Draw the "Cash" amount cell
+  doc.text(
+    "",
+    cashSectionX +
+      cashCellWidth +
+      cashCellWidth / 2 -
+      doc.getTextWidth("1000") / 2,
+    cashSectionY + 7
+  ); // Center text in the second column
+
+  // Draw the outer border of the cash and amount cells
+  doc.rect(cashSectionX, cashSectionY, cashCellWidth, 10); // Border for "Cash" label
+  doc.rect(cashSectionX + cashCellWidth, cashSectionY, cashCellWidth, 10); // Border for the amount
+
+  //detailed table
+
+  const cGst = (GST || 0) / 2;
+
+  const cGstFX = cGst.toFixed(2)
+
+  const sGst = (GST || 0) / 2;
+
+  const sGstFx = sGst.toFixed(2)
+
+
+  
+
+
+  const totalAmountNumber = Number(TotalAmount);
+  const GSTNumber = Number(GST);
+  
+  // First column labels for gross amount, taxes, and discounts
+  const leftColumn = [
+    { label: "Gross Amount", value: `${totalAmountNumber.toFixed(2)}` },
+    { label: "CGST 1.5%", value: `${Number(cGst).toFixed(2)}` },
+    { label: "SGST 1.5%", value: `${Number(cGst).toFixed(2)}` },
+    { label: "IGST 3%", value: `${GSTNumber.toFixed(2)}` },
+    { label: "Hallmarking Amount", value: "" },
+    { label: "Purchase Amount (-)", value: `${(totalAmountNumber + GSTNumber).toFixed(2)}` },
+    { label: "RO/Discount (-)", value: "" },
+    { label: "Net Amount", value: `${(totalAmountNumber + GSTNumber).toFixed(2)}` },
+  ];
+  
+  // Dummy values for the right column
+  const rightColumnValues = [
+    `${totalAmountNumber.toFixed(2)}`, 
+    `${Number(cGstFX).toFixed(2)}`, 
+    `${Number(sGstFx).toFixed(2)}`, 
+    `${GSTNumber.toFixed(2)}`, 
+    "", 
+    `${(totalAmountNumber + GSTNumber).toFixed(2)}`, 
+    "", 
+    `${(totalAmountNumber + GSTNumber).toFixed(2)}`
+  ];
+
+
+
+  // Set table starting position and dimensions
+  const startX4 = 135; // Starting X position for the table
+  const startY4 = 175; // Starting Y position for the table
+  const tableWidth4 = 70; // Table width
+  const tableHeight4 = 80; // Table height (adjust based on number of rows)
+  const cellHeight4 = 10; // Height for each cell row
+  const verticalLineX = startX4 + tableWidth4 / 2; // X position for the center vertical line
+
+  doc.setLineWidth(0.3);
+  doc.rect(startX4, startY4, tableWidth4, tableHeight4); // Outer table border
+
+  // Draw vertical line at the center
+  doc.line(verticalLineX, startY4, verticalLineX, startY4 + tableHeight4); // Vertical line splitting the table
+
+  // Fill in the left column labels and right column dummy values
+  leftColumn.forEach((row, index) => {
+    const ypos = startY4 + (index + 1) * cellHeight4 - 3; // Y position for the text
+
+    // Draw left side labels
+    doc.setFontSize(10);
+    doc.setFont("sanserif", "bold");
+    doc.text(`${row.label}`, startX4 + 2, ypos);
+
+    // Draw right side dummy values
+    const rightValue = rightColumnValues[index];
+    doc.setFont("sanserif", "normal");
+    doc.text(`${rightValue}`, verticalLineX + 2, ypos); // Right side column values
+
+    // Draw horizontal line after each cell
+    doc.line(startX4, ypos + 3, startX4 + tableWidth4, ypos + 3); // Horizontal line across the row
+  });
+
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(10);
+  doc.text("Billng By - Admin", 100, 220);
+
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(10);
+  doc.text(
+    "note:- we declare that this invoice shows actual price of the good described ",
+    5,
+    240
+  );
+
+  doc.setFont("sanserif", "normal");
+  doc.setFontSize(10);
+  doc.text("and that all particulars are true and correct", 5, 245);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("Customer Sign", 10, 285);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("(Saturday Closed )", 70, 285);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("Thank You !", 70, 290);
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(10);
+  doc.text("For Mundlik Jewellers", 150, 285);
+
+  // Generate the PDF and open it in a new window
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+};
+
+const generateinvoicepdf71 = (items, customer, mainitem) => {
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
