@@ -7,7 +7,7 @@ export const generateBillPDF = (
   invoiceformate,
   mainitem
 ) => {
-  console.log("labelformatee ", invoiceItems);
+  console.log("labelformatee ", invoiceformate);
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
