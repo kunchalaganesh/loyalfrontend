@@ -31,110 +31,111 @@ export const generateBillPDF = (
     generateinvoicepdf7(invoiceItems, csData, mainitem);
     return;
   }
+}
 
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4",
-  });
+//   const doc = new jsPDF({
+//     orientation: "portrait",
+//     unit: "mm",
+//     format: "a4",
+//   });
 
-  // GSTIN & Invoice Header
-  doc.setFontSize(10);
-  doc.text("GSTIN: 24AYPB4952C1ZA", 160, 10);
-  doc.setFontSize(14);
-  doc.text("TAX INVOICE", 90, 20);
+//   // GSTIN & Invoice Header
+//   doc.setFontSize(10);
+//   doc.text("GSTIN: 24AYPB4952C1ZA", 160, 10);
+//   doc.setFontSize(14);
+//   doc.text("TAX INVOICE", 90, 20);
 
-  // Invoice Details
-  doc.setFontSize(10);
-  doc.text("Invoice No.: 95", 14, 30);
-  doc.text("Invoice Dt.: 21-Feb-2020", 14, 35);
-  doc.text("Invoice Time: 10:40:24AM", 14, 40);
-  doc.text("Place of Supply: Gujarat", 150, 30);
-  doc.text("Terms of Delivery:", 150, 35);
+//   // Invoice Details
+//   doc.setFontSize(10);
+//   doc.text("Invoice No.: 95", 14, 30);
+//   doc.text("Invoice Dt.: 21-Feb-2020", 14, 35);
+//   doc.text("Invoice Time: 10:40:24AM", 14, 40);
+//   doc.text("Place of Supply: Gujarat", 150, 30);
+//   doc.text("Terms of Delivery:", 150, 35);
 
-  // Customer Information
-  doc.text("Invoice To:", 14, 50);
-  doc.text("Rohit Mishra", 14, 55);
-  doc.text("Address Line No. 1, Address Line No. 2, Vadodara", 14, 60);
-  doc.text("State: Gujarat", 14, 65);
-  doc.text("Mobile No.: 9898098980", 150, 60);
-  doc.text("PAN No.: AKQPQ5486N", 150, 65);
+//   // Customer Information
+//   doc.text("Invoice To:", 14, 50);
+//   doc.text("Rohit Mishra", 14, 55);
+//   doc.text("Address Line No. 1, Address Line No. 2, Vadodara", 14, 60);
+//   doc.text("State: Gujarat", 14, 65);
+//   doc.text("Mobile No.: 9898098980", 150, 60);
+//   doc.text("PAN No.: AKQPQ5486N", 150, 65);
 
-  // Draw Table Headers
-  doc.setFontSize(10);
-  doc.text("Sr.", 14, 80);
-  doc.text("Product Details", 24, 80);
-  doc.text("Pcs", 54, 80); // Adjusted width
-  doc.text("Purity", 64, 80);
-  doc.text("Gross Wt", 84, 80); // Adjusted for text width
-  doc.text("Net Wt", 104, 80); // Adjusted for text width
-  doc.text("Rate / gm", 124, 80); // Adjusted for text width
-  doc.text("Amount", 144, 80);
-  doc.text("Labour Rate", 164, 80); // Adjusted for header width
-  doc.text("Labour Amt", 184, 80); // Adjusted for header width
-  doc.text("Total", 204, 80);
+//   // Draw Table Headers
+//   doc.setFontSize(10);
+//   doc.text("Sr.", 14, 80);
+//   doc.text("Product Details", 24, 80);
+//   doc.text("Pcs", 54, 80); // Adjusted width
+//   doc.text("Purity", 64, 80);
+//   doc.text("Gross Wt", 84, 80); // Adjusted for text width
+//   doc.text("Net Wt", 104, 80); // Adjusted for text width
+//   doc.text("Rate / gm", 124, 80); // Adjusted for text width
+//   doc.text("Amount", 144, 80);
+//   doc.text("Labour Rate", 164, 80); // Adjusted for header width
+//   doc.text("Labour Amt", 184, 80); // Adjusted for header width
+//   doc.text("Total", 204, 80);
 
-  // Draw Table Borders
-  doc.line(10, 85, 200, 85); // Top line
-  doc.line(10, 90, 200, 90); // Table header bottom line
+//   // Draw Table Borders
+//   doc.line(10, 85, 200, 85); // Top line
+//   doc.line(10, 90, 200, 90); // Table header bottom line
 
-  // Draw Column Separators
-  doc.line(10, 85, 10, 150); // Left border, extended for half-page height
-  doc.line(20, 85, 20, 150); // After Sr
-  doc.line(50, 85, 50, 150); // After Product Details
-  doc.line(60, 85, 60, 150); // After Pcs
-  doc.line(80, 85, 80, 150); // After Purity
-  doc.line(100, 85, 100, 150); // After Gross Wt
-  doc.line(120, 85, 120, 150); // After Net Wt
-  doc.line(140, 85, 140, 150); // After Rate / gm
-  doc.line(160, 85, 160, 150); // After Amount
-  doc.line(180, 85, 180, 150); // After Labour Rate
-  doc.line(200, 85, 200, 150); // After Labour Amt
-  doc.line(210, 85, 210, 150); // Right border, extended for half-page height
+//   // Draw Column Separators
+//   doc.line(10, 85, 10, 150); // Left border, extended for half-page height
+//   doc.line(20, 85, 20, 150); // After Sr
+//   doc.line(50, 85, 50, 150); // After Product Details
+//   doc.line(60, 85, 60, 150); // After Pcs
+//   doc.line(80, 85, 80, 150); // After Purity
+//   doc.line(100, 85, 100, 150); // After Gross Wt
+//   doc.line(120, 85, 120, 150); // After Net Wt
+//   doc.line(140, 85, 140, 150); // After Rate / gm
+//   doc.line(160, 85, 160, 150); // After Amount
+//   doc.line(180, 85, 180, 150); // After Labour Rate
+//   doc.line(200, 85, 200, 150); // After Labour Amt
+//   doc.line(210, 85, 210, 150); // Right border, extended for half-page height
 
-  // Insert Product Row
-  doc.text("1", 14, 95);
-  doc.text("Gold Ring", 24, 95);
-  doc.text("1", 54, 95);
-  doc.text("22K", 64, 95);
-  doc.text("11.35", 84, 95);
-  doc.text("10.67", 104, 95);
-  doc.text("3980", 124, 95);
-  doc.text("42466.60", 144, 95);
-  doc.text("500.00", 164, 95);
-  doc.text("5335.00", 184, 95);
-  doc.text("47801.60", 204, 95);
+//   // Insert Product Row
+//   doc.text("1", 14, 95);
+//   doc.text("Gold Ring", 24, 95);
+//   doc.text("1", 54, 95);
+//   doc.text("22K", 64, 95);
+//   doc.text("11.35", 84, 95);
+//   doc.text("10.67", 104, 95);
+//   doc.text("3980", 124, 95);
+//   doc.text("42466.60", 144, 95);
+//   doc.text("500.00", 164, 95);
+//   doc.text("5335.00", 184, 95);
+//   doc.text("47801.60", 204, 95);
 
-  // Draw Row Bottom Line
-  doc.line(10, 100, 200, 100); // Row bottom line
+//   // Draw Row Bottom Line
+//   doc.line(10, 100, 200, 100); // Row bottom line
 
-  // Summary Section
-  doc.text("HSN/SAC: 7108", 14, 110);
-  doc.text("Taxable Amount: 47801.60", 14, 115);
-  doc.text("CGST @ 1.50%: 717.02", 14, 120);
-  doc.text("SGST @ 1.50%: 717.02", 14, 125);
-  doc.text("IGST: 0.00", 14, 130);
-  doc.text("Round Off: 0.36", 14, 135);
+//   // Summary Section
+//   doc.text("HSN/SAC: 7108", 14, 110);
+//   doc.text("Taxable Amount: 47801.60", 14, 115);
+//   doc.text("CGST @ 1.50%: 717.02", 14, 120);
+//   doc.text("SGST @ 1.50%: 717.02", 14, 125);
+//   doc.text("IGST: 0.00", 14, 130);
+//   doc.text("Round Off: 0.36", 14, 135);
 
-  // Total Amount
-  doc.setFontSize(12);
-  doc.text("Grand Total: 49236.00", 160, 135);
+//   // Total Amount
+//   doc.setFontSize(12);
+//   doc.text("Grand Total: 49236.00", 160, 135);
 
-  // Footer
-  doc.setFontSize(10);
-  doc.text("Rupees Forty Nine Thousand Two Hundred Thirty Six Only", 14, 145);
-  doc.text("For Manan Softwares", 160, 155);
-  doc.text("Authorised Signatory", 160, 160);
+//   // Footer
+//   doc.setFontSize(10);
+//   doc.text("Rupees Forty Nine Thousand Two Hundred Thirty Six Only", 14, 145);
+//   doc.text("For Manan Softwares", 160, 155);
+//   doc.text("Authorised Signatory", 160, 160);
 
-  // Save the PDF
-  // doc.save("invoice.pdf");
+//   // Save the PDF
+//   // doc.save("invoice.pdf");
 
-  const pdfData = doc.output("datauristring");
-  const newWindow = window.open();
-  newWindow.document.write(
-    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
-  );
-};
+//   const pdfData = doc.output("datauristring");
+//   const newWindow = window.open();
+//   newWindow.document.write(
+//     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+//   );
+// };
 
 const generateDummyData = () => {
   const items = [];
@@ -193,6 +194,77 @@ const generateDummyData = () => {
 
   return items;
 };
+
+
+const generateinvoicepdf3 = async (items, customer, mainitem) => {
+  console.log("checking items", items);
+  console.log("checking customer", customer);
+
+  const doc = new jsPDF({
+    orientation: "landscape", // Change orientation to landscape
+    unit: "mm",
+    format: "a4",
+  });
+
+  const pageHeight = doc.internal.pageSize.height;
+  const pageWidth = doc.internal.pageSize.width;
+  const marginTop = 80;
+  const tableHeight = 100; // Fixed table height
+  let currentY = marginTop;
+
+  // Adjusted column positions for a landscape layout and wider stones columns
+  const columnPositions = {
+    sr: 10, // Start from 10mm
+    Design: 20,
+    productDetails: 40,
+    Gwt: 75,
+    stones: 95, // Widen the "stones" column
+    nwt: 170,
+    stoneamt: 190, // Widen the "stoneamt" column
+  };
+
+  // Draw the table structure dynamically
+  const drawTableStructure = () => {
+    Object.values(columnPositions).forEach((pos) => {
+      doc.line(pos, marginTop, pos, marginTop + tableHeight); // Column separators
+    });
+    doc.line(pageWidth - 10, marginTop, pageWidth - 10, marginTop + tableHeight); // Right border
+  };
+
+  const drawTableHeader = () => {
+    doc.setFontSize(10);
+    doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
+    currentY += 5;
+
+    // Draw the header text
+    doc.text("Sr", columnPositions.sr + 2, currentY);
+    doc.text("Design", columnPositions.Design + 2, currentY);
+    doc.text("Product Details", columnPositions.productDetails + 2, currentY);
+    doc.text("G Wt", columnPositions.Gwt + 2, currentY);
+    doc.text("Stones Wt", columnPositions.stones + 2, currentY); // Adjusted position for Stones Wt
+    doc.text("N Wt", columnPositions.nwt + 2, currentY);
+    doc.text("Stones Amount", columnPositions.stoneamt + 2, currentY); // Adjusted position for Stones Amount
+
+    currentY += 10;
+    doc.line(columnPositions.sr, currentY+5, pageWidth - 10, currentY+5); // Table header bottom line
+    currentY += 5;
+
+    doc.line(columnPositions.sr, marginTop + tableHeight, pageWidth - 10, marginTop + tableHeight); // Bottom line
+  };
+
+  drawTableHeader();
+  drawTableStructure();
+
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+
+}
+
+
+
 
 const generateinvoicepdf6 = async (items, customer, mainitem) => {
   console.log("checking items", items);
@@ -425,25 +497,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     });
   };
 
-  // // Set Header Text
-  // doc.setFont("whitecraftlight", "italic");
-  // doc.setFontSize(40);
-  // doc.setTextColor(204, 85, 0); // Color for outline
-  // doc.setLineWidth(0.3);
-  // doc.text("KEVALI", 80, 20);
 
-  // doc.setFont("sanserif", "bold");
-  // doc.setFontSize(18);
-  // doc.setTextColor(0, 0, 0);
-  // doc.text("92.5 Silver Jewellery", 78, 26);
-
-  // doc.setFont("sanserif", "normal");
-  // doc.setFontSize(18);
-  // doc.text("Signature Of Eternal Elegance", 70, 33);
-
-  // doc.setFont("sanserif", "normal");
-  // doc.setFontSize(8);
-  // doc.text("(A Brand by Mewar Jewellery House pvt. ltd.)", 80, 37);
  
   const getImageBase64 = (imagePath) => {
     return new Promise((resolve, reject) => {

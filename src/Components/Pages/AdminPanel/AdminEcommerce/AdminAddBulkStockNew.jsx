@@ -964,59 +964,58 @@ const handleLotInputChange = (e) => {
   const handleCreateAddedProducts = (e) => {
     e.preventDefault();
 
+
     let updatedStonesList = [...allStonesList];
 
-  // Loop through each item in allStonesListmain
-  allStonesListmain.forEach((mainStone) => {
-    const foundInAllStones = updatedStonesList.find((stoneMain) =>
-      stoneMain.SKUStoneItem.some(
-        (stoneItem) =>
-          stoneItem.StoneName === mainStone.StoneName &&
-          stoneItem.StoneWeight === mainStone.StoneWeight &&
-          stoneItem.StonePieces === mainStone.StonePieces
-      )
-    );
-
-    // If mainStone is not found in any item of allStonesList, add it
-    if (!foundInAllStones) {
-      const newStoneMain = {
-        Id: null, // You may assign a new Id or use the one from mainStone
-        StoneMainName: mainStone.StoneName, // This could be set according to your data model
-        StoneMainWeight: mainStone.StoneWeight,
-        StoneMainPieces: mainStone.StonePieces,
-        StoneMainRate: mainStone.StoneRate,
-        StoneMainAmount: mainStone.StoneAmount,
-        StoneMainDescription: mainStone.Description,
-        SKUStoneItem: [
-          {
-            Id: mainStone.Id,
-            StoneName: mainStone.StoneName,
-            StoneWeight: mainStone.StoneWeight,
-            StonePieces: mainStone.StonePieces,
-            StoneRate: mainStone.StoneRate,
-            StoneAmount: mainStone.StoneAmount,
-            Description: mainStone.Description,
-            ClientCode: mainStone.ClientCode,
-            SKUStoneMainId: mainStone.Id,
-            StoneMasterId: null, // Set appropriate value
-            SKUId: mainStone.Id, // Set appropriate value
-            CompanyId: mainStone.CompanyId,
-            CounterId: mainStone.CounterId,
-            BranchId: mainStone.BranchId,
-            EmployeeId: mainStone.EmployeeId,
-            Status: mainStone.Status,
-            StoneLessPercent: mainStone.StoneLessPercent,
-          },
-        ],
-      };
-      
-      // Push the missing stone to allStonesList
-      updatedStonesList.push(newStoneMain);
-    }
-  });
-
-  // Update the state with the new stones list
-  setAllStonesList(updatedStonesList);
+    // Loop through each item in allStonesListmain
+    allStonesListmain.forEach((mainStone) => {
+      const foundInAllStones = updatedStonesList.find((stoneMain) =>
+        Array.isArray(stoneMain.SKUStoneItem) && // Check if SKUStoneItem is an array
+        stoneMain.SKUStoneItem.some(
+          (stoneItem) =>
+            stoneItem.StoneName === mainStone.StoneName &&
+            stoneItem.StoneWeight === mainStone.StoneWeight &&
+            stoneItem.StonePieces === mainStone.StonePieces
+        )
+      );
+  
+      // If mainStone is not found in any item of allStonesList, add it
+      if (!foundInAllStones) {
+        const newStoneMain = {
+          Id: null, // You may assign a new Id or use the one from mainStone
+          StoneMainName: mainStone.StoneName, // This could be set according to your data model
+          StoneMainWeight: mainStone.StoneWeight,
+          StoneMainPieces: mainStone.StonePieces,
+          StoneMainRate: mainStone.StoneRate,
+          StoneMainAmount: mainStone.StoneAmount,
+          StoneMainDescription: mainStone.Description,
+          SKUStoneItem: [
+            {
+              Id: mainStone.Id,
+              StoneName: mainStone.StoneName,
+              StoneWeight: mainStone.StoneWeight,
+              StonePieces: mainStone.StonePieces,
+              StoneRate: mainStone.StoneRate,
+              StoneAmount: mainStone.StoneAmount,
+              Description: mainStone.Description,
+              ClientCode: mainStone.ClientCode,
+              SKUStoneMainId: mainStone.Id,
+              StoneMasterId: null, // Set appropriate value
+              SKUId: mainStone.Id, // Set appropriate value
+              CompanyId: mainStone.CompanyId,
+              CounterId: mainStone.CounterId,
+              BranchId: mainStone.BranchId,
+              EmployeeId: mainStone.EmployeeId,
+              Status: mainStone.Status,
+              StoneLessPercent: mainStone.StoneLessPercent,
+            },
+          ],
+        };
+  
+        // Push the missing stone to allStonesList
+        updatedStonesList.push(newStoneMain);
+      }
+    });
 
     console.log('check allstones ', allStonesList);
     console.log('check mainstone ', allStonesListmain);
@@ -1766,23 +1765,26 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
 
 
               // Determine the nearest weight category based on the product's GrossWt
-    let weightCategory = "";
-    if (selectedSkuName !== "" && selectedSku) {
-        let wt = selectedSku.WeightCategories;
-        if (wt) {
+    let weightCategory = null; // Initialize as null
 
-          if(!product.WeightCategory){
-            // Split weight categories string into an array of numbers
-            const weightCategoriesArray = wt.split(',').map(Number);
+if (selectedSkuName !== "" && selectedSku) {
+  let wt = selectedSku.WeightCategories;
+  
+  if (wt) {
+    if (!product.WeightCategory) {
+      // Split weight categories string into an array of numbers
+      const weightCategoriesArray = wt.split(',').map(Number);
 
-            // Find the closest weight category
-            const grossWt = parseFloat(product.GrossWt);
-            weightCategory = findClosestWeightCategory(grossWt, weightCategoriesArray);
-        }else{
-          weightCategory = product.WeightCategory
-        }
-      }
+      // Find the closest weight category
+      const grossWt = parseFloat(product.GrossWt);
+
+      // Ensure that findClosestWeightCategory returns a valid number or null
+      weightCategory = findClosestWeightCategory(grossWt, weightCategoriesArray) || null;
+    } else {
+      weightCategory = product.WeightCategory ? parseFloat(product.WeightCategory) : null;
     }
+  }
+}
           return {
             ...product,
             GrossWt: !grossWithClip
