@@ -6,6 +6,9 @@ import QRCode from "qrcode";
 
 export const GenerateLabel = async (products, labelFormat) => {
   console.log("checking labelformate12 ", labelFormat);
+ 
+  generateLabel3(products);
+ 
   if (labelFormat === 1) {
     // Thashna Label Below
     generateLabel1(products);
@@ -17,7 +20,6 @@ export const GenerateLabel = async (products, labelFormat) => {
   } else if (labelFormat === 4) {
     generateLabel2(products);
   } else if (labelFormat === 5) {
-    // generateAndDownloadPrn(products);
     generateAndDownloadPrn(products);
   } else if (labelFormat == 6) {
     console.log("check formate  ", labelFormat);
@@ -129,6 +131,9 @@ const generateLabelContent2 = (product) => {
   const epcBytes = hexEPC.length / 2; // Calculate how many bytes the EPC is
   const rfwtTagLength = epcBytes <= 6 ? 48 : epcBytes <= 8 ? 64 : 80; // 6 bytes = 48 bits, 8 bytes = 64 bits, 10 bytes = 80 bits
 
+  console.log('checking prn  ', epcBytes, '  ',hexEPC )
+
+
   let pcValue = "";
 
   if (rfwtTagLength === 48) {
@@ -138,7 +143,6 @@ const generateLabelContent2 = (product) => {
   } else if (rfwtTagLength === 80) {
     pcValue = "*3800*"; // Assuming this for 80 bits, you can adjust based on your needs.
   }
-
   return `!PTX_SETUP
 ENGINE-WIDTH;454:LENGTH;1262:MIRROR;0.
 PTX_END
@@ -162,8 +166,8 @@ ISET;'UTF8'
 RFWTAG;16;PC
 16;H;${pcValue}
 STOP
-RFWTAG;${rfwtTagLength};EPC
-${rfwtTagLength};H;*${hexEPC}*
+RFWTAG;80;EPC
+80;H;*${hexEPC}*
 STOP
 BARCODE
 QRCODE;CCW;XD2;T2;E0;M0;I0;172;21
@@ -184,74 +188,10 @@ END
 
 ~NORMAL
 ~DELETE FORM;FORM-0`;
-};
+  };
 
-const generateLabelContent2old = (product) => {
-  const hexEPC = stringToHex(product.ItemCode).replace(/[^0-9A-F]/g, ""); // Ensure only valid hex characters are included
-  const grossWt = parseFloat(product.GrossWt).toFixed(3) || 0;
-  const pieces = parseInt(product.Pieces) || 1; // Ensure at least 1 to avoid division by zero
-  const weightPerPiece = (grossWt / pieces).toFixed(3); // Format to 3 decimal places
 
-  // Dynamically set RFWTAG length based on the actual byte size of hexEPC (1 byte = 2 hex chars)
-  const epcBytes = hexEPC.length / 2; // Calculate how many bytes the EPC is
-  const rfwtTagLength = epcBytes <= 6 ? 48 : epcBytes <= 8 ? 64 : 80; // 6 bytes = 48 bits, 8 bytes = 64 bits, 10 bytes = 80 bits
 
-  let pcValue = "";
-
-  if (rfwtTagLength === 48) {
-    pcValue = "*1C00*";
-  } else if (rfwtTagLength === 64) {
-    pcValue = "*2400*";
-  } else if (rfwtTagLength === 80) {
-    pcValue = "*3800*"; // Assuming this for 80 bits, you can adjust based on your needs.
-  }
-
-  return `!PTX_SETUP
-ENGINE-WIDTH;1183:LENGTH;2207:MIRROR;0.
-PTX_END
-~PAPER;ROTATE 0
-~CONFIG
-UPC DESCENDERS;0
-END
-~PAPER;LABELS 2;MEDIA 1
-~PAPER;FEED SHIFT 0;INTENSITY 8;SPEED IPS 3;SLEW IPS 6;TYPE 0
-~PAPER;CUT 0;PAUSE 0;TEAR 0
-~CONFIG
-CHECK DYNAMIC BCD;0
-SLASH ZERO;0
-UPPERCASE;0
-AUTO WRAP;0
-HOST FORM LENGTH;1
-END
-~CREATE;FORM-0;158
-SCALE;DOT;203;203
-ISET;'UTF8'
-RFWTAG;16;PC
-16;H;${pcValue}
-STOP
-RFWTAG;${rfwtTagLength};EPC
-${rfwtTagLength};H;*${hexEPC}*
-STOP
-BARCODE
-QRCODE;CCW;XD3;T2;E0;M0;I0;372;140
-"${product.ItemCode}"
-STOP
-FONT;NAME CALIBRIB.ttf
-ALPHA
-CCW;POINT;329;163;9;9;"G:"
-CCW;POINT;286;227;9;9;"P:"
-CCW;POINT;303;163;9;9;"${grossWt}"
-CCW;POINT;258;227;9;9;"${pieces}"
-CCW;POINT;323;195;9;9;"W:"
-CCW;POINT;290;195;9;9;"${weightPerPiece}"
-CCW;POINT;436;227;9;11;"${product.ItemCode}"
-STOP
-END
-~EXECUTE;FORM-0;1
-
-~NORMAL
-~DELETE FORM;FORM-0`;
-};
 
 //   return `!PTX_SETUP
 // ENGINE-WIDTH;1183:LENGTH;2207:MIRROR;0.

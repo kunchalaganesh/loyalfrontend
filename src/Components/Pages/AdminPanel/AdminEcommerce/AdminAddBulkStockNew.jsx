@@ -400,6 +400,8 @@ export default function AdminAddBulkStockNew() {
     // setFilteredparty(partyData);
     // setFilteredsku(allSku)
 
+
+    console.log('checking selected sku ', selectedSkuName)
     let filteredItems = allPurchaseItems;
 // case 1
     // Filter based on selected Lot Number, but only if `lotNumber` is not empty
@@ -417,12 +419,8 @@ export default function AdminAddBulkStockNew() {
       setFilteredparty(filteredItems);
       setPartyTypeId(filteredItems[0].Id)
 
-    } else {
-      setFilteredsku(allSku);
-      setFilteredparty(partyData);
-    }
+    } else if (selectedSkuName && selectedSkuName.trim() !== ""){
 
-    if (selectedSkuName && selectedSkuName.trim() !== "") {
       filteredItems = filteredItems.find(
         (sku) => sku.StockKeepingUnit === selectedSkuName
       );
@@ -432,7 +430,16 @@ export default function AdminAddBulkStockNew() {
         filteredItems = allPurchaseItems;
         setFilteredsku(allSku);
       }
+
+
+      // setFilteredsku(allSku);
+      // setFilteredparty(partyData);
+    }else{
+setFilteredsku(allSku);
+      setFilteredparty(partyData);
     }
+
+   
 
 
   // Set the filtered items
@@ -2193,8 +2200,12 @@ export default function AdminAddBulkStockNew() {
       setMaking_per_gram(selectedSku.MakingPerGram);
       setMaking_Fixed_Wastage(selectedSku.MakingFixedWastage);
       setMRP(selectedSku.MRP);
+      if(selectedSku.SKUStoneMain.lenght > 0){
       setAllSelectedSkuStones(selectedSku.SKUStoneMain);
 
+      }else{
+        setAllSelectedSkuStones([])
+      }
 
       setAllStonesList(selectedSku.SKUStoneMain);
       setAllSelectedSkuDiamonds(selectedSku.Diamonds);
