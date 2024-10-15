@@ -375,6 +375,7 @@ export default function AdminAddBulkStockNew() {
 
   // Function to get unique Lot Numbers
   const getUniqueLotNumbers = (items) => {
+    if (!Array.isArray(items)) return [];
     const lotSet = new Set(); // Set to store unique lot numbers
     return items.filter((item) => {
       if (!lotSet.has(item.LotNumber)) {
@@ -400,7 +401,7 @@ export default function AdminAddBulkStockNew() {
     // setFilteredsku(allSku)
 
     let filteredItems = allPurchaseItems;
-
+// case 1
     // Filter based on selected Lot Number, but only if `lotNumber` is not empty
     if (lotNumber && lotNumber !== "0") {
       filteredItems = filteredItems.filter(
@@ -412,32 +413,7 @@ export default function AdminAddBulkStockNew() {
       const fparty = filteredparty.filter(
         (item) => item.VendorName == vendorid
       );
-
-      console.log("checking party ", filteredItems);
-      setFilteredparty(fparty);
-
-
-      console.log('checking skuselected ', selectedSkuName);
-      // Filter based on selected SKU, but only if `selectedSkuName` is not empty
-      if (selectedSkuName && selectedSkuName.trim() !== "") {
-
-        const matchedSku = filteredItems.find(
-          (sku) => sku.StockKeepingUnit === skuName
-      );
-
-      if(matchedSku){
-        filteredItems = filteredItems.filter(
-          (item) => item.StockKeepingUnit === selectedSkuName
-        );
-        setFilteredsku(filteredItems);
-        setSelectedSkuName(uppercaseValue);
-      setSelectedSku(selectedSkuItem);
-      }else{
-      setFilteredsku([]);
-      setSelectedSkuName("");
-
-      }
-      }
+      setFilteredsku(filteredItems);
       setFilteredparty(filteredItems);
       setPartyTypeId(filteredItems[0].Id)
 
@@ -446,24 +422,18 @@ export default function AdminAddBulkStockNew() {
       setFilteredparty(partyData);
     }
 
-
-  // Check if SKU is not empty or null
-  if (selectedSkuName && selectedSkuName.trim() !== "") {
-    // Find matching SKU from filteredsku
-    const matchedSku = filteredsku.find(
-      (sku) => sku.StockKeepingUnit === selectedSkuName
-    );
-
-    // If a matching SKU is found, filter the items based on selectedSkuName
-    if (matchedSku) {
-      filteredItems = allPurchaseItems.filter(
-        (item) => item.StockKeepingUnit === selectedSkuName
+    if (selectedSkuName && selectedSkuName.trim() !== "") {
+      filteredItems = filteredItems.find(
+        (sku) => sku.StockKeepingUnit === selectedSkuName
       );
+      if(filteredItems){
+        filteredItems = filteredItems
+      }else{
+        filteredItems = allPurchaseItems;
+        setFilteredsku(allSku);
+      }
     }
-  } else {
-    // If SKU is empty, reset the filtered items to allPurchaseItems
-    filteredItems = allPurchaseItems;
-  }
+
 
   // Set the filtered items
   setAllFilteredPurchaseItems(filteredItems);
@@ -2103,22 +2073,58 @@ export default function AdminAddBulkStockNew() {
     }
   };
 
-  const handleSkuInputChange = (e) => {
-    const { value } = e.target;
-    const uppercaseValue = value.toUpperCase();
-    setSelectedSkuName(uppercaseValue);
-    let selectedSkuItem = [];
-    // selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
-    selectedSkuItem = allFilteredPurchaseItems.find((x) => x.StockKeepingUnit == uppercaseValue);
+  // const handleSkuInputChange = (e) => {
+  //   const { value } = e.target;
+  //   const uppercaseValue = value.toUpperCase();
+  //   setSelectedSkuName(uppercaseValue);
+  //   let selectedSkuItem = [];
+  //   // selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
+  //   selectedSkuItem = allFilteredPurchaseItems.find((x) => x.StockKeepingUnit == uppercaseValue);
 
-    // setSelectedSku(selectedSkuItem);
-    if (selectedSkuItem) {
-      setSelectedSkuName(uppercaseValue);
-      setSelectedSku(selectedSkuItem);
+  //   // setSelectedSku(selectedSkuItem);
+  //   if (selectedSkuItem) {
+  //     setSelectedSkuName(uppercaseValue);
+  //     setSelectedSku(selectedSkuItem);
+  //   } 
+  //   // else {
+  //   //   setSelectedSkuName(""); // Reset if SKU doesn't exist
+  //   // }
+  // };
+
+
+  const handleSkuInputChange = (e) => {
+    const enteredSku = e.target.value;
+    // const uppercaseValue = value.toUpperCase();
+    // Use contains logic for filtering the SKU list during input
+    const partialMatch = filteredsku.filter((sku) =>
+      sku.StockKeepingUnit.toLowerCase().includes(enteredSku.toLowerCase())
+    );
+  
+    // Update the SKU name with partial matching during input
+    setSelectedSkuName(enteredSku);
+  
+    // Update the filtered SKU list based on partial match
+    setFilteredsku(partialMatch);
+  };
+
+  const handleSkuSelect = (e) => {
+    const selectedSku = e.target.value;
+  
+    // Use exact match logic when user selects from the dropdown
+    const exactMatch = filteredsku.find(
+      (sku) => sku.StockKeepingUnit === selectedSku
+    );
+  
+    // If exact match is found, set the SKU name, otherwise reset it
+    if (exactMatch) {
+      setSelectedSkuName(selectedSku);
+      setSelectedSku(exactMatch);
     } else {
-      setSelectedSkuName(""); // Reset if SKU doesn't exist
+      setSelectedSkuName(""); // Reset if no exact match
+      setSelectedSku([]);
     }
   };
+  
 
   useEffect(() => {
     if (selectedSkuName !== "" && selectedSku) {
@@ -3577,7 +3583,8 @@ export default function AdminAddBulkStockNew() {
                                       name="skuList"
                                       placeholder="Enter SKU"
                                       value={selectedSkuName}
-                                      onInput={handleSkuInputChange}
+                                      onInput={handleSkuInputChange}  // Partial match on input
+      onBlur={handleSkuSelect}   
                                       list="skuList"
                                       autoComplete="off"
                                     />
