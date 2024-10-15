@@ -53,7 +53,7 @@ import AdminAddProduct from "./Components/Pages/AdminPanel/AdminMasters/AdminAdd
 import AdminAddDesign from "./Components/Pages/AdminPanel/AdminMasters/AdminAddDesign";
 import AdminAddOccassion from "./Components/Pages/AdminPanel/AdminMasters/AdminAddOccassion";
 import AdminAddVendor from "./Components/Pages/AdminPanel/AdminMasters/AdminAddVendor";
-import AdminPurchaseEntryEdit from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryEdit";
+// import AdminPurchaseEntryEdit from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryEdit";
 import AdminCreatePacket from "./Components/Pages/AdminPanel/AdminTrading/AdminCreatePacket";
 import AdminVendorTounche from "./Components/Pages/AdminPanel/AdminSettings/AdminVendorTounche";
 import AdminAddDiamond from "./Components/Pages/AdminPanel/AdminMasters/AdminAddDiamond";
