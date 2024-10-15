@@ -431,7 +431,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     doc.setFontSize(10);
     doc.text("Declaration :", customerx, fotertotaly + 55);
     const declarationText =
-      "I declare that this invoice shows the actual price of the goods described and that all particulars are true and correct, I received ornament in good condition";
+      "I declare that this invoice shows the actual price of the goods described and that all particulars are true and correct. I received ornament in good condition";
     const splitText = doc.splitTextToSize(declarationText, 80); // Adjust 180 to the width you want
     doc.setFontSize(10);
     doc.text(splitText, customerx, fotertotaly + 60);
@@ -448,12 +448,17 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     
     doc.line(customerx, fotertotaly + 90, fotertotalx + 60, fotertotaly + 90);
 
-    const ctext ="1st foor 2nd cross Vasanthappa Thota Banglore-560032"
+    const ctext ="1st Floor, 1/1, 2nd cross Vasanthappa Thota Banglore-560032"
     const splitText1 = doc.splitTextToSize(ctext, 80); // Adjust 180 to the width you want
     doc.text(splitText1, customerx, fotertotaly + 95);
-    const stext ="Contact Us : 08023333409/08091515409  @kevali.in/kevali.in"
+    const stext ="Contact Us : 080 23333409/080 91515409"
+    const s1text = "Email: jewls@kevali.in"
+    const s2text = "Instagram: kevali.in"
     const splitText2 = doc.splitTextToSize(stext, 80); // Adjust 180 to the width you want
-    doc.text(splitText2, fotertotalx, fotertotaly + 95);
+    doc.text(stext, fotertotalx, fotertotaly + 95);
+    doc.text(s1text, fotertotalx, fotertotaly + 100);
+    doc.text(s2text, fotertotalx, fotertotaly + 105);
+
 
   };
 
@@ -542,12 +547,12 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
 
   doc.text("Invoice To", customerx, customery);
 
-  doc.text("Customer Name :-", customerx, customery + 5);
-  doc.text(`${firstname} ${lastname}`, customerx + 28, customery + 5);
-  doc.text("Mobile No :-", customerx, customery + 10);
-  doc.text(`${mobile}`, customerx + 28, customery + 10);
-  doc.text("Address :-", customerx, customery + 15);
-  doc.text(`${address}`, customerx + 28, customery + 15);
+  doc.text(`Customer Name : ${firstname} ${lastname}`, customerx, customery + 5);
+  // doc.text(``, customerx + 28, customery + 5);
+  doc.text(`Mobile No     : ${mobile}`, customerx, customery + 10);
+  // doc.text(``, customerx + 28, customery + 10);
+  doc.text(`Address       : ${address}`, customerx, customery + 15);
+  // doc.text(``, customerx + 28, customery + 15);
 
   drawTableHeader();
   drawTableStructure();
