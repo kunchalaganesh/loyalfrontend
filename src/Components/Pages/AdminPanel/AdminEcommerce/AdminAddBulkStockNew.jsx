@@ -374,35 +374,20 @@ export default function AdminAddBulkStockNew() {
 
 
   // Function to get unique Lot Numbers
-const getUniqueLotNumbers = (items) => {
-  const lotSet = new Set(); // Set to store unique lot numbers
-  return items.filter((item) => {
-    if (!lotSet.has(item.LotNumber)) {
-      lotSet.add(item.LotNumber); // Add lot number to set if it's unique
-      return true; // Keep this item in the filtered array
-    }
-    return false; // Ignore duplicate lot numbers
-  });
-};
+  const getUniqueLotNumbers = (items) => {
+    const lotSet = new Set(); // Set to store unique lot numbers
+    return items.filter((item) => {
+      if (!lotSet.has(item.LotNumber)) {
+        lotSet.add(item.LotNumber); // Add lot number to set if it's unique
+        return true; // Keep this item in the filtered array
+      }
+      return false; // Ignore duplicate lot numbers
+    });
+  };
 
-// Assuming `allFilteredPurchaseItems` is already available
-const uniqueLotNumbers = getUniqueLotNumbers(allFilteredPurchaseItems);
+  // Assuming `allFilteredPurchaseItems` is already available
+  const uniqueLotNumbers = getUniqueLotNumbers(allFilteredPurchaseItems);
 
-const handleLotInputChange = (e) => {
-  const value = e.target.value;
-  setLotInputValue(value);
-
-  if (value === "") {
-    // If the input is cleared, show all lot numbers
-    setFilteredLotNumbers(uniqueLotNumbers);
-  } else {
-    // Filter the uniqueLotNumbers based on the user's input
-    const filtered = uniqueLotNumbers.filter((lot) =>
-      lot.LotNumber.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredLotNumbers(filtered);
-  }
-};
 
   const handleError = (message) => {
     setErrorMessage(message);
@@ -431,14 +416,28 @@ const handleLotInputChange = (e) => {
       console.log("checking party ", filteredItems);
       setFilteredparty(fparty);
 
+
+      console.log('checking skuselected ', selectedSkuName);
       // Filter based on selected SKU, but only if `selectedSkuName` is not empty
       if (selectedSkuName && selectedSkuName.trim() !== "") {
+
+        const matchedSku = filteredItems.find(
+          (sku) => sku.StockKeepingUnit === skuName
+      );
+
+      if(matchedSku){
         filteredItems = filteredItems.filter(
           (item) => item.StockKeepingUnit === selectedSkuName
         );
-      }
+        setFilteredsku(filteredItems);
+        setSelectedSkuName(uppercaseValue);
+      setSelectedSku(selectedSkuItem);
+      }else{
+      setFilteredsku([]);
+      setSelectedSkuName("");
 
-      setFilteredsku(filteredItems);
+      }
+      }
       setFilteredparty(filteredItems);
       setPartyTypeId(filteredItems[0].Id)
 
@@ -447,11 +446,28 @@ const handleLotInputChange = (e) => {
       setFilteredparty(partyData);
     }
 
-    // if (selectedSkuName && selectedSkuName.trim() !== "") {
-    //   filteredItems = filteredItems.filter(
-    //     (item) => item.StockKeepingUnit === selectedSkuName
-    //   );
-    // }
+
+  // Check if SKU is not empty or null
+  if (selectedSkuName && selectedSkuName.trim() !== "") {
+    // Find matching SKU from filteredsku
+    const matchedSku = filteredsku.find(
+      (sku) => sku.StockKeepingUnit === selectedSkuName
+    );
+
+    // If a matching SKU is found, filter the items based on selectedSkuName
+    if (matchedSku) {
+      filteredItems = allPurchaseItems.filter(
+        (item) => item.StockKeepingUnit === selectedSkuName
+      );
+    }
+  } else {
+    // If SKU is empty, reset the filtered items to allPurchaseItems
+    filteredItems = allPurchaseItems;
+  }
+
+  // Set the filtered items
+  setAllFilteredPurchaseItems(filteredItems);
+
 
     // if (partyTypeId && partyTypeId !== 0) {
     //   filteredItems = filteredItems.filter(
@@ -749,13 +765,13 @@ const handleLotInputChange = (e) => {
     let totalStoneAmount =
       selectedSkuStones.length > 0
         ? selectedSkuStones.reduce(
-            (a, b) =>
-              a +
-              (
-                parseFloat(b.StoneAmount) * parseFloat(selectedSku.Pieces)
-              ).toFixed(2),
-            0
-          )
+          (a, b) =>
+            a +
+            (
+              parseFloat(b.StoneAmount) * parseFloat(selectedSku.Pieces)
+            ).toFixed(2),
+          0
+        )
         : 0;
     setLoading(true);
     let formData = new FormData();
@@ -978,7 +994,7 @@ const handleLotInputChange = (e) => {
             stoneItem.StonePieces === mainStone.StonePieces
         )
       );
-  
+
       // If mainStone is not found in any item of allStonesList, add it
       if (!foundInAllStones) {
         const newStoneMain = {
@@ -1011,7 +1027,7 @@ const handleLotInputChange = (e) => {
             },
           ],
         };
-  
+
         // Push the missing stone to allStonesList
         updatedStonesList.push(newStoneMain);
       }
@@ -1025,13 +1041,13 @@ const handleLotInputChange = (e) => {
     let totalStoneAmount =
       selectedSkuStones && selectedSkuStones.length > 0
         ? selectedSkuStones.reduce(
-            (a, b) =>
-              a +
-              (
-                parseFloat(b.StoneAmount) * parseFloat(selectedSku.Pieces)
-              ).toFixed(2),
-            0
-          )
+          (a, b) =>
+            a +
+            (
+              parseFloat(b.StoneAmount) * parseFloat(selectedSku.Pieces)
+            ).toFixed(2),
+          0
+        )
         : 0;
 
     const totalCollectionItem =
@@ -1110,8 +1126,8 @@ const handleLotInputChange = (e) => {
       Array.isArray(selectedSku) && selectedSku.length > 0
         ? selectedSku[0]
         : selectedSku && typeof selectedSku === "object"
-        ? selectedSku
-        : {};
+          ? selectedSku
+          : {};
     let createdProduct = {
       ProductTitle: productName,
       CategoryId: categoryId,
@@ -1126,8 +1142,8 @@ const handleLotInputChange = (e) => {
       GrossWt: !grossWithClip
         ? `${parseFloat(grosswt).toFixed(3)}`
         : `${parseFloat(parseFloat(grosswt) - parseFloat(clipWeight)).toFixed(
-            3
-          )}`,
+          3
+        )}`,
       ClipWeight: `${parseFloat(clipWeight).toFixed(3)}`,
       TotalStoneWeight: `${parseFloat(stoneWeight).toFixed(3)}`,
       TotalStoneAmount: `${parseFloat(stoneAmount).toFixed(2)}`,
@@ -1484,8 +1500,8 @@ const handleLotInputChange = (e) => {
       stockType === "Labelled"
         ? parseFloat(product.GrossWt) || 0
         : stockType === "Unlabelled"
-        ? parseFloat(product.TotalGrossWt) || 0
-        : 0;
+          ? parseFloat(product.TotalGrossWt) || 0
+          : 0;
     const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
     const netWt = parseFloat(product.NetWt) || 0;
 
@@ -1544,22 +1560,22 @@ const handleLotInputChange = (e) => {
         parseFloat(value) -
           parseFloat(updatedProduct.ClipWeight) -
           parseFloat(updatedProduct.TotalStoneWeight) >
-        0
+          0
           ? (
-              parseFloat(value) -
-              parseFloat(updatedProduct.ClipWeight) -
-              parseFloat(updatedProduct.TotalStoneWeight)
-            ).toFixed(3)
+            parseFloat(value) -
+            parseFloat(updatedProduct.ClipWeight) -
+            parseFloat(updatedProduct.TotalStoneWeight)
+          ).toFixed(3)
           : (updatedProduct.GrossWt = value);
     }
     if (property === "TotalGrossWt" && !isNaN(value)) {
       updatedProduct.TotalNetWt =
         parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight) > 0
           ? (
-              parseFloat(value) -
-              parseFloat(updatedProduct.ClipWeight) -
-              parseFloat(updatedProduct.TotalStoneWeight)
-            ).toFixed(3)
+            parseFloat(value) -
+            parseFloat(updatedProduct.ClipWeight) -
+            parseFloat(updatedProduct.TotalStoneWeight)
+          ).toFixed(3)
           : (updatedProduct.TotalGrossWt = value);
     }
 
@@ -1667,40 +1683,40 @@ const handleLotInputChange = (e) => {
 
 
   // Function to find the closest weight category based on the GrossWt
-function findClosestWeightCategory(grossWt, weightCategoriesArray) {
-  // Sort weight categories in ascending order
-  weightCategoriesArray.sort((a, b) => a - b);
+  function findClosestWeightCategory(grossWt, weightCategoriesArray) {
+    // Sort weight categories in ascending order
+    weightCategoriesArray.sort((a, b) => a - b);
 
-  // Initialize closest category with the first element
-  let closestCategory = weightCategoriesArray[0];
+    // Initialize closest category with the first element
+    let closestCategory = weightCategoriesArray[0];
 
-  // Loop through each category to find the closest
-  for (let i = 0; i < weightCategoriesArray.length; i++) {
+    // Loop through each category to find the closest
+    for (let i = 0; i < weightCategoriesArray.length; i++) {
       let currentCategory = weightCategoriesArray[i];
 
       // If the grossWt is less than or equal to the current category, assign it
       if (grossWt <= currentCategory) {
-          closestCategory = currentCategory;
-          break;
+        closestCategory = currentCategory;
+        break;
       }
 
       // If the grossWt is slightly higher, find the closest match based on distance
       if (grossWt > currentCategory) {
-          if (i < weightCategoriesArray.length - 1) {
-              const nextCategory = weightCategoriesArray[i + 1];
+        if (i < weightCategoriesArray.length - 1) {
+          const nextCategory = weightCategoriesArray[i + 1];
 
-              if (grossWt <= nextCategory) {
-                  closestCategory = (grossWt - currentCategory) <= (nextCategory - grossWt)
-                      ? currentCategory
-                      : nextCategory;
-                  break;
-              }
+          if (grossWt <= nextCategory) {
+            closestCategory = (grossWt - currentCategory) <= (nextCategory - grossWt)
+              ? currentCategory
+              : nextCategory;
+            break;
           }
+        }
       }
-  }
+    }
 
-  return closestCategory;
-}
+    return closestCategory;
+  }
 
   const handleEditProducts = async () => {
     setLoading(true);
@@ -1752,7 +1768,7 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
               // Ensure StoneWeight and pieces are valid numbers
               const stoneWeight = parseFloat(stone.StoneWeight) || 0;
               const pieces = parseFloat(product.Pieces) || 1; // Default to 1 if pieces is not provided
-          
+
               return total + (stoneWeight * pieces);
             }, 0);
           }
@@ -1764,40 +1780,40 @@ function findClosestWeightCategory(grossWt, weightCategoriesArray) {
               : product.TotalStoneWeight;
 
 
-              // Determine the nearest weight category based on the product's GrossWt
-    let weightCategory = null; // Initialize as null
+          // Determine the nearest weight category based on the product's GrossWt
+          let weightCategory = null; // Initialize as null
 
-if (selectedSkuName !== "" && selectedSku) {
-  let wt = selectedSku.WeightCategories;
-  
-  if (wt) {
-    if (!product.WeightCategory) {
-      // Split weight categories string into an array of numbers
-      const weightCategoriesArray = wt.split(',').map(Number);
+          if (selectedSkuName !== "" && selectedSku) {
+            let wt = selectedSku.WeightCategories;
 
-      // Find the closest weight category
-      const grossWt = parseFloat(product.GrossWt);
+            if (wt) {
+              if (!product.WeightCategory) {
+                // Split weight categories string into an array of numbers
+                const weightCategoriesArray = wt.split(',').map(Number);
 
-      // Ensure that findClosestWeightCategory returns a valid number or null
-      weightCategory = findClosestWeightCategory(grossWt, weightCategoriesArray) || null;
-    } else {
-      weightCategory = product.WeightCategory ? parseFloat(product.WeightCategory) : null;
-    }
-  }
-}
+                // Find the closest weight category
+                const grossWt = parseFloat(product.GrossWt);
+
+                // Ensure that findClosestWeightCategory returns a valid number or null
+                weightCategory = findClosestWeightCategory(grossWt, weightCategoriesArray) || null;
+              } else {
+                weightCategory = product.WeightCategory ? parseFloat(product.WeightCategory) : null;
+              }
+            }
+          }
           return {
             ...product,
             GrossWt: !grossWithClip
               ? product.GrossWt.toString()
               : parseFloat(
-                  parseFloat(product.GrossWt) - parseFloat(product.ClipWeight)
-                )
-                  .toFixed(3)
-                  .toString(),
+                parseFloat(product.GrossWt) - parseFloat(product.ClipWeight)
+              )
+                .toFixed(3)
+                .toString(),
             TotalStoneWeight: totalStoneWeight,
             NetWt: product.NetWt.toString(),
             ClipWeight: product.ClipWeight.toString(),
-            WeightCategory :weightCategory
+            WeightCategory: weightCategory
           };
         });
 
@@ -2092,8 +2108,16 @@ if (selectedSkuName !== "" && selectedSku) {
     const uppercaseValue = value.toUpperCase();
     setSelectedSkuName(uppercaseValue);
     let selectedSkuItem = [];
-    selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
-    setSelectedSku(selectedSkuItem);
+    // selectedSkuItem = allSku.find((x) => x.StockKeepingUnit == uppercaseValue);
+    selectedSkuItem = allFilteredPurchaseItems.find((x) => x.StockKeepingUnit == uppercaseValue);
+
+    // setSelectedSku(selectedSkuItem);
+    if (selectedSkuItem) {
+      setSelectedSkuName(uppercaseValue);
+      setSelectedSku(selectedSkuItem);
+    } else {
+      setSelectedSkuName(""); // Reset if SKU doesn't exist
+    }
   };
 
   useEffect(() => {
@@ -2273,7 +2297,7 @@ if (selectedSkuName !== "" && selectedSku) {
         (
           parseFloat(grosswt) -
           parseFloat(selectedStone.StoneMainWeight) *
-            parseFloat(selectedSku.Pieces)
+          parseFloat(selectedSku.Pieces)
         ).toFixed(3)
       );
       setStoneAmount(
@@ -2647,8 +2671,8 @@ if (selectedSkuName !== "" && selectedSku) {
 
         const totalNetWt = parseFloat(
           parseFloat(product.GrossWt) -
-            parseFloat(product.TotalStoneWeight) -
-            parseFloat(totalDiamondWeight)
+          parseFloat(product.TotalStoneWeight) -
+          parseFloat(totalDiamondWeight)
         ).toFixed(3);
 
         const totalDiamondPieces = (
@@ -2691,11 +2715,11 @@ if (selectedSkuName !== "" && selectedSku) {
       prevProducts.map((product, index) =>
         index === selectedProductIndex
           ? {
-              ...product,
-              Stones: product.Stones.filter(
-                (_, sIndex) => sIndex !== stoneIndex
-              ),
-            }
+            ...product,
+            Stones: product.Stones.filter(
+              (_, sIndex) => sIndex !== stoneIndex
+            ),
+          }
           : product
       )
     );
@@ -2705,11 +2729,11 @@ if (selectedSkuName !== "" && selectedSku) {
       prevProducts.map((product, index) =>
         index === selectedProductIndex
           ? {
-              ...product,
-              Diamonds: product.Diamonds.filter(
-                (_, sIndex) => sIndex !== diamondIndex
-              ),
-            }
+            ...product,
+            Diamonds: product.Diamonds.filter(
+              (_, sIndex) => sIndex !== diamondIndex
+            ),
+          }
           : product
       )
     );
@@ -2818,17 +2842,17 @@ if (selectedSkuName !== "" && selectedSku) {
                 >
                   {goldAlert
                     ? // <AlertMessage
-                      //   type="error"
-                      //   message="Gross Wt of Gold could not be zero"
-                      // />
-                      alert("Gross Wt of Gold could not be zero")
+                    //   type="error"
+                    //   message="Gross Wt of Gold could not be zero"
+                    // />
+                    alert("Gross Wt of Gold could not be zero")
                     : null}
                   {barCodeAlert
                     ? // <AlertMessage
-                      //   type="error"
-                      //   message="Sorry, Please enter a correct Barcode"
-                      // />
-                      alert("Sorry, Please enter a correct Barcode")
+                    //   type="error"
+                    //   message="Sorry, Please enter a correct Barcode"
+                    // />
+                    alert("Sorry, Please enter a correct Barcode")
                     : null}
                   {loadingTop ? (
                     <div
@@ -2972,7 +2996,7 @@ if (selectedSkuName !== "" && selectedSku) {
                             )
                           )}
                           {addedProducts[selectedProductIndex].Stones.length ===
-                          0 ? (
+                            0 ? (
                             <button
                               id="bulkStockAddProductImportButton"
                               onClick={handleAddStone}
@@ -3653,7 +3677,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                 </Grid>
                               </Grid>
                               <Grid container>
-                              <Grid item xs={6} md={3}>
+                                <Grid item xs={6} md={3}>
                                   <div
                                     style={{
                                       display: "flex",
@@ -3688,7 +3712,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                   </div>
                                 </Grid>
 
-                                
+
                                 <Grid item xs={6} md={3}>
                                   <div
                                     style={{
@@ -3759,7 +3783,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                 </Grid>
 
 
-                                
+
 
 
                                 <Grid item xs={6} md={3}>
@@ -3867,7 +3891,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                     categoriesData
                                       .filter((x) => x.Id == e.target.value)[0]
                                       ?.CategoryName.toLowerCase() !==
-                                      "diamonds"
+                                    "diamonds"
                                   ) {
                                     setCategory(e.target.value),
                                       setBaseMetal(e.target.value);
@@ -4162,12 +4186,12 @@ if (selectedSkuName !== "" && selectedSku) {
                                         setDiamondTotalAmount(
                                           parseFloat(
                                             parseFloat(e.target.value) *
-                                              parseInt(diamondPieces)
+                                            parseInt(diamondPieces)
                                           ).toFixed(2)
                                         );
                                     }}
 
-                                    // readOnly
+                                  // readOnly
                                   />
                                 </div>
                                 <div className="bulkStockAddProductDetailsItem">
@@ -4183,8 +4207,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                       );
                                       setDiamondTotalAmount(
                                         e.target.value *
-                                          diamondWeight *
-                                          diamondSellRate
+                                        diamondWeight *
+                                        diamondSellRate
                                       );
                                     }}
                                   />
@@ -4216,7 +4240,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                       setDiamondSellRate(
                                         parseFloat(
                                           parseFloat(e.target.value) /
-                                            parseInt(diamondPieces)
+                                          parseInt(diamondPieces)
                                         ).toFixed(2)
                                       );
                                     }}
@@ -4350,7 +4374,7 @@ if (selectedSkuName !== "" && selectedSku) {
                             ) : (
                               <>
                                 {category &&
-                                categoryName.toLowerCase() == "diamonds" ? (
+                                  categoryName.toLowerCase() == "diamonds" ? (
                                   <div className="bulkStockAddProductDetailsItem">
                                     <label style={{ margin: 0 }}>Metal</label>
                                     <select
@@ -4395,9 +4419,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                       return (
                                         <option
                                           key={y}
-                                          value={`${parseInt(x.Id)},${
-                                            x.ProductName
-                                          }`}
+                                          value={`${parseInt(x.Id)},${x.ProductName
+                                            }`}
                                         >
                                           {x.ProductName}
                                         </option>
@@ -4420,9 +4443,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                       return (
                                         <option
                                           key={y}
-                                          value={`${parseInt(x.Id)},${
-                                            x.DesignName
-                                          }`}
+                                          value={`${parseInt(x.Id)},${x.DesignName
+                                            }`}
                                         >
                                           {x.DesignName}
                                         </option>
@@ -4472,9 +4494,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                       return (
                                         <option
                                           key={y}
-                                          value={`${parseInt(x.Id)},${
-                                            x.PurityName
-                                          }`}
+                                          value={`${parseInt(x.Id)},${x.PurityName
+                                            }`}
                                         >
                                           {x.PurityName}
                                         </option>
@@ -4530,9 +4551,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                         return (
                                           <option
                                             key={y}
-                                            value={`${parseInt(x.Id)},${
-                                              x.BoxName
-                                            }`}
+                                            value={`${parseInt(x.Id)},${x.BoxName
+                                              }`}
                                           >
                                             {x.BoxName}
                                           </option>
@@ -4683,13 +4703,13 @@ if (selectedSkuName !== "" && selectedSku) {
 
                                           if (
                                             grossWeightValue -
-                                              parseFloat(stoneWeight) >
+                                            parseFloat(stoneWeight) >
                                             0
                                           ) {
                                             setNetWt(
                                               grossWeightValue -
-                                                parseFloat(clipWeight) -
-                                                parseFloat(stoneWeight)
+                                              parseFloat(clipWeight) -
+                                              parseFloat(stoneWeight)
                                             );
                                           } else {
                                             setNetWt(0);
@@ -4898,7 +4918,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                         setWastagePerc(e.target.value),
                                           setFineWastagePerc(
                                             parseFloat(finePerc) +
-                                              parseFloat(e.target.value)
+                                            parseFloat(e.target.value)
                                           );
                                       }}
                                     />
@@ -5402,8 +5422,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                             }
                                             // placeholder={x.CategoryId}
                                             readOnly
-                                            // value={x.product_type}
-                                            // onChange={(e) => handleInputChange(e, x.id, "Product_type")}
+                                          // value={x.product_type}
+                                          // onChange={(e) => handleInputChange(e, x.id, "Product_type")}
                                           />
                                         </td>
                                       ) : null}
@@ -5419,8 +5439,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                             // : ""
                                           }
                                           readOnly
-                                          // value={x.product_type}
-                                          // onChange={(e) => handleInputChange(e, x.id, "Product_type")}
+                                        // value={x.product_type}
+                                        // onChange={(e) => handleInputChange(e, x.id, "Product_type")}
                                         />
                                       </td>
                                       <td>
@@ -5437,7 +5457,7 @@ if (selectedSkuName !== "" && selectedSku) {
                                           // placeholder={x.collection}
                                           // value={x.collection}
                                           readOnly
-                                          // onChange={(e) => handleInputChange(e, x.id, "collection")}
+                                        // onChange={(e) => handleInputChange(e, x.id, "collection")}
                                         />
                                       </td>
                                       <td>
@@ -5453,9 +5473,9 @@ if (selectedSkuName !== "" && selectedSku) {
                                             // : ""
                                           }
                                           readOnly
-                                          // onChange={() => {
-                                          //   setPurity(x.purity);
-                                          // }}
+                                        // onChange={() => {
+                                        //   setPurity(x.purity);
+                                        // }}
                                         />
                                       </td>
 
@@ -5472,9 +5492,9 @@ if (selectedSkuName !== "" && selectedSku) {
                                                 "Quantity"
                                               )
                                             }
-                                            // onChange={() => {
-                                            //   setPurity(x.purity);
-                                            // }}
+                                          // onChange={() => {
+                                          //   setPurity(x.purity);
+                                          // }}
                                           />
                                         </td>
                                       ) : null}
@@ -5484,9 +5504,9 @@ if (selectedSkuName !== "" && selectedSku) {
                                             type="text"
                                             placeholder={x.ItemCode}
                                             value={x.ItemCode}
-                                            //   onChange={() => {
-                                            //     setItemCode(x.itemCode);
-                                            //   }}
+                                          //   onChange={() => {
+                                          //     setItemCode(x.itemCode);
+                                          //   }}
                                           />
                                         </td>
                                       ) : null}
@@ -5508,8 +5528,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                                 ? "red"
                                                 : "black",
                                             }}
-                                            //     setItemCode(x.itemCode);
-                                            //   }}
+                                          //     setItemCode(x.itemCode);
+                                          //   }}
                                           />
                                         </td>
                                       ) : null}
@@ -5790,12 +5810,12 @@ if (selectedSkuName !== "" && selectedSku) {
                                                 prevProducts.map((item, i) =>
                                                   i === index
                                                     ? {
-                                                        ...item,
-                                                        Stones: [
-                                                          ...item.Stones,
-                                                          addStone,
-                                                        ],
-                                                      }
+                                                      ...item,
+                                                      Stones: [
+                                                        ...item.Stones,
+                                                        addStone,
+                                                      ],
+                                                    }
                                                     : item
                                                 )
                                               ),
@@ -5816,12 +5836,12 @@ if (selectedSkuName !== "" && selectedSku) {
                                                 prevProducts.map((item, i) =>
                                                   i === index
                                                     ? {
-                                                        ...item,
-                                                        Diamonds: [
-                                                          ...item.Diamonds,
-                                                          addDiamond,
-                                                        ],
-                                                      }
+                                                      ...item,
+                                                      Diamonds: [
+                                                        ...item.Diamonds,
+                                                        addDiamond,
+                                                      ],
+                                                    }
                                                     : item
                                                 )
                                               );
@@ -5834,8 +5854,8 @@ if (selectedSkuName !== "" && selectedSku) {
                                         </button>
                                       </td>
                                       {stockType === "Labelled" &&
-                                      addedProducts.length > 0 &&
-                                      addedProducts[0].CategoryId == 5 ? (
+                                        addedProducts.length > 0 &&
+                                        addedProducts[0].CategoryId == 5 ? (
                                         <td>
                                           <button
                                             onClick={() => {
@@ -5843,12 +5863,12 @@ if (selectedSkuName !== "" && selectedSku) {
                                                 prevProducts.map((item, i) =>
                                                   i === index
                                                     ? {
-                                                        ...item,
-                                                        Diamonds: [
-                                                          ...item.Diamonds,
-                                                          addDiamond,
-                                                        ],
-                                                      }
+                                                      ...item,
+                                                      Diamonds: [
+                                                        ...item.Diamonds,
+                                                        addDiamond,
+                                                      ],
+                                                    }
                                                     : item
                                                 )
                                               ),
@@ -6192,12 +6212,12 @@ if (selectedSkuName !== "" && selectedSku) {
                                                         (item, i) =>
                                                           i === index
                                                             ? {
-                                                                ...item,
-                                                                Stones: [
-                                                                  ...item.Stones,
-                                                                  addStone,
-                                                                ],
-                                                              }
+                                                              ...item,
+                                                              Stones: [
+                                                                ...item.Stones,
+                                                                addStone,
+                                                              ],
+                                                            }
                                                             : item
                                                       )
                                                   );
@@ -6230,12 +6250,12 @@ if (selectedSkuName !== "" && selectedSku) {
                                                           (item, i) =>
                                                             i === index
                                                               ? {
-                                                                  ...item,
-                                                                  Diamonds: [
-                                                                    ...item.Diamonds,
-                                                                    addDiamond,
-                                                                  ],
-                                                                }
+                                                                ...item,
+                                                                Diamonds: [
+                                                                  ...item.Diamonds,
+                                                                  addDiamond,
+                                                                ],
+                                                              }
                                                               : item
                                                         )
                                                     );
@@ -6461,8 +6481,8 @@ if (selectedSkuName !== "" && selectedSku) {
                           </button>
                         ) : null}
                         {deleteAll &&
-                        stockType === "Labelled" &&
-                        addedProducts.length > 0 ? (
+                          stockType === "Labelled" &&
+                          addedProducts.length > 0 ? (
                           <button
                             onClick={() => deleteAllProducts(allItemCodesArray)}
                             className="bulkProductAddDeleteButton"
