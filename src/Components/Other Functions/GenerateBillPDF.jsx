@@ -33,6 +33,7 @@ export const generateBillPDF = (
   }
 }
 
+
 //   const doc = new jsPDF({
 //     orientation: "portrait",
 //     unit: "mm",
@@ -572,7 +573,103 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
 
 
 
-const generateinvoicepdf7 = (items, customer, mainitem) => {
+const generateinvoicepdf7 = (items, customer, mainitem)=>{
+
+  const {
+    InvoiceNo,
+    InvoiceDate,
+    ProductName,
+    HSNCode,
+    Purity,
+    Qty,
+    GrossWt,
+    StoneWt,
+    NetWt,
+    StoneAmount,
+    MakingPerGram,
+    TotalAmount,
+    GST} = mainitem
+ 
+ 
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
+
+
+  const startx = 2
+  const starty = 50.5
+
+  doc.line(0, starty, 210, starty); // From (10, 50) to (200, 50)
+
+  doc.setFont("sanserif", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(0, 0, 0);
+  doc.text("GOLD SALE", 90, 43);
+
+  let pan;
+  let adhar;
+  let mobile;
+  let address;
+
+  customer.PanNo;
+  customer.AadharNo;
+
+  if (customer.PanNo) {
+    pan = customer.PanNo;
+  } else {
+    pan = "NA";
+  }
+
+  if (customer.AadharNo) {
+    adhar = customer.AadharNo;
+  } else {
+    adhar = "NA";
+  }
+
+  if (customer.Mobile) {
+    mobile = customer.Mobile;
+  } else {
+    mobile = "NA";
+  }
+
+  if (customer.CurrAddStreet) {
+    address = customer.CurrAddStreet;
+  } else {
+    address = "NA";
+  }
+
+  // First column data
+  const firstColumn = [
+    { label: "Name", value: `${customer.FirstName}` },
+    { label: "Address", value: `${address}` },
+    { label: "Mobile", value: `${mobile}` },
+    { label: "Pan/Adhar", value: `${pan} / ${adhar}` },
+  ];
+
+  // Second column data
+  const secondColumn = [
+    { label: "Invoice No:", value: `${InvoiceNo}` },
+    { label: "Date:", value: `${InvoiceDate}` },
+    { label: "GSTIN No:", value: "27ABXPM4841M1ZS" },
+    { label: "GSTIN Type:", value: "CGST + SGST + IGST" },
+  ];
+
+  doc.setLineWidth(0.3);
+  // doc.rect(startx, starty, 200, 40);
+
+
+// Generate the PDF and open it in a new window
+const pdfData = doc.output("datauristring");
+const newWindow = window.open();
+newWindow.document.write(
+  `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+);
+
+}
+
+const generateinvoicepdf7old = (items, customer, mainitem) => {
  
   const {
     InvoiceNo,
@@ -654,7 +751,7 @@ const generateinvoicepdf7 = (items, customer, mainitem) => {
 
   // Set table starting position and dimensions
   const startX = 5;
-  const startY = 45;
+  const startY = 50.8;
   const cellWidth = 80;
   const cellHeight = 10;
 

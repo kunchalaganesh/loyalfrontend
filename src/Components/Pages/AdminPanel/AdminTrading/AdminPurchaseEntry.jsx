@@ -2781,7 +2781,21 @@ export default function AdminPurchaseEntry() {
         console.log("Match found :", stone);
       }
     });
+
+    let StonePiecest = 0;
+    
+
     if (selectedStone) {
+      StonePiecest = 0;
+    selectedStone.StonePieces !== null && selectedStone.StonePieces !== undefined
+      ? selectedStone.StonePieces
+      : selectedStone.StoneMainPieces !== null && selectedStone.StoneMainPieces !== undefined
+      ? selectedStone.StoneMainPieces
+      : 1;
+
+      if(StonePiecest == 0){
+        StonePiecest = 1;
+      }
       newStones[index] = {
         ...newStones[index],
         StoneName: selectedStone.StoneName
@@ -2790,9 +2804,7 @@ export default function AdminPurchaseEntry() {
         StoneWeight: selectedStone.StoneWeight
           ? selectedStone.StoneWeight
           : selectedStone.StoneMainWeight,
-        StonePieces: selectedStone.StonePieces
-          ? selectedStone.StonePieces
-          : selectedStone.StoneMainPieces,
+          StonePieces: StonePiecest,
         StoneRate: selectedStone.StoneRate
           ? selectedStone.StoneRate
           : selectedStone.StoneMainRate,
@@ -2812,6 +2824,9 @@ export default function AdminPurchaseEntry() {
 
     const skuPieces = parseFloat(selectedSku?.Pieces) || 1;
     const qty = parseFloat(purchaseProduct.ClipQuantity) || 1;
+
+    const rate = parseFloat(newStones[index].StoneWeight)*
+    parseFloat(newStones[index].StoneRate);
   
     // Convert values to numbers to avoid calculation errors
     let totalwt =
@@ -2820,13 +2835,17 @@ export default function AdminPurchaseEntry() {
       skuPieces *
       qty;
     let totalpcs =
-      (parseFloat(newStones[index].StonePieces) || 0) * skuPieces * qty;
+      (parseFloat(newStones[index].StonePieces) || 1) * skuPieces * qty;
   
     // Assign calculated totals
     newStones[index].TotalStoneWt = totalwt;
-    newStones[index].TotalStonePcs = totalpcs;
-  
-    console.log("Check updated stones", newStones);
+    newStones[index].TotalStonePcs = totalpcs || 1;
+
+    newStones[index].StoneAmount = rate;
+
+    
+    console.log("Check updated stones", StonePiecest);
+    // StoneAmount
 
     setPurchaseProduct({ ...purchaseProduct, Stones: newStones });
     setIscal(true);

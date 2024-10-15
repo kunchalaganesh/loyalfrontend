@@ -54,26 +54,7 @@ const stringToHex = (str) => {
 };
 
 const generateAndDownloadPrn = async (products) => {
-  // const prnContentArray = products.map(product => generateLabelContent(product));
 
-  // const generatedContent = generateLabelContent1(predefinedValues);
-  // const prnContentArray = [generatedContent];
-  // console.log('checking final ', prnContentArray)
-
-  // const prnContentArray = products.map(product => generateLabelContent2(product));
-
-  // const prnContentArray = products.map(product => generateLabelContent2(product));
-  // prnContentArray.forEach((content, index) => {
-  //   const blob = new Blob([content], { type: 'text/plain' });
-  //   const url = URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   a.href = url;
-  //   a.download = `label_${index + 1}.prn`; // Download labels for each product
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   document.body.removeChild(a);
-  //   URL.revokeObjectURL(url);
-  // });
 
   const combinedContent = products
     .map((product) => generateLabelContent2(product))
@@ -137,7 +118,75 @@ const printToDevice = async (device, products) => {
   }
 };
 
+
 const generateLabelContent2 = (product) => {
+  const hexEPC = stringToHex(product.ItemCode).replace(/[^0-9A-F]/g, ""); // Ensure only valid hex characters are included
+  const grossWt = parseFloat(product.GrossWt).toFixed(3) || 0;
+  const pieces = parseInt(product.Pieces) || 1; // Ensure at least 1 to avoid division by zero
+  const weightPerPiece = (grossWt / pieces).toFixed(3); // Format to 3 decimal places
+
+  // Dynamically set RFWTAG length based on the actual byte size of hexEPC (1 byte = 2 hex chars)
+  const epcBytes = hexEPC.length / 2; // Calculate how many bytes the EPC is
+  const rfwtTagLength = epcBytes <= 6 ? 48 : epcBytes <= 8 ? 64 : 80; // 6 bytes = 48 bits, 8 bytes = 64 bits, 10 bytes = 80 bits
+
+  let pcValue = "";
+
+  if (rfwtTagLength === 48) {
+    pcValue = "*1C00*";
+  } else if (rfwtTagLength === 64) {
+    pcValue = "*2400*";
+  } else if (rfwtTagLength === 80) {
+    pcValue = "*3800*"; // Assuming this for 80 bits, you can adjust based on your needs.
+  }
+
+  return `!PTX_SETUP
+ENGINE-WIDTH;454:LENGTH;1262:MIRROR;0.
+PTX_END
+~PAPER;ROTATE 0
+~CONFIG
+UPC DESCENDERS;0
+END
+~PAPER;LABELS 2;MEDIA 1
+~PAPER;FEED SHIFT 0;INTENSITY 8;SPEED IPS 3;SLEW IPS 6;TYPE 0
+~PAPER;CUT 0;PAUSE 0;TEAR 0
+~CONFIG
+CHECK DYNAMIC BCD;0
+SLASH ZERO;0
+UPPERCASE;0
+AUTO WRAP;0
+HOST FORM LENGTH;1
+END
+~CREATE;FORM-0;90
+SCALE;DOT;203;203
+ISET;'UTF8'
+RFWTAG;16;PC
+16;H;${pcValue}
+STOP
+RFWTAG;${rfwtTagLength};EPC
+${rfwtTagLength};H;*${hexEPC}*
+STOP
+BARCODE
+QRCODE;CCW;XD2;T2;E0;M0;I0;172;21
+"${product.ItemCode}"
+STOP
+FONT;NAME CALIBRIB.ttf
+ALPHA
+CCW;POINT;154;33;7;9;"G:"
+CCW;POINT;106;82;7;12;"P:"
+CCW;POINT;124;33;7;10;"${grossWt}"
+CCW;POINT;75;82;7;10;"${pieces}"
+CCW;POINT;154;57;7;7;"W:"
+CCW;POINT;119;57;7;11;"${weightPerPiece}"
+CCW;POINT;237;82;7;9;"${product.ItemCode}"
+STOP
+END
+~EXECUTE;FORM-0;1
+
+~NORMAL
+~DELETE FORM;FORM-0`;
+};
+
+const generateLabelContent2old = (product) => {
   const hexEPC = stringToHex(product.ItemCode).replace(/[^0-9A-F]/g, ""); // Ensure only valid hex characters are included
   const grossWt = parseFloat(product.GrossWt).toFixed(3) || 0;
   const pieces = parseInt(product.Pieces) || 1; // Ensure at least 1 to avoid division by zero

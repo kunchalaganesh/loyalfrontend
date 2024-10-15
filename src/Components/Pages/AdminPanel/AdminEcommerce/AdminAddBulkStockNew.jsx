@@ -2446,7 +2446,22 @@ export default function AdminAddBulkStockNew() {
                 value
             );
 
+            let StonePiecest = 0;
+
             if (selectedStone) {
+
+              StonePiecest = 0;
+              selectedStone.StonePieces !== null && selectedStone.StonePieces !== undefined
+                ? selectedStone.StonePieces
+                : selectedStone.StoneMainPieces !== null && selectedStone.StoneMainPieces !== undefined
+                ? selectedStone.StoneMainPieces
+                : 1;
+          
+                if(StonePiecest == 0){
+                  StonePiecest = 1;
+                }
+
+
               return {
                 ...stone,
                 StoneName: selectedStone.StoneName
@@ -2455,9 +2470,7 @@ export default function AdminAddBulkStockNew() {
                 StoneWeight: selectedStone.StoneWeight
                   ? selectedStone.StoneWeight
                   : selectedStone.StoneMainWeight,
-                StonePieces: selectedStone.StonePieces
-                  ? selectedStone.StonePieces
-                  : selectedStone.StoneMainPieces,
+                  StonePieces: StonePiecest,
                 StoneRate: selectedStone.StoneRate
                   ? selectedStone.StoneRate
                   : selectedStone.StoneMainRate,
@@ -2470,6 +2483,11 @@ export default function AdminAddBulkStockNew() {
               };
             }
           }
+
+          const rate = parseFloat(stone.StoneWeight)*
+          parseFloat(stone.StoneRate);
+      
+          stone.StoneAmount = rate;
 
           // Update the stone with the new value for the given field
           return { ...stone, [field]: value };
@@ -2500,10 +2518,13 @@ export default function AdminAddBulkStockNew() {
 
         const totalStonePieces = (
           updatedStones.reduce(
-            (total, stone) => total + parseFloat(stone.StonePieces || 0),
+            (total, stone) => total + parseFloat(stone.StonePieces || 1),
             0
           ) || 0
         ).toString();
+
+       
+
 
         return {
           ...product,
@@ -2748,23 +2769,23 @@ export default function AdminAddBulkStockNew() {
     }
   };
   const handleClose = () => {
-    // setAddedProducts((prevProducts) =>
-    //   prevProducts.map((product, index) => {
-    //     if (index !== selectedProductIndex) return product;
+    setAddedProducts((prevProducts) =>
+      prevProducts.map((product, index) => {
+        if (index !== selectedProductIndex) return product;
 
-    //     const filteredStones = product.Stones.filter(
-    //       (stone) =>
-    //         stone.StoneName &&
-    //         stone.StoneWeight &&
-    //         stone.StonePieces &&
-    //         stone.StoneRate &&
-    //         stone.StoneAmount &&
-    //         stone.Description
-    //     );
+        const filteredStones = product.Stones.filter(
+          (stone) =>
+            stone.StoneName &&
+            stone.StoneWeight &&
+            stone.StonePieces &&
+            stone.StoneRate &&
+            stone.StoneAmount &&
+            stone.Description
+        );
 
-    //     return { ...product, Stones: filteredStones };
-    //   })
-    // );
+        return { ...product, Stones: filteredStones };
+      })
+    );
     setShowAddStoneBox(false);
   };
   const handleCloseDiamond = () => {
