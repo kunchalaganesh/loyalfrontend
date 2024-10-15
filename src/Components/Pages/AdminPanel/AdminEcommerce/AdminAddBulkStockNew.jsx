@@ -2200,12 +2200,12 @@ setFilteredsku(allSku);
       setMaking_per_gram(selectedSku.MakingPerGram);
       setMaking_Fixed_Wastage(selectedSku.MakingFixedWastage);
       setMRP(selectedSku.MRP);
-      if(selectedSku.SKUStoneMain.lenght > 0){
-      setAllSelectedSkuStones(selectedSku.SKUStoneMain);
-
-      }else{
-        setAllSelectedSkuStones([])
+      if (selectedSku.SKUStoneMain && selectedSku.SKUStoneMain.length > 0) {
+        setAllSelectedSkuStones(selectedSku.SKUStoneMain);
+      } else {
+        setAllSelectedSkuStones([]);
       }
+      
 
       setAllStonesList(selectedSku.SKUStoneMain);
       setAllSelectedSkuDiamonds(selectedSku.Diamonds);

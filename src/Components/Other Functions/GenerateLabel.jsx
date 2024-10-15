@@ -7,7 +7,7 @@ import QRCode from "qrcode";
 export const GenerateLabel = async (products, labelFormat) => {
   console.log("checking labelformate12 ", labelFormat);
  
-  generateLabel3(products);
+  // generatelabel11(products);
  
   if (labelFormat === 1) {
     // Thashna Label Below
@@ -166,8 +166,8 @@ ISET;'UTF8'
 RFWTAG;16;PC
 16;H;${pcValue}
 STOP
-RFWTAG;80;EPC
-80;H;*${hexEPC}*
+RFWTAG;${rfwtTagLength};EPC
+${rfwtTagLength};H;*${hexEPC}*
 STOP
 BARCODE
 QRCODE;CCW;XD2;T2;E0;M0;I0;172;21
@@ -1638,12 +1638,12 @@ const generatelabel11 = async (products) => {
   const imageWidth = 7;
 
 
-  const leftx = 3;
-  const lefty = 3;
-  const middlex = 13;
+  const leftx = 15;
+  const lefty = 2;
+  const middlex = 45;
   const middley = 1.5;
 
-  const rightx = 37;
+  const rightx = 33;
   const righty = 2;
 
    // Dummy stone array
@@ -1694,39 +1694,42 @@ const generatelabel11 = async (products) => {
     if (MRP == 0 || MRP === "") {
 
 
-      doc.text(`G :  ${GrossWt}`, leftx, lefty)
-      doc.text(`L :  ${TotalStoneWeight}`, leftx, lefty+2.5)
-      doc.text(`N :  ${NetWt}`, leftx, lefty+5)
-      doc.text(`R :  ${TotalStoneAmount}`, leftx, lefty+7.5)
-      doc.text(`${SKU}`, leftx, lefty+10)
+       // Adding stones array (first fill 5 stones, then wrap around)
+       let stoneX = leftx; // Starting point for stones
+       let stoneY = lefty;
+       const stoneWrapOffset = 12; // Offset for wrapping stones to the left of the previous
+ 
+       for (let j = 0; j < Stones.length; j++) {
+         if (j < 5) {
+           // Place the first 5 stones in a row
+           doc.text(
+ `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
+             stoneX,
+             stoneY + j * 2.5
+           );
+         } else {
+           // Wrap remaining stones to the left side of the previous ones
+           doc.text(
+ `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
+             stoneX - stoneWrapOffset, // Move left
+             stoneY + (j - 5) * 2.5
+           );
+         }
+       }
+
+
+      doc.text(`G :  ${GrossWt}`, rightx, righty)
+      doc.text(`L :  ${TotalStoneWeight}`, rightx, righty+2.5)
+      doc.text(`N :  ${NetWt}`, rightx, righty+5)
+      doc.text(`R :  ${TotalStoneAmount}`, rightx, righty+7.5)
+      doc.text(`${SKU}`, rightx, righty+10)
 
 
       doc.text(`${ItemCode}`, middlex, middley+8.5)
       doc.text(`${RFIDCode||''}`, middlex, middley+10.5)
 
 
-        // Adding stones array (first fill 5 stones, then wrap around)
-        let stoneX = rightx; // Starting point for stones
-        let stoneY = righty;
-        const stoneWrapOffset = 12; // Offset for wrapping stones to the left of the previous
-  
-        for (let j = 0; j < Stones.length; j++) {
-          if (j < 5) {
-            // Place the first 5 stones in a row
-            doc.text(
-  `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
-              stoneX,
-              stoneY + j * 2.5
-            );
-          } else {
-            // Wrap remaining stones to the left side of the previous ones
-            doc.text(
-  `${Stones[j].StoneName.substring(0, 4)}: ${Stones[j].StoneWeight}`,
-              stoneX - stoneWrapOffset, // Move left
-              stoneY + (j - 5) * 2.5
-            );
-          }
-        }
+       
 
 
 
