@@ -9,7 +9,7 @@ export const generateBillPDF = (
 ) => {
   console.log("labelformatee ", invoiceformate);
 
-  generateinvoicepdf3(invoiceItems, csData, mainitem);
+  // generateinvoicepdf3(invoiceItems, csData, mainitem);
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
