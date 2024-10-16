@@ -327,6 +327,8 @@ export default function AdminAddBulkStockNew() {
             case 9:
               setAllSku(result.value);
               setFilteredsku(result.value);
+
+              console.log('check all skus', result.value)
               break;
             case 10:
               setAllDiamondSizeWeightRate(result.value);
@@ -401,7 +403,6 @@ export default function AdminAddBulkStockNew() {
     // setFilteredsku(allSku)
 
 
-    console.log('checking selected sku ', selectedSkuName)
     let filteredItems = allPurchaseItems;
 // case 1
     // Filter based on selected Lot Number, but only if `lotNumber` is not empty
@@ -415,9 +416,38 @@ export default function AdminAddBulkStockNew() {
       const fparty = filteredparty.filter(
         (item) => item.VendorName == vendorid
       );
-      setFilteredsku(filteredItems);
+
+
+if (selectedSkuName && selectedSkuName.trim() !== ""){
+
+  filteredItems = filteredItems.filter(
+    (item) => item.StockKeepingUnit === selectedSkuName
+  );
+
+}
+
+
+
+      const skuToSet = allSku.filter((sku) => 
+        filteredItems.some(item => item.StockKeepingUnit === sku.StockKeepingUnit)
+      );
+
+      console.log('checking selected skuu ', selectedSkuName)
+
+      console.log('checking selected sku ', skuToSet)
+      console.log('checking filtered items ', filteredItems)
+      console.log('checking all sku ', allSku)
+
+
+      setFilteredsku(skuToSet);
       setFilteredparty(filteredItems);
       setPartyTypeId(filteredItems[0].Id)
+
+
+
+
+
+
 
     } else if (selectedSkuName && selectedSkuName.trim() !== ""){
 
@@ -957,8 +987,12 @@ setFilteredsku(allSku);
   const handleCreateAddedProducts = (e) => {
     e.preventDefault();
 
+    console.log('checking allstonemain ', allStonesList)
+    // let updatedStonesList = [...allStonesList];
+    let updatedStonesList = Array.isArray(allStonesList) ? [...allStonesList] : [];
 
-    let updatedStonesList = [...allStonesList];
+
+   
 
     // Loop through each item in allStonesListmain
     allStonesListmain.forEach((mainStone) => {
@@ -2121,6 +2155,8 @@ setFilteredsku(allSku);
     const exactMatch = filteredsku.find(
       (sku) => sku.StockKeepingUnit === selectedSku
     );
+
+    console.log('check selected sku ', exactMatch)
   
     // If exact match is found, set the SKU name, otherwise reset it
     if (exactMatch) {
@@ -2152,7 +2188,7 @@ setFilteredsku(allSku);
         (collectionObj) => collectionObj.Collection.Id == selectedSku.CollectionId
       );
 
-      console.log('checking sku ', matchingCollection, '  ', matchingCollection1)
+      console.log('checking sku ', selectedSku, '  ', matchingCollection1)
 
       if (matchingCollection) {
         // Set the CollectionName to the selected collection's name
@@ -2202,12 +2238,23 @@ setFilteredsku(allSku);
       setMRP(selectedSku.MRP);
       if (selectedSku.SKUStoneMain && selectedSku.SKUStoneMain.length > 0) {
         setAllSelectedSkuStones(selectedSku.SKUStoneMain);
+        
+        const updatedStonesList = [
+          ...allStonesListmain,
+          ...(Array.isArray(selectedSku.SKUStoneMain) ? selectedSku.SKUStoneMain : []),
+        ];
+      
+        // Set the combined list
+        setAllStonesList(updatedStonesList);
+        console.log('check suk stones',updatedStonesList)
+      
       } else {
         setAllSelectedSkuStones([]);
+        setAllStonesList(allStonesListmain);
       }
       
 
-      setAllStonesList(selectedSku.SKUStoneMain);
+     
       setAllSelectedSkuDiamonds(selectedSku.Diamonds);
       if (
         selectedSku.ClipWeight == 0 ||
@@ -2378,7 +2425,7 @@ setFilteredsku(allSku);
   }, []);
   useEffect(() => {
     if (selectedSku) {
-      setAllStonesList(selectedSku.SKUStoneMain);
+      // setAllStonesList(selectedSku.SKUStoneMain);
     } else {
       fetchAllStonesList();
     }
@@ -2780,23 +2827,23 @@ setFilteredsku(allSku);
     }
   };
   const handleClose = () => {
-    setAddedProducts((prevProducts) =>
-      prevProducts.map((product, index) => {
-        if (index !== selectedProductIndex) return product;
+    // setAddedProducts((prevProducts) =>
+    //   prevProducts.map((product, index) => {
+    //     if (index !== selectedProductIndex) return product;
 
-        const filteredStones = product.Stones.filter(
-          (stone) =>
-            stone.StoneName &&
-            stone.StoneWeight &&
-            stone.StonePieces &&
-            stone.StoneRate &&
-            stone.StoneAmount &&
-            stone.Description
-        );
+    //     const filteredStones = product.Stones.filter(
+    //       (stone) =>
+    //         stone.StoneName &&
+    //         stone.StoneWeight &&
+    //         stone.StonePieces &&
+    //         stone.StoneRate &&
+    //         stone.StoneAmount &&
+    //         stone.Description
+    //     );
 
-        return { ...product, Stones: filteredStones };
-      })
-    );
+    //     return { ...product, Stones: filteredStones };
+    //   })
+    // );
     setShowAddStoneBox(false);
   };
   const handleCloseDiamond = () => {
@@ -2938,6 +2985,20 @@ setFilteredsku(allSku);
                                   list="allStonesList"
                                 />
                                 <datalist id="allStonesList">
+  {Array.isArray(allStonesList) && allStonesList.length > 0 ? (
+    allStonesList.map((stone) => (
+      <option
+        key={stone.StoneMainName || stone.StoneName} // Using a fallback for key
+        value={stone.StoneMainName || stone.StoneName} // Using a fallback for value
+      >
+        {stone.StoneMainName || stone.StoneName} // Using a fallback for display
+      </option>
+    ))
+  ) : (
+    <option value="" disabled>No stones available</option> // Handle empty state
+  )}
+</datalist>
+                                {/* <datalist id="allStonesList">
                                   {allStonesList.map((stone) => (
                                     <option
                                       key={
@@ -2956,7 +3017,7 @@ setFilteredsku(allSku);
                                         : stone.StoneName}
                                     </option>
                                   ))}
-                                </datalist>
+                                </datalist> */}
                                 <label>Stone Weight</label>
                                 <input
                                   value={x.StoneWeight || ""}
@@ -4687,7 +4748,7 @@ setFilteredsku(allSku);
                                     </label>
                                     <label>
                                       {" "}
-                                      Images {`${selectedFiles.length}`}
+                                      Images {`${selectedFiles?.length || 0}`}
                                     </label>
                                   </div>
                                 ) : null}
