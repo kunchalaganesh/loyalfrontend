@@ -2081,6 +2081,155 @@ export default function AdminInvoice() {
       };
     });
 
+    // try {
+      const orderItemsList = allSelectedProducts.map((product) => {
+        let item = {
+          BillType: "sale",
+          // OrderId: rcvdId,
+          CategoryName: `${product.Cate}`,
+          MRP: `${product.mrp}`,
+          ProductId: product.id,
+          CustomerId: parseInt(customerId),
+          ProductName: product.ProductName,
+          Quantity: "1",
+          TotalStoneWeight: product.TotalStoneWeight,
+          HSNCode: `${product.HSNCode}` || "",
+          // ItemCode: product.itemCode,
+          MakingFixedAmt: product.MakingFixedAmt,
+          MakingFixedWastage: product.MakingFixedWastage,
+          MakingPerGram: product.MakingPerGram,
+          MakingPercentage: product.MakingPercentage,
+          HallmarkAmount: product.HallmarkAmount,
+          ProductCode: "",
+          ProductNo: "",
+          NetWt: product.NetWt,
+          StoneAmount: product.StoneAmount,
+          TotalStoneAmount: product.TotalStoneAmount,
+          PurityId: product.PurityId ? product.PurityId : 0,
+          MakingCharg: `${product.making}`,
+          MetalRate: `${product.TodaysRate}`,
+          HUIDCode: product.HUIDCode,
+          Size: product.Size,
+          GrossWt: product.GrossWt,
+          WastageWt: `${product.MakingFixedWastage}`,
+          OnlineStatus: "Billed",
+          Price: `${(
+            parseFloat(product.finalPrice) + parseFloat(product.totalGstAmount)
+          ).toFixed(3)}`,
+        };
+        if (product.sell) {
+          item.ItemCode = product.ItemCode;
+        }
+        if (product.purchase) {
+          item.PurchaseInvoiceNo = product.PurchaseInvoiceNo;
+        }
+        if (product.purchase) {
+          item = {
+            ...item,
+            BillType: "purchase",
+            ProductName: product.ProductName,
+            CategoryName: product.CategoryName,
+            MRP: product.MRP,
+            Quantity: `${product.Quantity}`,
+            StoneWeight: product.TotalStoneWeight,
+            StoneAmount: product.StoneAmount,
+            WastageWt: "0",
+            PurchaseEntryNo: "",
+            PurProductId: 0,
+            FinePercentage: `${product.FinePercent}`,
+            PurProductAmt: `${(
+              parseFloat(product.finalPrice) +
+              parseFloat(product.totalGstAmount)
+            ).toFixed(3)}`,
+            // Add additional properties or modify existing properties for products with purchase = true
+          };
+        }
+
+        if (product.unlabel) {
+          item = {
+            ...item,
+            BillType: "unlabelled",
+
+            StoneAmount: "0",
+            ProductId: product.Id,
+            CategoryName: product.CategoryName,
+            ProductName: product.ProductName,
+            // ItemCode:"",
+            MRP: "",
+            Quantity: `${product.Quantity}`,
+            MakingFixedAmt: product.MakingFixedAmt,
+            MakingFixedWastage: product.MakingFixedWastage,
+            MakingPerGram: product.MakingPerGram,
+            MakingPercentage: product.MakingPercentage,
+            HallmarkAmount: product.HallmarkAmount,
+            StoneWeight: product.TotalStoneWeight,
+            HSNCode: "",
+            GrossWt: product.GrossWt,
+            NetWt: product.NetWt,
+            Purity: product.PurityId ? product.PurityId : 0,
+            MakingCharg: `${product.making}`,
+            MetalRate: `${product.GoldRate}`,
+            HUIDCode: product.huidCode || "",
+            Size: product.size || "",
+            TotalWt: product.grosswt,
+            WastageWt: product.making_Fixed_Wastage,
+            UnlProductId: product.Id,
+            UnlProductAmt: `${(
+              parseFloat(product.finalPrice) +
+              parseFloat(product.totalGstAmount)
+            ).toFixed(3)}`,
+            // Add additional properties or modify existing properties for products with purchase = true
+          };
+        }
+        if (product.order) {
+          item = {
+            // ...item,
+            BillType: "wholesale",
+            // OrderId: rcvdId,
+            StoneAmount: product.stoneAmount,
+            ProductId: 0,
+            CategoryName: product.CategoryName,
+            ProductName: product.collectionName,
+            Customer_Id: parseInt(customerId),
+            // ItemCode:"",
+            MRP: `${product.mrp}`,
+            Quantity: `${product.Quantity}`,
+            making_fixed_amt: product.making_Fixed_Amt,
+            making_fixed_wastage: product.making_Fixed_Wastage,
+            making_per_gram: product.making_per_gram,
+            making_percentage: product.making_Percentage,
+            hallmark_amt: product.hallmark_amt,
+            StoneWeight: product.stoneWeight,
+            HSNCode: `${product.hsn_code}` || "",
+            grosswt: product.grosswt,
+            NetWt: product.netwt,
+            Purity: product.purity,
+            makingchrg: `${product.making}`,
+            Rate: `${product.GoldRate}`,
+            HUIDCode: product.huidCode || "",
+            Size: product.size || "",
+            TotalWt: product.grosswt,
+            WastageWt: product.making_Fixed_Wastage,
+            price: `${(
+              parseFloat(product.finalPrice) +
+              parseFloat(product.totalGstAmount)
+            ).toFixed(3)}`,
+            // Add additional properties or modify existing properties for products with purchase = true
+          };
+        }
+
+        return item;
+      });
+
+    // } catch (error) {
+    //   alert(error);
+    //   console.error(error);
+    // }
+
+
+
+
+
     // const newAllSelectedProducts = newAllSelectedProducts.map(product => ({
     //   ...product,
     //   totalGstAmount: product.totalGstAmount?.toString() || "0", // Convert totalGstAmount to string
@@ -2237,13 +2386,13 @@ export default function AdminInvoice() {
           ? "Estimate"
           : "Tax Invoice",
 
-        InvoiceItem: newAllSelectedProducts,
+        InvoiceItem: orderItemsList,
         Payments : paymentsList
       };
 
       console.log(formData, "FORMDATA FOR ORDER");
 
-      console.log('checking itemdetails ', newAllSelectedProducts);
+      // console.log('checking itemdetails ', orderItemsListk);
 
       // createOrderItems('1', '');
 
@@ -2268,6 +2417,9 @@ export default function AdminInvoice() {
       } else {
         // setLoading(false);
         console.log(rcvdData, "InvoiceCreated");
+        generateBillPDF(rcvdData.InvoiceItem , rcvdData.Customer , InvoiceFormat, rcvdData);
+
+
         // addAllSelectedPayments(rcvdData, rcvdData.InvoiceItem, rcvdData.Id);
         // createOrderItems(rcvdData.id, rcvdData);
       }
