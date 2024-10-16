@@ -9,6 +9,8 @@ export const generateBillPDF = (
 ) => {
   console.log("labelformatee ", invoiceformate);
 
+  generateinvoicepdf3(invoiceItems, csData, mainitem);
+
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
     return;
@@ -22,7 +24,7 @@ export const generateBillPDF = (
     generateinvoicepdf4(invoiceItems, csData, mainitem);
     return;
   } else if (invoiceformate === 5) {
-    generateinvoicepdf5(invoiceItems, csData, mainitem);
+    // generateinvoicepdf5(invoiceItems, csData, mainitem);
     return;
   } else if (invoiceformate === 6) {
     generateinvoicepdf6(invoiceItems, csData, mainitem);
@@ -139,65 +141,40 @@ export const generateBillPDF = (
 // };
 
 const generateDummyData = () => {
-  const items = [];
-  const productNames = [
-    "Gold Ring",
-    "Diamond Necklace",
-    "Silver Bracelet",
-    "Platinum Earrings",
-    "Emerald Pendant",
-    "Ruby Brooch",
-    "Sapphire Ring",
-    "Topaz Necklace",
-    "Aquamarine Bracelet",
-    "Citrine Earrings",
-    "Tanzanite Pendant",
-    "Opal Brooch",
-    "Peridot Ring",
-    "Garnet Necklace",
-    "Amethyst Bracelet",
-    "Moonstone Earrings",
-    "Lapis Lazuli Pendant",
-    "Tourmaline Brooch",
-    "Onyx Ring",
-    "Jade Necklace",
-    "Coral Bracelet",
-    "Zircon Earrings",
-    "Malachite Pendant",
-    "Tiger's Eye Brooch",
-    "Amber Ring",
-    "Iolite Necklace",
-    "Chrysoprase Bracelet",
-    "Kyanite Earrings",
-    "Spinel Pendant",
-    "Alexandrite Brooch",
-  ];
+  const stonesNames = ['stone1', 'stone2', 'stone3', 'stone4', 'stone5', 'stone6', 'stone7', 'stone8'];
 
-  for (let i = 0; i < 30; i++) {
-    const productIndex = Math.floor(Math.random() * productNames.length);
-    const quantity = Math.floor(Math.random() * 10) + 1; // Random quantity between 1 and 10
-    const hsnCode = `71${Math.floor(Math.random() * 1000)}`; // Random HSN code
-    const grossWt = (Math.random() * 100).toFixed(2); // Random gross weight between 0 and 100
-    const netWt = (Math.random() * grossWt).toFixed(2); // Net weight less than gross weight
-    const metalRate = (Math.random() * 5000).toFixed(2); // Random rate per gram
-    const totalAmount = (netWt * metalRate).toFixed(2); // Total amount calculation
+  // Helper function to generate random stones array
+  const generateRandomStones = () => {
+    const numberOfStones = Math.floor(Math.random() * (8 - 3 + 1)) + 3; // Random number between 3 and 8
+    const shuffledStones = stonesNames.sort(() => 0.5 - Math.random()).slice(0, numberOfStones);
 
-    items.push({
-      ProductName: productNames[productIndex],
-      Quantity: "1",
-      HSNCode: hsnCode,
-      GrossWt: grossWt,
-      NetWt: netWt,
-      MetalRate: metalRate,
-      TotalAmount: totalAmount,
+    return shuffledStones.map(stone => ({
+      stonename: stone,
+      stoneweight: (Math.random() * (5 - 1) + 1).toFixed(2), // Random stone weight between 1 and 5
+    }));
+  };
+
+  const dummyData = [];
+
+  for (let i = 1; i <= 20; i++) {
+    dummyData.push({
+      sno: i,
+      design: `Design ${i}`,
+      productdetail: `Product ${i}`,
+      grosswt: (Math.random() * (100 - 50) + 50).toFixed(2), // Random gross weight between 50 and 100
+      stones: generateRandomStones(),
+      netwt: (Math.random() * (90 - 40) + 40).toFixed(2), // Random net weight between 40 and 90
     });
   }
 
-  return items;
+  return dummyData;
 };
 
 
-const generateinvoicepdf3 = async (items, customer, mainitem) => {
+const generateinvoicepdf3 = async (items1, customer, mainitem) => {
+
+  const items = generateDummyData();
+  console.log(items);
   console.log("checking items", items);
   console.log("checking customer", customer);
 
@@ -213,6 +190,10 @@ const generateinvoicepdf3 = async (items, customer, mainitem) => {
   const tableHeight = 100; // Fixed table height
   let currentY = marginTop;
 
+  const maxStones = Math.max(...items.map(item => item.stones.length));
+
+  console.log('chek maxstones ', maxStones)
+
   // Adjusted column positions for a landscape layout and wider stones columns
   const columnPositions = {
     sr: 10, // Start from 10mm
@@ -220,8 +201,8 @@ const generateinvoicepdf3 = async (items, customer, mainitem) => {
     productDetails: 40,
     Gwt: 75,
     stones: 95, // Widen the "stones" column
-    nwt: 170,
-    stoneamt: 190, // Widen the "stoneamt" column
+    nwt: 178,
+    stoneamt: 198, // Widen the "stoneamt" column
   };
 
   // Draw the table structure dynamically
@@ -232,6 +213,12 @@ const generateinvoicepdf3 = async (items, customer, mainitem) => {
     doc.line(pageWidth - 10, marginTop, pageWidth - 10, marginTop + tableHeight); // Right border
   };
 
+  const stoneWeightSpace = columnPositions.nwt - columnPositions.stones;
+  const stoneAmountSpace = pageWidth - columnPositions.stoneamt - 10;
+
+  // Dynamic cell width for stones
+  const stoneWeightCellWidth = stoneWeightSpace / maxStones;
+  const stoneAmountCellWidth = stoneAmountSpace / maxStones;
   const drawTableHeader = () => {
     doc.setFontSize(10);
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
@@ -246,15 +233,110 @@ const generateinvoicepdf3 = async (items, customer, mainitem) => {
     doc.text("N Wt", columnPositions.nwt + 2, currentY);
     doc.text("Stones Amount", columnPositions.stoneamt + 2, currentY); // Adjusted position for Stones Amount
 
+
+    currentY += 1;
+    doc.line(columnPositions.sr, currentY + 5, pageWidth - 10, currentY + 5); // Table header bottom line
+
+
+    // Print dynamic stone names for "Stones Wt" sub-columns
+    for (let i = 0; i < maxStones; i++) {
+      const stoneWeightX = columnPositions.stones + i * stoneWeightCellWidth;
+      // doc.text(`Stone ${i + 1}`, stoneWeightX + 2, currentY); // Replace with stone names as needed
+      doc.line(stoneWeightX, currentY + 5, stoneWeightX, marginTop + tableHeight);
+    }
+
+    // Print dynamic stone names for "Stones Amount" sub-columns
+    for (let i = 0; i < maxStones; i++) {
+      const stoneAmountX = columnPositions.stoneamt + i * stoneAmountCellWidth;
+      // doc.text(`Stone ${i + 1}`, stoneAmountX + 2, currentY); // Replace with stone names as needed
+      doc.line(stoneAmountX, currentY + 5, stoneAmountX, marginTop + tableHeight);
+    }
+
+    // Print dynamic stone names for "Stones Wt" and "Stones Amount" sub-columns
+    items.forEach((item) => {
+      for (let i = 0; i < item.stones.length; i++) {
+        const stoneName = item.stones[i].stonename.slice(0, 3);; // Get the stone name from the item data
+
+        // Position stone names under "Stones Wt" column
+        const stoneWeightX = columnPositions.stones + i * stoneWeightCellWidth;
+        doc.text(stoneName, stoneWeightX + 2, currentY + 10);
+
+        // Position stone names under "Stones Amount" column
+        const stoneAmountX = columnPositions.stoneamt + i * stoneAmountCellWidth;
+        doc.text(stoneName, stoneAmountX + 2, currentY + 10);
+      }
+
+    });
+
+    // Final lines for the last stone sub-columns
+    const finalStoneWeightX = columnPositions.stones + maxStones * stoneWeightCellWidth;
+    const finalStoneAmountX = columnPositions.stoneamt + maxStones * stoneAmountCellWidth;
+
+    doc.line(finalStoneWeightX, currentY, finalStoneWeightX, marginTop + tableHeight);
+    doc.line(finalStoneAmountX, currentY, finalStoneAmountX, marginTop + tableHeight);
+
+
     currentY += 10;
-    doc.line(columnPositions.sr, currentY+5, pageWidth - 10, currentY+5); // Table header bottom line
+    doc.line(columnPositions.sr, currentY + 5, pageWidth - 10, currentY + 5); // Table header bottom line
     currentY += 5;
 
     doc.line(columnPositions.sr, marginTop + tableHeight, pageWidth - 10, marginTop + tableHeight); // Bottom line
   };
 
+  const drawTableRow = (item, rowIndex) => {
+    const rowHeight = 10;
+    const startY = currentY+10;
+
+    // Print row number (Sr)
+    doc.text(`${rowIndex + 1}`, columnPositions.sr + 2, startY);
+
+    // Print Design (assuming the item has a design property)
+    doc.text(item.design || '', columnPositions.Design + 2, startY);
+
+    // Print Product Details
+    doc.text(item.productdetail || '', columnPositions.productDetails + 2, startY);
+
+    // Print G Wt (Gross Weight)
+    doc.text(item.grosswt || '0.00', columnPositions.Gwt + 2, startY);
+
+    // Print Stones Wt (for each stone in item)
+    item.stones.forEach((stone, index) => {
+      const stoneWeightX = columnPositions.stones + index * stoneWeightCellWidth;
+      doc.text(stone.stoneweight, stoneWeightX + 2, startY);
+    });
+
+    // Print N Wt (Net Weight)
+    doc.text(item.netwt || '0.00', columnPositions.nwt + 2, startY);
+
+    // Print Stones Amount (for each stone in item)
+    item.stones.forEach((stone, index) => {
+      const stoneAmountX = columnPositions.stoneamt + index * stoneAmountCellWidth;
+      doc.text(stone.stoneweight, stoneAmountX + 2, startY);
+    });
+
+    currentY += rowHeight; // Move to the next row position
+  };
+
+  const drawTableContent = () => {
+    const rowHeight = 10; // Set row height here for consistency
+  
+  items.forEach((item, index) => {
+    if (currentY + rowHeight > pageHeight - 30) {
+      // If current Y position + rowHeight will exceed pageHeight, add a new page
+      doc.addPage();
+      currentY = marginTop; // Reset Y position on new page
+      drawTableHeader(); // Re-draw the header on the new page
+      drawTableStructure(); // Re-draw the table structure on the new page
+    }
+
+    drawTableRow(item, index); // Draw the row after ensuring no overflow
+  });
+  };
+
   drawTableHeader();
   drawTableStructure();
+  drawTableContent();
+  
 
   const pdfData = doc.output("datauristring");
   const newWindow = window.open();
@@ -330,7 +412,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     ); // Right border
   };
 
-  
+
 
   const drawTableHeader = () => {
     doc.setFontSize(10);
@@ -446,13 +528,13 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
 
     doc.text("Authorised Signatory", fotertotalx, fotertotaly + 86);
     doc.text("Customer Signatory", customerx, fotertotaly + 86);
-    
+
     doc.line(customerx, fotertotaly + 90, fotertotalx + 60, fotertotaly + 90);
 
-    const ctext ="1st Floor, 1/1, 2nd cross Vasanthappa Thota Banglore-560032"
+    const ctext = "1st Floor, 1/1, 2nd cross Vasanthappa Thota Banglore-560032"
     const splitText1 = doc.splitTextToSize(ctext, 80); // Adjust 180 to the width you want
     doc.text(splitText1, customerx, fotertotaly + 95);
-    const stext ="Contact Us : 080 23333409/080 91515409"
+    const stext = "Contact Us : 080 23333409/080 91515409"
     const s1text = "Email: jewls@kevali.in"
     const s2text = "Instagram: kevali.in"
     const splitText2 = doc.splitTextToSize(stext, 80); // Adjust 180 to the width you want
@@ -504,7 +586,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
   };
 
 
- 
+
   const getImageBase64 = (imagePath) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -573,7 +655,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
 
 
 
-const generateinvoicepdf7 = (items, customer, mainitem)=>{
+const generateinvoicepdf7 = (items, customer, mainitem) => {
 
   const {
     InvoiceNo,
@@ -588,9 +670,9 @@ const generateinvoicepdf7 = (items, customer, mainitem)=>{
     StoneAmount,
     MakingPerGram,
     TotalAmount,
-    GST} = mainitem
- 
- 
+    GST } = mainitem
+
+
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -660,17 +742,17 @@ const generateinvoicepdf7 = (items, customer, mainitem)=>{
   // doc.rect(startx, starty, 200, 40);
 
 
-// Generate the PDF and open it in a new window
-const pdfData = doc.output("datauristring");
-const newWindow = window.open();
-newWindow.document.write(
-  `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
-);
+  // Generate the PDF and open it in a new window
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
 
 }
 
 const generateinvoicepdf7old = (items, customer, mainitem) => {
- 
+
   const {
     InvoiceNo,
     InvoiceDate,
@@ -684,9 +766,9 @@ const generateinvoicepdf7old = (items, customer, mainitem) => {
     StoneAmount,
     MakingPerGram,
     TotalAmount,
-    GST} = mainitem
- 
- 
+    GST } = mainitem
+
+
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -872,7 +954,7 @@ const generateinvoicepdf7old = (items, customer, mainitem) => {
   doc.line(5, 177 + 10, 5 + tableWidth2, 177 + 10);
 
 
-  
+
 
   const TableData = [
     {
@@ -901,7 +983,7 @@ const generateinvoicepdf7old = (items, customer, mainitem) => {
       Item: rowData.ProductName || "N/A",
       HSN: rowData.HSNCode || "N/A",
       Purity: rowData.Purity || "N/A",
-      Qty:  "1",
+      Qty: "1",
       "Gr wt": rowData.GrossWt || "N/A",
       "Stone wt": rowData.TotalStoneWeight || "N/A",
       "Net wt": rowData.NetWt || "N/A",
@@ -943,9 +1025,9 @@ const generateinvoicepdf7old = (items, customer, mainitem) => {
   doc.text(
     "",
     cashSectionX +
-      cashCellWidth +
-      cashCellWidth / 2 -
-      doc.getTextWidth("1000") / 2,
+    cashCellWidth +
+    cashCellWidth / 2 -
+    doc.getTextWidth("1000") / 2,
     cashSectionY + 7
   ); // Center text in the second column
 
@@ -964,12 +1046,12 @@ const generateinvoicepdf7old = (items, customer, mainitem) => {
   const sGstFx = sGst.toFixed(2)
 
 
-  
+
 
 
   const totalAmountNumber = Number(TotalAmount);
   const GSTNumber = Number(GST);
-  
+
   // First column labels for gross amount, taxes, and discounts
   const leftColumn = [
     { label: "Gross Amount", value: `${totalAmountNumber.toFixed(2)}` },
@@ -981,16 +1063,16 @@ const generateinvoicepdf7old = (items, customer, mainitem) => {
     { label: "RO/Discount (-)", value: "" },
     { label: "Net Amount", value: `${(totalAmountNumber + GSTNumber).toFixed(2)}` },
   ];
-  
+
   // Dummy values for the right column
   const rightColumnValues = [
-    `${totalAmountNumber.toFixed(2)}`, 
-    `${Number(cGstFX).toFixed(2)}`, 
-    `${Number(sGstFx).toFixed(2)}`, 
-    `${GSTNumber.toFixed(2)}`, 
-    "", 
-    `${(totalAmountNumber + GSTNumber).toFixed(2)}`, 
-    "", 
+    `${totalAmountNumber.toFixed(2)}`,
+    `${Number(cGstFX).toFixed(2)}`,
+    `${Number(sGstFx).toFixed(2)}`,
+    `${GSTNumber.toFixed(2)}`,
+    "",
+    `${(totalAmountNumber + GSTNumber).toFixed(2)}`,
+    "",
     `${(totalAmountNumber + GSTNumber).toFixed(2)}`
   ];
 
@@ -1242,9 +1324,9 @@ const generateinvoicepdf71 = (items, customer, mainitem) => {
   doc.text(
     "",
     cashSectionX +
-      cashCellWidth +
-      cashCellWidth / 2 -
-      doc.getTextWidth("1000") / 2,
+    cashCellWidth +
+    cashCellWidth / 2 -
+    doc.getTextWidth("1000") / 2,
     cashSectionY + 7
   ); // Center text in the second column
 
@@ -1659,16 +1741,16 @@ const generatepdf2 = (csData, invoiceItems) => {
     doc.text(
       parseFloat(
         parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-          parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
       )?.toFixed(2),
       160,
       y
     );
     NetCharges += parseFloat(
       parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+      parseFloat(item.StoneAmount ? item.StoneAmount : 0)
     );
     doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
     HallmarkCharges += parseFloat(
@@ -1677,14 +1759,14 @@ const generatepdf2 = (csData, invoiceItems) => {
     totalAmount =
       item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
         ? parseFloat(item.MRP ? item.MRP : 0) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
         : parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) *
-              parseFloat(item.NetWt) +
-              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-          );
+          parseFloat(parseFloat(item.MetalRate) / 10) *
+          parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        );
     Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
@@ -1989,16 +2071,16 @@ const generatepdf1 = (csData, invoiceItems) => {
     doc.text(
       parseFloat(
         parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-          parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
       )?.toFixed(2),
       160,
       y
     );
     NetCharges += parseFloat(
       parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+      parseFloat(item.StoneAmount ? item.StoneAmount : 0)
     );
     doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
     HallmarkCharges += parseFloat(
@@ -2007,14 +2089,14 @@ const generatepdf1 = (csData, invoiceItems) => {
     totalAmount =
       item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
         ? parseFloat(item.MRP ? item.MRP : 0) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
         : parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) *
-              parseFloat(item.NetWt) +
-              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-          );
+          parseFloat(parseFloat(item.MetalRate) / 10) *
+          parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        );
     Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
@@ -2318,16 +2400,16 @@ const generatepdf = (csData, invoiceItems) => {
     doc.text(
       parseFloat(
         parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-          parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
       )?.toFixed(2),
       160,
       y
     );
     NetCharges += parseFloat(
       parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+      parseFloat(item.StoneAmount ? item.StoneAmount : 0)
     );
     doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
     HallmarkCharges += parseFloat(
@@ -2336,14 +2418,14 @@ const generatepdf = (csData, invoiceItems) => {
     totalAmount =
       item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
         ? parseFloat(item.MRP ? item.MRP : 0) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
         : parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) *
-              parseFloat(item.NetWt) +
-              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-          );
+          parseFloat(parseFloat(item.MetalRate) / 10) *
+          parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        );
     Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
@@ -2678,8 +2760,8 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     // );
     NetCharges += parseFloat(
       parseFloat(parseFloat(item.MetalRate) / 10) * parseFloat(item.NetWt) +
-        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-        parseFloat(item.StoneAmount ? item.StoneAmount : 0)
+      parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+      parseFloat(item.StoneAmount ? item.StoneAmount : 0)
     );
     // doc.text(item.HallmarkAmount ? `${item.HallmarkAmount}` : "-", 175, y);
     HallmarkCharges += parseFloat(
@@ -2688,14 +2770,14 @@ export const generateBillInvocePDF123 = (csData, invoiceItems) => {
     totalAmount =
       item.MRP !== 0 && item.MRP !== "" && item.MRP !== "0"
         ? parseFloat(item.MRP ? item.MRP : 0) +
-            parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-            parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+        parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
         : parseFloat(
-            parseFloat(parseFloat(item.MetalRate) / 10) *
-              parseFloat(item.NetWt) +
-              parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
-              parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
-          );
+          parseFloat(parseFloat(item.MetalRate) / 10) *
+          parseFloat(item.NetWt) +
+          parseFloat(item.HallmarkAmount ? item.HallmarkAmount : 0) +
+          parseFloat(item.StoneAmount ? item.StoneAmount : 0) || 0
+        );
     Total += totalAmount;
     // doc.text(`${item.StoneAmount || "-"}`, 130, y);
     // doc.text(`${item.MetalRate || "-"}`, 145, y);
