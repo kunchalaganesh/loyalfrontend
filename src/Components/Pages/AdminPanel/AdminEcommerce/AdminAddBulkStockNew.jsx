@@ -989,6 +989,10 @@ setFilteredsku(allSku);
 
     console.log('checking allstonemain ', allStonesList)
     // let updatedStonesList = [...allStonesList];
+
+
+
+    
     let updatedStonesList = Array.isArray(allStonesList) ? [...allStonesList] : [];
 
 

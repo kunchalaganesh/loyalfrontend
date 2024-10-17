@@ -18,9 +18,9 @@ export const GenerateLabel = async (products, labelFormat) => {
     generateLabel1(products);
   } else if (labelFormat === 2) {
     // Nice Label Below
-    // generateLabeltashna(products);
+    generateLabeltashna(products);
 
-    generateLabel2(products);
+    // generateLabel2(products);
   } else if (labelFormat === 3) {
     generateLabel3(products);
     // generateLabel2(products);
