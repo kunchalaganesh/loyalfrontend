@@ -1812,6 +1812,10 @@ setFilteredsku(allSku);
               }
             }
           }
+          const updatedStones = product.Stones.map((stone) => ({
+            ...stone,
+            StonePieces: stone.StonePieces.toString(),
+          }));
           return {
             ...product,
             GrossWt: !grossWithClip
@@ -1824,7 +1828,8 @@ setFilteredsku(allSku);
             TotalStoneWeight: totalStoneWeight,
             NetWt: product.NetWt.toString(),
             ClipWeight: product.ClipWeight.toString(),
-            WeightCategory: weightCategory
+            WeightCategory: weightCategory,
+            Stones: updatedStones,
           };
         });
 
