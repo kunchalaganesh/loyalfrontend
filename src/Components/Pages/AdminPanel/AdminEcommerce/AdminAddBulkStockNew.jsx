@@ -471,6 +471,7 @@ setFilteredsku(allSku);
 
    
 
+    console.log('checking filtered purchase',filteredItems )
 
   // Set the filtered items
   setAllFilteredPurchaseItems(filteredItems);
@@ -987,12 +988,46 @@ setFilteredsku(allSku);
   const handleCreateAddedProducts = (e) => {
     e.preventDefault();
 
-    console.log('checking allstonemain ', allStonesList)
+    console.log('checking allstonemain ', quantity)
     // let updatedStonesList = [...allStonesList];
 
 
+    if(lotNumber && selectedSkuName){
+     
+      // createdProduct.Quantity
 
-    
+      const totalQty = allFilteredPurchaseItems.reduce((acc, item) => {
+        return acc + parseFloat(item.Quantity || 0);
+      }, 0);
+      
+      const totalGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
+        return acc + parseFloat(item.GrossWt || 0);
+      }, 0);
+
+
+      if(quantity >totalQty  || quantity*grosswt > totalGrossWt){
+        alert("Error: Quantity or Gross Weight exceeds the available limits.");
+    return; // Stop the process
+      }
+
+    }else if(lotNumber){
+      const totalQty = allFilteredPurchaseItems.reduce((acc, item) => {
+        return acc + parseFloat(item.Quantity || 0);
+      }, 0);
+      const totalGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
+        return acc + parseFloat(item.GrossWt || 0);
+      }, 0);
+
+
+       if(quantity >totalQty  || quantity*grosswt > totalGrossWt){
+        alert("Error: Quantity or Gross Weight exceeds the available limits.");
+    return; // Stop the process
+      }
+
+    }
+
+
+
     let updatedStonesList = Array.isArray(allStonesList) ? [...allStonesList] : [];
 
 
@@ -1570,20 +1605,81 @@ setFilteredsku(allSku);
     }
 
     // If 'grosswt' is changed, calculate 'netWt'
-    if (property === "GrossWt" && !isNaN(value)) {
-      updatedProduct.NetWt =
-        parseFloat(value) -
-          parseFloat(updatedProduct.ClipWeight) -
-          parseFloat(updatedProduct.TotalStoneWeight) >
-          0
-          ? (
+    // if (property === "GrossWt" && !isNaN(value)) {
+    //   updatedProduct.NetWt =
+    //     parseFloat(value) -
+    //       parseFloat(updatedProduct.ClipWeight) -
+    //       parseFloat(updatedProduct.TotalStoneWeight) >
+    //       0
+    //       ? (
+    //         parseFloat(value) -
+    //         parseFloat(updatedProduct.ClipWeight) -
+    //         parseFloat(updatedProduct.TotalStoneWeight)
+    //       ).toFixed(3)
+    //       : (updatedProduct.GrossWt = value);
+    // }
+
+    // Parse updated properties to numbers, defaulting to 0 if empty or invalid
+  // const grosswt = parseFloat(product.GrossWt) || 0;
+  const clipWeight = parseFloat(product.ClipWeight) || 0;
+  const totalFilteredGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
+    return acc + parseFloat(item.GrossWt || 0);
+  }, 0);
+  // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+  // const netWt = parseFloat(product.NetWt) || 0;
+
+  // Update 'GrossWt' -> recalculate 'NetWt'
+  if (property === "GrossWt" && !isNaN(value)) {
+    if(value>totalFilteredGrossWt){
+      // alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+      product.GrossWt = 0;
+    }else{
+    product.NetWt =
+      parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
+        ? (
             parseFloat(value) -
-            parseFloat(updatedProduct.ClipWeight) -
-            parseFloat(updatedProduct.TotalStoneWeight)
+            parseFloat(clipWeight) -
+            parseFloat(stoneWeight)
           ).toFixed(3)
-          : (updatedProduct.GrossWt = value);
+        : 0;
     }
+  }
+
+  // Update 'TotalStoneWeight' -> recalculate 'NetWt'
+  if (property === "TotalStoneWeight" && !isNaN(value)) {
+    product.NetWt =
+      grosswt > parseFloat(value)
+        ? (grosswt - parseFloat(value)).toFixed(3)
+        : 0;
+  }
+
+  // Update 'ClipWeight' -> recalculate 'NetWt'
+  if (property === "ClipWeight" && !isNaN(value)) {
+    if (grosswt > clipWeight) {
+      // If clip weight is valid, recalculate net weight
+      product.NetWt = (grosswt - (clipWeight + stoneWeight)).toFixed(3);
+    } else {
+      // If clip weight exceeds gross weight, reset values
+      product.GrossWt = (clipWeight + stoneWeight).toFixed(3);
+      product.NetWt = 0;
+    }
+  }
+
+  // Update 'NetWt' -> recalculate 'GrossWt' and 'TotalStoneWeight'
+  if (property === "NetWt" && !isNaN(value)) {
+    product.GrossWt = (
+      parseFloat(value) + parseFloat(clipWeight) + stoneWeight
+    ).toFixed(3);
+    product.TotalStoneWeight = (
+      grosswt - parseFloat(value) - parseFloat(clipWeight)
+    ).toFixed(3);
+  }
+
+
+
     if (property === "TotalGrossWt" && !isNaN(value)) {
+
+      
       updatedProduct.TotalNetWt =
         parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight) > 0
           ? (
@@ -1594,50 +1690,51 @@ setFilteredsku(allSku);
           : (updatedProduct.TotalGrossWt = value);
     }
 
-    // If 'stoneWeight' is changed, calculate 'netWt'
-    if (property === "TotalStoneWeight" && !isNaN(value)) {
-      updatedProduct.NetWt =
-        parseFloat(updatedProduct.GrossWt) > value
-          ? (updatedProduct.GrossWt - parseFloat(value)).toFixed(3)
-          : ((updatedProduct.GrossWt = value),
-            (updatedProduct.TotalStoneWeight = value),
-            (updatedProduct.NetWt = 0));
-      // updatedProduct.stoneWeight = value
-      // updatedProduct.TotalStoneWeight= value
-    }
-    if (property === "ClipWeight" && !isNaN(value)) {
-      const clipWeight = parseFloat(value);
-      if (grosswt > clipWeight) {
-        // If gross weight is greater than the clip weight, update net weight
-        updatedProduct.NetWt = parseFloat(
-          grosswt - (stoneWeight + clipWeight)
-        ).toFixed(3);
-        updatedProduct.ClipWeight = clipWeight;
-        updatedProduct.ClipQuantity = "1";
-      } else {
-        // If clip weight is greater or equal to the gross weight, adjust accordingly
-        updatedProduct.GrossWt = parseFloat(clipWeight + stoneWeight).toFixed(
-          3
-        );
-        updatedProduct.ClipWeight = clipWeight;
-        updatedProduct.ClipQuantity = "1";
-        updatedProduct.NetWt = 0; // Set net weight to 0 if conditions dictate
-      }
-    }
+    // // If 'stoneWeight' is changed, calculate 'netWt'
+    // if (property === "TotalStoneWeight" && !isNaN(value)) {
+    //   updatedProduct.NetWt =
+    //     parseFloat(updatedProduct.GrossWt) > value
+    //       ? (updatedProduct.GrossWt - parseFloat(value)).toFixed(3)
+    //       : ((updatedProduct.GrossWt = value),
+    //         (updatedProduct.TotalStoneWeight = value),
+    //         (updatedProduct.NetWt = 0));
+    //   // updatedProduct.stoneWeight = value
+    //   // updatedProduct.TotalStoneWeight= value
+    // }
+    // if (property === "ClipWeight" && !isNaN(value)) {
+    //   const clipWeight = parseFloat(value);
+    //   if (grosswt > clipWeight) {
+    //     // If gross weight is greater than the clip weight, update net weight
+    //     updatedProduct.NetWt = parseFloat(
+    //       grosswt - (stoneWeight + clipWeight)
+    //     ).toFixed(3);
+    //     updatedProduct.ClipWeight = clipWeight;
+    //     updatedProduct.ClipQuantity = "1";
+    //   } else {
+    //     // If clip weight is greater or equal to the gross weight, adjust accordingly
+    //     updatedProduct.GrossWt = parseFloat(clipWeight + stoneWeight).toFixed(
+    //       3
+    //     );
+    //     updatedProduct.ClipWeight = clipWeight;
+    //     updatedProduct.ClipQuantity = "1";
+    //     updatedProduct.NetWt = 0; // Set net weight to 0 if conditions dictate
+    //   }
+    // }
 
-    // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
-    if (property === "NetWt" && !isNaN(value)) {
-      updatedProduct.GrossWt = (
-        parseFloat(value) +
-        parseFloat(updatedProduct.ClipWeight) +
-        stoneWeight
-      ).toFixed(3);
-      updatedProduct.TotalStoneWeight = (
-        grosswt -
-        parseFloat(value) -
-        parseFloat(updatedProduct.ClipWeight)
-      ).toFixed(3);
-    }
+    // // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
+    // if (property === "NetWt" && !isNaN(value)) {
+    //   updatedProduct.GrossWt = (
+    //     parseFloat(value) +
+    //     parseFloat(updatedProduct.ClipWeight) +
+    //     stoneWeight
+    //   ).toFixed(3);
+    //   updatedProduct.TotalStoneWeight = (
+    //     grosswt -
+    //     parseFloat(value) -
+    //     parseFloat(updatedProduct.ClipWeight)
+    //   ).toFixed(3);
+    // }
+
     if (property === "TotalNetWt" && !isNaN(value)) {
       updatedProduct.TotalGrossWt = (
         parseFloat(value) +
@@ -1654,8 +1751,20 @@ setFilteredsku(allSku);
       handlePiecesChange(value, index);
     }
 
-    updatedProducts[index] = updatedProduct;
+     // Second case: check if total GrossWt does not exceed filtered GrossWt
+ 
+     updatedProducts[index] = updatedProduct;
 
+  const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
+    return acc + parseFloat(item.GrossWt || 0);
+  }, 0);
+
+  if (totalCurrentGrossWt > totalFilteredGrossWt) {
+    alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+    return; // Stop further execution
+  }
+
+    
     setAddedProducts(updatedProducts);
   };
 
