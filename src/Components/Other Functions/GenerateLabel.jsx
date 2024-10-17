@@ -8,15 +8,23 @@ export const GenerateLabel = async (products, labelFormat) => {
   console.log("checking labelformate12 ", labelFormat);
  
   // generatelabel11(products);
+
+
+
+  // labelFormat = 0;
  
   if (labelFormat === 1) {
     // Thashna Label Below
     generateLabel1(products);
   } else if (labelFormat === 2) {
     // Nice Label Below
-    generateLabeltashna(products);
+    // generateLabeltashna(products);
+
+    generateLabel2(products);
   } else if (labelFormat === 3) {
     generateLabel3(products);
+    // generateLabel2(products);
+
   } else if (labelFormat === 4) {
     generateLabel2(products);
   } else if (labelFormat === 5) {
@@ -1633,18 +1641,18 @@ const generatelabel11 = async (products) => {
     orientation: "landscape",
   });
 
-  const fontSize = 5.5;
-  const imageHeight = 7;
-  const imageWidth = 7;
+  const fontSize = 7;
+  const imageHeight = 8.5;
+  const imageWidth = 8.5;
 
 
   const leftx = 15;
-  const lefty = 2;
+  const lefty = 3;
   const middlex = 45;
   const middley = 1.5;
 
   const rightx = 33;
-  const righty = 2;
+  const righty = 3;
 
    // Dummy stone array
    const Stones = [
@@ -1658,7 +1666,7 @@ const generatelabel11 = async (products) => {
     { StoneName: "Topaz", StoneWeight: 0.9 },
     { StoneName: "Topaz", StoneWeight: 0.9 },
     { StoneName: "Topaz", StoneWeight: 0.9 },
-    { StoneName: "Topaz", StoneWeight: 0.9 },
+    // { StoneName: "Topaz", StoneWeight: 0.9 },
     // You can add more stones as needed
   ];
 
@@ -1717,7 +1725,7 @@ const generatelabel11 = async (products) => {
          }
        }
 
-
+      //  doc.setFontSize(6);
       doc.text(`G :  ${GrossWt}`, rightx, righty)
       doc.text(`L :  ${TotalStoneWeight}`, rightx, righty+2.5)
       doc.text(`N :  ${NetWt}`, rightx, righty+5)
@@ -1725,8 +1733,8 @@ const generatelabel11 = async (products) => {
       doc.text(`${SKU}`, rightx, righty+10)
 
 
-      doc.text(`${ItemCode}`, middlex, middley+8.5)
-      doc.text(`${RFIDCode||''}`, middlex, middley+10.5)
+      doc.text(`${ItemCode}`, middlex, middley+10.4)
+      doc.text(`${RFIDCode||'RF0001'}`, middlex, middley+12.6)
 
 
        
