@@ -9,7 +9,9 @@ export const generateBillPDF = (
 ) => {
   console.log("labelformatee ", invoiceformate);
 
-  // generateinvoicepdf7(invoiceItems, csData, mainitem);
+  // generateinvoicepdf3(invoiceItems, csData, mainitem);
+
+
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
@@ -162,7 +164,7 @@ const generateDummyData = () => {
       design: `Design ${i}`,
       productdetail: `Product ${i}`,
       grosswt: (Math.random() * (100 - 50) + 50).toFixed(2), // Random gross weight between 50 and 100
-      stones: generateRandomStones(),
+      Stones: generateRandomStones(),
       netwt: (Math.random() * (90 - 40) + 40).toFixed(2), // Random net weight between 40 and 90
     });
   }
@@ -171,7 +173,581 @@ const generateDummyData = () => {
 };
 
 
-const generateinvoicepdf3 = async (items1, customer, mainitem) => {
+
+
+
+const generateinvoicepdf3old1 = async (items1, customer, mainitem) => {
+  const items = generateDummyData();
+  console.log('checking original items ', items1);
+  console.log("checking items", items);
+  console.log("checking customer", customer);
+
+  const doc = new jsPDF({
+      orientation: "landscape", // Change orientation to landscape
+      unit: "mm",
+      format: "a4",
+  });
+
+  const pageHeight = doc.internal.pageSize.height;
+  const pageWidth = doc.internal.pageSize.width;
+  const marginTop = 15;
+
+  let tableHeight = 170; // Fixed table height
+  let currentY = marginTop;
+
+  // Check for maximum stones, handling empty stones array
+  const maxStones = Math.max(0, ...items.map((item) => item.Stones.length));
+
+  console.log("chek maxstones ", maxStones);
+
+  doc.setFontSize(12);
+  doc.setFont('sanserif', 'bold');
+  doc.text('Customer Name: ', 10, 10);
+
+  // Adjusted column positions for a landscape layout and wider stones columns
+  const columnPositions = {
+      sr: 10, // Start from 10mm
+      Design: 20,
+      productDetails: 40,
+      Gwt: 75,
+      stones: 95, // Widen the "stones" column
+      nwt: 178,
+      stoneamt: 198, // Widen the "stoneamt" column
+  };
+
+  // Draw the table structure dynamically
+  const drawTableStructure = () => {
+      Object.values(columnPositions).forEach((pos) => {
+          doc.line(pos, marginTop, pos, marginTop + tableHeight); // Column separators
+      });
+      doc.line(
+          pageWidth - 10,
+          marginTop,
+          pageWidth - 10,
+          marginTop + tableHeight
+      ); // Right border
+  };
+
+  const stoneWeightSpace = columnPositions.nwt - columnPositions.stones;
+  const stoneAmountSpace = pageWidth - columnPositions.stoneamt - 10;
+
+  // Dynamic cell width for stones, ensuring we don't divide by zero
+  const stoneWeightCellWidth = maxStones > 0 ? stoneWeightSpace / maxStones : 0;
+  const stoneAmountCellWidth = maxStones > 0 ? stoneAmountSpace / maxStones : 0;
+
+  const drawTableHeader = () => {
+      doc.setFontSize(10);
+      doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
+      currentY += 5;
+
+      // Draw the header text
+      doc.text("Sr", columnPositions.sr + 2, currentY);
+      doc.text("Design", columnPositions.Design + 2, currentY);
+      doc.text("Product Details", columnPositions.productDetails + 2, currentY);
+      doc.text("G Wt", columnPositions.Gwt + 2, currentY);
+      doc.text("Stones Wt", columnPositions.stones + 2, currentY); // Adjusted position for Stones Wt
+      doc.text("N Wt", columnPositions.nwt + 2, currentY);
+      doc.text("Stones Amount", columnPositions.stoneamt + 2, currentY); // Adjusted position for Stones Amount
+
+      currentY += 1;
+      doc.line(columnPositions.sr, currentY + 5, pageWidth - 10, currentY + 5); // Table header bottom line
+
+      // Print dynamic stone names for "Stones Wt" sub-columns
+      for (let i = 0; i < maxStones; i++) {
+          const stoneWeightX = columnPositions.stones + i * stoneWeightCellWidth;
+          doc.line(
+              stoneWeightX,
+              currentY + 5,
+              stoneWeightX,
+              marginTop + tableHeight
+          );
+      }
+
+      // Print dynamic stone names for "Stones Amount" sub-columns
+      for (let i = 0; i < maxStones; i++) {
+          const stoneAmountX =
+              columnPositions.stoneamt + i * stoneAmountCellWidth;
+          doc.line(
+              stoneAmountX,
+              currentY + 5,
+              stoneAmountX,
+              marginTop + tableHeight
+          );
+      }
+
+      // Print dynamic stone names for "Stones Wt" and "Stones Amount" sub-columns
+      items.forEach((item) => {
+          for (let i = 0; i < item.Stones.length; i++) {
+              const stoneName = item.Stones[i].stonename.slice(0, 3); // Get the stone name from the item data
+
+              // Position stone names under "Stones Wt" column
+              const stoneWeightX =
+                  columnPositions.stones + i * stoneWeightCellWidth;
+              doc.text(stoneName, stoneWeightX + 2, currentY + 10);
+
+              // Position stone names under "Stones Amount" column
+              const stoneAmountX =
+                  columnPositions.stoneamt + i * stoneAmountCellWidth;
+              doc.text(stoneName, stoneAmountX + 2, currentY + 10);
+          }
+      });
+
+      // Final lines for the last stone sub-columns, only if there are stones
+      if (maxStones > 0) {
+          const finalStoneWeightX =
+              columnPositions.stones + maxStones * stoneWeightCellWidth;
+          const finalStoneAmountX =
+              columnPositions.stoneamt + maxStones * stoneAmountCellWidth;
+
+          console.log("maxStones:", maxStones);
+          console.log("stoneWeightCellWidth:", stoneWeightCellWidth);
+          console.log("finalStoneWeightX:", finalStoneWeightX);
+
+          doc.line(
+              finalStoneWeightX,
+              currentY,
+              finalStoneWeightX,
+              marginTop + tableHeight
+          );
+          doc.line(
+              finalStoneAmountX,
+              currentY,
+              finalStoneAmountX,
+              marginTop + tableHeight
+          );
+      }
+
+      currentY += 10;
+      doc.line(columnPositions.sr, currentY + 5, pageWidth - 10, currentY + 5); // Table header bottom line
+      currentY += 5;
+
+      doc.line(
+          columnPositions.sr,
+          marginTop + tableHeight,
+          pageWidth - 10,
+          marginTop + tableHeight
+      ); // Bottom line
+  };
+
+  const drawTableRow = (item, rowIndex) => {
+      const rowHeight = 10;
+      const startY = currentY + 10;
+
+      // Print row number (Sr)
+      doc.text(`${rowIndex + 1}`, columnPositions.sr + 2, startY);
+
+      // Print Design (assuming the item has a design property)
+      doc.text(item.design || "", columnPositions.Design + 2, startY);
+
+      // Print Product Details
+      doc.text(
+          item.productdetail || "",
+          columnPositions.productDetails + 2,
+          startY
+      );
+
+      // Print G Wt (Gross Weight)
+      doc.text(item.grosswt || "0.00", columnPositions.Gwt + 2, startY);
+
+      // Print Stones Wt (for each stone in item), handle empty stones array
+      item.Stones.forEach((stone, index) => {
+          const stoneWeightX =
+              columnPositions.stones + index * stoneWeightCellWidth;
+          doc.text(stone.stoneweight || "0.00", stoneWeightX + 2, startY);
+      });
+
+      // Print N Wt (Net Weight)
+      doc.text(item.netwt || "0.00", columnPositions.nwt + 2, startY);
+
+      // Print Stones Amount (for each stone in item), handle empty stones array
+      item.Stones.forEach((stone, index) => {
+          const stoneAmountX =
+              columnPositions.stoneamt + index * stoneAmountCellWidth;
+          doc.text(stone.stoneamount || "0.00", stoneAmountX + 2, startY);
+      });
+
+      currentY += rowHeight; // Move to the next row position
+  };
+
+  const drawTableContent = () => {
+      const rowHeight = 10; // Set row height here for consistency
+      const maxRowsPerPage = 14; // Maximum rows per page
+
+      let currentPageItems = []; // To store items for the current page
+      let pageIndex = 0; // To track the current page index
+      let globalRowIndex = 0; // To track the overall row index (for Sr number)
+
+      let grandTotalGrossWt = 0;
+      let grandTotalNetWt = 0;
+      let grandTotalStonesWt = Array(maxStones).fill(0); // Array for each stone's total weight
+      let grandTotalStonesAmt = Array(maxStones).fill(0); // Array for each stone's total amount
+
+      // Split items into groups of 7 per page
+      for (let i = 0; i < items.length; i += maxRowsPerPage) {
+          currentPageItems = items.slice(i, i + maxRowsPerPage); // Get 7 items for the current page
+
+          // If it's not the first page, add a new page and re-draw header and structure
+          if (pageIndex > 0) {
+              doc.addPage();
+              tableHeight = 180; // Adjust the table height for subsequent pages
+              drawTableStructure();
+              drawTableHeader();
+          }
+
+          currentPageItems.forEach((item, index) => {
+              drawTableRow(item, globalRowIndex);
+              globalRowIndex++; // Increment overall row index
+              grandTotalGrossWt += parseFloat(item.grosswt) || 0;
+              grandTotalNetWt += parseFloat(item.netwt) || 0;
+
+              // Accumulate total stone weights and amounts
+              item.Stones.forEach((stone, stoneIndex) => {
+                  grandTotalStonesWt[stoneIndex] +=
+                      parseFloat(stone.stoneweight) || 0;
+                  grandTotalStonesAmt[stoneIndex] +=
+                      parseFloat(stone.stoneamount) || 0;
+              });
+          });
+
+          pageIndex++; // Increment page index
+      }
+
+      // Draw grand total at the end
+      currentY += 10; // Leave space for total
+      doc.setFontSize(12);
+      doc.setFont('sanserif', 'bold');
+      doc.text("Grand Total", columnPositions.sr + 2, currentY);
+      doc.text(grandTotalGrossWt.toFixed(2), columnPositions.Gwt + 2, currentY);
+      doc.text(grandTotalNetWt.toFixed(2), columnPositions.nwt + 2, currentY);
+
+      // Print totals for stones weights and amounts
+      grandTotalStonesWt.forEach((weight, index) => {
+          const stoneTotalX =
+              columnPositions.stones + index * stoneWeightCellWidth;
+          doc.text(weight.toFixed(2), stoneTotalX + 2, currentY);
+      });
+
+      grandTotalStonesAmt.forEach((amount, index) => {
+          const stoneAmountTotalX =
+              columnPositions.stoneamt + index * stoneAmountCellWidth;
+          doc.text(amount.toFixed(2), stoneAmountTotalX + 2, currentY);
+      });
+  };
+
+  drawTableStructure(); // Draw the initial table structure
+  drawTableHeader(); // Draw the table header
+  drawTableContent(); // Draw the table content
+
+
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+
+  // doc.save("invoice.pdf");
+};
+
+
+
+  const generateinvoicepdf3 = async (items, customer, mainitem) => {
+
+
+    const items1 = generateDummyData();
+    console.log('checking original items ', items1);
+    console.log("checking items", items);
+    console.log("checking customer", customer);
+
+    const doc = new jsPDF({
+      orientation: "landscape", // Change orientation to landscape
+      unit: "mm",
+      format: "a4",
+    });
+
+    const pageHeight = doc.internal.pageSize.height;
+    const pageWidth = doc.internal.pageSize.width;
+    const marginTop = 15;
+
+    let tableHeight = 170; // Fixed table height
+    let currentY = marginTop;
+
+    const maxStones = Math.max(...items.map((item) => item.Stones.length));
+
+    console.log("chek maxstones ", maxStones);
+
+    doc.setFontSize(12)
+doc.setFont('sanserif', 'bold');
+doc.text(`Customer Name: ${customer.FirstName}`, 10, 10)
+
+
+    // Adjusted column positions for a landscape layout and wider stones columns
+    const columnPositions = {
+      sr: 10, // Start from 10mm
+      Design: 20,
+      productDetails: 40,
+      Gwt: 75,
+      stones: 95, // Widen the "stones" column
+      nwt: 178,
+      stoneamt: 198, // Widen the "stoneamt" column
+    };
+
+    // Draw the table structure dynamically
+    const drawTableStructure = () => {
+      Object.values(columnPositions).forEach((pos) => {
+        doc.line(pos, marginTop, pos, marginTop + tableHeight); // Column separators
+      });
+      doc.line(
+        pageWidth - 10,
+        marginTop,
+        pageWidth - 10,
+        marginTop + tableHeight
+      ); // Right border
+    };
+
+    const stoneWeightSpace = columnPositions.nwt - columnPositions.stones;
+    const stoneAmountSpace = pageWidth - columnPositions.stoneamt - 10;
+
+    // Dynamic cell width for stones
+    const stoneWeightCellWidth = stoneWeightSpace / maxStones;
+    const stoneAmountCellWidth = stoneAmountSpace / maxStones;
+
+    const drawTableHeader = () => {
+      doc.setFontSize(10);
+      doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header top line
+      currentY += 5;
+
+      // Draw the header text
+      doc.text("Sr", columnPositions.sr + 2, currentY);
+      doc.text("Design", columnPositions.Design + 2, currentY);
+      doc.text("Product Details", columnPositions.productDetails + 2, currentY);
+      doc.text("G Wt", columnPositions.Gwt + 2, currentY);
+      doc.text("Stones Wt", columnPositions.stones + 2, currentY); // Adjusted position for Stones Wt
+      doc.text("N Wt", columnPositions.nwt + 2, currentY);
+      doc.text("Stones Amount", columnPositions.stoneamt + 2, currentY); // Adjusted position for Stones Amount
+
+      currentY += 1;
+      doc.line(columnPositions.sr, currentY + 5, pageWidth - 10, currentY + 5); // Table header bottom line
+
+      // Print dynamic stone names for "Stones Wt" sub-columns
+      for (let i = 0; i < maxStones; i++) {
+        const stoneWeightX = columnPositions.stones + i * stoneWeightCellWidth;
+        doc.line(
+          stoneWeightX,
+          currentY + 5,
+          stoneWeightX,
+          marginTop + tableHeight
+        );
+      }
+
+      // Print dynamic stone names for "Stones Amount" sub-columns
+      for (let i = 0; i < maxStones; i++) {
+        const stoneAmountX =
+          columnPositions.stoneamt + i * stoneAmountCellWidth;
+        doc.line(
+          stoneAmountX,
+          currentY + 5,
+          stoneAmountX,
+          marginTop + tableHeight
+        );
+      }
+
+      // Print dynamic stone names for "Stones Wt" and "Stones Amount" sub-columns
+      items.forEach((item) => {
+        for (let i = 0; i < item.Stones.length; i++) {
+          const stoneName = item.Stones[i].StoneName.slice(0, 3); // Get the stone name from the item data
+
+          // Position stone names under "Stones Wt" column
+          const stoneWeightX =
+            columnPositions.stones + i * stoneWeightCellWidth;
+          doc.text(stoneName, stoneWeightX + 2, currentY + 10);
+
+          // Position stone names under "Stones Amount" column
+          const stoneAmountX =
+            columnPositions.stoneamt + i * stoneAmountCellWidth;
+          doc.text(stoneName, stoneAmountX + 2, currentY + 10);
+        }
+      });
+      if (maxStones > 0) {
+
+      // // Final lines for the last stone sub-columns
+      const finalStoneWeightX =
+        columnPositions.stones + maxStones * stoneWeightCellWidth;
+      const finalStoneAmountX =
+        columnPositions.stoneamt + maxStones * stoneAmountCellWidth;
+
+        console.log("maxStones:", maxStones);
+console.log("stoneWeightCellWidth:", stoneWeightCellWidth);
+console.log("finalStoneWeightX:", finalStoneWeightX);
+
+      doc.line(
+        finalStoneWeightX,
+        currentY,
+        finalStoneWeightX,
+        marginTop + tableHeight
+      );
+      doc.line(
+        finalStoneAmountX,
+        currentY,
+        finalStoneAmountX,
+        marginTop + tableHeight
+      );
+
+      currentY += 10;
+      doc.line(columnPositions.sr, currentY + 5, pageWidth - 10, currentY + 5); // Table header bottom line
+      currentY += 5;
+
+      doc.line(
+        columnPositions.sr,
+        marginTop + tableHeight,
+        pageWidth - 10,
+        marginTop + tableHeight
+      ); // Bottom line
+    }
+
+    };
+
+    const drawTableRow = (item, rowIndex) => {
+      const rowHeight = 10;
+      const startY = currentY + 10;
+
+      // Print row number (Sr)
+      doc.text(`${rowIndex + 1}`, columnPositions.sr + 2, startY);
+
+      // Print Design (assuming the item has a design property)
+      doc.text(item.ItemCode || "", columnPositions.Design + 2, startY);
+
+      // Print Product Details
+      doc.text(
+        item.ProductName || "",
+        columnPositions.productDetails + 2,
+        startY
+      );
+
+      // Print G Wt (Gross Weight)
+      doc.text(item.GrossWt || "0.00", columnPositions.Gwt + 2, startY);
+
+      // Print Stones Wt (for each stone in item)
+      item.Stones.forEach((stone, index) => {
+        const stoneWeightX =
+          columnPositions.stones + index * stoneWeightCellWidth;
+        doc.text(stone.StoneWeight, stoneWeightX + 2, startY);
+      });
+
+      // Print N Wt (Net Weight)
+      doc.text(item.NetWt || "0.00", columnPositions.nwt + 2, startY);
+
+      // Print Stones Amount (for each stone in item)
+      item.Stones.forEach((stone, index) => {
+        const stoneAmountX =
+          columnPositions.stoneamt + index * stoneAmountCellWidth;
+        doc.text(stone.StoneAmount, stoneAmountX + 2, startY);
+      });
+
+      currentY += rowHeight; // Move to the next row position
+    };
+
+  
+
+    const drawTableContent = () => {
+        const rowHeight = 10; // Set row height here for consistency
+        const maxRowsPerPage = 14; // Maximum rows per page
+      
+        let currentPageItems = []; // To store items for the current page
+        let pageIndex = 0; // To track the current page index
+        let globalRowIndex = 0; // To track the overall row index (for Sr number)
+      
+        let grandTotalGrossWt = 0;
+        let grandTotalNetWt = 0;
+        let grandTotalStonesWt = Array(maxStones).fill(0); // Array for each stone's total weight
+        let grandTotalStonesAmt = Array(maxStones).fill(0); // Array for each stone's total amount
+      
+        // Split items into groups of 7 per page
+        for (let i = 0; i < items.length; i += maxRowsPerPage) {
+          currentPageItems = items.slice(i, i + maxRowsPerPage); // Get 7 items for the current page
+      
+          // If it's not the first page, add a new page and re-draw header and structure
+          if (pageIndex > 0) {
+            doc.addPage();
+            tableHeight = 100;
+            currentY = marginTop; // Reset Y position on new page
+            drawTableHeader(); // Re-draw the header on the new page
+            drawTableStructure(); // Re-draw the table structure on the new page
+          }
+      
+          // Draw the rows for the current page
+          currentPageItems.forEach((item, index) => {
+            drawTableRow(item, globalRowIndex); // Pass the global index for Sr number
+            grandTotalGrossWt += parseFloat(item.GrossWt);
+            grandTotalNetWt += parseFloat(item.NetWt);
+      
+            // Add up stone weights and amounts for each item
+            item.Stones.forEach((stone, index) => {
+              grandTotalStonesWt[index] += parseFloat(stone.StoneWeight);
+              grandTotalStonesAmt[index] += parseFloat(stone.StoneAmount); // Sum up the stone amounts
+            });
+      
+            globalRowIndex++; // Increment the global index after each row
+          });
+      
+          pageIndex++; // Move to the next page
+        }
+      
+        // Draw the Grand Total row at the bottom
+        if (currentY + rowHeight > pageHeight - 30) {
+          doc.addPage();
+          currentY = marginTop; // Reset Y position on new page
+          drawTableHeader(); // Re-draw the header on the new page
+          drawTableStructure(); // Re-draw the table structure on the new page
+        }
+      
+        // Print the "Grand Total" row
+        doc.setFont("sanserif", "bold");
+        currentY += rowHeight;
+        doc.text("Grand ", columnPositions.sr + 15, currentY);
+        doc.text("Total ", columnPositions.sr + 15, currentY + 5);
+      
+        // Print Gross Total
+        doc.text(grandTotalGrossWt.toFixed(2), columnPositions.Gwt + 2, currentY);
+      
+        // Print Stones Total (for each stone column)
+        for (let i = 0; i < maxStones; i++) {
+          const stoneWeightX = columnPositions.stones + i * stoneWeightCellWidth;
+          doc.text(grandTotalStonesWt[i].toFixed(2), stoneWeightX + 2, currentY); // Stone weight total
+      
+          const stoneAmountX = columnPositions.stoneamt + i * stoneAmountCellWidth;
+          doc.text(grandTotalStonesAmt[i].toFixed(2), stoneAmountX, currentY); // Stone amount total
+        }
+      
+        // Print Net Total
+        doc.text(grandTotalNetWt.toFixed(2), columnPositions.nwt + 3, currentY);
+      
+        currentY += rowHeight; // Move down to the next row after Grand Total
+      
+        doc.line(10, currentY - 17, 287, currentY - 17);
+      };
+      
+      
+  
+    drawTableHeader();
+    drawTableStructure();
+    drawTableContent();
+
+
+    const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+
+    // const pdfData = doc.output("dataurlnewwindow");
+    // const newWindow = window.open();
+    // newWindow.document.write(
+    //   `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+    // );
+
+}
+
+const generateinvoicepdf3old = async (items1, customer, mainitem) => {
 
   const items = generateDummyData();
   console.log(items);
@@ -427,10 +1003,10 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     doc.text("Purity", columnPositions.purity + 2, currentY);
     // doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
     // doc.text('Net Wt', columnPositions.netWt+2, currentY);
-    doc.text("Taxable Amt", columnPositions.price + 2, currentY);
+    doc.text("Metal Amt", columnPositions.price + 2, currentY);
     doc.text("Qty", columnPositions.qty + 2, currentY);
     // doc.text('Rate / gm', columnPositions.rate+2, currentY);
-    doc.text("Total+GST", columnPositions.amount + 2, currentY);
+    doc.text("Total Amt", columnPositions.amount + 2, currentY);
 
     currentY += 5;
     doc.line(columnPositions.sr, currentY, pageWidth - 10, currentY); // Table header bottom line
@@ -576,7 +1152,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
       // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
       doc.text("7113", columnPositions.hsnCode + 2, currentY);
       doc.text(item.Purity || "NA", columnPositions.purity + 2, currentY);
-      doc.text(item.NetAmount || "0", columnPositions.price + 2, currentY);
+      doc.text(item.MetalRate || "0", columnPositions.price + 2, currentY);
       doc.text("1", columnPositions.qty + 2, currentY);
       doc.text(item.TotalAmount || "0", columnPositions.amount + 2, currentY);
 

@@ -2081,6 +2081,8 @@ export default function AdminInvoice() {
       };
     });
 
+    console.log('checking old request ', newAllSelectedProducts)
+
     // try {
       const orderItemsList = allSelectedProducts.map((product) => {
         let item = {
@@ -2091,7 +2093,7 @@ export default function AdminInvoice() {
           ProductId: product.id,
           CustomerId: parseInt(customerId),
           ProductName: product.ProductName,
-          Quantity: "1",
+          Quantity: product.Pieces,
           TotalStoneWeight: product.TotalStoneWeight,
           HSNCode: `${product.HSNCode}` || "",
           // ItemCode: product.itemCode,
@@ -2106,6 +2108,7 @@ export default function AdminInvoice() {
           StoneAmount: product.StoneAmount,
           TotalStoneAmount: product.TotalStoneAmount,
           PurityId: product.PurityId ? product.PurityId : 0,
+          Purity :product.PurityName,
           MakingCharg: `${product.making}`,
           MetalRate: `${product.TodaysRate}`,
           HUIDCode: product.HUIDCode,
@@ -2116,6 +2119,9 @@ export default function AdminInvoice() {
           Price: `${(
             parseFloat(product.finalPrice) + parseFloat(product.totalGstAmount)
           ).toFixed(3)}`,
+          LabelledStockId: product.sell ? product.Id : 0,  // Ensure LabelledStockId is present
+    Stones: product.Stones && product.Stones.length > 0 ? product.Stones : [],  // Ensure Stones array
+    Diamonds: product.Diamonds && product.Diamonds.length > 0 ? product.Diamonds : []
         };
         if (product.sell) {
           item.ItemCode = product.ItemCode;
@@ -2220,6 +2226,10 @@ export default function AdminInvoice() {
 
         return item;
       });
+
+
+ console.log('checking new request ', orderItemsList)
+
 
     // } catch (error) {
     //   alert(error);
@@ -2410,19 +2420,35 @@ export default function AdminInvoice() {
       setOrderCsData(rcvdData);
       
       console.log(rcvdData, "1st hit", orderCsData);
-      // createOrderItems(rcvdData.data.id);
-      if (rcvdData.status === "error") {
-        // setLoading(false);
-        alert(rcvdData.message); // Show error message
+
+      if (rcvdData.Status === 400 && rcvdData.Errors) {
+        // Extract error messages and alert the user
+        let errorMessages = [];
+        for (const [key, value] of Object.entries(rcvdData.Errors)) {
+          errorMessages.push(`${key}: ${value.join(', ')}`);
+        }
+        alert("Validation Error(s):\n" + errorMessages.join("\n"));
+      } else if (rcvdData.status === "error") {
+        alert(rcvdData.message); // General error message
       } else {
-        // setLoading(false);
         console.log(rcvdData, "InvoiceCreated");
-        generateBillPDF(rcvdData.InvoiceItem , rcvdData.Customer , InvoiceFormat, rcvdData);
-
-
-        // addAllSelectedPayments(rcvdData, rcvdData.InvoiceItem, rcvdData.Id);
-        // createOrderItems(rcvdData.id, rcvdData);
+        generateBillPDF(rcvdData.InvoiceItem, rcvdData.Customer, InvoiceFormat, rcvdData);
+        window.location.reload(); 
       }
+
+      // createOrderItems(rcvdData.data.id);
+      // if (rcvdData.status === "error") {
+      //   // setLoading(false);
+      //   alert(rcvdData.message); // Show error message
+      // } else {
+      //   // setLoading(false);
+      //   console.log(rcvdData, "InvoiceCreated");
+      //   generateBillPDF(rcvdData.InvoiceItem , rcvdData.Customer , InvoiceFormat, rcvdData);
+
+
+      //   // addAllSelectedPayments(rcvdData, rcvdData.InvoiceItem, rcvdData.Id);
+      //   // createOrderItems(rcvdData.id, rcvdData);
+      // }
     } catch (error) {
       alert(error);
       console.error(error);
