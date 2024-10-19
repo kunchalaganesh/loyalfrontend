@@ -13,6 +13,8 @@ export const generateBillPDF = (
 
   // generateinvoicepdf6(invoiceItems, csData, mainitem);
 
+  // generateinvoicepdf7(invoiceItems, csData, mainitem);
+
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
     return;
@@ -1431,6 +1433,10 @@ doc.line(boxPadding, tableStartY+10, boxPadding + boxWidth, tableStartY+10);
 let rowStartY = headerY + 10;
 // startX = boxPadding+2;
 items.forEach((item) => {
+
+  if (item.ProductName.toLowerCase() === "old gold") {
+    return; // Skip to the next item
+  }
   let startX = boxPadding + 2; // Reset startX for each new row
 
   const itemData = [
@@ -1442,10 +1448,11 @@ items.forEach((item) => {
     item.TotalStoneWeight,
     item.NetWt,
     item.TotalStoneAmount,
-    item.RatePerGram,
+    item.MetalRate,
     item.MakingPercentage,
-    item.TotalAmount,
+    item.Price,
   ];
+
 
   // Render each column's data for the current row
   itemData.forEach((data, index) => {
@@ -1525,10 +1532,6 @@ leftColumn.forEach((row, index) => {
   doc.rect(cashSectionX, cashSectionY, cashCellWidth, 10); // Border for "Cash" label
   doc.rect(cashSectionX + cashCellWidth, cashSectionY, cashCellWidth, 10); // Border for the amount
 
-
-
-
-
   doc.setFont("sanserif", "normal");
   doc.setFontSize(10);
   doc.text("Billng By - Admin", 100, 220);
@@ -1563,12 +1566,15 @@ leftColumn.forEach((row, index) => {
 
 
 
+
+
   // Generate the PDF and open it in a new window
   const pdfData = doc.output("datauristring");
   const newWindow = window.open();
   newWindow.document.write(
     `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
   );
+
 
 }
 

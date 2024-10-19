@@ -234,6 +234,9 @@ export default function AdminAddBulkStockNew() {
   const [filteredlot, setFilteredlot] = useState([]);
   const [selectedSku, setSelectedSku] = useState([]);
   const [selectedSkuName, setSelectedSkuName] = useState("");
+  const [unlabeledgold, setUnlabeledgold] = useState(0);
+  const [unlabeledqty, setUnlabeledqty] = useState(0);
+  
 
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
@@ -404,8 +407,13 @@ export default function AdminAddBulkStockNew() {
 
 
     let filteredItems = allPurchaseItems;
-// case 1
+    // case 1
     // Filter based on selected Lot Number, but only if `lotNumber` is not empty
+
+
+    let totalPurchaseGrossWt = 0;
+    let totalPurchaseQty = 0; // Add totalPurchaseQty
+
     if (lotNumber && lotNumber !== "0") {
       filteredItems = filteredItems.filter(
         (item) => item.LotNumber === lotNumber
@@ -417,26 +425,68 @@ export default function AdminAddBulkStockNew() {
         (item) => item.VendorName == vendorid
       );
 
+      let labelledStockItems = allLabelledStockData.filter(item => item.LotNumber === lotNumber);
 
-if (selectedSkuName && selectedSkuName.trim() !== ""){
+      if (selectedSkuName && selectedSkuName.trim() !== "") {
 
-  filteredItems = filteredItems.filter(
-    (item) => item.StockKeepingUnit === selectedSkuName
-  );
+        filteredItems = filteredItems.filter(
+          (item) => item.StockKeepingUnit === selectedSkuName
+        );
+        labelledStockItems = labelledStockItems.filter(item => item.SKU === selectedSkuName);
+        totalPurchaseGrossWt =  filteredItems.reduce((acc, item) => {
+          return acc + parseFloat(item.GrossWt || 0);
+        }, 0);
+        totalPurchaseQty = filteredItems.reduce((acc, item) => {
+          return acc + parseFloat(item.Quantity || 0);
+        }, 0);
 
-}
-
-
-
-      const skuToSet = allSku.filter((sku) => 
+      }else{
+        // StockKeepingUnit = ""
+        const filteredItems1 = filteredItems.filter(
+          (item) => item.StockKeepingUnit === ""
+        );
+        labelledStockItems = labelledStockItems.filter(item => item.SKU === "");
+        totalPurchaseGrossWt =  filteredItems1.reduce((acc, item) => {
+          return acc + parseFloat(item.GrossWt || 0);
+        }, 0);
+        totalPurchaseQty = filteredItems1.reduce((acc, item) => {
+          return acc + parseFloat(item.Quantity || 0);
+        }, 0);
+      }
+      const skuToSet = allSku.filter((sku) =>
         filteredItems.some(item => item.StockKeepingUnit === sku.StockKeepingUnit)
       );
 
-      console.log('checking selected skuu ', selectedSkuName)
+      console.log('checking labellist ', labelledStockItems)
 
       console.log('checking selected sku ', skuToSet)
       console.log('checking filtered items ', filteredItems)
       console.log('checking all sku ', allSku)
+
+      
+
+      // Filter labelled stock data based on selected LotNumber
+      // const labelledStockItems = allLabelledStockData.filter(item => item.LotNumber === lotNumber);
+
+      // Calculate total gross weight from labelled stock for the given LotNumber
+      const totalLabelledGrossWt = labelledStockItems.reduce((acc, item) => {
+        return acc + parseFloat(item.GrossWt || 0);
+      }, 0);
+      const totalLabelledQty = labelledStockItems.reduce((acc, item) => {
+        return acc + parseFloat(item.ClipQuantity || 1);
+      }, 0);
+
+
+      // Calculate unlabelled gross weight (purchase gross wt - labelled gross wt)
+      const unlabelledGrossWt = totalPurchaseGrossWt - totalLabelledGrossWt;
+      const unlabelledQty = totalPurchaseQty - totalLabelledQty;
+      setUnlabeledgold(unlabelledGrossWt || 0)
+      setUnlabeledqty(unlabelledQty || 0); 
+
+      console.log('Total Purchase GrossWt:', totalPurchaseGrossWt);
+      console.log('Total Labelled GrossWt:', totalLabelledGrossWt);
+      console.log('Unlabelled GrossWt:', unlabelledGrossWt);
+      console.log('Unlabelled qty:', unlabelledQty);
 
 
       setFilteredsku(skuToSet);
@@ -449,14 +499,14 @@ if (selectedSkuName && selectedSkuName.trim() !== ""){
 
 
 
-    } else if (selectedSkuName && selectedSkuName.trim() !== ""){
+    } else if (selectedSkuName && selectedSkuName.trim() !== "") {
 
       filteredItems = filteredItems.find(
         (sku) => sku.StockKeepingUnit === selectedSkuName
       );
-      if(filteredItems){
+      if (filteredItems) {
         filteredItems = filteredItems
-      }else{
+      } else {
         filteredItems = allPurchaseItems;
         setFilteredsku(allSku);
       }
@@ -464,17 +514,17 @@ if (selectedSkuName && selectedSkuName.trim() !== ""){
 
       // setFilteredsku(allSku);
       // setFilteredparty(partyData);
-    }else{
-setFilteredsku(allSku);
+    } else {
+      setFilteredsku(allSku);
       setFilteredparty(partyData);
     }
 
-   
 
-    console.log('checking filtered purchase',filteredItems )
 
-  // Set the filtered items
-  setAllFilteredPurchaseItems(filteredItems);
+    console.log('checking filtered purchase', filteredItems)
+
+    // Set the filtered items
+    setAllFilteredPurchaseItems(filteredItems);
 
 
     // if (partyTypeId && partyTypeId !== 0) {
@@ -992,46 +1042,19 @@ setFilteredsku(allSku);
     // let updatedStonesList = [...allStonesList];
 
 
-    if(lotNumber && selectedSkuName){
-     
-      // createdProduct.Quantity
-
-      const totalQty = allFilteredPurchaseItems.reduce((acc, item) => {
-        return acc + parseFloat(item.Quantity || 0);
-      }, 0);
-      
-      const totalGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
-        return acc + parseFloat(item.GrossWt || 0);
-      }, 0);
-
-
-      if(quantity >totalQty  || quantity*grosswt > totalGrossWt){
-        alert("Error: Quantity or Gross Weight exceeds the available limits.");
-    return; // Stop the process
-      }
-
-    }else if(lotNumber){
-      const totalQty = allFilteredPurchaseItems.reduce((acc, item) => {
-        return acc + parseFloat(item.Quantity || 0);
-      }, 0);
-      const totalGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
-        return acc + parseFloat(item.GrossWt || 0);
-      }, 0);
-
-
-       if(quantity >totalQty  || quantity*grosswt > totalGrossWt){
-        alert("Error: Quantity or Gross Weight exceeds the available limits.");
-    return; // Stop the process
-      }
-
+    if (lotNumber && lotNumber !== "0" || selectedSkuName && selectedSkuName.trim() !== "") {
+    if(unlabeledqty <quantity ){
+      alert("Error: Quantity exceeds the available limits.");
+        return; // Stop the process
     }
+  }
 
 
 
     let updatedStonesList = Array.isArray(allStonesList) ? [...allStonesList] : [];
 
 
-   
+
 
     // Loop through each item in allStonesListmain
     allStonesListmain.forEach((mainStone) => {
@@ -1546,21 +1569,21 @@ setFilteredsku(allSku);
 
     const product = updatedProducts[index];
 
-   
+
 
     // Update the specific property in the product object
     let updatedProduct = { ...product, [property]: value };
 
-     // Parse properties to numbers or set them as 0 if the value is empty or invalid
-     const grosswt =
-     stockType === "Labelled"
-       ? parseFloat(product.GrossWt) || 0
-       : stockType === "Unlabelled"
-         ? parseFloat(product.TotalGrossWt) || 0
-         : 0;
-   const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
-   const netWt = parseFloat(product.NetWt) || 0;
-   const clipWeight = parseFloat(product.ClipWeight) || 0;
+    // Parse properties to numbers or set them as 0 if the value is empty or invalid
+    const grosswt =
+      stockType === "Labelled"
+        ? parseFloat(product.GrossWt) || 0
+        : stockType === "Unlabelled"
+          ? parseFloat(product.TotalGrossWt) || 0
+          : 0;
+    const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+    const netWt = parseFloat(product.NetWt) || 0;
+    const clipWeight = parseFloat(product.ClipWeight) || 0;
 
     if (property === "RFIDCode") {
       // Convert the barcode number to uppercase before doing the comparison
@@ -1624,69 +1647,72 @@ setFilteredsku(allSku);
     // }
 
     // Parse updated properties to numbers, defaulting to 0 if empty or invalid
-  // const grosswt = parseFloat(product.GrossWt) || 0;
- 
-  const totalFilteredGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
-    return acc + parseFloat(item.GrossWt || 0);
-  }, 0);
-  // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
-  // const netWt = parseFloat(product.NetWt) || 0;
+    // const grosswt = parseFloat(product.GrossWt) || 0;
 
-  // Update 'GrossWt' -> recalculate 'NetWt'
-  if (property === "GrossWt" && !isNaN(value)) {
-    if(value>totalFilteredGrossWt){
-      // alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
-      updatedProduct.GrossWt = 0;
-      updatedProduct.NetWt = 0;
-    }else{
-      updatedProduct.NetWt =
-      parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
-        ? (
-            parseFloat(value) -
-            parseFloat(clipWeight) -
-            parseFloat(stoneWeight)
-          ).toFixed(3)
-        : 0;
+    const totalFilteredGrossWt = unlabeledgold;
+    // allFilteredPurchaseItems.reduce((acc, item) => {
+    //   return acc + parseFloat(item.GrossWt || 0);
+    // }, 0);
+
+
+    // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+    // const netWt = parseFloat(product.NetWt) || 0;
+
+    // Update 'GrossWt' -> recalculate 'NetWt'
+    if (property === "GrossWt" && !isNaN(value)) {
+      if (value > totalFilteredGrossWt) {
+        alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+        updatedProduct.GrossWt = 0;
+        updatedProduct.NetWt = 0;
+      } else {
+        updatedProduct.NetWt =
+          parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
+            ? (
+              parseFloat(value) -
+              parseFloat(clipWeight) -
+              parseFloat(stoneWeight)
+            ).toFixed(3)
+            : 0;
+      }
     }
-  }
 
-  // // Update 'TotalStoneWeight' -> recalculate 'NetWt'
-  // if (property === "TotalStoneWeight" && !isNaN(value)) {
-  //   updatedProduct.NetWt =
-  //     grosswt > parseFloat(value)
-  //       ? (grosswt - parseFloat(value)).toFixed(3)
-  //       : 0;
-  // }
-  // // console.log('propertyvalue ',property, '  ', value , updatedProduct.)
+    // // Update 'TotalStoneWeight' -> recalculate 'NetWt'
+    // if (property === "TotalStoneWeight" && !isNaN(value)) {
+    //   updatedProduct.NetWt =
+    //     grosswt > parseFloat(value)
+    //       ? (grosswt - parseFloat(value)).toFixed(3)
+    //       : 0;
+    // }
+    // // console.log('propertyvalue ',property, '  ', value , updatedProduct.)
 
-  // // Update 'ClipWeight' -> recalculate 'NetWt'
-  // if (property === "ClipWeight" && !isNaN(value)) {
-  //   if (grosswt > clipWeight) {
-  //     // If clip weight is valid, recalculate net weight
-  //     updatedProduct.NetWt = (grosswt - (clipWeight + stoneWeight)).toFixed(3);
-  //   } else {
-  //     // If clip weight exceeds gross weight, reset values
-  //     // updatedProduct.GrossWt = (clipWeight + stoneWeight).toFixed(3);
-  //     updatedProduct.NetWt = 0;
-  //     updatedProduct.ClipWeight = 0
-  //   }
-  // }
+    // // Update 'ClipWeight' -> recalculate 'NetWt'
+    // if (property === "ClipWeight" && !isNaN(value)) {
+    //   if (grosswt > clipWeight) {
+    //     // If clip weight is valid, recalculate net weight
+    //     updatedProduct.NetWt = (grosswt - (clipWeight + stoneWeight)).toFixed(3);
+    //   } else {
+    //     // If clip weight exceeds gross weight, reset values
+    //     // updatedProduct.GrossWt = (clipWeight + stoneWeight).toFixed(3);
+    //     updatedProduct.NetWt = 0;
+    //     updatedProduct.ClipWeight = 0
+    //   }
+    // }
 
-  // // Update 'NetWt' -> recalculate 'GrossWt' and 'TotalStoneWeight'
-  // if (property === "NetWt" && !isNaN(value)) {
-  //   updatedProduct.GrossWt = (
-  //     parseFloat(value) + parseFloat(clipWeight) + stoneWeight
-  //   ).toFixed(3);
-  //   updatedProduct.TotalStoneWeight = (
-  //     grosswt - parseFloat(value) - parseFloat(clipWeight)
-  //   ).toFixed(3);
-  // }
+    // // Update 'NetWt' -> recalculate 'GrossWt' and 'TotalStoneWeight'
+    // if (property === "NetWt" && !isNaN(value)) {
+    //   updatedProduct.GrossWt = (
+    //     parseFloat(value) + parseFloat(clipWeight) + stoneWeight
+    //   ).toFixed(3);
+    //   updatedProduct.TotalStoneWeight = (
+    //     grosswt - parseFloat(value) - parseFloat(clipWeight)
+    //   ).toFixed(3);
+    // }
 
 
 
     if (property === "TotalGrossWt" && !isNaN(value)) {
 
-      
+
       updatedProduct.TotalNetWt =
         parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight) > 0
           ? (
@@ -1701,8 +1727,8 @@ setFilteredsku(allSku);
     if (property === "TotalStoneWeight" && !isNaN(value)) {
       const clipWeight1 = parseFloat(value);
       if (grosswt > clipWeight1) {
-        updatedProduct.NetWt = updatedProduct.GrossWt - parseFloat(value) -updatedProduct.ClipWeight
-        updatedProduct.TotalStoneWeight = value 
+        updatedProduct.NetWt = updatedProduct.GrossWt - parseFloat(value) - updatedProduct.ClipWeight
+        updatedProduct.TotalStoneWeight = value
 
         // parseFloat(updatedProduct.GrossWt) > value
         //   ? ((updatedProduct.GrossWt - parseFloat(value)-value).toFixed(3),updatedProduct.TotalStoneWeight= value)
@@ -1710,13 +1736,13 @@ setFilteredsku(allSku);
         //     // (updatedProduct.stoneWeight = 0)
         //     updatedProduct.NetWt = (updatedProduct.GrossWt - updatedProduct.ClipWeight).toFixed(3),  // Correct calculation for NetWt
         //         updatedProduct.TotalStoneWeight = 0  // Reset TotalStoneWeight to 0
-            // (updatedProduct.GrossWt = value),
-            // (updatedProduct.TotalStoneWeight = value),
-            // (updatedProduct.NetWt = 0)
-          // );
-      }else{
-        updatedProduct.NetWt = updatedProduct.GrossWt - 0 -updatedProduct.ClipWeight
-        updatedProduct.TotalStoneWeight = 0 
+        // (updatedProduct.GrossWt = value),
+        // (updatedProduct.TotalStoneWeight = value),
+        // (updatedProduct.NetWt = 0)
+        // );
+      } else {
+        updatedProduct.NetWt = updatedProduct.GrossWt - 0 - updatedProduct.ClipWeight
+        updatedProduct.TotalStoneWeight = 0
         // updatedProduct.NetWt =
         // parseFloat(updatedProduct.GrossWt) > value
         //   ? ((updatedProduct.GrossWt - parseFloat(value)-value).toFixed(3),updatedProduct.TotalStoneWeight= value)
@@ -1729,9 +1755,9 @@ setFilteredsku(allSku);
         //     // (updatedProduct.NetWt = 0)
         //   );
       }
-      
-      
-      
+
+
+
       // updatedProduct.stoneWeight = value
       // updatedProduct.TotalStoneWeight= value
     }
@@ -1787,22 +1813,22 @@ setFilteredsku(allSku);
       handlePiecesChange(value, index);
     }
 
-     // Second case: check if total GrossWt does not exceed filtered GrossWt
- 
-     updatedProducts[index] = updatedProduct;
+    // Second case: check if total GrossWt does not exceed filtered GrossWt
 
-  const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
-    return acc + parseFloat(item.GrossWt || 0);
-  }, 0);
+    updatedProducts[index] = updatedProduct;
 
-  if (totalCurrentGrossWt > totalFilteredGrossWt) {
-    alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
-    return; // Stop further execution
-  }
+    const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
+      return acc + parseFloat(item.GrossWt || 0);
+    }, 0);
 
-  console.log('checking updateproducts ',updatedProducts );
+    if (totalCurrentGrossWt > totalFilteredGrossWt) {
+      alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+      return; // Stop further execution
+    }
 
-    
+    console.log('checking updateproducts ', updatedProducts);
+
+
     setAddedProducts(updatedProducts);
   };
 
@@ -1814,7 +1840,7 @@ setFilteredsku(allSku);
 
   //   const product = updatedProducts[index];
 
-   
+
 
   //   // Update the specific property in the product object
   //   let updatedProduct = { ...product, [property]: value };
@@ -1953,7 +1979,7 @@ setFilteredsku(allSku);
 
   //   if (property === "TotalGrossWt" && !isNaN(value)) {
 
-      
+
   //     updatedProduct.TotalNetWt =
   //       parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight) > 0
   //         ? (
@@ -2026,7 +2052,7 @@ setFilteredsku(allSku);
   //   }
 
   //    // Second case: check if total GrossWt does not exceed filtered GrossWt
- 
+
   //    updatedProducts[index] = updatedProduct;
 
   // const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
@@ -2040,7 +2066,7 @@ setFilteredsku(allSku);
 
   // console.log('checking updateproducts ',updatedProducts );
 
-    
+
   //   setAddedProducts(updatedProducts);
   // };
 
@@ -2534,24 +2560,24 @@ setFilteredsku(allSku);
     const partialMatch = filteredsku.filter((sku) =>
       sku.StockKeepingUnit.toLowerCase().includes(enteredSku.toLowerCase())
     );
-  
+
     // Update the SKU name with partial matching during input
     setSelectedSkuName(enteredSku);
-  
+
     // Update the filtered SKU list based on partial match
     setFilteredsku(partialMatch);
   };
 
   const handleSkuSelect = (e) => {
     const selectedSku = e.target.value;
-  
+
     // Use exact match logic when user selects from the dropdown
     const exactMatch = filteredsku.find(
       (sku) => sku.StockKeepingUnit === selectedSku
     );
 
     console.log('check selected sku ', exactMatch)
-  
+
     // If exact match is found, set the SKU name, otherwise reset it
     if (exactMatch) {
       setSelectedSkuName(selectedSku);
@@ -2561,7 +2587,7 @@ setFilteredsku(allSku);
       setSelectedSku([]);
     }
   };
-  
+
 
   useEffect(() => {
     if (selectedSkuName !== "" && selectedSku) {
@@ -2632,23 +2658,23 @@ setFilteredsku(allSku);
       setMRP(selectedSku.MRP);
       if (selectedSku.SKUStoneMain && selectedSku.SKUStoneMain.length > 0) {
         setAllSelectedSkuStones(selectedSku.SKUStoneMain);
-        
+
         const updatedStonesList = [
           ...allStonesListmain,
           ...(Array.isArray(selectedSku.SKUStoneMain) ? selectedSku.SKUStoneMain : []),
         ];
-      
+
         // Set the combined list
         setAllStonesList(updatedStonesList);
-        console.log('check suk stones',updatedStonesList)
-      
+        console.log('check suk stones', updatedStonesList)
+
       } else {
         setAllSelectedSkuStones([]);
         setAllStonesList(allStonesListmain);
       }
-      
 
-     
+
+
       setAllSelectedSkuDiamonds(selectedSku.Diamonds);
       if (
         selectedSku.ClipWeight == 0 ||
@@ -2906,12 +2932,12 @@ setFilteredsku(allSku);
               selectedStone.StonePieces !== null && selectedStone.StonePieces !== undefined
                 ? selectedStone.StonePieces
                 : selectedStone.StoneMainPieces !== null && selectedStone.StoneMainPieces !== undefined
-                ? selectedStone.StoneMainPieces
-                : 1;
-          
-                if(StonePiecest == 0){
-                  StonePiecest = 1;
-                }
+                  ? selectedStone.StoneMainPieces
+                  : 1;
+
+              if (StonePiecest == 0) {
+                StonePiecest = 1;
+              }
 
 
               return {
@@ -2922,7 +2948,7 @@ setFilteredsku(allSku);
                 StoneWeight: selectedStone.StoneWeight
                   ? selectedStone.StoneWeight
                   : selectedStone.StoneMainWeight,
-                  StonePieces: StonePiecest,
+                StonePieces: StonePiecest,
                 StoneRate: selectedStone.StoneRate
                   ? selectedStone.StoneRate
                   : selectedStone.StoneMainRate,
@@ -2936,9 +2962,9 @@ setFilteredsku(allSku);
             }
           }
 
-          const rate = parseFloat(stone.StoneWeight)*
-          parseFloat(stone.StoneRate);
-      
+          const rate = parseFloat(stone.StoneWeight) *
+            parseFloat(stone.StoneRate);
+
           stone.StoneAmount = rate;
 
           // Update the stone with the new value for the given field
@@ -2975,7 +3001,7 @@ setFilteredsku(allSku);
           ) || 0
         ).toString();
 
-       
+
 
 
         return {
@@ -3379,19 +3405,19 @@ setFilteredsku(allSku);
                                   list="allStonesList"
                                 />
                                 <datalist id="allStonesList">
-  {Array.isArray(allStonesList) && allStonesList.length > 0 ? (
-    allStonesList.map((stone) => (
-      <option
-        key={stone.StoneMainName || stone.StoneName} // Using a fallback for key
-        value={stone.StoneMainName || stone.StoneName} // Using a fallback for value
-      >
-        {stone.StoneMainName || stone.StoneName} // Using a fallback for display
-      </option>
-    ))
-  ) : (
-    <option value="" disabled>No stones available</option> // Handle empty state
-  )}
-</datalist>
+                                  {Array.isArray(allStonesList) && allStonesList.length > 0 ? (
+                                    allStonesList.map((stone) => (
+                                      <option
+                                        key={stone.StoneMainName || stone.StoneName} // Using a fallback for key
+                                        value={stone.StoneMainName || stone.StoneName} // Using a fallback for value
+                                      >
+                                        {stone.StoneMainName || stone.StoneName} // Using a fallback for display
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>No stones available</option> // Handle empty state
+                                  )}
+                                </datalist>
                                 {/* <datalist id="allStonesList">
                                   {allStonesList.map((stone) => (
                                     <option
@@ -4071,7 +4097,7 @@ setFilteredsku(allSku);
                                       placeholder="Enter SKU"
                                       value={selectedSkuName}
                                       onInput={handleSkuInputChange}  // Partial match on input
-      onBlur={handleSkuSelect}   
+                                      onBlur={handleSkuSelect}
                                       list="skuList"
                                       autoComplete="off"
                                     />
