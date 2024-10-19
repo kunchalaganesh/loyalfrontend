@@ -966,9 +966,9 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     sr: pageWidth - 200,
     productDetails: pageWidth - 185,
     // pcs: pageWidth-150,
-    hsnCode: pageWidth - 150,
-    purity: pageWidth - 120,
-    price: pageWidth - 90,
+    hsnCode: pageWidth - 125,
+    purity: pageWidth - 100,
+    // price: pageWidth - 90,
     qty: pageWidth - 60,
     amount: pageWidth - 40,
   };
@@ -1003,7 +1003,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     doc.text("Purity", columnPositions.purity + 2, currentY);
     // doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
     // doc.text('Net Wt', columnPositions.netWt+2, currentY);
-    doc.text("Metal Amt", columnPositions.price + 2, currentY);
+    // doc.text("Metal Amt", columnPositions.price + 2, currentY);
     doc.text("Qty", columnPositions.qty + 2, currentY);
     // doc.text('Rate / gm', columnPositions.rate+2, currentY);
     doc.text("Total Amt", columnPositions.amount + 2, currentY);
@@ -1152,9 +1152,9 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
       // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
       doc.text("7113", columnPositions.hsnCode + 2, currentY);
       doc.text(item.Purity || "NA", columnPositions.purity + 2, currentY);
-      doc.text( "7500", columnPositions.price + 2, currentY);
-      doc.text("1", columnPositions.qty + 2, currentY);
-      doc.text(item.TotalAmount || "7500", columnPositions.amount + 2, currentY);
+      // doc.text( item.Price || "NA", columnPositions.price + 2, currentY);
+      doc.text(item.Quantity || "NA", columnPositions.qty + 2, currentY);
+      doc.text(item.Price || "NA", columnPositions.amount + 2, currentY);
 
       // Update currentY based on the row count
       currentY += rowCount * rowHeight; // Adjust currentY based on the number of lines
@@ -1183,7 +1183,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
 
   try {
     // Get the Base64 string of the image
-    const imageBase64 = await getImageBase64('/images/pdfimages/6.jpg'); // Adjust path accordingly
+    const imageBase64 = await getImageBase64('/images/pdfimages/7.png'); // Adjust path accordingly
 
     // Add the image to the PDF at specified coordinates (x, y, width, height)
     const x = (pageWidth - 40) / 2;
