@@ -1537,6 +1537,7 @@ setFilteredsku(allSku);
     });
   };
 
+
   // console.log("allItemCodesArray outside useEffect", allItemCodesArray);
   const handleInputChange = (e, index, property) => {
     const { value } = e.target;
@@ -1545,18 +1546,21 @@ setFilteredsku(allSku);
 
     const product = updatedProducts[index];
 
-    // Parse properties to numbers or set them as 0 if the value is empty or invalid
-    const grosswt =
-      stockType === "Labelled"
-        ? parseFloat(product.GrossWt) || 0
-        : stockType === "Unlabelled"
-          ? parseFloat(product.TotalGrossWt) || 0
-          : 0;
-    const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
-    const netWt = parseFloat(product.NetWt) || 0;
+   
 
     // Update the specific property in the product object
     let updatedProduct = { ...product, [property]: value };
+
+     // Parse properties to numbers or set them as 0 if the value is empty or invalid
+     const grosswt =
+     stockType === "Labelled"
+       ? parseFloat(product.GrossWt) || 0
+       : stockType === "Unlabelled"
+         ? parseFloat(product.TotalGrossWt) || 0
+         : 0;
+   const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+   const netWt = parseFloat(product.NetWt) || 0;
+   const clipWeight = parseFloat(product.ClipWeight) || 0;
 
     if (property === "RFIDCode") {
       // Convert the barcode number to uppercase before doing the comparison
@@ -1604,7 +1608,7 @@ setFilteredsku(allSku);
       // }
     }
 
-    // If 'grosswt' is changed, calculate 'netWt'
+    // // If 'grosswt' is changed, calculate 'netWt'
     // if (property === "GrossWt" && !isNaN(value)) {
     //   updatedProduct.NetWt =
     //     parseFloat(value) -
@@ -1621,7 +1625,7 @@ setFilteredsku(allSku);
 
     // Parse updated properties to numbers, defaulting to 0 if empty or invalid
   // const grosswt = parseFloat(product.GrossWt) || 0;
-  const clipWeight = parseFloat(product.ClipWeight) || 0;
+ 
   const totalFilteredGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
     return acc + parseFloat(item.GrossWt || 0);
   }, 0);
@@ -1632,9 +1636,10 @@ setFilteredsku(allSku);
   if (property === "GrossWt" && !isNaN(value)) {
     if(value>totalFilteredGrossWt){
       // alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
-      product.GrossWt = 0;
+      updatedProduct.GrossWt = 0;
+      updatedProduct.NetWt = 0;
     }else{
-    product.NetWt =
+      updatedProduct.NetWt =
       parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
         ? (
             parseFloat(value) -
@@ -1645,35 +1650,37 @@ setFilteredsku(allSku);
     }
   }
 
-  // Update 'TotalStoneWeight' -> recalculate 'NetWt'
-  if (property === "TotalStoneWeight" && !isNaN(value)) {
-    product.NetWt =
-      grosswt > parseFloat(value)
-        ? (grosswt - parseFloat(value)).toFixed(3)
-        : 0;
-  }
+  // // Update 'TotalStoneWeight' -> recalculate 'NetWt'
+  // if (property === "TotalStoneWeight" && !isNaN(value)) {
+  //   updatedProduct.NetWt =
+  //     grosswt > parseFloat(value)
+  //       ? (grosswt - parseFloat(value)).toFixed(3)
+  //       : 0;
+  // }
+  // // console.log('propertyvalue ',property, '  ', value , updatedProduct.)
 
-  // Update 'ClipWeight' -> recalculate 'NetWt'
-  if (property === "ClipWeight" && !isNaN(value)) {
-    if (grosswt > clipWeight) {
-      // If clip weight is valid, recalculate net weight
-      product.NetWt = (grosswt - (clipWeight + stoneWeight)).toFixed(3);
-    } else {
-      // If clip weight exceeds gross weight, reset values
-      product.GrossWt = (clipWeight + stoneWeight).toFixed(3);
-      product.NetWt = 0;
-    }
-  }
+  // // Update 'ClipWeight' -> recalculate 'NetWt'
+  // if (property === "ClipWeight" && !isNaN(value)) {
+  //   if (grosswt > clipWeight) {
+  //     // If clip weight is valid, recalculate net weight
+  //     updatedProduct.NetWt = (grosswt - (clipWeight + stoneWeight)).toFixed(3);
+  //   } else {
+  //     // If clip weight exceeds gross weight, reset values
+  //     // updatedProduct.GrossWt = (clipWeight + stoneWeight).toFixed(3);
+  //     updatedProduct.NetWt = 0;
+  //     updatedProduct.ClipWeight = 0
+  //   }
+  // }
 
-  // Update 'NetWt' -> recalculate 'GrossWt' and 'TotalStoneWeight'
-  if (property === "NetWt" && !isNaN(value)) {
-    product.GrossWt = (
-      parseFloat(value) + parseFloat(clipWeight) + stoneWeight
-    ).toFixed(3);
-    product.TotalStoneWeight = (
-      grosswt - parseFloat(value) - parseFloat(clipWeight)
-    ).toFixed(3);
-  }
+  // // Update 'NetWt' -> recalculate 'GrossWt' and 'TotalStoneWeight'
+  // if (property === "NetWt" && !isNaN(value)) {
+  //   updatedProduct.GrossWt = (
+  //     parseFloat(value) + parseFloat(clipWeight) + stoneWeight
+  //   ).toFixed(3);
+  //   updatedProduct.TotalStoneWeight = (
+  //     grosswt - parseFloat(value) - parseFloat(clipWeight)
+  //   ).toFixed(3);
+  // }
 
 
 
@@ -1690,50 +1697,79 @@ setFilteredsku(allSku);
           : (updatedProduct.TotalGrossWt = value);
     }
 
-    // // If 'stoneWeight' is changed, calculate 'netWt'
-    // if (property === "TotalStoneWeight" && !isNaN(value)) {
-    //   updatedProduct.NetWt =
-    //     parseFloat(updatedProduct.GrossWt) > value
-    //       ? (updatedProduct.GrossWt - parseFloat(value)).toFixed(3)
-    //       : ((updatedProduct.GrossWt = value),
-    //         (updatedProduct.TotalStoneWeight = value),
-    //         (updatedProduct.NetWt = 0));
-    //   // updatedProduct.stoneWeight = value
-    //   // updatedProduct.TotalStoneWeight= value
-    // }
-    // if (property === "ClipWeight" && !isNaN(value)) {
-    //   const clipWeight = parseFloat(value);
-    //   if (grosswt > clipWeight) {
-    //     // If gross weight is greater than the clip weight, update net weight
-    //     updatedProduct.NetWt = parseFloat(
-    //       grosswt - (stoneWeight + clipWeight)
-    //     ).toFixed(3);
-    //     updatedProduct.ClipWeight = clipWeight;
-    //     updatedProduct.ClipQuantity = "1";
-    //   } else {
-    //     // If clip weight is greater or equal to the gross weight, adjust accordingly
-    //     updatedProduct.GrossWt = parseFloat(clipWeight + stoneWeight).toFixed(
-    //       3
-    //     );
-    //     updatedProduct.ClipWeight = clipWeight;
-    //     updatedProduct.ClipQuantity = "1";
-    //     updatedProduct.NetWt = 0; // Set net weight to 0 if conditions dictate
-    //   }
-    // }
+    // If 'stoneWeight' is changed, calculate 'netWt'
+    if (property === "TotalStoneWeight" && !isNaN(value)) {
+      const clipWeight1 = parseFloat(value);
+      if (grosswt > clipWeight1) {
+        updatedProduct.NetWt = updatedProduct.GrossWt - parseFloat(value) -updatedProduct.ClipWeight
+        updatedProduct.TotalStoneWeight = value 
 
-    // // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
-    // if (property === "NetWt" && !isNaN(value)) {
-    //   updatedProduct.GrossWt = (
-    //     parseFloat(value) +
-    //     parseFloat(updatedProduct.ClipWeight) +
-    //     stoneWeight
-    //   ).toFixed(3);
-    //   updatedProduct.TotalStoneWeight = (
-    //     grosswt -
-    //     parseFloat(value) -
-    //     parseFloat(updatedProduct.ClipWeight)
-    //   ).toFixed(3);
-    // }
+        // parseFloat(updatedProduct.GrossWt) > value
+        //   ? ((updatedProduct.GrossWt - parseFloat(value)-value).toFixed(3),updatedProduct.TotalStoneWeight= value)
+        //   : (
+        //     // (updatedProduct.stoneWeight = 0)
+        //     updatedProduct.NetWt = (updatedProduct.GrossWt - updatedProduct.ClipWeight).toFixed(3),  // Correct calculation for NetWt
+        //         updatedProduct.TotalStoneWeight = 0  // Reset TotalStoneWeight to 0
+            // (updatedProduct.GrossWt = value),
+            // (updatedProduct.TotalStoneWeight = value),
+            // (updatedProduct.NetWt = 0)
+          // );
+      }else{
+        updatedProduct.NetWt = updatedProduct.GrossWt - 0 -updatedProduct.ClipWeight
+        updatedProduct.TotalStoneWeight = 0 
+        // updatedProduct.NetWt =
+        // parseFloat(updatedProduct.GrossWt) > value
+        //   ? ((updatedProduct.GrossWt - parseFloat(value)-value).toFixed(3),updatedProduct.TotalStoneWeight= value)
+        //   : (
+        //     // (updatedProduct.stoneWeight = 0)
+        //     updatedProduct.NetWt = (updatedProduct.GrossWt - updatedProduct.ClipWeight).toFixed(3),  // Correct calculation for NetWt
+        //         updatedProduct.TotalStoneWeight = 0  // Reset TotalStoneWeight to 0
+        //     // (updatedProduct.GrossWt = value),
+        //     // (updatedProduct.TotalStoneWeight = value),
+        //     // (updatedProduct.NetWt = 0)
+        //   );
+      }
+      
+      
+      
+      // updatedProduct.stoneWeight = value
+      // updatedProduct.TotalStoneWeight= value
+    }
+    if (property === "ClipWeight" && !isNaN(value)) {
+      const clipWeight1 = parseFloat(value);
+      if (grosswt > clipWeight1) {
+        // If gross weight is greater than the clip weight, update net weight
+        updatedProduct.NetWt = parseFloat(
+          grosswt - (stoneWeight + clipWeight1)
+        ).toFixed(3);
+        updatedProduct.ClipWeight = clipWeight1;
+        updatedProduct.ClipQuantity = "1";
+      } else {
+        // If clip weight is greater or equal to the gross weight, adjust accordingly
+        // updatedProduct.GrossWt = parseFloat(clipWeight + stoneWeight).toFixed(
+        //   3
+        // );
+        updatedProduct.ClipWeight = 0;// clipWeight;
+        updatedProduct.ClipQuantity = "1";
+        updatedProduct.NetWt = parseFloat(
+          grosswt - (stoneWeight + 0)
+        ).toFixed(3);//0; // Set net weight to 0 if conditions dictate
+      }
+    }
+
+    // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
+    if (property === "NetWt" && !isNaN(value)) {
+      updatedProduct.GrossWt = (
+        parseFloat(value) +
+        parseFloat(updatedProduct.ClipWeight) +
+        stoneWeight
+      ).toFixed(3);
+      updatedProduct.TotalStoneWeight = (
+        grosswt -
+        parseFloat(value) -
+        parseFloat(updatedProduct.ClipWeight)
+      ).toFixed(3);
+    }
 
     if (property === "TotalNetWt" && !isNaN(value)) {
       updatedProduct.TotalGrossWt = (
@@ -1764,9 +1800,249 @@ setFilteredsku(allSku);
     return; // Stop further execution
   }
 
+  console.log('checking updateproducts ',updatedProducts );
+
     
     setAddedProducts(updatedProducts);
   };
+
+  // // console.log("allItemCodesArray outside useEffect", allItemCodesArray);
+  // const handleInputChange = (e, index, property) => {
+  //   const { value } = e.target;
+  //   // Copy the addedProducts array to avoid direct state mutation
+  //   const updatedProducts = [...addedProducts];
+
+  //   const product = updatedProducts[index];
+
+   
+
+  //   // Update the specific property in the product object
+  //   let updatedProduct = { ...product, [property]: value };
+
+  //    // Parse properties to numbers or set them as 0 if the value is empty or invalid
+  //    const grosswt =
+  //    stockType === "Labelled"
+  //      ? parseFloat(product.GrossWt) || 0
+  //      : stockType === "Unlabelled"
+  //        ? parseFloat(product.TotalGrossWt) || 0
+  //        : 0;
+  //  const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+  //  const netWt = parseFloat(product.NetWt) || 0;
+
+  //   if (property === "RFIDCode") {
+  //     // Convert the barcode number to uppercase before doing the comparison
+  //     const barcodeValue = value.toUpperCase();
+  //     updatedProduct.RFIDCode = barcodeValue; // Set the barcodeNumber property to uppercase
+
+  //     //     // Check for a match in the allLabelledStockData array
+  //     // const matchingLabelledProduct = allLabelledStockData.find(
+  //     //   (item) => item.RFIDCode === barcodeValue
+  //     // );
+
+  //     const matchingLabelledProduct = allLabelledStockData.find((item) => {
+  //       return item.RFIDCode === barcodeValue && item.Status !== "Sold";
+  //     });
+
+  //     if (matchingLabelledProduct) {
+  //       // Show an alert if a match is found
+  //       alert(`Barcode ${barcodeValue} is already in use for another product.`);
+  //       updatedProduct.RFIDCode = ""; // Clear the RFIDCode field
+  //     } else {
+  //       // If no match is found, proceed with the normal logic
+  //       const matchingProduct = rifdData.find(
+  //         (item) => item.BarcodeNumber === barcodeValue
+  //       );
+
+  //       if (matchingProduct) {
+  //         updatedProduct.TIDNumber = matchingProduct.TidValue;
+  //       } else {
+  //         // If no matching product found, set TIDNumber to null
+  //         updatedProduct.TIDNumber = null;
+  //       }
+  //     }
+
+  //     // // Find a matching product in the rifdData array
+  //     // const matchingProduct = rifdData.find(
+  //     //   (item) => item.BarcodeNumber === barcodeValue
+  //     // );
+
+  //     // if (matchingProduct) {
+  //     //   updatedProduct.TIDNumber = matchingProduct.TidValue;
+  //     // } else {
+  //     //   // If no matching product found, set 'tid' to null or some default value
+  //     //   updatedProduct.TIDNumber = null; // or any default value you want
+  //     //   // setBarCodeAlert(true);
+  //     // }
+  //   }
+
+  //   // If 'grosswt' is changed, calculate 'netWt'
+  //   if (property === "GrossWt" && !isNaN(value)) {
+  //     updatedProduct.NetWt =
+  //       parseFloat(value) -
+  //         parseFloat(updatedProduct.ClipWeight) -
+  //         parseFloat(updatedProduct.TotalStoneWeight) >
+  //         0
+  //         ? (
+  //           parseFloat(value) -
+  //           parseFloat(updatedProduct.ClipWeight) -
+  //           parseFloat(updatedProduct.TotalStoneWeight)
+  //         ).toFixed(3)
+  //         : (updatedProduct.GrossWt = value);
+  //   }
+
+  //   // Parse updated properties to numbers, defaulting to 0 if empty or invalid
+  // // const grosswt = parseFloat(product.GrossWt) || 0;
+  // // const clipWeight = parseFloat(product.ClipWeight) || 0;
+  // // const totalFilteredGrossWt = allFilteredPurchaseItems.reduce((acc, item) => {
+  // //   return acc + parseFloat(item.GrossWt || 0);
+  // // }, 0);
+  // // // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+  // // // const netWt = parseFloat(product.NetWt) || 0;
+
+  // // // Update 'GrossWt' -> recalculate 'NetWt'
+  // // if (property === "GrossWt" && !isNaN(value)) {
+  // //   if(value>totalFilteredGrossWt){
+  // //     // alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+  // //     updatedProduct.GrossWt = 0;
+  // //     updatedProduct.NetWt = 0;
+  // //   }else{
+  // //     updatedProduct.NetWt =
+  // //     parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
+  // //       ? (
+  // //           parseFloat(value) -
+  // //           parseFloat(clipWeight) -
+  // //           parseFloat(stoneWeight)
+  // //         ).toFixed(3)
+  // //       : 0;
+  // //   }
+  // // }
+
+  // // // Update 'TotalStoneWeight' -> recalculate 'NetWt'
+  // // if (property === "TotalStoneWeight" && !isNaN(value)) {
+  // //   updatedProduct.NetWt =
+  // //     grosswt > parseFloat(value)
+  // //       ? (grosswt - parseFloat(value)).toFixed(3)
+  // //       : 0;
+  // // }
+  // // // console.log('propertyvalue ',property, '  ', value , updatedProduct.)
+
+  // // // Update 'ClipWeight' -> recalculate 'NetWt'
+  // // if (property === "ClipWeight" && !isNaN(value)) {
+  // //   if (grosswt > clipWeight) {
+  // //     // If clip weight is valid, recalculate net weight
+  // //     updatedProduct.NetWt = (grosswt - (clipWeight + stoneWeight)).toFixed(3);
+  // //   } else {
+  // //     // If clip weight exceeds gross weight, reset values
+  // //     // updatedProduct.GrossWt = (clipWeight + stoneWeight).toFixed(3);
+  // //     updatedProduct.NetWt = 0;
+  // //     updatedProduct.ClipWeight = 0
+  // //   }
+  // // }
+
+  // // // Update 'NetWt' -> recalculate 'GrossWt' and 'TotalStoneWeight'
+  // // if (property === "NetWt" && !isNaN(value)) {
+  // //   updatedProduct.GrossWt = (
+  // //     parseFloat(value) + parseFloat(clipWeight) + stoneWeight
+  // //   ).toFixed(3);
+  // //   updatedProduct.TotalStoneWeight = (
+  // //     grosswt - parseFloat(value) - parseFloat(clipWeight)
+  // //   ).toFixed(3);
+  // // }
+
+
+
+  //   if (property === "TotalGrossWt" && !isNaN(value)) {
+
+      
+  //     updatedProduct.TotalNetWt =
+  //       parseFloat(value) - parseFloat(updatedProduct.TotalStoneWeight) > 0
+  //         ? (
+  //           parseFloat(value) -
+  //           parseFloat(updatedProduct.ClipWeight) -
+  //           parseFloat(updatedProduct.TotalStoneWeight)
+  //         ).toFixed(3)
+  //         : (updatedProduct.TotalGrossWt = value);
+  //   }
+
+  //   // If 'stoneWeight' is changed, calculate 'netWt'
+  //   if (property === "TotalStoneWeight" && !isNaN(value)) {
+  //     updatedProduct.NetWt =
+  //       parseFloat(updatedProduct.GrossWt) > value
+  //         ? (updatedProduct.GrossWt - parseFloat(value)).toFixed(3)
+  //         : ((updatedProduct.GrossWt = value),
+  //           (updatedProduct.TotalStoneWeight = value),
+  //           (updatedProduct.NetWt = 0));
+  //     // updatedProduct.stoneWeight = value
+  //     // updatedProduct.TotalStoneWeight= value
+  //   }
+  //   if (property === "ClipWeight" && !isNaN(value)) {
+  //     const clipWeight = parseFloat(value);
+  //     if (grosswt > clipWeight) {
+  //       // If gross weight is greater than the clip weight, update net weight
+  //       updatedProduct.NetWt = parseFloat(
+  //         grosswt - (stoneWeight + clipWeight)
+  //       ).toFixed(3);
+  //       updatedProduct.ClipWeight = clipWeight;
+  //       updatedProduct.ClipQuantity = "1";
+  //     } else {
+  //       // If clip weight is greater or equal to the gross weight, adjust accordingly
+  //       updatedProduct.GrossWt = parseFloat(clipWeight + stoneWeight).toFixed(
+  //         3
+  //       );
+  //       updatedProduct.ClipWeight = clipWeight;
+  //       updatedProduct.ClipQuantity = "1";
+  //       updatedProduct.NetWt = 0; // Set net weight to 0 if conditions dictate
+  //     }
+  //   }
+
+  //   // If 'netWt' is changed, calculate 'grosswt' and 'stoneWeight'
+  //   if (property === "NetWt" && !isNaN(value)) {
+  //     updatedProduct.GrossWt = (
+  //       parseFloat(value) +
+  //       parseFloat(updatedProduct.ClipWeight) +
+  //       stoneWeight
+  //     ).toFixed(3);
+  //     updatedProduct.TotalStoneWeight = (
+  //       grosswt -
+  //       parseFloat(value) -
+  //       parseFloat(updatedProduct.ClipWeight)
+  //     ).toFixed(3);
+  //   }
+
+  //   if (property === "TotalNetWt" && !isNaN(value)) {
+  //     updatedProduct.TotalGrossWt = (
+  //       parseFloat(value) +
+  //       stoneWeight +
+  //       parseFloat(updatedProduct.ClipWeight)
+  //     ).toFixed(3);
+  //     updatedProduct.TotalStoneWeight = (grosswt - parseFloat(value)).toFixed(
+  //       3
+  //     );
+  //   }
+  //   if (property === "Pieces" && value > 1 && stockType === "Labelled") {
+  //     setPiecesBox(true);
+  //     setProductPiecesEditId(index);
+  //     handlePiecesChange(value, index);
+  //   }
+
+  //    // Second case: check if total GrossWt does not exceed filtered GrossWt
+ 
+  //    updatedProducts[index] = updatedProduct;
+
+  // const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
+  //   return acc + parseFloat(item.GrossWt || 0);
+  // }, 0);
+
+  // if (totalCurrentGrossWt > totalFilteredGrossWt) {
+  //   alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+  //   return; // Stop further execution
+  // }
+
+  // console.log('checking updateproducts ',updatedProducts );
+
+    
+  //   setAddedProducts(updatedProducts);
+  // };
 
   // ... (rest of the code)
 
@@ -6363,6 +6639,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.GrossWt}
                                                 value={x.GrossWt}
                                                 onChange={(e) =>
@@ -6378,6 +6655,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.TotalGrossWt}
                                                 value={x.TotalGrossWt}
                                                 onChange={(e) =>
@@ -6394,6 +6672,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.ClipWeight}
                                                 value={x.ClipWeight}
                                                 onChange={(e) =>
@@ -6498,6 +6777,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.NetWt}
                                                 value={x.NetWt}
                                                 readOnly
@@ -6507,6 +6787,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.TotalNetWt}
                                                 value={x.TotalNetWt}
                                                 readOnly
@@ -6517,6 +6798,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.MakingPerGram}
                                                 value={x.MakingPerGram}
                                                 onChange={(e) =>
@@ -6533,6 +6815,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.MakingPercentage}
                                                 value={x.MakingPercentage}
                                                 onChange={(e) =>
@@ -6549,6 +6832,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 placeholder={x.MakingFixedAmt}
                                                 value={x.MakingFixedAmt}
                                                 onChange={(e) =>
@@ -6565,6 +6849,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 value={x.Quantity}
                                                 onChange={(e) =>
                                                   handleInputChange(
@@ -6580,6 +6865,7 @@ setFilteredsku(allSku);
                                             <td>
                                               <input
                                                 type="number"
+                                                onWheel={(e) => e.target.blur()}
                                                 value={x.Pieces}
                                                 onChange={(e) =>
                                                   handleInputChange(

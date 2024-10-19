@@ -11,7 +11,7 @@ export const generateBillPDF = (
 
   // generateinvoicepdf3(invoiceItems, csData, mainitem);
 
-
+  // generateinvoicepdf6(invoiceItems, csData, mainitem);
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
@@ -1053,11 +1053,11 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     );
 
     // IGST (3% assumed)
-    doc.text(
-      `IGST @ 3% : ${formatAmount(gstAmount)}`,
-      fotertotalx,
-      fotertotaly + 25
-    );
+    // doc.text(
+    //   `IGST @ 3% : ${formatAmount(gstAmount)}`,
+    //   fotertotalx,
+    //   fotertotaly + 25
+    // );
 
     // Total Invoice Amount
     doc.text(
@@ -1102,16 +1102,16 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
       fotertotaly + 60
     );
 
-    doc.text("Authorised Signatory", fotertotalx, fotertotaly + 86);
+    doc.text("Authorised Signature", fotertotalx, fotertotaly + 86);
     doc.text("Customer Signatory", customerx, fotertotaly + 86);
 
     doc.line(customerx, fotertotaly + 90, fotertotalx + 60, fotertotaly + 90);
 
-    const ctext = "1st Floor, 1/1, 2nd cross Vasanthappa Thota Banglore-560032"
+    const ctext = "1st Floor, 1/1, 2nd cross Vasanthappa Thota Ganganagar Banglore-560032"
     const splitText1 = doc.splitTextToSize(ctext, 80); // Adjust 180 to the width you want
     doc.text(splitText1, customerx, fotertotaly + 95);
-    const stext = "Contact Us : 080 23333409/080 91515409"
-    const s1text = "Email: jewls@kevali.in"
+    const stext = "Contact Us : 080 23333409/080 41515409"
+    const s1text = "Email: jewels@kevali.in"
     const s2text = "Instagram: kevali.in"
     const splitText2 = doc.splitTextToSize(stext, 80); // Adjust 180 to the width you want
     doc.text(stext, fotertotalx, fotertotaly + 95);
@@ -1152,9 +1152,9 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
       // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
       doc.text("7113", columnPositions.hsnCode + 2, currentY);
       doc.text(item.Purity || "NA", columnPositions.purity + 2, currentY);
-      doc.text(item.MetalRate || "0", columnPositions.price + 2, currentY);
+      doc.text( "7500", columnPositions.price + 2, currentY);
       doc.text("1", columnPositions.qty + 2, currentY);
-      doc.text(item.TotalAmount || "0", columnPositions.amount + 2, currentY);
+      doc.text(item.TotalAmount || "7500", columnPositions.amount + 2, currentY);
 
       // Update currentY based on the row count
       currentY += rowCount * rowHeight; // Adjust currentY based on the number of lines
