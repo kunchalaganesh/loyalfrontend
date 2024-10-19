@@ -10,6 +10,7 @@ export const GenerateLabel = async (products, labelFormat) => {
   // generatelabel11(products);
 
 
+  // generatelabel9(products);
 
   // labelFormat = 0;
  
@@ -1481,7 +1482,7 @@ const generatelabel9 = async (products) => {
     orientation: "landscape",
   });
 
-  const fontSize = 5.5;
+  const fontSize = 6.5;
   const imageHeight = 7;
   const imageWidth = 7;
 
@@ -1515,10 +1516,10 @@ const generatelabel9 = async (products) => {
     if (MRP == 0 || MRP === "") {
       // doc.text(`${itemCode}`, 2, 3);
 
-      doc.text(`${ProductName}`, 2, 3.7);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
-      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
-      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
+      doc.text(`${ProductName}`, 3.5, 3.6);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 3.5, 5.8);
+      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 3.5, 8);
+      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 3.5, 10.1);
      
       doc.text(`${ItemCode}`, 30,10);
       doc.text(`${Description}`, 30,12);
@@ -1527,11 +1528,12 @@ const generatelabel9 = async (products) => {
       
       
     } else {
-      doc.text(`${ProductName}`, 2, 3.7);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
-      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
-      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
-     
+      doc.text(`${ProductName}`, 3.5, 3.6);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 3.5, 5.8);
+      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 3.5, 8);
+      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 3.5, 10.1);
+
+
       doc.text(`${ItemCode}`, 30,10);
       doc.text(`${Description}`, 30,12);
       doc.text(`${TotalStoneAmount}`, 38,5);

@@ -1042,7 +1042,7 @@ export default function AdminAddBulkStockNew() {
     // let updatedStonesList = [...allStonesList];
 
 
-    if (lotNumber && lotNumber !== "0" || selectedSkuName && selectedSkuName.trim() !== "") {
+    if ((lotNumber && lotNumber !== "0") || (selectedSkuName && selectedSkuName.trim() !== "")) {
     if(unlabeledqty <quantity ){
       alert("Error: Quantity exceeds the available limits.");
         return; // Stop the process
@@ -1649,32 +1649,51 @@ export default function AdminAddBulkStockNew() {
     // Parse updated properties to numbers, defaulting to 0 if empty or invalid
     // const grosswt = parseFloat(product.GrossWt) || 0;
 
-    const totalFilteredGrossWt = unlabeledgold;
-    // allFilteredPurchaseItems.reduce((acc, item) => {
-    //   return acc + parseFloat(item.GrossWt || 0);
-    // }, 0);
-
-
-    // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
-    // const netWt = parseFloat(product.NetWt) || 0;
-
-    // Update 'GrossWt' -> recalculate 'NetWt'
-    if (property === "GrossWt" && !isNaN(value)) {
-      if (value > totalFilteredGrossWt) {
-        alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
-        updatedProduct.GrossWt = 0;
-        updatedProduct.NetWt = 0;
-      } else {
-        updatedProduct.NetWt =
-          parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
-            ? (
-              parseFloat(value) -
-              parseFloat(clipWeight) -
-              parseFloat(stoneWeight)
-            ).toFixed(3)
-            : 0;
+    if (lotNumber && lotNumber !== "0" || selectedSkuName && selectedSkuName.trim() !== "") {
+      const totalFilteredGrossWt = unlabeledgold;
+      // allFilteredPurchaseItems.reduce((acc, item) => {
+      //   return acc + parseFloat(item.GrossWt || 0);
+      // }, 0);
+  
+  
+      // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
+      // const netWt = parseFloat(product.NetWt) || 0;
+  
+      // Update 'GrossWt' -> recalculate 'NetWt'
+      if (property === "GrossWt" && !isNaN(value)) {
+        if (value > totalFilteredGrossWt) {
+          alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+          updatedProduct.GrossWt = 0;
+          updatedProduct.NetWt = 0;
+        } else {
+          updatedProduct.NetWt =
+            parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
+              ? (
+                parseFloat(value) -
+                parseFloat(clipWeight) -
+                parseFloat(stoneWeight)
+              ).toFixed(3)
+              : 0;
+        }
       }
+    
+    }else{
+      if (property === "GrossWt" && !isNaN(value)) {
+        
+          updatedProduct.NetWt =
+            parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
+              ? (
+                parseFloat(value) -
+                parseFloat(clipWeight) -
+                parseFloat(stoneWeight)
+              ).toFixed(3)
+              : 0;
+        
+      }
+
     }
+
+    
 
     // // Update 'TotalStoneWeight' -> recalculate 'NetWt'
     // if (property === "TotalStoneWeight" && !isNaN(value)) {
@@ -1817,6 +1836,9 @@ export default function AdminAddBulkStockNew() {
 
     updatedProducts[index] = updatedProduct;
 
+
+    if (lotNumber && lotNumber !== "0" || selectedSkuName && selectedSkuName.trim() !== "") {
+
     const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
       return acc + parseFloat(item.GrossWt || 0);
     }, 0);
@@ -1825,6 +1847,7 @@ export default function AdminAddBulkStockNew() {
       alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
       return; // Stop further execution
     }
+  }
 
     console.log('checking updateproducts ', updatedProducts);
 
