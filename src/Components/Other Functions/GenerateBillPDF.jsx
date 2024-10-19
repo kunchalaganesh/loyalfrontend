@@ -1079,7 +1079,7 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     doc.text(`Balance Amount : ${balanceText}`, fotertotalx, fotertotaly + 40);
 
     const thankYouText = "Thank You For Your Business, God Bless Keep Buying";
-    doc.setFontSize(18);
+    doc.setFontSize(15);
 
     // Calculate the text width to center it
     const textWidth = doc.getTextWidth(thankYouText);
@@ -1114,9 +1114,9 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     const s1text = "Email: jewels@kevali.in"
     const s2text = "Instagram: kevali.in"
     const splitText2 = doc.splitTextToSize(stext, 80); // Adjust 180 to the width you want
-    doc.text(stext, fotertotalx, fotertotaly + 95);
-    doc.text(s1text, fotertotalx, fotertotaly + 100);
-    doc.text(s2text, fotertotalx, fotertotaly + 105);
+    doc.text(stext, fotertotalx-6, fotertotaly + 95);
+    doc.text(s1text, fotertotalx-6, fotertotaly + 100);
+    doc.text(s2text, fotertotalx-6, fotertotaly + 105);
 
 
   };
@@ -1186,23 +1186,36 @@ const generateinvoicepdf6 = async (items, customer, mainitem) => {
     const imageBase64 = await getImageBase64('/images/pdfimages/7.png'); // Adjust path accordingly
 
     // Add the image to the PDF at specified coordinates (x, y, width, height)
-    const x = (pageWidth - 40) / 2;
+    // const x = (pageWidth - 40) / 2;
 
-    doc.addImage(imageBase64, 'JPEG', x, 2, 40, 40);
+    // doc.addImage(imageBase64, 'JPEG', x, 2, 40, 40);
+    const imageWidth = 40;
+    const imageX = (pageWidth - imageWidth) / 2; // Center horizontally
+    const imageY = 5; // Adjust the y-coordinate as needed
+
+    // Add the image to the PDF
+    doc.addImage(imageBase64, 'JPEG', imageX, imageY, imageWidth, 40);
 
   } catch (error) {
     console.error("Error loading image:", error);
   }
 
+  const text = "TAX INVOICE";
+  const textWidth = doc.getTextWidth(text); // Get the width of the text
+  const textX = (pageWidth - textWidth) / 2; // Center horizontally
+  const textY = 50; // Adjust the Y position as needed (below the image)
+
+  // Add centered "TAX INVOICE" text
+  doc.text(text, textX, textY);
 
   // Start generating the PDF
-  doc.text("TAX INVOICE", 90, 49);
+  // doc.text("TAX INVOICE", 90, 49);
   doc.setFontSize(10);
-  doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey - 5);
-  doc.text("Invoice No :-", invoicex, invoicey);
-  doc.text(invoicenumber, invoicex + 20, invoicey);
+  doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey);
+  doc.text("Invoice No :-", invoicex, invoicey+5);
+  doc.text(invoicenumber, invoicex + 20, invoicey+5);
   // doc.text("Date :-", invoicex, invoicey + 5);
-  doc.text(`Date :- ${invoicedate}`, invoicex, invoicey + 5);
+  doc.text(`Date :- ${invoicedate}`, invoicex, invoicey + 9);
 
   doc.text("Invoice To", customerx, customery);
 
