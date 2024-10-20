@@ -459,7 +459,7 @@ export default function PurchaseFields({
                           value={purchaseProduct.Quantity}
                         />
                       </div>
-                      <div>
+                      {/* <div>
                         <th>MAKING %</th>
                         <input
                           name="MakingPercentage"
@@ -467,7 +467,7 @@ export default function PurchaseFields({
                           type="text"
                           value={purchaseProduct.MakingPercentage}
                         />
-                      </div>
+                      </div> */}
                       <div>
                         <th>MAKING/GM</th>
                         <input

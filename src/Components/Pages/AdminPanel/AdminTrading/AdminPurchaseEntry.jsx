@@ -3672,7 +3672,7 @@ export default function AdminPurchaseEntry() {
                                     value={purchaseProduct.MakingPercentage}
                                   />
                                 </div> */}
-                                    <div>
+                                    {/* <div>
                                       <th>FIXED WASTAGE WT</th>
                                       <input
                                         name="MakingFixedWastage"
@@ -3682,7 +3682,7 @@ export default function AdminPurchaseEntry() {
                                           purchaseProduct.MakingFixedWastage
                                         }
                                       />
-                                    </div>
+                                    </div> */}
                                     <div>
                                       <th>MAKING/GM</th>
                                       <input
