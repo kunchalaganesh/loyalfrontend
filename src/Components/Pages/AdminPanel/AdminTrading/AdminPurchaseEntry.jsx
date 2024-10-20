@@ -826,7 +826,7 @@ export default function AdminPurchaseEntry() {
     setCustomerName(value); // Update the name input value
 
     const selected = allCsData.find((customer) => {
-      const fullName = customer.FirmName;
+      const fullName = customer.VendorName//.FirmName;
       return fullName.toLowerCase() === value.toLowerCase();
     });
 
@@ -2412,6 +2412,8 @@ export default function AdminPurchaseEntry() {
     setSelectedSkuName('')
     setLabelName("");
     setSelectedProduct([]);
+    setPaymentAmount(0);
+    setPayments([]);
     setCategoryName("");
     setProductName("");
     setCollectionName("");
@@ -3895,7 +3897,7 @@ export default function AdminPurchaseEntry() {
                           />
                         </div> */}
                                 <div>
-                                  <th>ADD TO UNLABEL</th>
+                                  <th>ADD TO STOCK</th>
 
                                   <input
                                     style={{

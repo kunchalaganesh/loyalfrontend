@@ -673,7 +673,7 @@ export default function PurchaseFields({
                           />
                         </div> */}
                   <div>
-                    <th>ADD TO UNLABEL</th>
+                    <th>ADD TO STOCK</th>
 
                     <input
                       style={{

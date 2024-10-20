@@ -170,6 +170,8 @@ export default function AdminPurchaseEntryEditn() {
   const [allDiamondSizeWeightRate, setAllDiamondSizeWeightRate] = useState([]);
   const [iscal, setIscal] = useState(false);
   const [allcal, setAllcall] = useState(false);
+  const [isitemedit, setIsitemedit] = useState(true);
+
 
   const getTodaysDateInHTMLFormat = () => {
     const today = new Date();
@@ -515,9 +517,10 @@ export default function AdminPurchaseEntryEditn() {
         newItem.TotalGstAmount = tgst;
 
         newItem.FinalPrice = parseFloat(newItem.TotalItemAmt);
-        newItem.BalanceGold = newItem.FineGoldWt
-          ? parseFloat(newItem.FineGoldWt)
-          : 0;
+        newItem.BalanceGold = parseFloat(newItem.FineGoldWt || 0);
+        // newItem.FineGoldWt
+        //   ? parseFloat(newItem.FineGoldWt)
+        //   : 0;
         newItem.BalanceSilver = newItem.FineSilverWt
           ? parseFloat(newItem.FineSilverWt)
           : 0;
@@ -694,10 +697,10 @@ export default function AdminPurchaseEntryEditn() {
 
    //when sku selected
    useEffect(() => {
-    if (selectedSku) {
+    if(isitemedit){
+    if (selectedSku && selectedSkuName) {
       console.log(selectedSku, " sdjsdbn jkds jhd jkds ddjsd ");
       // setAllStonesList(selectedSku.SKUStoneMain);
-
       if (selectedSku.SKUStoneMain && Array.isArray(selectedSku.SKUStoneMain)) {
         const normalizedStones = selectedSku.SKUStoneMain.map(stone => ({
           StoneName: stone.StoneMainName,
@@ -909,10 +912,10 @@ export default function AdminPurchaseEntryEditn() {
       });
 
       setAllStonesList(allStonesmasterList);
-
-
     }
-  }, [selectedSku]);
+    setIscal(true);
+  }
+  }, [selectedSku, selectedSkuName, isitemedit]);
 
   console.log(allPurities, "allPurities");
 
@@ -1060,6 +1063,8 @@ export default function AdminPurchaseEntryEditn() {
       parseFloat(makingCharges3) +
       parseFloat(makingCharges4);
 
+      console.log('checkpoint1 ', totalMakingCharges)
+
     let updatedProduct = {};
     // Update selectedProduct with additional properties and calculated price
     if (
@@ -1185,9 +1190,11 @@ export default function AdminPurchaseEntryEditn() {
             );
 
       let totalGold = allSelectedProducts.reduce(
-        (total, product) => total + parseFloat(product.BalanceGold),
+        (total, product) => total + parseFloat(product.BalanceGold||0),
         0
       );
+
+      console.log('checkbalance 1  ',allSelectedProducts)
 
       let totalSilver = allSelectedProducts.reduce(
         (total, product) => total + parseFloat(product.BalanceSilver),
@@ -2230,14 +2237,17 @@ export default function AdminPurchaseEntryEditn() {
       });
 
       if (!response.ok) {
+        setIsitemedit(true)
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log("Success:", data);
+      setIsitemedit(true)
       if (payments.length > 0) {
         addAllSelectedPayments(rcvdId);
       } else {
+        setIsitemedit(true)
         resetAllFields();
       }
     } catch (error) {
@@ -2664,6 +2674,7 @@ export default function AdminPurchaseEntryEditn() {
       } else {
         // Generate bill PDF after setting the state
         // generateBillPDF(rcvdData.data, x);
+        setIsitemedit(true)
         resetAllFields();
         // addAllSelectedPayments()
 
@@ -2841,7 +2852,7 @@ export default function AdminPurchaseEntryEditn() {
           parseFloat(makingCharges2) +
           parseFloat(makingCharges3) +
           parseFloat(makingCharges4);
-
+          console.log('checkpoint2 ', totalMakingCharges)
         // console.log(netGoldRate, "netGoldRate");
         if (updatedProduct.MRP == 0 || updatedProduct.MRP == "") {
           updatedProduct.FinalPrice = parseFloat(grossTotalRate).toFixed(3);
@@ -2960,6 +2971,90 @@ export default function AdminPurchaseEntryEditn() {
     setPaymentAmount(0);
     setPayments([]);
     setSelectedSalesEmployee("");
+    setCategoryName("");
+    setProductName("");
+    setCollectionName("");
+    setPurityType("");
+    setProductQty("");
+    setSelectedProductPrice(0);
+    setAllStonesList(allStonesList1);
+    // scrollToCenter("adminInvoiceSelectLabelBox");
+    setPurchaseProduct({
+      StockKeepingUnit: "",
+      ItemCode: "",
+      MakingFixedAmt: 0,
+      MakingPerGram: 0,
+      MakingFixedWastage: 0,
+      MakingPercentage: 0,
+      MetalRate: 0,
+      FinePercent: 0,
+      WastagePercent: 0,
+      Quantity: 1,
+      PurityId: 0,
+      CategoryId: 0,
+      ProductId: 0,
+      FineGoldWt: 0,
+      FineSilverWt: 0,
+      FineOtherMetalWt: 0,
+      TotalStoneAmt: 0,
+      TotalItemAmt: 0,
+      FineWt: 0,
+      WastageWt: 0,
+      FineWastageWt: 0,
+      RDPurchaseId: 0,
+      CategoryName: "",
+      ProductName: "",
+      GrossWt: 0,
+      NetWt: 0,
+      StoneWt: 0,
+      Status: "Active",
+      CounterId: 0,
+      BranchId: 0,
+      CompanyId: 0,
+      FinePure: false,
+      ClientCode: 0,
+      AddToUnlabelled: false,
+      MetalId: 0,
+      MetalName: "",
+      StoneName: "",
+      StoneWeight: 0,
+      StonePieces: 0,
+      StoneRate: 0,
+      StoneAmount: 0,
+      HallmarkAmt: 0,
+      TagWeight: 0,
+      FindingWeight: 0,
+      LanyardWeight: 0,
+      ConvertAmount: convertAmount,
+      Stones: [],
+      Diamonds: [],
+      DiamondName: "",
+      DiamondWeight: 0,
+      DiamondRate: 0,
+      DiamondPieces: 0,
+      DiamondAmount: 0,
+      DiamondSize: "0",
+      DiamondPurchaseRate: "0",
+      DiamondSellRate: "0",
+      DiamondClarity: "",
+      DiamondColour: "",
+      DiamondShape: "",
+      DiamondCut: "",
+      DiamondSettingType: "",
+      DiamondCertificate: "",
+      DiamondPurchaseAmount: "0",
+      DiamondSellAmount: "0",
+      DiamondDescription: "",
+      Testing: "0",
+    });
+    setActive("Sell");
+    setSelectedProductType("");
+    setSelectedCategory("");
+    setSelectedProductType("");
+    console.log("here");
+    setConvertAmount(false);
+    setFinePure(false);
+    setIsitemedit(true)
     window.scrollTo(0, 0);
   };
 
@@ -3564,9 +3659,9 @@ export default function AdminPurchaseEntryEditn() {
       }
     }
   };
-  console.log(purchaseProduct, "purchaseProduct");
-  console.log(allSelectedProducts, "allSelectedProducts");
-  console.log(purchaseProduct, "purchaseProduct");
+  // console.log(purchaseProduct, "purchaseProduct");
+  // console.log(allSelectedProducts, "allSelectedProducts");
+  // console.log(purchaseProduct, "purchaseProduct");
   // console.log(metalPaymentOption, "metalPaymentOption");
   // console.log(metalPaymentOption, "metalPaymentOption");
   // console.log(purchaseProductList, "purchaseProductList");
@@ -4183,27 +4278,30 @@ export default function AdminPurchaseEntryEditn() {
             </div>
             {active === "Sell" ? (
               <AdminPurchseitemview
-                filteredPurities={filteredPurities}
-                productsLoading={productsLoading}
-                allSelectedProducts={allSelectedProducts}
-                labelName={labelName}
-                handleProductLabelChange={handleProductLabelChange}
-                selectedProduct={selectedProduct}
-                totalPayableAmount={totalPayableAmount}
-                openEditBox={openEditBox}
-                removePurchaseProductFromList={removePurchaseProductFromList}
-                setPurchaseProduct={setPurchaseProduct}
-                getShapeValue={getShapeValue}
-                getDiamondClarity={getDiamondClarity}
-                getDiamondColor={getDiamondColor}
-                getDiamondCut = {getDiamondCut}
-                getSettingType={getSettingType}
-                setActive={setActive}
-                setConvertAmount={setConvertAmount}
-                setFinePure={setFinePure}
-                setSelectedSkuName={setSelectedSkuName}
-                selectedSkuName={selectedSkuName}
-              />
+                    filteredPurities={filteredPurities}
+                    productsLoading={productsLoading}
+                    allSelectedProducts={allSelectedProducts}
+                    labelName={labelName}
+                    handleProductLabelChange={handleProductLabelChange}
+                    selectedProduct={selectedProduct}
+                    totalPayableAmount={totalPayableAmount}
+                    openEditBox={openEditBox}
+                    removePurchaseProductFromList={
+                      removePurchaseProductFromList
+                    }
+                    setPurchaseProduct={setPurchaseProduct}
+                    getShapeValue={getShapeValue}
+                    getDiamondClarity={getDiamondClarity}
+                    getDiamondColor={getDiamondColor}
+                    getDiamondCut={getDiamondCut}
+                    getSettingType={getSettingType}
+                    setActive={setActive}
+                    setConvertAmount={setConvertAmount}
+                    setFinePure={setFinePure}
+                    setSelectedSkuName={setSelectedSkuName}
+                    selectedSkuName={selectedSkuName}
+                    setIsitemedit= {setIsitemedit}
+                  />
             ) : active === "Purchase" ? (
               <PurchaseFields
                 selectedSkuName={selectedSkuName}
@@ -4278,7 +4376,12 @@ export default function AdminPurchaseEntryEditn() {
               metalPaymentOption={metalPaymentOption}
               setPaymentDescription={setPaymentDescription}
               setGstType={setGstType}
-              setAdvanceAmount={setAdvanceAmount}
+              handleMetalPaymentOption={handleMetalPaymentOption}
+setAdvanceAmount ={setAdvanceAmount}
+  setConvertAmount={setConvertAmount}
+  convertAmount={convertAmount}
+  setIscal={setIscal}
+  setDiscountAmount={setDiscountAmount}
               from={'purchaseentryedit'}
             />
 

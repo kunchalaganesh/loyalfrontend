@@ -54,10 +54,14 @@ export default function AdminPurchaseHead({
             value={customerName}
             onInput={handleNameInputChange}
             list="customerNamesList"
+            autoComplete="off"
           />
           <datalist id="customerNamesList">
             {allCsData.map((customer, index) => (
-              <option key={index} value={`${customer.FirmName}`} />
+              <option key={index} 
+              value={`${customer.VendorName}`}
+              // value={`${customer.FirmName}`}
+               />
             ))}
           </datalist>
           <button onClick={() => navigate("/add_supplier")} className="adminInvoiceAddCustomerOption">

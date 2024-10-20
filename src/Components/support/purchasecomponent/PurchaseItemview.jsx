@@ -44,7 +44,8 @@ export default function AdminPurchseitemview({
                 <thead>
                   <tr>
                     <th>ITEM DETAILS</th>
-                    <th>F WT + W WT/RATE</th>
+                    <th>F+W WT</th>
+                    <th>RATE</th>
                     <th>GROSS WT</th>
                     <th>NET WT</th>
                     <th>FINE%</th>
@@ -144,7 +145,10 @@ export default function AdminPurchseitemview({
                           {/* <td>₹{parseFloat(x.MetalRate).toFixed(0)}</td> */}
 
                           <td>
-                          {parseFloat(x.FineWastageWt).toFixed(3)}/{parseFloat(x.MetalRate).toFixed(0)}
+                          {parseFloat(x.FineWastageWt).toFixed(3)}
+                          </td>
+                          <td>
+                          {parseFloat(x.MetalRate).toFixed(0)}
                           </td>
                           
 
@@ -159,8 +163,8 @@ export default function AdminPurchseitemview({
                           <td>
                             ₹
                             {parseFloat(
-                              parseFloat(x.FinalPrice) +
-                                parseFloat(x.TotalGstAmount)
+                              parseFloat(x.FinalPrice) 
+                              
                             ).toFixed(3)}
                           </td>
                         </tr>
@@ -171,7 +175,9 @@ export default function AdminPurchseitemview({
                     <td>
                       <div>{/* Any content you want to display here */}</div>
                     </td>
-
+                    <td>
+                      <div>{/* Any content you want to display here */}</div>
+                    </td>
                     <td>
                       {selectedProduct.length > 0
                         ? selectedProduct[0].MetalRate

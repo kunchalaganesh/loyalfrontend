@@ -92,6 +92,7 @@ class ProductCalculator {
         let MakingFixedAmt = updatedProduct.MakingFixedAmt;
         let MakingFixedWastage = updatedProduct.MakingFixedWastage;
         let MakingPerGram = updatedProduct.MakingPerGram;
+        let finepercentage = updatedProduct.FinePercent;
 
     if (matchingVendor) {
         console.log('Match found:', matchingVendor);
@@ -105,6 +106,9 @@ class ProductCalculator {
           // updatedProduct.MakingFixedWastage = parseFloat(matchingVendor.MakingFixedWastage);
           // updatedProduct.MakingPerGram = matchingVendor.MakingPerGram || 0;
        
+          if (!userEditedFields.FinePercent) {
+            updatedProduct.FinePercent = matchingVendor.FinePercentage || 0;
+            }
 
           if (!userEditedFields.finePure) {
           setFinePure(matchingVendor.FinePure)
@@ -138,6 +142,7 @@ class ProductCalculator {
           updatedProduct.MakingPerGram = MakingPerGram;
           updatedProduct.MakingPercentage = wastagewt;
           updatedProduct.MakingFixedWastage = MakingFixedWastage;
+          updatedProduct.FinePercent = finepercentage || 0;
     }
 
 
@@ -383,6 +388,8 @@ let making2 = 0;
     //         updatedProduct.selectedSku.MakingFixedWastage || 0
     //       ).toFixed(3)
     //     : "0";
+
+    console.log('check itematedit ', updatedProduct)
   }
 
   static calculateTotalPrice(updatedProduct, convertAmount, gstType, finePure) {
@@ -464,12 +471,24 @@ let making2 = 0;
     );
 
     // Calculate TotalItemAmt
-    updatedProduct.TotalItemAmt = convertAmount
-      ? totalRate + otherrate
-      : totalMakingCharges + otherrate;
+    // updatedProduct.TotalItemAmt = convertAmount
+    //   ? totalRate + otherrate
+    //   : totalMakingCharges + otherrate;
 
-    // Set updated product values
-    updatedProduct.Making = totalMakingCharges;
+    // // Set updated product values
+    // updatedProduct.Making = totalMakingCharges;
+
+    // Ensure values are numeric, or default to 0 if they are not
+const validTotalMakingCharges = isNaN(parseFloat(totalMakingCharges)) ? 0 : parseFloat(totalMakingCharges);
+const validOtherRate = isNaN(parseFloat(otherrate)) ? 0 : parseFloat(otherrate);
+
+// Calculate TotalItemAmt
+updatedProduct.TotalItemAmt = convertAmount
+  ? totalRate + validOtherRate
+  : validTotalMakingCharges + validOtherRate;
+
+// Set updated product values
+updatedProduct.Making = validTotalMakingCharges;
 
     console.log(
       "checking rates :",
@@ -589,21 +608,49 @@ let making2 = 0;
             parseFloat(purchaseProduct.MakingFixedWastage)) /
         10;
 
-    let totalMakingCharges =
-        parseFloat(makingCharges1) +
-        parseFloat(makingCharges2) +
-        parseFloat(makingCharges3) +
-        parseFloat(makingCharges4) +
-        parseFloat(purchaseProduct.StoneAmount) +
-        parseFloat(purchaseProduct.DiamondPurchaseAmount) +
-        parseFloat(purchaseProduct.HallmarkAmt);
+    // let totalMakingCharges =
+    //     parseFloat(makingCharges1) +
+    //     parseFloat(makingCharges2) +
+    //     parseFloat(makingCharges3) +
+    //     parseFloat(makingCharges4) +
+    //     parseFloat(purchaseProduct.StoneAmount) +
+    //     parseFloat(purchaseProduct.DiamondPurchaseAmount) +
+    //     parseFloat(purchaseProduct.HallmarkAmt);
 
-    let allItemGstRate =
-        (parseFloat(FineRate) + parseFloat(totalMakingCharges)) * 0.03;
+    // let allItemGstRate =
+    //     (parseFloat(FineRate) + parseFloat(totalMakingCharges)) * 0.03;
 
-    let totalRate = parseFloat(
-        parseFloat(FineRate) + parseFloat(totalMakingCharges)
-    );
+    // let totalRate = parseFloat(
+    //     parseFloat(FineRate) + parseFloat(totalMakingCharges)
+    // );
+
+    // Ensure all values are numeric or default to 0 if they are not valid numbers
+let validMakingCharges1 = isNaN(parseFloat(makingCharges1)) ? 0 : parseFloat(makingCharges1);
+let validMakingCharges2 = isNaN(parseFloat(makingCharges2)) ? 0 : parseFloat(makingCharges2);
+let validMakingCharges3 = isNaN(parseFloat(makingCharges3)) ? 0 : parseFloat(makingCharges3);
+let validMakingCharges4 = isNaN(parseFloat(makingCharges4)) ? 0 : parseFloat(makingCharges4);
+let validStoneAmount = isNaN(parseFloat(purchaseProduct.StoneAmount)) ? 0 : parseFloat(purchaseProduct.StoneAmount);
+let validDiamondPurchaseAmount = isNaN(parseFloat(purchaseProduct.DiamondPurchaseAmount)) ? 0 : parseFloat(purchaseProduct.DiamondPurchaseAmount);
+let validHallmarkAmt = isNaN(parseFloat(purchaseProduct.HallmarkAmt)) ? 0 : parseFloat(purchaseProduct.HallmarkAmt);
+let validFineRate = isNaN(parseFloat(FineRate)) ? 0 : parseFloat(FineRate);
+
+// Calculate total making charges
+let totalMakingCharges =
+    validMakingCharges1 +
+    validMakingCharges2 +
+    validMakingCharges3 +
+    validMakingCharges4 +
+    validStoneAmount +
+    validDiamondPurchaseAmount +
+    validHallmarkAmt;
+
+// Calculate total GST rate and total rate
+let allItemGstRate = (validFineRate + totalMakingCharges) * 0.03;
+
+let totalRate = validFineRate + totalMakingCharges;
+
+console.log('checking total ', totalRate, totalMakingCharges);
+
 
     console.log('checkingtotal ', totalRate, totalMakingCharges)
 
