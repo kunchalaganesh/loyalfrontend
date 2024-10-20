@@ -1261,6 +1261,9 @@ const generateinvoicepdf7 = (items, customer, mainitem) => {
     StoneAmount,
     MakingPerGram,
     TotalAmount,
+    UrdPurchaseAmt,
+    Payments,
+    PaymentMode,
     GST } = mainitem
 
   const doc = new jsPDF({
@@ -1277,6 +1280,19 @@ const generateinvoicepdf7 = (items, customer, mainitem) => {
   const boxPadding = 5; // Padding on both sides
   const boxWidth = pageWidth - 2 * boxPadding; // Calculate box width with padding
   const boxHeight = 40;
+
+  const urdPurchasePositive = Math.abs(TotalAmount); // Convert UrdPurchaseAmt to positive
+
+  const totalgross = urdPurchasePositive - UrdPurchaseAmt ;
+  const cgst = (GST || 0) / 2;
+  const sgst = (GST || 0) / 2;
+
+ 
+
+  // const sGstFx = sGst.toFixed(2)
+const totalAmountNumber = Number(TotalAmount);
+const GSTNumber = Number(GST);
+
 
 
   doc.line(0, starty, 210, starty); // From (10, 50) to (200, 50)
@@ -1373,37 +1389,28 @@ const columnArray = [
 ];
 
 
-const cGst = (GST || 0) / 2;
-
-  const cGstFX = cGst.toFixed(2)
-
-  const sGst = (GST || 0) / 2;
-
-  const sGstFx = sGst.toFixed(2)
-const totalAmountNumber = Number(TotalAmount);
-const GSTNumber = Number(GST);
 
 const leftColumn = [
-  { label: "Gross Amount", value: `${totalAmountNumber.toFixed(2)}` },
-  { label: "CGST 1.5%", value: `${Number(cGst).toFixed(2)}` },
-  { label: "SGST 1.5%", value: `${Number(cGst).toFixed(2)}` },
+  { label: "Gross Amount", value: `${totalgross.toFixed(2)}` },
+  { label: "CGST 1.5%", value: `${Number(cgst).toFixed(2)}` },
+  { label: "SGST 1.5%", value: `${Number(sgst).toFixed(2)}` },
   { label: "IGST 3%", value: `${GSTNumber.toFixed(2)}` },
   { label: "Hallmarking Amount", value: "" },
-  { label: "Purchase Amount (-)", value: `${(totalAmountNumber + GSTNumber).toFixed(2)}` },
+  { label: "Purchase Amount (-)", value: `${UrdPurchaseAmt}` },
   { label: "RO/Discount (-)", value: "" },
-  { label: "Net Amount", value: `${(totalAmountNumber + GSTNumber).toFixed(2)}` },
+  { label: "Net Amount", value: `${(totalgross + GSTNumber).toFixed(2)}` },
 ];
 
  // Dummy values for the right column
  const rightColumnValues = [
-  `${totalAmountNumber.toFixed(2)}`,
-  `${Number(cGstFX).toFixed(2)}`,
-  `${Number(sGstFx).toFixed(2)}`,
+  `${Math.abs(totalgross.toFixed(2))}`,
+  `${Number(cgst).toFixed(2)}`,
+  `${Number(sgst).toFixed(2)}`,
   `${GSTNumber.toFixed(2)}`,
   "",
-  `${(totalAmountNumber + GSTNumber).toFixed(2)}`,
+  `${UrdPurchaseAmt}`,
   "",
-  `${(totalAmountNumber + GSTNumber).toFixed(2)}`
+  `${(Math.abs(totalgross)+GSTNumber-UrdPurchaseAmt).toFixed(2)}`
 ];
 
 
@@ -1504,37 +1511,89 @@ leftColumn.forEach((row, index) => {
   //draw cash table
   doc.setFont("sanserif", "bold");
 
-  // Now create a second section with two columns: "Cash" and its amount
-  const cashSectionX = 5; // Starting X position for the cash section
-  const cashSectionY = 199;
-  const cashCellWidth = 50; // Width of each column for the cash table
+  // Initialize drawing positions
+const sectionX = 5; // Starting X position for the payment section
+// const sectionY = 199; // Starting Y position
+// const cellWidth = 50; // Width of each column for the payment table
+// const cellHeight = 10; // Height for each cell
 
-  // Draw the "Cash" label cell
+let currentX = sectionX; // To adjust X position dynamically for each payment mode
+
+// Set font and style for the document
+doc.setFontSize(10);
+doc.setFont("sanserif", "bold");
+
+const paymentSummary = Payments.map(payment => ({
+  mode: payment.PaymentModeType,
+  amount: payment.Amount
+}));
+
+// Starting position for drawing the payment sections
+let startY = 199; // Starting Y position for the first payment section
+const cellWidth = 50; // Width of each column for the payment table
+const cellHeight = 10; // Height of each row for the payment table
+let adminy = 210;
+// Loop through payment summary and draw each payment mode and amount
+paymentSummary.forEach((payment, index) => {
+  // Calculate the Y position for each payment mode based on the index
+  const currentY = startY + index * (cellHeight + 0); // Adding 2 for spacing
+
+  // Draw the payment mode label cell
   doc.setFontSize(10);
   doc.setFont("sanserif", "bold");
   doc.text(
-    "Cash",
-    cashSectionX + cashCellWidth / 2 - doc.getTextWidth("Cash") / 2,
-    cashSectionY + 7
+      payment.mode,
+      5 + cellWidth / 2 - doc.getTextWidth(payment.mode) / 2,
+      currentY + 7 // Center text vertically
   ); // Center text in the first column
 
-  // Draw the "Cash" amount cell
+  // Draw the payment amount cell
   doc.text(
-    "",
-    cashSectionX +
-    cashCellWidth +
-    cashCellWidth / 2 -
-    doc.getTextWidth("1000") / 2,
-    cashSectionY + 7
+      payment.amount,
+      5 + cellWidth + cellWidth / 2 - doc.getTextWidth(payment.amount) / 2,
+      currentY + 7 // Center text vertically
   ); // Center text in the second column
 
-  // Draw the outer border of the cash and amount cells
-  doc.rect(cashSectionX, cashSectionY, cashCellWidth, 10); // Border for "Cash" label
-  doc.rect(cashSectionX + cashCellWidth, cashSectionY, cashCellWidth, 10); // Border for the amount
+  // Draw the outer border of the payment mode and amount cells
+  doc.rect(5, currentY, cellWidth, cellHeight); // Border for payment mode label
+  doc.rect(5 + cellWidth, currentY, cellWidth, cellHeight); // Border for the amount
+  adminy = currentY;
+});
+
+
+  // Now create a second section with two columns: "Cash" and its amount
+  // const cashSectionX = 5; // Starting X position for the cash section
+  // const cashSectionY = 199;
+  // const cashCellWidth = 50; // Width of each column for the cash table
+
+  // // Draw the "Cash" label cell
+  // doc.setFontSize(10);
+  // doc.setFont("sanserif", "bold");
+  
+  
+  // doc.text(
+  //   "Cash",
+  //   cashSectionX + cashCellWidth / 2 - doc.getTextWidth("Cash") / 2,
+  //   cashSectionY + 7
+  // ); // Center text in the first column
+
+  // // Draw the "Cash" amount cell
+  // doc.text(
+  //   "",
+  //   cashSectionX +
+  //   cashCellWidth +
+  //   cashCellWidth / 2 -
+  //   doc.getTextWidth("1000") / 2,
+  //   cashSectionY + 7
+  // ); // Center text in the second column
+
+  // // Draw the outer border of the cash and amount cells
+  // doc.rect(cashSectionX, cashSectionY, cashCellWidth, 10); // Border for "Cash" label
+  // doc.rect(cashSectionX + cashCellWidth, cashSectionY, cashCellWidth, 10); // Border for the amount
 
   doc.setFont("sanserif", "normal");
   doc.setFontSize(10);
-  doc.text("Billng By - Admin", 100, 220);
+  doc.text("Billng By - Admin", 100, adminy+15);
 
   doc.setFont("sanserif", "normal");
   doc.setFontSize(10);
