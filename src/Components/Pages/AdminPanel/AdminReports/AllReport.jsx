@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import AdminHeading from "../Heading/AdminHeading";
-import {Box, Grid, Tab, Table, TableCell, TableContainer, TableBody, TableHead, TableRow, Tabs} from "@mui/material";
+import {Slider, TextField, Box, Grid, Tab, Table, TableCell, TableContainer, TableBody, TableHead, TableRow, Tabs} from "@mui/material";
 import AdminBreadCrump from "../Heading/AdminBreadCrump";
 import {
     a125,
@@ -67,6 +67,10 @@ function AllReport() {
         ToDate: "2024-09-06",
     });
 
+    const [startRange, setStartRange] = useState(0);
+    const [endRange, setEndRange] = useState(100);
+    const [minGrossWeight, setMinGrossWeight] = useState(0);
+    const [maxGrossWeight, setMaxGrossWeight] = useState(200); 
 
     const fetchAllCategory = async () => {
         const formData = {
@@ -209,6 +213,35 @@ function AllReport() {
 
         setFilteredStockReport(filtered);
         setCurrentPage(1);
+    };
+
+
+    const handleSliderChange = (event, newValue) => {
+        const [start, end] = newValue;
+        setStartRange(start);
+        setEndRange(end);
+        filterData(start, end);  // Filter after both values are set
+    };
+    
+    const handleStartRangeChange = (event) => {
+        const value = Number(event.target.value);  // Cast to number
+        setStartRange(value);
+        filterData(value, endRange);  // Filter with updated start range
+    };
+    
+    const handleEndRangeChange = (event) => {
+        const value = Number(event.target.value);  // Cast to number
+        setEndRange(value);
+        filterData(startRange, value);  // Filter with updated end range
+    };
+
+    // Filter logic for GrossWeight range
+    const filterData = (start, end) => {
+        console.log('check start and end ',startRange,   end )
+        const filtered = allSkuReport.filter(item => item.GrossWeight >= start && item.GrossWeight <= end);
+        setFilteredSKUReport(filtered);
+
+
     };
 
     const filterSKU = () => {
@@ -511,6 +544,11 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
         });
         const data = await response.json();
         setAllSkuReport(data)
+        const grossWeights = data.map(item => item.GrossWeight);
+        setMinGrossWeight(Math.min(...grossWeights));
+        setMaxGrossWeight(Math.max(...grossWeights));
+        setStartRange(Math.min(...grossWeights));
+        setEndRange(Math.max(...grossWeights));
     };
 
     const fetchAllSkuKarigarReport = async () => {
@@ -1779,6 +1817,46 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
 
       </Box>
     )}
+
+    {selectedTab === 3 && (
+                                        <Grid container spacing={2} sx={{ mt: 2 }}>
+    {/* Start Range Input */}
+    <Grid item xs={6}>
+        <TextField
+            label="Start Range"
+            type="number"
+            value={startRange}
+            onChange={handleStartRangeChange}
+            fullWidth
+        />
+    </Grid>
+
+    {/* End Range Input */}
+    <Grid item xs={6}>
+        <TextField
+            label="End Range"
+            type="number"
+            value={endRange}
+            onChange={handleEndRangeChange}
+            fullWidth
+        />
+    </Grid>
+
+    {/* Slider for selecting range */}
+    <Grid item xs={12}>
+        <Box sx={{ width: '20%' }}>
+            <Slider
+                value={[startRange, endRange]}
+                onChange={handleSliderChange}
+                valueLabelDisplay="auto"
+                min={minGrossWeight}
+                max={maxGrossWeight}
+                sx={{ marginTop: 2 }}
+            />
+        </Box>
+    </Grid>
+</Grid>
+            )}
     
 
                             <Table size="small" sx={{borderRadius: '4px', borderCollapse: 'collapse'}}>
@@ -1802,9 +1880,11 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                         <TableCell sx={{fontWeight: "600"}} align="center">closing gross wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">closing net wt</TableCell>
                                     </TableRow>)}
+                
                                     {selectedTab == 3 &&
+                                       
                                     <TableRow>
-                                        <TableCell sx={{fontWeight: "600"}} align="center">Sr No</TableCell>
+                                        <TableCell sx={{fontWeight: "600", width: '100px'}} align="center">Sr No</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">SKU</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Item Name</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">QTY</TableCell>

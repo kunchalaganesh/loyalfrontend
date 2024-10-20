@@ -50,6 +50,7 @@ export default function AdminVendorTounche() {
         ClientCode: "",
         FinePure: false,
         PurityId: 0,
+        FinePercentage: 0,
         WastageWt: "0",
         MakingFixedAmt: "0",
         MakingPerGram: "0",
@@ -464,6 +465,16 @@ export default function AdminVendorTounche() {
     const addNewCategory = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        if(allSelectedTounche.length === 0){
+        if (!newCategory.VendorId || !newCategory.CategoryId || !newCategory.ProductId || !newCategory.PurityId) {
+            alert("Please choose SKU or provide Category, Product, and Purity details.");
+            setLoading(false);
+            return;
+        }
+    }
+
+
         const formData = {
             VendorId: parseInt(newCategory.VendorId),
             CategoryId: parseInt(newCategory.CategoryId),
@@ -475,6 +486,7 @@ export default function AdminVendorTounche() {
             MakingPerGram: `${newCategory.MakingPerGram}`,
             MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
             MakingPercentage: `${newCategory.MakingPercentage}`,
+            FinePercentage: `${newCategory.FinePercentage}`,
             StockKeepingUnit: newCategory.StockKeepingUnit,
             CompanyId: CompanyId ? CompanyId : 0,
             CounterId: CounterId ? CounterId : 0,
@@ -484,44 +496,123 @@ export default function AdminVendorTounche() {
             DiamondSizeWeightRateTemplateId: parseInt(
                 newCategory.DiamondSizeWeightRateTemplateId
             ),
+            SKUList:[],
             Stones: newCategory.Stones.map((stone) => ({
             ...stone,
-            VendorId: parseInt(newCategory.VendorId) // Update VendorId for each stone
+            VendorId: parseInt(newCategory.VendorId), // Update VendorId for each stone,
+            
         })),
             ...(newCategory.OldEntry ? {Id: newCategory.Id} : {}),
         };
+        // let newArray = allSelectedTounche
+        //     .filter((x) => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
+        //     .map((item) => {
+        //         return {
+        //             ...item,
+        //             FinePure: newCategory.FinePure,
+        //             VendorId: parseInt(newCategory.VendorId),
+        //             CategoryId: parseInt(newCategory.CategoryId),
+        //             ProductId: parseInt(newCategory.ProductId),
+        //             ClientCode: clientCode,
+        //             PurityId: parseInt(newCategory.PurityId),
+        //             WastageWt: `${newCategory.WastageWt}`,
+        //             MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
+        //             MakingPerGram: `${newCategory.MakingPerGram}`,
+        //             MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
+        //             MakingPercentage: `${newCategory.MakingPercentage}`,
+        //             StockKeepingUnit: item.StockKeepingUnit,
+        //             CompanyId: CompanyId ? CompanyId : 0,
+        //             CounterId: CounterId ? CounterId : 0,
+        //             BranchId: BranchId ? BranchId : 0,
+        //             EmployeeId: EmployeeId ? EmployeeId : 0,
+        //             DiamondSizeWeightRateTemplateId: parseInt(
+        //                 newCategory.DiamondSizeWeightRateTemplateId
+        //             ),
+        //             Stones: newCategory.Stones.map((stone) => ({
+        //                 ...stone,
+        //                 VendorId: parseInt(newCategory.VendorId), // Set VendorId for each stone
+        //             })),
+        //         };
+        //     });
+
+        // const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
+
+
+        let newArrayData;
+
+    // Case 1: if VendorId, CategoryId, ProductId, and PurityId are not 0, empty, or null
+    if (
+        newCategory.VendorId &&
+        newCategory.CategoryId &&
+        newCategory.ProductId &&
+        newCategory.PurityId
+    ) {
+        // Use existing logic for this case
         let newArray = allSelectedTounche
             .filter((x) => x.StockKeepingUnit !== newCategory.StockKeepingUnit)
-            .map((item) => {
-                return {
-                    ...item,
-                    FinePure: newCategory.FinePure,
-                    VendorId: parseInt(newCategory.VendorId),
-                    CategoryId: parseInt(newCategory.CategoryId),
-                    ProductId: parseInt(newCategory.ProductId),
-                    ClientCode: clientCode,
-                    PurityId: parseInt(newCategory.PurityId),
-                    WastageWt: `${newCategory.WastageWt}`,
-                    MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
-                    MakingPerGram: `${newCategory.MakingPerGram}`,
-                    MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
-                    MakingPercentage: `${newCategory.MakingPercentage}`,
-                    StockKeepingUnit: item.StockKeepingUnit,
-                    CompanyId: CompanyId ? CompanyId : 0,
-                    CounterId: CounterId ? CounterId : 0,
-                    BranchId: BranchId ? BranchId : 0,
-                    EmployeeId: EmployeeId ? EmployeeId : 0,
-                    DiamondSizeWeightRateTemplateId: parseInt(
-                        newCategory.DiamondSizeWeightRateTemplateId
-                    ),
-                    Stones: newCategory.Stones.map((stone) => ({
-                        ...stone,
-                        VendorId: parseInt(newCategory.VendorId), // Set VendorId for each stone
-                    })),
-                };
-            });
+            .map((item) => ({
+                ...item,
+                FinePure: newCategory.FinePure,
+                VendorId: parseInt(newCategory.VendorId),
+                CategoryId: parseInt(newCategory.CategoryId),
+                ProductId: parseInt(newCategory.ProductId),
+                ClientCode: clientCode,
+                PurityId: parseInt(newCategory.PurityId),
+                WastageWt: `${newCategory.WastageWt}`,
+                MakingFixedAmt: `${newCategory.MakingFixedAmt}`,
+                MakingPerGram: `${newCategory.MakingPerGram}`,
+                MakingFixedWastage: `${newCategory.MakingFixedWastage}`,
+                MakingPercentage: `${newCategory.MakingPercentage}`,
+                FinePercentage: `${newCategory.FinePercentage}`,
+                StockKeepingUnit: item.StockKeepingUnit,
+                CompanyId: CompanyId ? CompanyId : 0,
+                CounterId: CounterId ? CounterId : 0,
+                BranchId: BranchId ? BranchId : 0,
+                EmployeeId: EmployeeId ? EmployeeId : 0,
+                DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
+                Stones: newCategory.Stones.map((stone) => ({
+                    ...stone,
+                    VendorId: parseInt(newCategory.VendorId), // Set VendorId for each stone
+                })),
+                SKUList:[]
+            }));
 
-        const newArrayData = newArray.length > 0 ? [...newArray] : [formData];
+        newArrayData = newArray.length > 0 ? [...newArray] : [formData];
+
+    // Case 2: if VendorId and allSelectedTounche is not empty
+    } else if (newCategory.VendorId && allSelectedTounche.length > 0) {
+        // Create SKUList from allSelectedTounche
+        const SKUList = allSelectedTounche.map((item) => ({
+
+            // console.log('check items', item)
+
+            VendorId: parseInt(newCategory.VendorId),
+            CategoryId: parseInt(item.CategoryId),
+            ProductId: parseInt(item.ProductId),
+            ClientCode: clientCode,
+            PurityId: parseInt(item.PurityId),
+            StockKeepingUnit: item.StockKeepingUnit,
+            CompanyId: CompanyId ? CompanyId : 0,
+            CounterId: CounterId ? CounterId : 0,
+            BranchId: BranchId ? BranchId : 0,
+            EmployeeId: EmployeeId ? EmployeeId : 0,
+            DiamondSizeWeightRateTemplateId: parseInt(newCategory.DiamondSizeWeightRateTemplateId),
+            FinePercentage: `${newCategory.FinePercentage}`, // Example FinePercentage value
+        }));
+
+        newArrayData = [{
+            ...formData,
+            SKUList: SKUList,
+        }];
+    }
+
+
+
+    console.log('checking vendor payload  ', newArrayData);
+
+
+
+
         try {
             const response = await fetch(
                 !newCategory.OldEntry ? a179 : a179, // update a180 add a179
@@ -545,6 +636,7 @@ export default function AdminVendorTounche() {
                 ProductId: 0,
                 ClientCode: "",
                 PurityId: 0,
+                FinePercentage: 0,
                 WastageWt: "0",
                 MakingFixedAmt: "0",
                 MakingPerGram: "0",
@@ -648,6 +740,7 @@ export default function AdminVendorTounche() {
                 CategoryId: parseInt(x.CategoryId),
                 ProductId: parseInt(x.ProductId),
                 PurityId: parseInt(x.PurityId),
+                FinePercentage: newCategory.FinePercentage,
                 ClientCode: clientCode,
                 FinePure: newCategory.FinePure,
                 WastageWt: newCategory.WastageWt,
@@ -731,6 +824,7 @@ export default function AdminVendorTounche() {
         CategoryId: parseInt(x.CategoryId),
         ProductId: parseInt(x.ProductId),
         PurityId: parseInt(x.PurityId),
+        FinePercentage: newCategory.FinePercentage,
         ClientCode: clientCode,
         FinePure: newCategory.FinePure,
         WastageWt: newCategory.WastageWt,
@@ -932,7 +1026,7 @@ export default function AdminVendorTounche() {
                                         name="CategoryId"
                                         value={newCategory.CategoryId}
                                         onChange={handleNewCategoryChange}
-                                        required={"required"}
+                                        // required={"required"}
                                     >
                                         <option value={""}>Select an Option</option>
                                         {categoriesData?.map((x) => {
@@ -947,7 +1041,7 @@ export default function AdminVendorTounche() {
                                         Select Product<sup>*</sup>
                                     </label>
                                     <select
-                                        required={"required"}
+                                        // required={"required"}
                                         name="ProductId"
                                         value={newCategory.ProductId}
                                         onChange={handleNewCategoryChange}
@@ -973,7 +1067,7 @@ export default function AdminVendorTounche() {
                                         Select Purity<sup>*</sup>
                                     </label>
                                     <select
-                                        required={"required"}
+                                        // required={"required"}
                                         name="PurityId"
                                         value={newCategory.PurityId}
                                         onChange={handleNewCategoryChange}
@@ -995,6 +1089,14 @@ export default function AdminVendorTounche() {
                                                 return <option value={x.Id}>{x.PurityName}</option>;
                                             })}
                                     </select>
+
+                                    <label>FinePercentage</label>
+                                    <input
+                                        name="FinePercentage"
+                                        value={newCategory.FinePercentage}
+                                        onChange={handleNewCategoryChange}
+                                        type="text"
+                                    />
 
                                     <label>Gram/Fine</label>
                                     <select
