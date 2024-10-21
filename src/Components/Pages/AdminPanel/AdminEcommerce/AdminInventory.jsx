@@ -165,6 +165,8 @@ export default function AdminInventory() {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
+
+            console.log('check all data',data)
             let branchProducts = data;
             console.log(branchProducts, "branchProducts");
             // Add a serial number property to each product
@@ -173,10 +175,19 @@ export default function AdminInventory() {
             } else {
                 branchProducts = data;
             }
-            const productsWithSerial = branchProducts.map((product, index) => ({
-                ...product,
-                serialNumber: index + 1,
-            }));
+
+            const activeProducts = branchProducts.filter((product) => product.Status === "Active");
+
+// Add a serial number property to each product
+const productsWithSerial = activeProducts.map((product, index) => ({
+    ...product,
+    serialNumber: index + 1,
+}));
+
+            // const productsWithSerial = branchProducts.map((product, index) => ({
+            //     ...product,
+            //     serialNumber: index + 1,
+            // }));
 
             // setAllProducts(productsWithSerial.reverse()); // Assuming data.data is an array of products
             setAllProducts(productsWithSerial.reverse());
