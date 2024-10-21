@@ -54,6 +54,14 @@ export default function AdminSecondNavbar() {
         {/* <AiOutlineDown /> */}
       </div>
       <div
+        onClick={() => navigate("/admin_estimation")}
+        className="adminDesktopSecondNavbarItemsBox"
+      >
+        <FaFileInvoiceDollar size={"17px"} />
+        <p>WholeSale</p>
+        {/* <AiOutlineDown /> */}
+      </div>
+      <div
         onClick={() => navigate("/admin_invoice")}
         className="adminDesktopSecondNavbarItemsBox"
       >

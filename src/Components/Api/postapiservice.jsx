@@ -280,15 +280,19 @@ export const createOrder = async (orderDetails) => {
       formData.append("AssignedOtherMetalWeight", "0");
       formData.append("AssignedDiamondWeight", "0");
   
-      const response = await fetch(a154, {
-        method: "POST",
-        body: formData,
-      });
 
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
   
+
+
+      const response = await fetch(a154, {
+        method: "POST",
+        body: formData1,
+      });
+
+      
       const data = await response.json();
       return data;
     } catch (error) {

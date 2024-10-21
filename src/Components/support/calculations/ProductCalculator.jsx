@@ -441,6 +441,7 @@ let making2 = 0;
 
     // Calculate other rates (stone amount, diamond purchase amount, hallmark amount)
     let stoneAmount = parseFloat(updatedProduct.StoneAmount || 0);
+    
     let totalDiamondPurchaseAmount = parseFloat(
       updatedProduct.TotalDiamondAmount || 0
     );

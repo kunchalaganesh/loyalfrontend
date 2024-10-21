@@ -1237,7 +1237,7 @@ export default function AdminPurchaseEntry() {
 
     try {
       const orderResponse = await createOrder(orderDetails);
-      console.log("Order response:", orderResponse);
+      console.log("Order response:", orderDetails);
 
       sendProductData(orderResponse.Id);
       // setIssubmit(false)
@@ -1432,7 +1432,7 @@ export default function AdminPurchaseEntry() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload1),
       });
 
       if (!response.ok) {

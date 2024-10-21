@@ -81,6 +81,8 @@ import AllReport from "./Components/Pages/AdminPanel/AdminReports/AllReport";
 import AdminPurchaseEntryEditn from "./Components/Pages/AdminPanel/AdminTrading/AdminPurchaseEntryEditn";
 // import AdminBillsettings from "../../../../../Adminuisettings/Billsettings.jsx"
 import AdminBillsettings from "./Components/Pages/AdminPanel/AdminuiSettings/Billsettings";
+import AdminEstimation from "./Components/Pages/AdminPanel/AdminTrading/AdminEstimation";
+
 
 
 function App() {
@@ -209,6 +211,10 @@ function App() {
                 <Route
                     path="/admin_invoice"
                     element={isAuthenticated ? <AdminInvoice/> : <AdminPanelLogin/>}
+                />
+                <Route
+                    path="/admin_estimation"
+                    element={isAuthenticated ? <AdminEstimation/> : <AdminPanelLogin/>}
                 />
                 <Route
                     path="/admin_invoice_edit"
