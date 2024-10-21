@@ -1042,7 +1042,7 @@ export default function AdminAddBulkStockNew() {
     // let updatedStonesList = [...allStonesList];
 
 
-    if ((lotNumber && lotNumber !== "0") || (selectedSkuName && selectedSkuName.trim() !== "")) {
+    if ((lotNumber && lotNumber !== "0") ) {
     if(unlabeledqty <quantity ){
       alert("Error: Quantity exceeds the available limits.");
         return; // Stop the process
@@ -1649,7 +1649,7 @@ export default function AdminAddBulkStockNew() {
     // Parse updated properties to numbers, defaulting to 0 if empty or invalid
     // const grosswt = parseFloat(product.GrossWt) || 0;
 
-    if (lotNumber && lotNumber !== "0" || selectedSkuName && selectedSkuName.trim() !== "") {
+    if (lotNumber && lotNumber !== "0") {
       const totalFilteredGrossWt = unlabeledgold;
       // allFilteredPurchaseItems.reduce((acc, item) => {
       //   return acc + parseFloat(item.GrossWt || 0);
@@ -1837,7 +1837,7 @@ export default function AdminAddBulkStockNew() {
     updatedProducts[index] = updatedProduct;
 
 
-    if (lotNumber && lotNumber !== "0" || selectedSkuName && selectedSkuName.trim() !== "") {
+    if (lotNumber && lotNumber !== "0") {
 
     const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
       return acc + parseFloat(item.GrossWt || 0);
