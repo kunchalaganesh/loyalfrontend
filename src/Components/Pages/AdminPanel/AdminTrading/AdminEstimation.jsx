@@ -1007,7 +1007,7 @@ export default function AdminEstimation() {
         calculateWholesaleProductFinalPrice(changeSelectedProduct, true);
 
         // calculateOrderPrice(changeSelectedProduct);
-        // setActive("Sell");
+        setActive("Wholesale");
         // addProductToList(selected);
         // setSelectedProduct([]);
         // if (labelName) {
@@ -1015,7 +1015,7 @@ export default function AdminEstimation() {
         //   alert("Label is missing");
         // } // Calculate the final price
       } else if (selected && isAdded) {
-        // setActive("Sell");
+        setActive("Wholesale");
         setWholesaleProductLabelName("");
         alert("Already Added");
         // console.log("Not selected");
@@ -6280,6 +6280,7 @@ const getCollectionWastage = (selectedCustomer, selectedProduct, collectionmainl
                                 );
                               })
                             : null}
+
                           <tr>
                             <td>
                               <div className="adminAddInvoiceMainAddLabelOption">
@@ -7039,10 +7040,253 @@ const getCollectionWastage = (selectedCustomer, selectedProduct, collectionmainl
               filteredPuritiesWholesaleProduct={filteredPuritiesWholesaleProduct}
               convertAmount={convertAmount}
               setConvertAmount={setConvertAmount}
-
-
-
+              selectedProduct={selectedProduct}
+              allSelectedProducts={allSelectedProducts}
               />
+
+
+
+{!productsLoading ? (
+  <div className="adminInvoiceAddProductsOptionsMainBox">
+    <div
+      id="adminInvoiceAddProductsOptionsInnerBox"
+      className="adminInvoiceAddProductsOptionsInnerBox"
+    >
+      <table>
+        <thead>
+          <tr>
+            <th>ITEM DETAILS</th>
+            <th>RATE</th>
+            <th>GROSS WT</th>
+            <th>NET WT</th>
+            <th>PURITY</th>
+            <th>MAKING</th>
+            <th>PRICE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allSelectedProducts.length > 0
+            ? allSelectedProducts.map((x, index) => {
+                let image1 = x.Images ? x.Images.split(",")[0] : "";
+                return (
+                  <tr
+                    key={index}
+                    style={{
+                      borderBottom: "1px solid rgba(128, 128, 128, 0.3)",
+                    }}
+                  >
+                    <td>
+                      <div className="adminAddInvoiceMainAddLabelOption">
+                        <div className="adminAddInvoiceMainAddLabelOptionImageBox">
+                          {x.sell && image1 !== "" ? (
+                            <img
+                              src={`${s1}/${image1}`}
+                              style={{
+                                maxWidth: "50px",
+                                maxHeight: "50px",
+                              }}
+                            />
+                          ) : (
+                            <BsCardImage size={"30px"} />
+                          )}
+                        </div>
+                        <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
+                          {x.purchase ? (
+                            <p
+                              style={{
+                                textAlign: "left",
+                                margin: "5px",
+                                padding: "5px",
+                                marginBottom: "0px",
+                                paddingBottom: "0px",
+                                color: "red",
+                              }}
+                            >
+                              Purchase
+                            </p>
+                          ) : x.unlabel ? (
+                            <p
+                              style={{
+                                textAlign: "left",
+                                margin: "5px",
+                                padding: "5px",
+                                marginBottom: "0px",
+                                paddingBottom: "0px",
+                                color: "green",
+                              }}
+                            >
+                              Unlabel
+                            </p>
+                          ) : x.wholesale ? (
+                            <p
+                              style={{
+                                textAlign: "left",
+                                margin: "5px",
+                                padding: "5px",
+                                marginBottom: "0px",
+                                paddingBottom: "0px",
+                                color: "purple",
+                              }}
+                            >
+                              Wholesale
+                            </p>
+                          ) : x.sell ? (
+                            <p
+                              style={{
+                                textAlign: "left",
+                                margin: "5px",
+                                padding: "5px",
+                                marginBottom: "0px",
+                                paddingBottom: "0px",
+                                color: "#02a8b5",
+                              }}
+                            >
+                              {x.ItemCode}
+                            </p>
+                          ) : null}
+                          {x.purchase ? (
+                            <p
+                              style={{
+                                fontWeight: "bold",
+                                color: "red",
+                                fontSize: "10px",
+                                textAlign: "left",
+                                margin: "0px 5px",
+                                padding: "0px 5px",
+                              }}
+                            >
+                              {`${x.CategoryName}, ${x.ProductName}`}
+                            </p>
+                          ) : x.unlabel ? (
+                            <p
+                              style={{
+                                fontWeight: "bold",
+                                color: "green",
+                                fontSize: "10px",
+                                textAlign: "left",
+                                margin: "0px 5px",
+                                padding: "0px 5px",
+                              }}
+                            >
+                              {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
+                            </p>
+                          ) : x.sell ? (
+                            <p
+                              style={{
+                                fontWeight: "bold",
+                                color: "#02a8b5",
+                                fontSize: "10px",
+                                textAlign: "left",
+                                margin: "0px 5px",
+                                padding: "0px 5px",
+                              }}
+                            >
+                              {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
+                            </p>
+                          ) : x.wholesale ? (
+                            <p
+                              style={{
+                                fontWeight: "bold",
+                                color: "#02a8b5",
+                                fontSize: "10px",
+                                textAlign: "left",
+                                margin: "0px 5px",
+                                padding: "0px 5px",
+                              }}
+                            >
+                              {`${x.CategoryName}, ${x.ProductName}, ${x.DesignName}`}
+                            </p>
+                          ) : null}
+                        </div>
+                        <div className="adminAddInvoiceMainAddLabelOptionEditIconBox">
+                          <button
+                            onClick={() => {
+                              if (x.sell) {
+                                editItem(x);
+                              } else if (x.purchase) {
+                                setActive("Purchase"),
+                                  removePurchaseProductFromList(index),
+                                  setPurchaseProduct(x);
+                              } else if (x.unlabel) {
+                                setActive("Unlabel"),
+                                  removePurchaseProductFromList(index),
+                                  setUnlabelProduct(x);
+                              } else if (x.wholesale) {
+                                setActive("Wholesale"),
+                                  removePurchaseProductFromList(index),
+                                  setWholesaleProduct(x),
+                                  setWholesaleProductLabelName(x.ItemCode);
+                              }
+                            }}
+                            className="adminAddInvoiceMainAddLabelOptionEditIcon"
+                          >
+                            <AiOutlineEdit />
+                          </button>
+                          <button
+                            style={{ marginBottom: "5px" }}
+                            onClick={() => {
+                              x.purchase
+                                ? removePurchaseProductFromList(index)
+                                : x.unlabel
+                                ? removePurchaseProductFromList(index)
+                                : removeProductFromList(x.Id);
+                            }}
+                            className="adminAddInvoiceMainAddLabelOptionDeleteIcon"
+                          >
+                            <RxCross2 />
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                    {x.purchase ? (
+                      <td>₹{parseFloat(x.GoldRate).toFixed(0)}</td>
+                    ) : x.unlabel ? (
+                      <td>₹{parseFloat(x.GoldRate).toFixed(0)}</td>
+                    ) : x.sell ? (
+                      <td>₹{parseFloat(x.TodaysRate).toFixed(0)}</td>
+                    ) : (
+                      <td>₹{parseFloat(x.GoldRate).toFixed(0)}</td>
+                    )}
+                    <td>{parseFloat(x.GrossWt).toFixed(3)}</td>
+                    {x.purchase ? (
+                      <td>{parseFloat(x.NetWt).toFixed(3)}</td>
+                    ) : x.unlabel ? (
+                      <td>{parseFloat(x.NetWt).toFixed(3)}</td>
+                    ) : x.wholesale ? (
+                      <td>{parseFloat(x.NetWt).toFixed(3)}</td>
+                    ) : (
+                      <td>{parseFloat(x.NetWt).toFixed(3)}</td>
+                    )}
+                    <td>{parseFloat(x.PurityName).toFixed(3)}</td>
+                    <td>₹{parseFloat(x.making).toFixed(3)}</td>
+                    {x.purchase ? (
+                      <td>₹{parseFloat(x.PurchaseAmount).toFixed(3)}</td>
+                    ) : x.wholesale ? (
+                      <td>₹{parseFloat(parseFloat(x.finalPrice)).toFixed(3)}</td>
+                    ) : (
+                      <td>
+                        ₹
+                        {parseFloat(
+                          parseFloat(x.finalPrice) +
+                            parseFloat(x.totalGstAmount)
+                        ).toFixed(3)}
+                      </td>
+                    )}
+                  </tr>
+                );
+              })
+            : null}
+        </tbody>
+      </table>
+    </div>
+  </div>
+) : null}
+
+
+
+
+
+
                 {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     <label>Label</label>

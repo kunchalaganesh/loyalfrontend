@@ -10,7 +10,7 @@ export default function InvoiceFields({ selectedSkuName,
     allCategories, filteredProducts, handleInputChangeWholesale,
     filteredPurities, filteredWholesaleCollection, wholesaleProductLabelName,
     handleWholesaleProductLabelChange, allProducts, filteredProductsWholesale,
-    filteredPuritiesWholesaleProduct,convertAmount,setConvertAmount }) {
+    filteredPuritiesWholesaleProduct,convertAmount,setConvertAmount,allSelectedProducts }) {
 
     return (
         <div className="adminPurchaseInvoiceAddProductsOptionsMainPurchaseBox">
@@ -63,7 +63,7 @@ export default function InvoiceFields({ selectedSkuName,
                                                         changeSelectedProduct,
                                                         true
                                                     ),
-                                                    setActive("Sell")
+                                                    setActive("Wholesale")
                                                 );
                                                 // setOrderProductLabelName("");
                                             } else {
@@ -76,10 +76,17 @@ export default function InvoiceFields({ selectedSkuName,
                                     autoComplete="off"
                                 />
                                 <datalist id="productLabelList">
+    {allProducts
+      .filter((product) => !allSelectedProducts.some((x) => x.ItemCode === product.ItemCode))
+      .map((product) => (
+        <option key={product.Id} value={product.ItemCode} />
+      ))}
+  </datalist>
+                                {/* <datalist id="productLabelList">
                                     {allProducts.map((product) => (
                                         <option key={product.Id} value={product.ItemCode} />
                                     ))}
-                                </datalist>
+                                </datalist> */}
                             </div>
                             <div>
                                 <th>CATEGORY</th>
