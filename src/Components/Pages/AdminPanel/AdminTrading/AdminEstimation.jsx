@@ -65,6 +65,8 @@ import GetApiService from "../../../Api/getapiService";
 import { ClipLoader } from "react-spinners";
 import ErrorModal from "../../../Other Functions/popup";
 import { useAdminData } from "../AdminSettings/useAdminData.jsx";
+import InvoiceFields from "../../../support/billsupport/invoicefields.jsx"
+
 
 
 export default function AdminEstimation() {
@@ -1187,38 +1189,74 @@ export default function AdminEstimation() {
     calculateWholesaleProductFinalPrice(wholesaleProduct);
   }, [convertAmount]);
 
-  const getCollectionWastage = (
-    selectedCustomer,
-    selectedProduct,
-    collectionmainlist
-  ) => {
+//   const getCollectionWastage = (
+//     selectedCustomer,
+//     selectedProduct,
+//     collectionmainlist
+//   ) => {
+//     // Extract CustomerSlabId and CollectionId from the customer and product
+//     const customerSlabId = selectedCustomer.CustomerSlabId;
+//     const collectionId = selectedProduct.CollectionId;
+
+//     // Find the collection in the collection list that matches the product's CollectionId
+//     const matchedCollection = collectionmainlist.find(
+//       (collection) => collection.Collection.Id === collectionId
+//     );
+
+//     if (matchedCollection) {
+//       // Find the slab within the SlabCollectionList that matches the customer's slab
+//       const matchedSlab = matchedCollection.SlabCollectionList.find(
+//         (slab) => slab.SlabId === customerSlabId
+//       );
+
+//       if (matchedSlab) {
+//         // If a matching slab is found, return the CollectionWastage
+//         return matchedSlab.CollectionWastage;
+//       } else {
+//         console.log("No matching slab found for customer.");
+//         return null;
+//       }
+//     } else {
+//       console.log("No matching collection found for product.");
+//       return null;
+//     }
+//   };
+
+const getCollectionWastage = (selectedCustomer, selectedProduct, collectionmainlist) => {
+    // Check if selectedCustomer and selectedProduct are not null or undefined
+    if (!selectedCustomer || !selectedProduct) {
+      console.log("Selected customer or product is invalid.");
+      return 0;
+    }
+  
     // Extract CustomerSlabId and CollectionId from the customer and product
     const customerSlabId = selectedCustomer.CustomerSlabId;
     const collectionId = selectedProduct.CollectionId;
-
+  
     // Find the collection in the collection list that matches the product's CollectionId
     const matchedCollection = collectionmainlist.find(
       (collection) => collection.Collection.Id === collectionId
     );
-
+  
     if (matchedCollection) {
       // Find the slab within the SlabCollectionList that matches the customer's slab
       const matchedSlab = matchedCollection.SlabCollectionList.find(
         (slab) => slab.SlabId === customerSlabId
       );
-
+  
       if (matchedSlab) {
         // If a matching slab is found, return the CollectionWastage
         return matchedSlab.CollectionWastage;
       } else {
         console.log("No matching slab found for customer.");
-        return null;
+        return 0;
       }
     } else {
       console.log("No matching collection found for product.");
-      return null;
+      return 0;
     }
   };
+  
 
   // Function to match CustomerId from selectedCustomer and match product details from selectedProduct
   const getMatchingData = (selectedCustomer, selectedProduct) => {
@@ -4536,12 +4574,12 @@ export default function AdminEstimation() {
       if (value !== "") {
         updatedProduct.FinePercent = 100;
         updatedProduct.GoldRate = parseFloat(value);
-        updatedProduct.PurityRate = parseFloat(value);
+        // updatedProduct.PurityRate = parseFloat(value);
         updatedProduct.TodaysRate = parseFloat(value);
       } else {
         updatedProduct.FinePercent = 0;
         updatedProduct.GoldRate = 0;
-        updatedProduct.PurityRate = 0;
+        // updatedProduct.PurityRate = 0;
         updatedProduct.TodaysRate = 0;
       }
     } else if (name === "ProductId") {
@@ -6984,7 +7022,28 @@ export default function AdminEstimation() {
               </div>
             ) : active === "Wholesale" ? (
               <div>
-                <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
+              <InvoiceFields
+              selectedSkuName={selectedSkuName}
+              handleSkuInputChange={handleSkuInputChange}
+              allSkuList={allSku}
+              wholesaleProduct= {wholesaleProduct}
+              allCategories={allCategories}
+              filteredProducts={filteredProducts}
+              handleInputChangeWholesale={handleInputChangeWholesale}
+              filteredPurities={filteredPurities}
+              filteredWholesaleCollection={filteredWholesaleCollection}
+              wholesaleProductLabelName={wholesaleProductLabelName}
+              handleWholesaleProductLabelChange={handleWholesaleProductLabelChange}
+              allProducts={allProducts}
+              filteredProductsWholesale={filteredProductsWholesale}
+              filteredPuritiesWholesaleProduct={filteredPuritiesWholesaleProduct}
+              convertAmount={convertAmount}
+              setConvertAmount={setConvertAmount}
+
+
+
+              />
+                {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     <label>Label</label>
                     <input
@@ -7085,22 +7144,7 @@ export default function AdminEstimation() {
                           </option>
                         );
                       })}
-                      {/* {filteredUnlabelCollection.map((x) => {
-                      if (!uniqueNamesSet.has(x.collection)) {
-                        uniqueNamesSet.add(x.collection);
-
-                        return (
-                          <option
-                            key={x.id}
-                            value={`${x.id},${x.collection},${x.collectionId}`}
-                          >
-                            {x.collection}
-                          </option>
-                        );
-                      }
-
-                      return null;
-                    })} */}
+                      
                     </select>
                   </div>
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
@@ -7157,15 +7201,7 @@ export default function AdminEstimation() {
                       value={wholesaleProduct.NetWt}
                     />
                   </div>
-                  {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                <label>Stone Wt</label>
-                <input
-                  name="stonewt"
-                  onChange={handleInputChangePurchase}
-                  type="text"
-                  value={purchaseProduct.stonewt}
-                />
-              </div> */}
+                  
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     <label>Gold Rate</label>
                     <div
@@ -7274,15 +7310,7 @@ export default function AdminEstimation() {
                     />
                   </div>
 
-                  {/* <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
-                    <label>Fine Percentage</label>
-                    <input
-                      name="Finepercent"
-                      onChange={handleInputChangeOrder}
-                      type="text"
-                      value={wholesaleProduct.Finepercent}
-                    />
-                  </div> */}
+            
 
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     <label>Fine + Wastage Wt</label>
@@ -7308,6 +7336,18 @@ export default function AdminEstimation() {
                   </div>
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     {/* <label>Add</label>  */}
+                    {/* <button
+                      onClick={() =>
+                        addWholesaleProductToList(wholesaleProduct, true)
+                      }
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div> */}
+
+                <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
+                    {/* <label>Add</label>  */}
                     <button
                       onClick={() =>
                         addWholesaleProductToList(wholesaleProduct, true)
@@ -7316,7 +7356,6 @@ export default function AdminEstimation() {
                       Add
                     </button>
                   </div>
-                </div>
               </div>
             ) : null}
             <div

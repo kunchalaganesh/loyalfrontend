@@ -11,7 +11,7 @@ export const GenerateLabel = async (products, labelFormat) => {
 
 
   // generatelabel9(products);
-
+  // generateLabel2(products);
   // labelFormat = 0;
  
   if (labelFormat === 1) {

@@ -6984,6 +6984,8 @@ export default function AdminInvoice() {
               </div>
             ) : active === "Wholesale" ? (
               <div>
+
+             
                 <div className="adminInvoiceAddProductsOptionsMainPurchaseBox">
                   <div className="adminInvoiceAddProductsOptionsMainPurchaseItems">
                     <label>Label</label>
