@@ -13,7 +13,7 @@ export const generateBillPDF = (
 
   // generateinvoicepdf6(invoiceItems, csData, mainitem);
 
-  // generateinvoicepdf10(invoiceItems, csData, mainitem);
+  // generateinvoicepdf8(invoiceItems, csData, mainitem);
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
@@ -36,8 +36,16 @@ export const generateBillPDF = (
   } else if (invoiceformate === 7) {
     generateinvoicepdf7(invoiceItems, csData, mainitem);
     return;
-  }else if (invoiceformate === 10) {
+  } else if (invoiceformate === 8) {
+    generateinvoicepdf8(invoiceItems, csData, mainitem);
+    return;
+  }
+  else if (invoiceformate === 10) {
     generateinvoicepdf10(invoiceItems, csData, mainitem);
+    return;
+  }
+  else if (invoiceformate === 11) {
+    generateinvoicepdf8(invoiceItems, csData, mainitem);
     return;
   }
 }
@@ -1505,10 +1513,6 @@ leftColumn.forEach((row, index) => {
   // Draw horizontal line after each cell
   doc.line(startX4, ypos + 3, startX4 + tableWidth4, ypos + 3); // Horizontal line across the row
 });
-
-
-
-
 // Draw bottom border for the table
 
   //draw cash table
@@ -1626,9 +1630,337 @@ paymentSummary.forEach((payment, index) => {
   doc.setFontSize(10);
   doc.text("For Mundlik Jewellers", 150, 285);
 
+  // Generate the PDF and open it in a new window
+  const pdfData = doc.output("datauristring");
+  const newWindow = window.open();
+  newWindow.document.write(
+    `<iframe width='100%' height='100%' src='${pdfData}'></iframe>`
+  );
+}
 
 
+const generateinvoicepdf8 = async (items, customer, mainitem) => {
 
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a5",
+  });
+
+  // Set table starting position and dimensions
+  const startX = 5;
+  const startY = 45;
+  const cellWidth = 80;
+  const cellHeight = 10;
+
+  const columnWidths = {
+    "Sr No": 9,
+    "Item Name": 18,
+    Pcs: 9,
+    "Gr + Tag": 12,
+    Tag: 12,
+    "Gr Wt": 12,
+    "RB Wt": 12,
+    "Em Wt": 12,
+    "Nr Wt": 12,
+    "Ad Wt": 12,
+    "CLR Wt": 12,
+    "Moti Wt": 12,
+    "BDS Wt": 12,
+    "Net Wt": 12,
+    Touch: 12,
+    "Fine Wt": 12,
+    "S Amt": 12,
+  };
+
+  const columnArray = [
+    "Sr No",
+    "Item Name",
+    "Pcs",
+    "Gr + Tag",
+    "Tag",
+    "Gr Wt",
+    "RB Wt",
+    "Em Wt",
+    "Nr Wt",
+    "Ad Wt",
+    "CLR Wt",
+    "Moti Wt",
+    "BDS Wt",
+    "Net Wt",
+    "Touch",
+    "Fine Wt",
+    "S Amt",
+  ];
+
+  const dummyData = [
+    {
+      "Sr No": "1",
+      "Item Name": "Bangle",
+      Pcs: "2",
+      "Gr + Tag": "12.00",
+      Tag: "5.00",
+      "Gr Wt": "7.00",
+      "RB Wt": "0.00",
+      "Em Wt": "0.00",
+      "Nr Wt": "6.00",
+      "Ad Wt": "1.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "7.00",
+      Touch: "92%",
+      "Fine Wt": "6.44",
+      "S Amt": "1000.00",
+    },
+    {
+      "Sr No": "2",
+      "Item Name": "Bangle",
+      Pcs: "1",
+      "Gr + Tag": "20.00",
+      Tag: "8.00",
+      "Gr Wt": "12.00",
+      "RB Wt": "0.00",
+      "Em Wt": "0.00",
+      "Nr Wt": "10.00",
+      "Ad Wt": "2.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "12.00",
+      Touch: "91%",
+      "Fine Wt": "10.92",
+      "S Amt": "2000.00",
+    },
+    {
+      "Sr No": "3",
+      "Item Name": "CADA",
+      Pcs: "1",
+      "Gr + Tag": "30.00",
+      Tag: "15.00",
+      "Gr Wt": "15.00",
+      "RB Wt": "2.00",
+      "Em Wt": "1.00",
+      "Nr Wt": "12.00",
+      "Ad Wt": "3.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "1.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "14.00",
+      Touch: "90%",
+      "Fine Wt": "12.60",
+      "S Amt": "1500.00",
+    },
+    {
+      "Sr No": "4",
+      "Item Name": "MICRO EP",
+      Pcs: "2",
+      "Gr + Tag": "8.00",
+      Tag: "2.00",
+      "Gr Wt": "6.00",
+      "RB Wt": "0.00",
+      "Em Wt": "1.00",
+      "Nr Wt": "4.00",
+      "Ad Wt": "1.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "5.00",
+      Touch: "89%",
+      "Fine Wt": "4.45",
+      "S Amt": "800.00",
+    },
+    {
+      "Sr No": "5",
+      "Item Name": "NR BRCLET",
+      Pcs: "1",
+      "Gr + Tag": "25.00",
+      Tag: "10.00",
+      "Gr Wt": "15.00",
+      "RB Wt": "0.00",
+      "Em Wt": "2.00",
+      "Nr Wt": "12.00",
+      "Ad Wt": "3.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "14.00",
+      Touch: "88%",
+      "Fine Wt": "12.32",
+      "S Amt": "3000.00",
+    },
+    {
+      "Sr No": "6",
+      "Item Name": "NR BRCLET",
+      Pcs: "1",
+      "Gr + Tag": "7.00",
+      Tag: "3.00",
+      "Gr Wt": "4.00",
+      "RB Wt": "0.00",
+      "Em Wt": "0.00",
+      "Nr Wt": "3.00",
+      "Ad Wt": "1.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "3.00",
+      Touch: "95%",
+      "Fine Wt": "2.85",
+      "S Amt": "1200.00",
+    },
+    {
+      "Sr No": "7",
+      "Item Name": "NR BRCLET",
+      Pcs: "1",
+      "Gr + Tag": "5.00",
+      Tag: "2.00",
+      "Gr Wt": "3.00",
+      "RB Wt": "1.00",
+      "Em Wt": "1.00",
+      "Nr Wt": "1.00",
+      "Ad Wt": "0.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "2.00",
+      Touch: "96%",
+      "Fine Wt": "1.92",
+      "S Amt": "5000.00",
+    },
+    {
+      "Sr No": "8",
+      "Item Name": "NR BRCLET",
+      Pcs: "1",
+      "Gr + Tag": "18.00",
+      Tag: "6.00",
+      "Gr Wt": "12.00",
+      "RB Wt": "0.00",
+      "Em Wt": "2.00",
+      "Nr Wt": "8.00",
+      "Ad Wt": "4.00",
+      "CLR Wt": "0.00",
+      "Moti Wt": "0.00",
+      "BDS Wt": "0.00",
+      "Net Wt": "10.00",
+      Touch: "89%",
+      "Fine Wt": "8.90",
+      "S Amt": "1800.00",
+    },
+  ];
+
+  // Calculate totals for each column
+  const totals = {
+    Pcs: 0,
+    "Gr Wt": 0,
+    "RB Wt": 0,
+    "Em Wt": 0,
+    "Nr Wt": 0,
+    "Ad Wt": 0,
+    "CLR Wt": 0,
+    "Moti Wt": 0,
+    "Net Wt": 0,
+    "Fine Wt": 0,
+    "S Amt": 0,
+  };
+
+  dummyData.forEach((row) => {
+    Object.keys(totals).forEach((key) => {
+      const value = parseFloat(row[key]);
+      if (!isNaN(value)) {
+        totals[key] += value;
+      }
+    });
+  });
+
+  // Draw the table header and data rows
+  let currentX = 2;
+  const tableWidth = 200; // Total width for the table
+
+  columnArray.forEach((title, index) => {
+    const columnWidth = columnWidths[title] || 20; // Default to 20mm if not specified
+    const textX = currentX + 0.5;
+    const cellY = 10; // Adjusted Y position to place text within the cell
+
+    // Draw the centered text inside the cells
+    doc.setFontSize(8.5);
+    doc.setFont("sanserif", "normal");
+    doc.text(title.charAt(0).toUpperCase() + title.slice(1), textX, cellY); // Capitalize first letter
+
+    // Draw the vertical line for each column
+    if (index !== 0) {
+      doc.line(currentX, 5, currentX, 92); // Vertical line from header to the bottom of the table
+    }
+
+    // Draw the vertical line for each column
+    currentX += columnWidth;
+  });
+
+  doc.setFontSize(8.5);
+  doc.setFont("sanserif", "normal");
+  doc.text("Total", 15, 78);
+  doc.text("Stn Rate", 15, 83);
+  doc.text("Stn Amt", 15, 87);
+
+  //footer
+  doc.text("Stone Charge ", 160, 100);
+  doc.text("Huid Charge ", 160, 105);
+  doc.text("Courier Charge ", 160, 110);
+  doc.text("GST ", 160, 115);
+  doc.text("TDS Amount ", 160, 120);
+
+  doc.text("TDS:  ", 50, 110);
+  doc.text("Gold Rate: ", 50, 115);
+  doc.text("Issue: ", 50, 120);
+  doc.text("Reciept: ", 50, 125);
+
+  doc.setFontSize(8.5);
+  doc.setFont("sanserif", "bold");
+
+  doc.text("Payable Amount ", 160, 125);
+  doc.text("Net Balance ", 160, 130);
+
+  // Render data rows
+  const startRowY = 20;
+  let rowY = startRowY;
+
+  dummyData.forEach((row, rowIndex) => {
+    let columnX = 2;
+
+    columnArray.forEach((columnKey) => {
+      let value = row[columnKey] ? row[columnKey].toString() : "";
+      const columnWidth = columnWidths[columnKey] || 20;
+
+      if (!isNaN(value)) {
+        value = parseFloat(value).toFixed(2); // Apply toFixed(2) for all numeric values
+      }
+
+      doc.text(value, columnX + 0.5, rowY);
+      columnX += columnWidth;
+    });
+
+    rowY += 7;
+  });
+
+  // Draw the outer table border (adjust height to fit the table content)
+  doc.rect(0, 5, 210, 68); // Adjust to fit the content
+
+  doc.line(0, 15, 210, 15);
+
+  // Draw totals row at the bottom of the table
+  let totalRowX = 2;
+
+  columnArray.forEach((columnKey) => {
+    let totalValue = totals[columnKey] ? totals[columnKey].toFixed(2) : "";
+    const columnWidth = columnWidths[columnKey] || 20;
+
+    if (totalValue) {
+      doc.setFont("sanserif", "bold");
+      doc.text(totalValue, totalRowX + 0.5, rowY);
+      doc.line(0, 92, 210, 92);
+    }
+
+    totalRowX += columnWidth;
+  });
 
   // Generate the PDF and open it in a new window
   const pdfData = doc.output("datauristring");
@@ -1638,7 +1970,12 @@ paymentSummary.forEach((payment, index) => {
   );
 
 
+
+
 }
+
+
+
 
 
 

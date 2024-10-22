@@ -15,6 +15,9 @@ export default function GenerateRdPurchaseReceipt(order, rdPurchaseFormat) {
   } else if (rdPurchaseFormat == 10) {
     generateRdPurchaseReceipt2(order);
   }
+  else if (rdPurchaseFormat == 11) {
+    generateRdPurchaseReceipt2(order);
+  }
 }
 
 
