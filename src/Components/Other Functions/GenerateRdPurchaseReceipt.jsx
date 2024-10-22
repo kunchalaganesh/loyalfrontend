@@ -4,17 +4,21 @@ import { numberToIndianWords } from "./numberToIndianWords";
 
 export default function GenerateRdPurchaseReceipt(order, rdPurchaseFormat) {
   console.log("checking trigger", order, rdPurchaseFormat);
+  // generateRdPurchaseReceipt1(order);
+
   if (rdPurchaseFormat == 2) {
     // Thashna Label Below
     generateRdPurchaseReceipt2(order);
   } else if (rdPurchaseFormat == 1) {
     // Nice Label Below
     generateRdPurchaseReceipt2(order);
+  } else if (rdPurchaseFormat == 2) {
+
   }
 }
 
 
-const generateRdPurchaseReceipttashna = async (order) =>{
+const generateRdPurchaseReceipttashna = async (order) => {
 
   const doc = new jsPDF({
     orientation: "landscape",
@@ -124,11 +128,11 @@ const generateRdPurchaseReceipt1 = async (order) => {
         item.MakingPerGram &&
         item.MakingPercentage
         ? parseFloat(
-            parseFloat(item.MakingFixedAmt) +
-              parseFloat(item.MakingFixedWastage) +
-              parseFloat(item.MakingPerGram) +
-              parseFloat(item.MakingPercentage)
-          ).toFixed(2)
+          parseFloat(item.MakingFixedAmt) +
+          parseFloat(item.MakingFixedWastage) +
+          parseFloat(item.MakingPerGram) +
+          parseFloat(item.MakingPercentage)
+        ).toFixed(2)
         : "-",
       170,
       y
@@ -300,8 +304,8 @@ const generateRdPurchaseReceipt2 = async (order) => {
     }
 
     const clipDisplay = item.ClipQuantity && item.ClipWeight
-    ? String((item.ClipQuantity * item.ClipWeight).toFixed(3))
-    : '-';
+      ? String((item.ClipQuantity * item.ClipWeight).toFixed(3))
+      : '-';
 
     // item.ClipQuantity && item.ClipWeight
     //   ? `${item.ClipQuantity} * ${item.ClipWeight}`

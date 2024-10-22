@@ -289,7 +289,7 @@ export const createOrder = async (orderDetails) => {
 
       const response = await fetch(a154, {
         method: "POST",
-        body: formData1,
+        body: formData,
       });
 
       

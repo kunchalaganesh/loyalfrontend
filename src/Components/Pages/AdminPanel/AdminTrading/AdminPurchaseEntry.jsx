@@ -1432,7 +1432,7 @@ export default function AdminPurchaseEntry() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload1),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

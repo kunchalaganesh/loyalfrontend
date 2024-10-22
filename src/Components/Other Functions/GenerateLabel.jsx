@@ -11,7 +11,7 @@ export const GenerateLabel = async (products, labelFormat) => {
 
 
   // generatelabel9(products);
-  // generateLabel2(products);
+  // generatelabel10(products);
   // labelFormat = 0;
  
   if (labelFormat === 1) {
@@ -1558,34 +1558,55 @@ const generatelabel9 = async (products) => {
 
 const generatelabel10 = async (products) => {
   const doc = new jsPDF({
-    // format: [27, 14],
-    format: [81, 12],
+    format: [27, 14],
+    // format: [81, 12],
     orientation: "landscape",
   });
 
-  const fontSize = 5.5;
-  const imageHeight = 7;
-  const imageWidth = 7;
+  const fontSize = 5;
+  const imageHeight = 12;
+  const imageWidth = 12;
+
+  const itemCodeX = 1; // X position for ItemCode
+  const itemCodeY = 3; // Y position for ItemCode
+  const rfidX = 16; // X position for RFID
+  const rfidY = 3; // Y position for RFID
+
+  const grossWtX = 1; // X position for GrossWt
+  const grossWtY = 6; // Y position for GrossWt
+  const netWtX = 16; // X position for NetWt
+  const netWtY = 6; // Y position for NetWt
+
+  const stoneWtX = 1; // X position for StoneWeight
+  const stoneWtY = 9; // Y position for StoneWeight
+  const piecesX = 16; // X position for Pieces
+  const piecesY = 9; // Y position for Pieces
+
+  const weightX = 1; // X position for Weight
+  const weightY = 12; // Y position for Weight
+  const despX = 16; // X position for Description
+  const despY = 12; // Y position for Description
 
   for (let i = 0; i < products.length; i++) {
     const {
+      collection,
       GrossWt,
+      TotalStoneWeight,
+      NetWt,
+      TotalStoneAmount,
       ItemCode,
       PurityName,
       MRP,
+      ProductNo,
+      Pieces,
+      Description,
       RFIDCode,
       CategoryName,
       Size,
       SKU,
       ProductTitle,
       OccassionName,
-      NetWt,
-      TotalStoneWeight,
-      TotalStoneAmount,
-      MakingPerGram,
-      MakingPercentage,
-      ProductName,
-      Description
+
     } = products[i];
 
     if (i > 0) {
@@ -1593,35 +1614,52 @@ const generatelabel10 = async (products) => {
     }
     doc.setFontSize(fontSize);
     doc.setFont("helvetica", "bold");
+    // doc.line(26, 0, 26, 12);
+    // {
+    //   collection.length > 20
+    //     ? doc.text(`${collection.substr(0, 26)}`, 1, 3)
+    //     : doc.text(`${collection}`, 1, 3);
+    // }
 
-    if (MRP == 0 || MRP === "") {
+    if (MRP === 0 || MRP === "") {
       // doc.text(`${itemCode}`, 2, 3);
+      doc.text(`${ItemCode}`, 3, 3);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 3, 6);
+      doc.text(`SWT: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 3, 8);
+      doc.text(`NWT: ${parseFloat(NetWt).toFixed(3)}`, 3, 10);
 
-      doc.text(`${ProductName}`, 2, 3.7);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
-      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
-      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
-     
-      doc.text(`${ItemCode}`, 30,10);
-      doc.text(`${Description}`, 30,12);
-      doc.text(`${TotalStoneAmount}`, 38,5);
+      doc.text(` ${RFIDCode}`, 16, 3);
+      doc.text(`${parseFloat(TotalStoneAmount).toFixed(3)}`, 16, 6);
+      doc.text(`${PurityName}`, 16, 8);
 
+      // doc.text(`${SKU}`, 17, 4);
       
       
+      // doc.text(`Size2: ${Size ? Size : ""}`, 3, 12);
+      // {
+      //   RFIDCode ? doc.text(`testing`, 3, 4) : doc.text("test", 16, 12);
+      // }
     } else {
-      doc.text(`${ProductName}`, 2, 3.7);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 5.8);
-      doc.text(`St W: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 2, 7.8);
-      doc.text(`Nt W: ${parseFloat(NetWt).toFixed(3)}`, 2, 9.8);
-     
-      doc.text(`${ItemCode}`, 30,10);
-      doc.text(`${Description}`, 30,12);
-      doc.text(`${TotalStoneAmount}`, 38,5);
+      doc.text(`${ItemCode}`, 3, 3);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 3, 6);
+      doc.text(`SWT: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 3, 8);
+      doc.text(`NWT: ${parseFloat(NetWt).toFixed(3)}`, 3, 10);
+
+      doc.text(` ${RFIDCode}`, 16, 3);
+      doc.text(`${parseFloat(TotalStoneAmount).toFixed(3)}`, 16, 6);
+      doc.text(`${PurityName}`, 16, 8);
     }
 
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(ItemCode);
-      doc.addImage(qrCodeDataUrl, "JPEG", 30, 1, imageWidth, imageHeight);
+      // doc.addImage(
+      //   qrCodeDataUrl,
+      //   "JPEG",
+      //   rfidX,
+      //   rfidY,
+      //   imageWidth,
+      //   imageHeight
+      // );
       console.log(qrCodeDataUrl, "qrCodeDataUrl");
     } catch (error) {
       console.error(error);
