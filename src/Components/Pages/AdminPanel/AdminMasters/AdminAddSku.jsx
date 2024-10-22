@@ -181,7 +181,7 @@ export default function AdminAddSku() {
     CategoryId: 1,
     ClientCode: clientCode,
     CollectionName: "",
-    CollectionId: "",
+    CollectionId: "0",
     CollectionNameSKU: "",
     Colour: "",
     CompanyId: 0,

@@ -12,8 +12,8 @@ export default function GenerateRdPurchaseReceipt(order, rdPurchaseFormat) {
   } else if (rdPurchaseFormat == 1) {
     // Nice Label Below
     generateRdPurchaseReceipt2(order);
-  } else if (rdPurchaseFormat == 2) {
-
+  } else if (rdPurchaseFormat == 10) {
+    generateRdPurchaseReceipt2(order);
   }
 }
 
