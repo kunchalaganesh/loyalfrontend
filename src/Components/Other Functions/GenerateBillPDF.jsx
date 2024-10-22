@@ -13,7 +13,7 @@ export const generateBillPDF = (
 
   // generateinvoicepdf6(invoiceItems, csData, mainitem);
 
-  // generateinvoicepdf10(invoiceItems, csData, mainitem);
+  generateinvoicepdf10(invoiceItems, csData, mainitem);
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
@@ -37,7 +37,7 @@ export const generateBillPDF = (
     generateinvoicepdf7(invoiceItems, csData, mainitem);
     return;
   }else if (invoiceformate === 10) {
-    generateinvoicepdf7(invoiceItems, csData, mainitem);
+    generateinvoicepdf10(invoiceItems, csData, mainitem);
     return;
   }
 }
@@ -1681,12 +1681,16 @@ const generateinvoicepdf10 = async (items, customer, mainitem) => {
 
   // Define the column positions
   const columnPositions = {
-    sr: pageWidth - 200,
+    sr: pageWidth - 205,
     productDetails: pageWidth - 185,
     // pcs: pageWidth-150,
     hsnCode: pageWidth - 130,
     purity: pageWidth - 110,
+    gwt:pageWidth - 110,
+    gwt:pageWidth - 110,
+    gwt:pageWidth - 110,
     qty: pageWidth - 90,
+    gwt:pageWidth - 110,
     va: pageWidth - 70,
     amount: pageWidth - 40,
   };
@@ -1908,12 +1912,12 @@ const generateinvoicepdf10 = async (items, customer, mainitem) => {
     // const x = (pageWidth - 40) / 2;
 
     // doc.addImage(imageBase64, 'JPEG', x, 2, 40, 40);
-    const imageWidth = 40;
+    const imageWidth = pageWidth/2;
     const imageX = (pageWidth - imageWidth) / 2; // Center horizontally
     const imageY = 5; // Adjust the y-coordinate as needed
 
     // Add the image to the PDF
-    doc.addImage(imageBase64, 'JPEG', 0, imageY, pageWidth, 40);
+    doc.addImage(imageBase64, 'JPEG', imageX, imageY, pageWidth/2, 30);
 
   } catch (error) {
     console.error("Error loading image:", error);

@@ -1563,7 +1563,7 @@ const generatelabel10 = async (products) => {
     orientation: "landscape",
   });
 
-  const fontSize = 5;
+  const fontSize = 7;
   const imageHeight = 12;
   const imageWidth = 12;
 
@@ -1612,7 +1612,7 @@ const generatelabel10 = async (products) => {
     if (i > 0) {
       doc.addPage(); // Add a new page for each product after the first one
     }
-    doc.setFontSize(fontSize);
+    
     doc.setFont("helvetica", "bold");
     // doc.line(26, 0, 26, 12);
     // {
@@ -1623,14 +1623,18 @@ const generatelabel10 = async (products) => {
 
     if (MRP === 0 || MRP === "") {
       // doc.text(`${itemCode}`, 2, 3);
-      doc.text(`${ItemCode}`, 3, 3);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 3, 6);
-      doc.text(`SWT: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 3, 8);
-      doc.text(`NWT: ${parseFloat(NetWt).toFixed(3)}`, 3, 10);
+      doc.setFontSize(7);
+      doc.text(`${ItemCode}`, 2, 3);
+      doc.setFontSize(6);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 6);
+      doc.text(`SW: ${parseFloat(TotalStoneWeight).toFixed(3)} `, 2, 8);
+      doc.text(`NW: ${parseFloat(NetWt).toFixed(3)}`, 2, 10);
 
-      doc.text(` ${RFIDCode}`, 16, 3);
-      doc.text(`${parseFloat(TotalStoneAmount).toFixed(3)}`, 16, 6);
-      doc.text(`${PurityName}`, 16, 8);
+      doc.setFontSize(7);
+      doc.text(` ${RFIDCode}`, 17, 3);
+      doc.setFontSize(6);
+      doc.text(`SC ${parseFloat(TotalStoneAmount).toFixed(0)}`, 17.2, 8);
+      doc.text(`${PurityName}`, 17.2, 5.5);
 
       // doc.text(`${SKU}`, 17, 4);
       
@@ -1640,14 +1644,18 @@ const generatelabel10 = async (products) => {
       //   RFIDCode ? doc.text(`testing`, 3, 4) : doc.text("test", 16, 12);
       // }
     } else {
-      doc.text(`${ItemCode}`, 3, 3);
-      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 3, 6);
-      doc.text(`SWT: ${parseFloat(TotalStoneWeight).toFixed(3)}`, 3, 8);
-      doc.text(`NWT: ${parseFloat(NetWt).toFixed(3)}`, 3, 10);
+      doc.setFontSize(7);
+      doc.text(`${ItemCode}`, 2, 3);
+      doc.setFontSize(6);
+      doc.text(`GW: ${parseFloat(GrossWt).toFixed(3)}`, 2, 6);
+      doc.text(`SW: ${parseFloat(TotalStoneWeight).toFixed(3)} `, 2, 8);
+      doc.text(`NW: ${parseFloat(NetWt).toFixed(3)}`, 2, 10);
 
-      doc.text(` ${RFIDCode}`, 16, 3);
-      doc.text(`${parseFloat(TotalStoneAmount).toFixed(3)}`, 16, 6);
-      doc.text(`${PurityName}`, 16, 8);
+      doc.setFontSize(7);
+      doc.text(` ${RFIDCode}`, 17, 3);
+      doc.setFontSize(6);
+      doc.text(`SC ${parseFloat(TotalStoneAmount).toFixed(0)}`, 17.2, 8);
+      doc.text(`${PurityName}`, 17.2, 5.5);
     }
 
     try {
