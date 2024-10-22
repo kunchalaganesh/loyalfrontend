@@ -13,7 +13,7 @@ export const generateBillPDF = (
 
   // generateinvoicepdf6(invoiceItems, csData, mainitem);
 
-  generateinvoicepdf10(invoiceItems, csData, mainitem);
+  // generateinvoicepdf10(invoiceItems, csData, mainitem);
 
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
