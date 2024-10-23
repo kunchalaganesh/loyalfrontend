@@ -51,6 +51,7 @@ export default function AdminPurchseitemview({
                     <th>FINE%</th>
                     <th>WASTAGE%</th>
                     <th>MAKING</th>
+                    <th>StoneAmt</th>
                     <th>PRICE</th>
                   </tr>
                 </thead>
@@ -160,6 +161,7 @@ export default function AdminPurchseitemview({
                           <td> {parseFloat(x.WastageWt).toFixed(3)}</td>
 
                           <td> ₹{parseFloat(x.Making).toFixed(3)}</td>
+                          <td> ₹{parseFloat(x.StoneAmount).toFixed(3)}</td>
                           <td>
                             ₹
                             {parseFloat(
@@ -203,6 +205,7 @@ export default function AdminPurchseitemview({
                         ? selectedProduct[0].Making
                         : 0}
                     </td>
+                    
                     <td>
                       {selectedProduct.length > 0
                         ? selectedProduct[0].Making
@@ -211,73 +214,6 @@ export default function AdminPurchseitemview({
                     <td>₹{totalPayableAmount || 0}</td>
                   </tr>
 
-                  {/* <tr style={{height:'10px'}}>
-
-                          <td>
-                            <div>
-
-                            </div>
-                          </td>
-                            
-                            
-                            <td>
-                              <div className="adminAddInvoiceMainAddLabelOption">
-                                <div className="adminAddInvoiceMainAddLabelOptionImageBox">
-                                  <BsCardImage size={"30px"} />
-                                </div>
-                                <div className="adminAddInvoiceMainAddLabelOptionLabelBox">
-                                  <input
-                                    // tabIndex="1"
-                                    type="text"
-                                    placeholder="Type or click to select an item"
-                                    name="productLabel"
-                                    value={labelName}
-                                    onInput={handleProductLabelChange}
-                                    readOnly
-                                    onKeyPress={(e) => {
-                                      if (e.key === "Ctrl") {
-                                        e.preventDefault();
-                                        // button1Ref.current.focus();
-                                        alert("Space");
-                                      } else if (e.key === "Enter") {
-                                        // Call your function here
-                                        if (selectedProduct.length !== 0) {
-                                          calculateFinalPrice(
-                                            selectedProduct,
-                                            true
-                                          );
-                                        } else {
-                                          // null;
-                                          button1Ref.current.focus();
-                                        }
-                                      }
-                                    }}
-                                    list="productLabelList"
-                                  />
-                                  <datalist id="productLabelList">
-                                    {allProducts.map((product, index) => (
-                                      <option
-                                        key={index}
-                                        value={product.itemCode}
-                                      />
-                                    ))}
-                                  </datalist>
-                                </div>
-                              </div>
-                            </td>
-
-                            {selectedProduct.length > 0 ? (
-                              <td>{selectedProduct.MetalRate}</td>
-                            ) : (
-                              <td>0</td>
-                            )}
-                            <td>{selectedProduct.GrossWt}</td>
-                            <td> {selectedProduct.NetWt}</td>
-                            <td> {selectedProduct.Purity}</td>
-                            <td>{selectedProduct.Making}</td>
-
-                            <td>₹{totalPayableAmount} </td>
-                          </tr> */}
                 </tbody>
               </table>
             </div>
@@ -310,6 +246,7 @@ export default function AdminPurchseitemview({
             <td> {selectedProduct.NetWt}</td>
             <td> {selectedProduct.Purity}</td>
             <td> {selectedProduct.Making}</td>
+            <td> {selectedProduct.Purity}</td>
 
             <td>
               {parseFloat(

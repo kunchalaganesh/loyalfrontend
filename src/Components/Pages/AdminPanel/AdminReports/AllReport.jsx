@@ -1283,7 +1283,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                         alignItems={"start"}
                         sx={{ flexDirection: { xs: "column", sm: "row" } }}
                     >
-                        <Grid item xs={12} sm={8}>
+                        <Grid item xs={12} sm={12}>
                             <Box mb={1} sx={{ textAlign: { xs: "center", sm: "left" } }}>
                                 <Tabs
                                     value={selectedTab}
@@ -1294,6 +1294,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                     scrollButtons="auto"
                                     allowScrollButtonsMobile
                                     sx={{
+                                        
                                         '& .MuiTab-root': {
                                             textTransform: 'none',
                                             color: '#000',
@@ -1935,6 +1936,7 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                                    <TableCell sx={{fontWeight: "600"}} align="center">Total Wt</TableCell>
                                                    <TableCell sx={{fontWeight: "600"}}
                                                    align="center">{selectedTab === 6 ? "Packet Wt" : "Box Wt"}</TableCell>
+                                                   <TableCell sx={{fontWeight: "600"}} align="center">Packet Count</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">Opening qty</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">opening gross wt</TableCell>
                                         <TableCell sx={{fontWeight: "600"}} align="center">opening net wt</TableCell>
@@ -2076,6 +2078,8 @@ const formattedDate = today.toISOString().split('T')[0]; // Format date to 'YYYY
                                                 
                                                 <TableCell
                                                     align="center">{selectedTab === 6 ? item.PacketWeight : item.BoxWeight}</TableCell>
+<TableCell
+                                                    align="center">{item.PacketCount}</TableCell>
 
                                                 <TableCell
                                                     align="center">{item.OpeningQuantity}</TableCell>

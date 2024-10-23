@@ -454,7 +454,7 @@ export default function AdminAddStone() {
                                     <th>Stone Pieces</th>
                                     <th>Stone Rate</th>
                                     <th>Stone Amount</th>
-                                    <th>Stone Less Percent</th>
+                                    {/* <th>Stone Less Percent</th> */}
                                     <th>Description</th>
                                     {/* <th>Client Code</th>
                     <th>Employee Code</th> */}
@@ -478,7 +478,7 @@ export default function AdminAddStone() {
                                         <td>{x.StonePieces}</td>
                                         <td>{x.StoneRate}</td>
                                         <td>{x.StoneAmount}</td>
-                                        <td>{x.StoneLessPercent}</td>
+                                        {/* <td>{x.StoneLessPercent}</td> */}
                                         <td>{x.Description}</td>
                                         {/* <td>{x.ClientCode}</td>
                       <td>{x.EmployeeCode}</td> */}
@@ -511,7 +511,7 @@ export default function AdminAddStone() {
                                         type="text"
                                         required="required"
                                     />
-                                    <label>
+                                    {/* <label>
                                         Stone Less Percent<sup>*</sup>
                                     </label>
                                     <input
@@ -519,7 +519,7 @@ export default function AdminAddStone() {
                                         value={newCategory.StoneLessPercent}
                                         onChange={handleNewCategoryChange}
                                         type="text"
-                                    />
+                                    /> */}
 
                                     <label>
                                         Stone Weight<sup>*</sup>

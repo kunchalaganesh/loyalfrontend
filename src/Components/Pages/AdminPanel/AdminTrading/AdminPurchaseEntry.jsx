@@ -3641,20 +3641,7 @@ export default function AdminPurchaseEntry() {
                                     )}
                                   </div>
                                 </div>
-
                                 <div>
-                                  <th>STONE PIECES</th>
-                                  <input
-                                    name="StonePieces"
-                                    onChange={handleInputChangePurchase}
-                                    type="text"
-                                    value={purchaseProduct.StonePieces}
-                                  />
-                                </div>
-
-                                {showAllFields ? (
-                                  <>
-                                    <div>
                                       <th>QUANTITY</th>
                                       <input
                                         name="Quantity"
@@ -3663,6 +3650,20 @@ export default function AdminPurchaseEntry() {
                                         value={purchaseProduct.Quantity}
                                       />
                                     </div>
+
+                                
+
+                                {showAllFields ? (
+                                  <>
+                                  <div>
+                                  <th>STONE PIECES</th>
+                                  <input
+                                    name="StonePieces"
+                                    onChange={handleInputChangePurchase}
+                                    type="text"
+                                    value={purchaseProduct.StonePieces}
+                                  />
+                                </div>
                                     {/* <div>
                                   <th>MAKING %</th>
                                   <input
@@ -3841,15 +3842,7 @@ export default function AdminPurchaseEntry() {
                                   </>
                                 ) : null}
 
-                                <div>
-                                  <th>TESTING</th>
-                                  <input
-                                    name="Testing"
-                                    onChange={handleInputChangePurchase}
-                                    type="text"
-                                    value={purchaseProduct.Testing}
-                                  />
-                                </div>
+                                
 
                                 <div>
                                   <th>FINE WT</th>
@@ -3882,6 +3875,15 @@ export default function AdminPurchaseEntry() {
                                     value={parseFloat(
                                       purchaseProduct.FineWastageWt
                                     ).toFixed(3)}
+                                  />
+                                </div>
+                                <div>
+                                  <th>TESTING</th>
+                                  <input
+                                    name="Testing"
+                                    onChange={handleInputChangePurchase}
+                                    type="text"
+                                    value={purchaseProduct.Testing}
                                   />
                                 </div>
                                 {/* <div>

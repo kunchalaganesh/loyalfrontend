@@ -62,8 +62,34 @@ import { Grid } from "@mui/material";
 import GetApiService from "../../../Api/getapiService";
 import { ClipLoader } from "react-spinners";
 import ErrorModal from "../../../Other Functions/popup";
+import { FaPlus, FaTrash } from 'react-icons/fa'; 
+import { TableContainer } from "@mui/material";
 
 export default function AdminAddBulkStockNew() {
+
+  const thStyle = {
+    padding: '5px',
+    border: '1px solid #ccc',
+    textAlign: 'center',
+    fontWeight: '600',
+  };
+  
+  const tdStyle = {
+    padding: '5px',
+    border: '1px solid #ccc',
+    textAlign: 'center',
+  };
+  
+  const inputStyle = {
+    width: '100%',
+    padding: '3px',
+    margin: '0',
+    boxSizing: 'border-box',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  };
+
+
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [showModal, setShowModal] = useState(false); // Modal visibility state
@@ -5642,6 +5668,31 @@ export default function AdminAddBulkStockNew() {
                         />
                       </div>
                     </div>
+
+                    {/* <div className="adminAddBulkStockAddedProductsOuterBox">
+                      
+                      
+                      <TableContainer sx={{ borderSpacing: '0', borderCollapse: 'collapse' }}>
+        <table size="small" sx={{ borderRadius: '4px', borderCollapse: 'collapse', borderSpacing: '0' }}>
+          <thead>
+            <tr>
+              <th style={thStyle}>Name</th>
+              <th style={thStyle}>Weight</th>
+              <th style={thStyle}>Pieces</th>
+              <th style={thStyle}>Rate</th>
+              <th style={thStyle}>Amount</th>
+              <th style={thStyle}>Description</th>
+             
+            </tr>
+          </thead>
+          </table>
+          </TableContainer>
+
+
+                      </div> */}
+
+
+
                     <div className="adminAddBulkStockAddedProductsOuterBox">
                       {/* <form onSubmit={updatedetailsBox}> */}
                       {showAllFields ? (

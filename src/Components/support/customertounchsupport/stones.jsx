@@ -25,8 +25,8 @@ export default function Stonetounch({ stones, onAmountChange }) {
           <tr>
             <th>S.No</th>
             <th>Stone Name</th>
-            <th>Weight</th>
-            <th>Pieces</th>
+            {/* <th>Weight</th>
+            <th>Pieces</th> */}
             <th>Rate</th>
           </tr>
         </thead>
@@ -35,8 +35,8 @@ export default function Stonetounch({ stones, onAmountChange }) {
             <tr key={stone.Id}>
               <td>{index + 1}</td>
               <td>{stone.StoneName}</td>
-              <td>{stone.StoneWeight}</td>
-              <td>{stone.StonePieces}</td>
+              {/* <td>{stone.StoneWeight}</td>
+              <td>{stone.StonePieces}</td> */}
               <td>
                 <input
                   type="number"
