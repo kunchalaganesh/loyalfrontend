@@ -1675,8 +1675,9 @@ export default function AdminAddBulkStockNew() {
     // Parse updated properties to numbers, defaulting to 0 if empty or invalid
     // const grosswt = parseFloat(product.GrossWt) || 0;
 
+    let totalFilteredGrossWt  =0;
     if (lotNumber && lotNumber !== "0") {
-      const totalFilteredGrossWt = unlabeledgold;
+       totalFilteredGrossWt = unlabeledgold;
       // allFilteredPurchaseItems.reduce((acc, item) => {
       //   return acc + parseFloat(item.GrossWt || 0);
       // }, 0);

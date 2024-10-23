@@ -32,7 +32,16 @@ import { RxCross2 } from "react-icons/rx";
 import { GiCheckMark } from "react-icons/gi";
 
 export default function AdminPurchasePayments() {
+
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    // Formatting to 'YYYY-MM-DDTHH:MM'
+    const formattedDateTime = now.toISOString().slice(0, 16);
+    return formattedDateTime;
+  };
+
   const [active, setActive] = useState("List");
+  const [invoiceDateTime, setInvoiceDateTime] = useState(getCurrentDateTime());
   const [supplierName, setSupplierName] = useState("");
   const [allSalesTeam, setAllSalesTeam] = useState([]);
   const [allSupplierData, setAllSupplierData] = useState([]);
@@ -154,6 +163,16 @@ export default function AdminPurchasePayments() {
       // setOldGoldAmount(0);
       setTotalPayableGold(0);
       setTotalPayableSilver(0);
+    }
+  };
+
+  const handleDateTimeChange = (e) => {
+    const selectedDateTime = e.target.value;
+    setInvoiceDateTime(selectedDateTime);
+
+    // Check if the selected date-time is fully selected (length of 16 characters)
+    if (selectedDateTime.length === 16) {
+      e.target.blur(); // Blur the input to close the picker after full date-time is selected
     }
   };
 
@@ -1143,7 +1162,19 @@ export default function AdminPurchasePayments() {
                   <div
                     id="adminInvoiceAddCustomerTitle"
                     className="adminInvoiceSelectLabelBox"
+                  
                   >
+
+<div className="adminInvoiceSelectItem">
+        <label>Date & Time</label>
+        <input
+          type="datetime-local"
+          name="invoiceDateTime"
+          value={invoiceDateTime}
+          onChange={handleDateTimeChange} // Will blur only after full date-time is selected
+        />
+      </div>
+
                     <div className="adminInvoiceSelectItem">
                       {/* <button >Check</button> */}
                       <label>Firm Name</label>
