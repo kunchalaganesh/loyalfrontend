@@ -29,7 +29,17 @@ import { RxCross2 } from "react-icons/rx";
 import { GiCheckMark } from "react-icons/gi";
 
 export default function AdminInvoicePayments() {
+
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    // Formatting to 'YYYY-MM-DDTHH:MM'
+    const formattedDateTime = now.toISOString().slice(0, 16);
+    return formattedDateTime;
+  };
+
   const [active, setActive] = useState("addNew");
+  const [invoiceDateTime, setInvoiceDateTime] = useState(getCurrentDateTime());
+
   const [supplierName, setSupplierName] = useState("");
   const [allSalesTeam, setAllSalesTeam] = useState([]);
   const [allSupplierData, setAllSupplierData] = useState([]);
@@ -162,6 +172,17 @@ export default function AdminInvoicePayments() {
       // setOldGoldAmount(0);
       setTotalPayableGold(0);
       setTotalPayableSilver(0);
+    }
+  };
+
+
+  const handleDateTimeChange = (e) => {
+    const selectedDateTime = e.target.value;
+    setInvoiceDateTime(selectedDateTime);
+
+    // Check if the selected date-time is fully selected (length of 16 characters)
+    if (selectedDateTime.length === 16) {
+      e.target.blur(); // Blur the input to close the picker after full date-time is selected
     }
   };
 
@@ -992,10 +1013,15 @@ export default function AdminInvoicePayments() {
   const updateInvoices = async (invoices) => {
     if (invoices.length > 0) {
       try {
+        const formatToISO = (dateTime) => {
+          const date = new Date(dateTime);
+          return date.toISOString(); // Convert to ISO string (e.g., '2024-10-17T10:58:52.368Z')
+        };
         const invoicesList = invoices.map((invoice) => {
           return {
             // ...invoice,
             Id: parseInt(invoice.Id),
+            TransactionDate: formatToISO(invoiceDateTime), 
             ReceivedAmt: `${
               parseFloat(invoice.receivedAmt) + parseFloat(invoice.paidPrice)
             }`,
@@ -1213,6 +1239,17 @@ export default function AdminInvoicePayments() {
                     id="adminInvoiceAddCustomerTitle"
                     className="adminInvoiceSelectLabelBox"
                   >
+
+<div className="adminInvoiceSelectItem">
+        <label>Date & Time</label>
+        <input
+          type="datetime-local"
+          name="invoiceDateTime"
+          value={invoiceDateTime}
+          onChange={handleDateTimeChange} // Will blur only after full date-time is selected
+        />
+      </div>
+
                     <div className="adminInvoiceSelectItem">
                       {/* <button >Check</button> */}
                       <label>Customer Name</label>

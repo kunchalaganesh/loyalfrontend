@@ -934,12 +934,20 @@ export default function AdminPurchasePayments() {
   ]);
   const updateInvoices = async (invoices) => {
     if (invoices.length > 0) {
+
       try {
+
+        const formatToISO = (dateTime) => {
+          const date = new Date(dateTime);
+          return date.toISOString(); // Convert to ISO string (e.g., '2024-10-17T10:58:52.368Z')
+        };
+
         const invoicesList = invoices.map((invoice) => {
           return {
             ...invoice,
             ClientCode: clientCode,
             Id: parseInt(invoice.Id),
+            TransactionDate: formatToISO(invoiceDateTime), 
             BalanceGold: `${
               parseFloat(invoice.BalanceGold).toFixed(3) -
               parseFloat(invoice.paidGold).toFixed(3)
