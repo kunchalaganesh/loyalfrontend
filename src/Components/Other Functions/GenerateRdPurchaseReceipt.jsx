@@ -519,8 +519,8 @@ const generateRdPurchaseReceipt8 = async (product) => {
 
   // Render stone column headers dynamically if there are stones
   if (maxStones > 0) {
-    uniqueStoneNames.forEach((stoneName, index) => {
-      const stone = stoneName.slice(0, 3);
+    uniqueStoneNames.forEach((StoneName, index) => {
+      const stone = StoneName.slice(0, 3);
       doc.text(stone, columnPositions[`stone${index + 1}`], currentY);
     });
   }
@@ -569,7 +569,7 @@ let tg = g + tag; // Perform the additionget
 
     // Fill in the weights based on unique stone names
     item.Stones.forEach(stone => {
-      const index = uniqueStoneNames.indexOf(stone.stonename);
+      const index = uniqueStoneNames.indexOf(stone.StoneName);
       if (index >= 0) {
         stoneWeights[index] = stone.stoneweight; // Assign stone weight to the correct index
       }
