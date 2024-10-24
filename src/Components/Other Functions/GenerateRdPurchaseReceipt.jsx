@@ -454,7 +454,7 @@ const generateRdPurchaseReceipt8 = async (product) => {
   const totalRowHeight = lineHeight + 5; // Height of the total row
   const pageBottomMargin = 20; // Space from bottom of the page
 
-  const allStoneNames = items.flatMap(item => item.Stones.map(stone => stone.stonename));
+  const allStoneNames = items.flatMap(item => item.Stones.map(stone => stone.StoneName));
   const uniqueStoneNames = [...new Set(allStoneNames)]; // Get unique stone names
 
   const maxStones = uniqueStoneNames.length; // Use unique stone count
@@ -621,8 +621,8 @@ const drawHeader = (doc, columnPositions, currentY,allStoneNames) => {
   // Render stone column headers dynamically if there are stones
   const uniqueStoneNames = [...new Set(allStoneNames)];
   if (uniqueStoneNames.length > 0) {
-    uniqueStoneNames.forEach((stoneName, index) => {
-      const stone = stoneName.slice(0, 3);
+    uniqueStoneNames.forEach((StoneName, index) => {ß
+      const stone = StoneName.slice(0, 3);
       doc.text(stone, columnPositions[`stone${index + 1}`], currentY);
     });
   }
