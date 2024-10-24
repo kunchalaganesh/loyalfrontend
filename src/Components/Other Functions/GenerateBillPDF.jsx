@@ -15,6 +15,8 @@ export const generateBillPDF = (
 
   // generateinvoicepdf8(invoiceItems, csData, mainitem);
 
+  // generateinvoicepdf10(invoiceItems, csData, mainitem);
+
   if (invoiceformate === 1) {
     generateinvoicepdf1(invoiceItems, csData, mainitem);
     return;
@@ -38,6 +40,7 @@ export const generateBillPDF = (
     return;
   } else if (invoiceformate === 8) {
     generateinvoicepdf8(invoiceItems, csData, mainitem);
+    // generateinvoicepdf8(invoiceItems, csData, mainitem);
     return;
   }
   else if (invoiceformate === 10) {
@@ -2019,16 +2022,16 @@ const generateinvoicepdf10 = async (items, customer, mainitem) => {
   // Define the column positions
   const columnPositions = {
     sr: pageWidth - 205,
-    productDetails: pageWidth - 185,
+    productDetails: pageWidth - 192,
     // pcs: pageWidth-150,
-    hsnCode: pageWidth - 130,
-    purity: pageWidth - 110,
-    gwt:pageWidth - 110,
-    gwt:pageWidth - 110,
-    gwt:pageWidth - 110,
+    hsnCode: pageWidth - 155,
+    purity: pageWidth - 140,
+    gwt:pageWidth - 125,
+    swt:pageWidth - 105,
+    // gwt:pageWidth - 110,
     qty: pageWidth - 90,
-    gwt:pageWidth - 110,
-    va: pageWidth - 70,
+    goldrate:pageWidth - 80,
+    va: pageWidth - 60,
     amount: pageWidth - 40,
   };
 
@@ -2055,15 +2058,18 @@ const generateinvoicepdf10 = async (items, customer, mainitem) => {
     currentY += 5;
 
     // Draw the header text
-    doc.text("Sr.", columnPositions.sr + 2, currentY);
+    doc.text("Sr No", columnPositions.sr + 2, currentY);
     doc.text("Product Details", columnPositions.productDetails + 2, currentY);
     // doc.text('Pcs', columnPositions.pcs+2, currentY);
-    doc.text("HSN Code", columnPositions.hsnCode + 2, currentY);
+    doc.text("HSN", columnPositions.hsnCode + 2, currentY);
     doc.text("Purity", columnPositions.purity + 2, currentY);
+    doc.text("Gross", columnPositions.gwt + 2, currentY);
+    doc.text("Stone", columnPositions.swt + 2, currentY);
     // doc.text('Gross Wt', columnPositions.grossWt+2, currentY);
     // doc.text('Net Wt', columnPositions.netWt+2, currentY);
     // doc.text("Metal Amt", columnPositions.price + 2, currentY);
     doc.text("Qty", columnPositions.qty + 2, currentY);
+    doc.text('Gold Rate', columnPositions.goldrate+2, currentY);
     doc.text('VA', columnPositions.va+2, currentY);
     doc.text("Total Amt", columnPositions.amount + 2, currentY);
 
@@ -2211,8 +2217,11 @@ const generateinvoicepdf10 = async (items, customer, mainitem) => {
       // doc.text(item.Quantity || '1', columnPositions.pcs+2, currentY);
       doc.text("7113", columnPositions.hsnCode + 2, currentY);
       doc.text(item.Purity || "NA", columnPositions.purity + 2, currentY);
+      doc.text(item.GrossWt || "NA", columnPositions.gwt + 2, currentY);
+      doc.text(item.TotalStoneWeight || "NA", columnPositions.swt + 2, currentY);
       // doc.text( item.Price || "NA", columnPositions.price + 2, currentY);
       doc.text(item.Quantity || "NA", columnPositions.qty + 2, currentY);
+      doc.text(item.MetalRate || "NA", columnPositions.goldrate + 2, currentY);
       doc.text(item.MakingPercentage || "NA", columnPositions.va + 2, currentY);
       doc.text(item.Price || "NA", columnPositions.amount + 2, currentY);
 
@@ -2271,7 +2280,7 @@ const generateinvoicepdf10 = async (items, customer, mainitem) => {
   // Start generating the PDF
   // doc.text("TAX INVOICE", 90, 49);
   doc.setFontSize(10);
-  doc.text("GSTIN :- 29AASCM4571D1Z2", invoicex, invoicey);
+  doc.text("GSTIN :- 36AAKFA6291P2ZQ", invoicex, invoicey);
   doc.text("Invoice No :-", invoicex, invoicey+5);
   doc.text(invoicenumber, invoicex + 20, invoicey+5);
   // doc.text("Date :-", invoicex, invoicey + 5);

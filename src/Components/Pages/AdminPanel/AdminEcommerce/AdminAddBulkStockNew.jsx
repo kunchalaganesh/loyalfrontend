@@ -62,7 +62,7 @@ import { Grid } from "@mui/material";
 import GetApiService from "../../../Api/getapiService";
 import { ClipLoader } from "react-spinners";
 import ErrorModal from "../../../Other Functions/popup";
-import { FaPlus, FaTrash } from 'react-icons/fa'; 
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import { TableContainer } from "@mui/material";
 
 export default function AdminAddBulkStockNew() {
@@ -73,13 +73,13 @@ export default function AdminAddBulkStockNew() {
     textAlign: 'center',
     fontWeight: '600',
   };
-  
+
   const tdStyle = {
     padding: '5px',
     border: '1px solid #ccc',
     textAlign: 'center',
   };
-  
+
   const inputStyle = {
     width: '100%',
     padding: '3px',
@@ -262,7 +262,7 @@ export default function AdminAddBulkStockNew() {
   const [selectedSkuName, setSelectedSkuName] = useState("");
   const [unlabeledgold, setUnlabeledgold] = useState(0);
   const [unlabeledqty, setUnlabeledqty] = useState(0);
-  
+
 
   const allStates = useSelector((state) => state);
   const adminLoggedIn = allStates.reducer1;
@@ -404,6 +404,63 @@ export default function AdminAddBulkStockNew() {
   }, [clientCode]);
 
 
+  const columns = [
+    { key: "ProductName", label: "Product Type", placeholder: "", priority: 1, type: "read" },
+    { key: "DesignName", label: "Collection", placeholder: "", priority: 2, type: "read" },
+    { key: "PurityName", label: "Purity", placeholder: "", priority: 3, type: "read" },
+    { key: "ItemCode", label: "Label", placeholder: "", priority: 4, type: "read" },
+    { key: "RFIDCode", label: "Barcode Number", placeholder: "", priority: 5, type: "input" },
+    { key: "TIDNumber", label: "TID", placeholder: "", priority: 6, type: "read" },
+    { key: "GrossWt", label: "GrossWt", placeholder: "", priority: 7, type: "input" },
+    { key: "ClipWeight", label: "ClipWt", placeholder: "", priority: 8, type: "input" },
+    { key: "TotalStoneWeight", label: "StoneWt", placeholder: "", priority: 9, type: "input" },
+    { key: "NetWt", label: "NetWt", placeholder: "", priority: 10, type: "read" },
+    { key: "Size", label: "Size", placeholder: "", priority: 11, type: "input" },
+    { key: "Pieces", label: "Pieces", placeholder: "", priority: 12, type: "input" },
+    { key: "Description", label: "Description", placeholder: "", priority: 27, type: "input" },
+    { key: "ProductTitle", label: "Product Name", placeholder: "", priority: 14, type: "input" },
+    { key: "HUIDCode", label: "HUID Code", placeholder: "", priority: 15, type: "input" },
+    { key: "HallmarkAmount", label: "Hallmark Amount", placeholder: "", priority: 16, type: "input" },
+    { key: "TotalStoneAmount", label: "Stone Amount", placeholder: "", priority: 17, type: "input" },
+    { key: "MakingPerGram", label: "Making Per Gram", placeholder: "", priority: 18, type: "input" },
+    { key: "MakingPercentage", label: "Making Percentage", placeholder: "", priority: 19, type: "input" },
+    { key: "MakingFixedAmt", label: "Fixed Making", placeholder: "", priority: 20, type: "input" },
+    { key: "MakingFixedWastage", label: "Fixed Wastage", placeholder: "", priority: 21, type: "input" },
+    { key: "MRP", label: "MRP", placeholder: "", priority: 22, type: "input" },
+    { key: "OccassionName", label: "Occasion", placeholder: "", priority: 23, type: "input" },
+    { key: "Gender", label: "Gender", placeholder: "", priority: 24, type: "input" },
+    { key: "Status", label: "Online Status", placeholder: "", priority: 25, type: "read" },
+    { key: "DeleteProduct", label: "Delete Product", placeholder: "", priority: 26, type: "button" }, // Button for delete action
+    { key: "Stones", label: "Stone", placeholder: "", priority: 13, type: "button" }, // Button for delete action
+  ];
+
+
+  const handleButtonClick = (key) =>{
+    if(key == "Stones"){
+      setAddedProducts((prevProducts) =>
+        prevProducts.map((item, i) =>
+          i === index
+            ? {
+              ...item,
+              Stones: [
+                ...item.Stones,
+                addStone,
+              ],
+            }
+            : item
+        )
+      ),
+        setShowAddStoneBox(true);
+      setSelectedProductIndex(index);
+    }
+
+  }
+
+
+  // Sort columns by priority
+  const sortedColumns = columns.sort((a, b) => a.priority - b.priority);
+
+
   // Function to get unique Lot Numbers
   const getUniqueLotNumbers = (items) => {
     if (!Array.isArray(items)) return [];
@@ -459,20 +516,20 @@ export default function AdminAddBulkStockNew() {
           (item) => item.StockKeepingUnit === selectedSkuName
         );
         labelledStockItems = labelledStockItems.filter(item => item.SKU === selectedSkuName);
-        totalPurchaseGrossWt =  filteredItems.reduce((acc, item) => {
+        totalPurchaseGrossWt = filteredItems.reduce((acc, item) => {
           return acc + parseFloat(item.GrossWt || 0);
         }, 0);
         totalPurchaseQty = filteredItems.reduce((acc, item) => {
           return acc + parseFloat(item.Quantity || 0);
         }, 0);
 
-      }else{
+      } else {
         // StockKeepingUnit = ""
         const filteredItems1 = filteredItems.filter(
           (item) => item.StockKeepingUnit === ""
         );
         labelledStockItems = labelledStockItems.filter(item => item.SKU === "");
-        totalPurchaseGrossWt =  filteredItems1.reduce((acc, item) => {
+        totalPurchaseGrossWt = filteredItems1.reduce((acc, item) => {
           return acc + parseFloat(item.GrossWt || 0);
         }, 0);
         totalPurchaseQty = filteredItems1.reduce((acc, item) => {
@@ -489,7 +546,7 @@ export default function AdminAddBulkStockNew() {
       console.log('checking filtered items ', filteredItems)
       console.log('checking all sku ', allSku)
 
-      
+
 
       // Filter labelled stock data based on selected LotNumber
       // const labelledStockItems = allLabelledStockData.filter(item => item.LotNumber === lotNumber);
@@ -507,7 +564,7 @@ export default function AdminAddBulkStockNew() {
       const unlabelledGrossWt = totalPurchaseGrossWt - totalLabelledGrossWt;
       const unlabelledQty = totalPurchaseQty - totalLabelledQty;
       setUnlabeledgold(unlabelledGrossWt || 0)
-      setUnlabeledqty(unlabelledQty || 0); 
+      setUnlabeledqty(unlabelledQty || 0);
 
       console.log('Total Purchase GrossWt:', totalPurchaseGrossWt);
       console.log('Total Labelled GrossWt:', totalLabelledGrossWt);
@@ -1068,12 +1125,12 @@ export default function AdminAddBulkStockNew() {
     // let updatedStonesList = [...allStonesList];
 
 
-    if ((lotNumber && lotNumber !== "0") ) {
-    if(unlabeledqty <quantity ){
-      alert("Error: Quantity exceeds the available limits.");
+    if ((lotNumber && lotNumber !== "0")) {
+      if (unlabeledqty < quantity) {
+        alert("Error: Quantity exceeds the available limits.");
         return; // Stop the process
+      }
     }
-  }
 
 
 
@@ -1675,17 +1732,17 @@ export default function AdminAddBulkStockNew() {
     // Parse updated properties to numbers, defaulting to 0 if empty or invalid
     // const grosswt = parseFloat(product.GrossWt) || 0;
 
-    let totalFilteredGrossWt  =0;
+    let totalFilteredGrossWt = 0;
     if (lotNumber && lotNumber !== "0") {
-       totalFilteredGrossWt = unlabeledgold;
+      totalFilteredGrossWt = unlabeledgold;
       // allFilteredPurchaseItems.reduce((acc, item) => {
       //   return acc + parseFloat(item.GrossWt || 0);
       // }, 0);
-  
-  
+
+
       // const stoneWeight = parseFloat(product.TotalStoneWeight) || 0;
       // const netWt = parseFloat(product.NetWt) || 0;
-  
+
       // Update 'GrossWt' -> recalculate 'NetWt'
       if (property === "GrossWt" && !isNaN(value)) {
         if (value > totalFilteredGrossWt) {
@@ -1703,24 +1760,24 @@ export default function AdminAddBulkStockNew() {
               : 0;
         }
       }
-    
-    }else{
+
+    } else {
       if (property === "GrossWt" && !isNaN(value)) {
-        
-          updatedProduct.NetWt =
-            parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
-              ? (
-                parseFloat(value) -
-                parseFloat(clipWeight) -
-                parseFloat(stoneWeight)
-              ).toFixed(3)
-              : 0;
-        
+
+        updatedProduct.NetWt =
+          parseFloat(value) - parseFloat(clipWeight) - parseFloat(stoneWeight) > 0
+            ? (
+              parseFloat(value) -
+              parseFloat(clipWeight) -
+              parseFloat(stoneWeight)
+            ).toFixed(3)
+            : 0;
+
       }
 
     }
 
-    
+
 
     // // Update 'TotalStoneWeight' -> recalculate 'NetWt'
     // if (property === "TotalStoneWeight" && !isNaN(value)) {
@@ -1866,15 +1923,15 @@ export default function AdminAddBulkStockNew() {
 
     if (lotNumber && lotNumber !== "0") {
 
-    const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
-      return acc + parseFloat(item.GrossWt || 0);
-    }, 0);
+      const totalCurrentGrossWt = updatedProducts.reduce((acc, item) => {
+        return acc + parseFloat(item.GrossWt || 0);
+      }, 0);
 
-    if (totalCurrentGrossWt > totalFilteredGrossWt) {
-      alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
-      return; // Stop further execution
+      if (totalCurrentGrossWt > totalFilteredGrossWt) {
+        alert("Error: Total GrossWt of all items exceeds the available GrossWt.");
+        return; // Stop further execution
+      }
     }
-  }
 
     console.log('checking updateproducts ', updatedProducts);
 
@@ -5670,27 +5727,50 @@ export default function AdminAddBulkStockNew() {
                       </div>
                     </div>
 
-                    {/* <div className="adminAddBulkStockAddedProductsOuterBox">
-                      
-                      
-                      <TableContainer sx={{ borderSpacing: '0', borderCollapse: 'collapse' }}>
-        <table size="small" sx={{ borderRadius: '4px', borderCollapse: 'collapse', borderSpacing: '0' }}>
-          <thead>
-            <tr>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Weight</th>
-              <th style={thStyle}>Pieces</th>
-              <th style={thStyle}>Rate</th>
-              <th style={thStyle}>Amount</th>
-              <th style={thStyle}>Description</th>
-             
+                    <div className="adminAddBulkStockAddedProductsOuterBox">
+
+
+                    {/* <TableContainer sx={{ borderSpacing: '0', borderCollapse: 'collapse' }}>
+      <table size="small" style={{ borderRadius: '4px', borderCollapse: 'collapse', borderSpacing: '0' }}>
+        <thead>
+          <tr>
+            {sortedColumns.map((column) => (
+              <th key={column.key} style={{ padding: '8px', borderBottom: '2px solid #ccc' }}>{column.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {addedProducts?.map((product, index) => (
+            <tr key={index} style={{ borderBottom: '1px solid #ccc' }}>
+              {sortedColumns.map((column) => (
+                <td key={column.key} style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
+                  {column.type === "input" ? (
+                    <input
+                      id={column.key}
+                      type="text"
+                      placeholder={column.placeholder || product[column.key]}
+                      value={product[column.key]}
+                      onChange={(e) => handleInputChange(e, index, column.key)}
+                      style={{ width: '100%', boxSizing: 'border-box' }}
+                    />
+                  ) : column.type === "read" ? (
+                    <span>{product[column.key]}</span> // Read-only text
+                  ) : column.type === "button" ? (
+                    <button onClick={() => handleButtonClick(column.key)}>
+  {`${column.label}-${product[column.key] ? product[column.key].length : 0}`}
+</button>
+
+                  ) : null}
+                </td>
+              ))}
             </tr>
-          </thead>
-          </table>
-          </TableContainer>
+          ))}
+        </tbody>
+      </table>
+    </TableContainer> */}
 
 
-                      </div> */}
+                    </div>
 
 
 

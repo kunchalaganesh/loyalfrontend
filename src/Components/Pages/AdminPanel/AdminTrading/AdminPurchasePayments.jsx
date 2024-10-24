@@ -30,6 +30,7 @@ import { AiOutlineEdit, AiOutlinePlusSquare } from "react-icons/ai";
 import { FaRegCircle, FaRegDotCircle } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { GiCheckMark } from "react-icons/gi";
+import PaymentBox from "Components/support/paymentssupport/PaymentBox";
 
 export default function AdminPurchasePayments() {
 
@@ -947,19 +948,16 @@ export default function AdminPurchasePayments() {
             ...invoice,
             ClientCode: clientCode,
             Id: parseInt(invoice.Id),
-            TransactionDate: formatToISO(invoiceDateTime), 
-            BalanceGold: `${
-              parseFloat(invoice.BalanceGold).toFixed(3) -
+            TransactionDate: formatToISO(invoiceDateTime),
+            BalanceGold: `${parseFloat(invoice.BalanceGold).toFixed(3) -
               parseFloat(invoice.paidGold).toFixed(3)
-            }`,
-            BalanceSilver: `${
-              parseFloat(invoice.BalanceSilver).toFixed(3) -
+              }`,
+            BalanceSilver: `${parseFloat(invoice.BalanceSilver).toFixed(3) -
               parseFloat(invoice.paidSilver).toFixed(3)
-            }`,
-            BalanceAmount: `${
-              parseFloat(invoice.BalanceAmount).toFixed(3) -
+              }`,
+            BalanceAmount: `${parseFloat(invoice.BalanceAmount).toFixed(3) -
               parseFloat(invoice.paidPrice).toFixed(3)
-            }`,
+              }`,
           };
         });
         console.log(invoicesList, "invoicesList");
@@ -1170,18 +1168,18 @@ export default function AdminPurchasePayments() {
                   <div
                     id="adminInvoiceAddCustomerTitle"
                     className="adminInvoiceSelectLabelBox"
-                  
+
                   >
 
-<div className="adminInvoiceSelectItem">
-        <label>Date & Time</label>
-        <input
-          type="datetime-local"
-          name="invoiceDateTime"
-          value={invoiceDateTime}
-          onChange={handleDateTimeChange} // Will blur only after full date-time is selected
-        />
-      </div>
+                    <div className="adminInvoiceSelectItem">
+                      <label>Date & Time</label>
+                      <input
+                        type="datetime-local"
+                        name="invoiceDateTime"
+                        value={invoiceDateTime}
+                        onChange={handleDateTimeChange} // Will blur only after full date-time is selected
+                      />
+                    </div>
 
                     <div className="adminInvoiceSelectItem">
                       {/* <button >Check</button> */}
@@ -1267,7 +1265,7 @@ export default function AdminPurchasePayments() {
                 </div>
                 <div
                   className="adminAllProductsFilterLabelBox"
-                  // className="adminAllOrderLeftBox"
+                // className="adminAllOrderLeftBox"
                 >
                   {" "}
                   <div
@@ -1278,6 +1276,28 @@ export default function AdminPurchasePayments() {
                     className="adminInviceAddedProductsTotalOuterBox"
                   >
                     <div className="adminInviceAddedProductsTotalAmountOuterBox">
+
+console.log(${totalPayableAmount});
+
+                      <PaymentBox
+                        paymentType={paymentType}
+                        totalPayableGold={totalPayableGold}
+                        totalPayableSilver={totalPayableSilver}
+                        allProdctsNetAmount={allProdctsNetAmount}
+                        discountAmount={discountAmount}
+                        totalPayableGstAmount={totalPayableGstAmount}
+                        totalPayableAmount={totalPayableAmount}
+                        totalPaidAmount={totalPaidAmount}
+                        grandTotal={grandTotal}
+
+
+                      />
+
+                      <div style={{ marginTop: '20px' }}>
+
+
+                      </div>
+
                       <div className="adminInviceAddedProductsTotalItemBoxPaymentType">
                         <div onClick={() => setPaymentType("Receive")}>
                           {paymentType === "Receive" ? (
@@ -1347,7 +1367,7 @@ export default function AdminPurchasePayments() {
                               if (
                                 paymentOptions == "Cash" &&
                                 totalPaidCashAmount + parseInt(paymentAmount) >
-                                  200000
+                                200000
                               ) {
                                 alert(
                                   "Could Not Take more than 200000 in Cash"
@@ -1403,12 +1423,12 @@ export default function AdminPurchasePayments() {
                               onChange={(e) => {
                                 handleMetalPaymentOption("fineWt", e);
                               }}
-                              //     onChange={(e) =>
-                              //       setMetalPaymentOption({
-                              //         ...metalPaymentOption,
-                              //         fineWt: e.target.value,
-                              //     })
-                              // }
+                            //     onChange={(e) =>
+                            //       setMetalPaymentOption({
+                            //         ...metalPaymentOption,
+                            //         fineWt: e.target.value,
+                            //     })
+                            // }
                             />
                           </div>
                           <div>
@@ -1419,12 +1439,12 @@ export default function AdminPurchasePayments() {
                               onChange={(e) => {
                                 handleMetalPaymentOption("Rate", e);
                               }}
-                              // onChange={(e) =>
-                              //   setMetalPaymentOption({
-                              //     ...metalPaymentOption,
-                              //     fineRate: e.target.value,
-                              //   })
-                              // }
+                            // onChange={(e) =>
+                            //   setMetalPaymentOption({
+                            //     ...metalPaymentOption,
+                            //     fineRate: e.target.value,
+                            //   })
+                            // }
                             />
                           </div>
                           <div>
@@ -1487,12 +1507,12 @@ export default function AdminPurchasePayments() {
                               onChange={(e) => {
                                 handleMetalPaymentOption("Rate", e);
                               }}
-                              // onChange={(e) =>
-                              //   setMetalPaymentOption({
-                              //     ...metalPaymentOption,
-                              //     fineRate: e.target.value,
-                              //   })
-                              // }
+                            // onChange={(e) =>
+                            //   setMetalPaymentOption({
+                            //     ...metalPaymentOption,
+                            //     fineRate: e.target.value,
+                            //   })
+                            // }
                             />
                           </div>
 
@@ -1502,12 +1522,12 @@ export default function AdminPurchasePayments() {
                               type="number"
                               value={metalPaymentOption.fineWt}
                               readOnly
-                              //     onChange={(e) =>
-                              //       setMetalPaymentOption({
-                              //         ...metalPaymentOption,
-                              //         fineWt: e.target.value,
-                              //     })
-                              // }
+                            //     onChange={(e) =>
+                            //       setMetalPaymentOption({
+                            //         ...metalPaymentOption,
+                            //         fineWt: e.target.value,
+                            //     })
+                            // }
                             />
                           </div>
                           <div
@@ -1660,7 +1680,7 @@ export default function AdminPurchasePayments() {
                 </div>
                 <div
                   className="adminAllProductsFilterLabelBox"
-                  // className="adminAllOrderLeftBox"
+                // className="adminAllOrderLeftBox"
                 >
                   {/* <p>Status</p> */}
                 </div>
@@ -1709,7 +1729,7 @@ export default function AdminPurchasePayments() {
                                 <td>
                                   {x.BalanceAmount}
                                   {x.DebitAmount !== "" &&
-                                  x.DebitAmount !== "0" ? (
+                                    x.DebitAmount !== "0" ? (
                                     <p style={{ whiteSpace: "nowrap" }}>
                                       Debit - {x.DebitAmount}{" "}
                                     </p>
@@ -1726,7 +1746,7 @@ export default function AdminPurchasePayments() {
                                 <td>
                                   {x.BalanceSilver}
                                   {x.DebitSilver !== "" &&
-                                  x.DebitSilver !== "0" ? (
+                                    x.DebitSilver !== "0" ? (
                                     <p style={{ whiteSpace: "nowrap" }}>
                                       Debit - {x.DebitSilver}{" "}
                                     </p>
@@ -1763,10 +1783,10 @@ export default function AdminPurchasePayments() {
                                       x.paidStatus === "None"
                                         ? "red"
                                         : x.paidStatus === "Complete"
-                                        ? "green"
-                                        : x.paidStatus === "Partial"
-                                        ? "orange"
-                                        : "black",
+                                          ? "green"
+                                          : x.paidStatus === "Partial"
+                                            ? "orange"
+                                            : "black",
                                   }}
                                 >
                                   {x.paidStatus}

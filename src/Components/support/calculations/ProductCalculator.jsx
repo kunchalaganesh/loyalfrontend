@@ -485,7 +485,7 @@ const validOtherRate = isNaN(parseFloat(otherrate)) ? 0 : parseFloat(otherrate);
 
 // Calculate TotalItemAmt
 updatedProduct.TotalItemAmt = convertAmount
-  ? totalRate + validOtherRate
+  ? totalRate 
   : validTotalMakingCharges + validOtherRate;
 
 // Set updated product values
